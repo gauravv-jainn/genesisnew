@@ -1,0 +1,145 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Play } from "lucide-react";
+import { useRef } from "react";
+
+import { cn } from "@/lib/utils";
+
+/**
+ * Movie-poster card — the "Genesis Netflix" unit (img-025, img-026, img-013).
+ *
+ * Vertical 2:3 poster, category badge top-left, play affordance top-right,
+ * title and meta over a bottom scrim. On hover it lifts and blooms crimson,
+ * matching the centre-focused treatment in the reference carousel.
+ */
+
+export type Poster = {
+  id: string;
+  title: string;
+  /** e.g. "Brand Film", "Product Reel". */
+  category: string;
+  client?: string;
+  meta?: string[];
+  /** Optional real artwork. Falls back to a generated gradient. */
+  image?: string;
+};
+
+/**
+ * Deterministic placeholder artwork.
+ *
+ * Real poster images do not exist yet, and an empty <img> would render as a
+ * broken frame. Hashing the id into a hue keeps each card visually distinct
+ * and stable between server and client renders (no Math.random hydration
+ * mismatch). Delete once real artwork is supplied.
+ */
+function placeholderArt(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i += 1) {
+    hash = (hash * 31 + id.charCodeAt(i)) % 360;
+  }
+  const hue = hash;
+  const partner = (hue + 40) % 360;
+  return `radial-gradient(120% 90% at 30% 15%, hsl(${hue} 70% 45% / 0.85) 0%, transparent 60%),
+          radial-gradient(90% 80% at 80% 90%, hsl(${partner} 65% 35% / 0.75) 0%, transparent 65%),
+          linear-gradient(160deg, #1a1820 0%, #0c0b0f 100%)`;
+}
+
+export function PosterCard({
+  poster,
+  className,
+  priority = false,
+}: {
+  poster: Poster;
+  className?: string;
+  /** Renders larger, as the focused card in a rail. */
+  priority?: boolean;
+}) {
+  return (
+    <motion.article
+      whileHover={{ y: -10 }}
+      transition={{ type: "spring", stiffness: 300, damping: 24 }}
+      className={cn(
+        "group relative shrink-0 overflow-hidden rounded-3xl border border-white/10",
+        "shadow-[0_18px_50px_-18px_rgb(0_0_0/0.9)]",
+        "transition-shadow duration-500 hover:shadow-[0_26px_70px_-16px_rgb(255_45_63/0.4)]",
+        priority ? "w-[clamp(15rem,26vw,20rem)]" : "w-[clamp(12rem,20vw,16rem)]",
+        className,
+      )}
+    >
+      <div
+        // Arbitrary-value syntax: Tailwind v4 has no bare-fraction `aspect-2/3`.
+        className="relative aspect-[2/3] w-full"
+        style={
+          poster.image
+            ? { backgroundImage: `url(${poster.image})`, backgroundSize: "cover" }
+            : { backgroundImage: placeholderArt(poster.id) }
+        }
+      >
+        {/* Legibility scrim for the title block. */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45)_0%,transparent_28%,transparent_45%,rgb(0_0_0/0.88)_100%)]" />
+
+        <span className="glass absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-medium tracking-wide text-bone">
+          {poster.category}
+        </span>
+
+        <span className="glass absolute right-3 top-3 grid size-8 place-items-center rounded-full text-bone opacity-80 transition-opacity duration-300 group-hover:opacity-100">
+          <Play className="size-3.5 fill-current" aria-hidden />
+        </span>
+
+        <div className="absolute inset-x-0 bottom-0 p-4">
+          {poster.client && (
+            <p className="micro-label mb-1.5 !text-[10px] !tracking-[0.22em] text-bone/70">
+              {poster.client}
+            </p>
+          )}
+          <h3 className="text-balance text-[15px] font-semibold leading-tight text-bone">
+            {poster.title}
+          </h3>
+          {poster.meta && poster.meta.length > 0 && (
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {poster.meta.map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-bone/80"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+/**
+ * Horizontal poster rail with drag-to-pan and native scroll-snap.
+ * The scroll-driven centre-focus effect lands in the Phase 3 motion pass.
+ */
+export function PosterRail({
+  posters,
+  className,
+}: {
+  posters: Poster[];
+  className?: string;
+}) {
+  const railRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      ref={railRef}
+      className={cn(
+        "no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-4",
+        className,
+      )}
+    >
+      {posters.map((poster, index) => (
+        <div key={poster.id} className="snap-center">
+          <PosterCard poster={poster} priority={index === Math.floor(posters.length / 2)} />
+        </div>
+      ))}
+    </div>
+  );
+}

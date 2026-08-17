@@ -1,0 +1,167 @@
+"use client";
+
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+
+import { cn } from "@/lib/utils";
+
+/**
+ * Statistics display.
+ *
+ * `StatCard` is the bordered tile with an icon well (img-012 "1,00,000+
+ * INFLUENCER DATABASE"); `StatRow` is the glass bar of four figures beneath it.
+ * Both share `CountUp`, which animates the number once on first view.
+ */
+
+/** Splits "1,00,000+" into the numeric part and any prefix/suffix. */
+function parseValue(value: string) {
+  const match = value.match(/^([^\d]*)([\d.,]+)(.*)$/);
+  if (!match) return { prefix: "", digits: null, suffix: value };
+  return { prefix: match[1], digits: match[2], suffix: match[3] };
+}
+
+function CountUp({ value, durationMs = 1400 }: { value: string; durationMs?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-15%" });
+  const prefersReducedMotion = useReducedMotion();
+  const { prefix, digits, suffix } = parseValue(value);
+
+  // Seeded with the FINAL figure, not zero. That keeps the markup correct
+  // without JavaScript, under `prefers-reduced-motion`, and for assistive
+  // tech — the count-up simply overwrites it on the first animation frame
+  // after the element scrolls into view.
+  const [display, setDisplay] = useState(digits ?? "");
+
+  useEffect(() => {
+    if (!inView || digits === null || prefersReducedMotion) return;
+
+    const target = Number(digits.replace(/,/g, ""));
+    if (!Number.isFinite(target)) return;
+
+    // Preserve the source formatting (Indian grouping in "1,00,000" included)
+    // by re-applying the original separators positionally.
+    const format = (n: number) => {
+      const raw = Math.round(n).toString();
+      if (!digits.includes(",")) return raw;
+      const groups = digits.split(",");
+      const sizes = groups.slice(1).map((g) => g.length);
+      let out = "";
+      let rest = raw;
+      for (const size of sizes.reverse()) {
+        if (rest.length <= size) break;
+        out = `,${rest.slice(-size)}${out}`;
+        rest = rest.slice(0, -size);
+      }
+      return rest + out;
+    };
+
+    let frame = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / durationMs);
+      // Ease-out cubic: fast start, settled landing.
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(format(target * eased));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [inView, digits, durationMs, prefersReducedMotion]);
+
+  return (
+    <span ref={ref}>
+      {prefix}
+      {display}
+      {suffix}
+    </span>
+  );
+}
+
+export function StatCard({
+  value,
+  label,
+  description,
+  icon,
+  action,
+  className,
+}: {
+  value: string;
+  label: string;
+  description?: string;
+  icon?: ReactNode;
+  action?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "glass glass-lit group relative flex items-start gap-5 rounded-3xl p-6 sm:p-7",
+        "bg-[linear-gradient(135deg,rgb(255_45_63/0.10)_0%,transparent_55%)]",
+        className,
+      )}
+    >
+      {icon && (
+        <div className="grid size-14 shrink-0 place-items-center rounded-2xl border border-crimson/25 bg-crimson/10 text-crimson">
+          {icon}
+        </div>
+      )}
+
+      <div className="min-w-0 flex-1">
+        <p className="text-3xl font-semibold tracking-tight text-bone sm:text-4xl">
+          <CountUp value={value} />
+        </p>
+        <p className="micro-label mt-2">{label}</p>
+        {description && (
+          <p className="mt-3 text-sm leading-relaxed text-ash">{description}</p>
+        )}
+      </div>
+
+      {action && <div className="shrink-0 self-center">{action}</div>}
+    </div>
+  );
+}
+
+/** The horizontal glass bar of figures from img-012. */
+export function StatRow({
+  stats,
+  className,
+}: {
+  stats: { value: string; label: string; icon?: ReactNode }[];
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "glass glass-lit grid grid-cols-2 gap-y-8 rounded-3xl px-6 py-8 sm:px-8 lg:grid-cols-4",
+        className,
+      )}
+    >
+      {stats.map((stat, index) => (
+        <motion.div
+          key={stat.label}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.5, delay: index * 0.08, ease: "easeOut" }}
+          className={cn(
+            "flex items-center gap-4 px-2",
+            // Hairline dividers between figures, never before the first in a row.
+            index > 0 && "lg:border-l lg:border-white/10 lg:pl-6",
+          )}
+        >
+          {stat.icon && (
+            <div className="grid size-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-bone">
+              {stat.icon}
+            </div>
+          )}
+          <div className="min-w-0">
+            <p className="text-2xl font-semibold tracking-tight text-bone">
+              <CountUp value={stat.value} />
+            </p>
+            <p className="mt-1 text-[13px] leading-tight text-ash">{stat.label}</p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}

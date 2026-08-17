@@ -4,9 +4,51 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ==========================================================================
+   GENESIS MEDIA — design tokens
+   --------------------------------------------------------------------------
+   Derived from docs/reference/. Two of those images (img-012 Influencer
+   Campaigns, img-013 Our Content) are existing Genesis Media artwork, so the
+   palette below follows them rather than the approximate values in the brief:
+   the brand accent is CRIMSON, not amber. Amber is retained as the secondary
+   "dramatic light" accent because the recurring papers-catching-light motif
+   (img-001, 005, 011, 014, 043) is unmistakably warm.
+
+   Everything is defined once here and consumed by utilities/components.
+   ========================================================================== */
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);
+    /* Serif italic, reserved for a single accent word in a headline. */
+    --font-serif: var(--font-serif);
+
+    /* --- Surfaces --------------------------------------------------------- */
+    --color-void: #08080a;
+    --color-ink: #0a0a0b;
+    --color-elevated: #131316;
+    --color-raised: #1c1a20;
+
+    /* --- Brand accents ---------------------------------------------------- */
+    /* Primary. Sampled from the Genesis CTA gradient + logo mark (img-012). */
+    --color-crimson: #ff2d3f;
+    --color-crimson-deep: #c9102b;
+    --color-crimson-soft: #ff6b78;
+
+    /* Secondary. The single dramatic light source on paper/documents. */
+    --color-amber: #ff8a3d;
+    --color-amber-light: #ffd08a;
+
+    /* Tertiary. From the brief; not evidenced in the references — use only
+       for rare cool-side contrast (see PROGRESS.md). */
+    --color-teal: #2dd4bf;
+
+    /* --- Type ------------------------------------------------------------- */
+    --color-bone: #f5f5f4;
+    --color-ash: #a3a3a3;
+    --color-faint: #6b6b70;
+
+    /* --- shadcn bridge ---------------------------------------------------- */
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -15,11 +57,6 @@
     --color-sidebar-primary: var(--sidebar-primary);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -38,6 +75,7 @@
     --color-card: var(--card);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
+
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -48,82 +86,196 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    /* --- Glass (One UI "Blur", per img-000) -------------------------------
+       Deliberately NOT the iOS "Clear" style: heavy blur, low-contrast fill,
+       a bright top edge, and no refraction/distortion. */
+    --glass-blur: 24px;
+    --glass-blur-heavy: 40px;
+    --glass-fill: rgb(255 255 255 / 0.05);
+    --glass-fill-strong: rgb(255 255 255 / 0.08);
+    --glass-border: rgb(255 255 255 / 0.12);
+    --glass-highlight: rgb(255 255 255 / 0.3);
+
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+
+    /* Genesis is dark-only; light values exist solely so shadcn primitives
+       have something valid to resolve against before `.dark` applies. */
+    --background: #0a0a0b;
+    --foreground: #f5f5f4;
+    --card: #131316;
+    --card-foreground: #f5f5f4;
+    --popover: #131316;
+    --popover-foreground: #f5f5f4;
+    --primary: #ff2d3f;
+    --primary-foreground: #ffffff;
+    --secondary: #1c1a20;
+    --secondary-foreground: #f5f5f4;
+    --muted: #1c1a20;
+    --muted-foreground: #a3a3a3;
+    --accent: #1c1a20;
+    --accent-foreground: #f5f5f4;
+    --destructive: #ff2d3f;
+    --border: rgb(255 255 255 / 0.1);
+    --input: rgb(255 255 255 / 0.14);
+    --ring: #ff2d3f;
+    --sidebar: #0a0a0b;
+    --sidebar-foreground: #f5f5f4;
+    --sidebar-primary: #ff2d3f;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #1c1a20;
+    --sidebar-accent-foreground: #f5f5f4;
+    --sidebar-border: rgb(255 255 255 / 0.1);
+    --sidebar-ring: #ff2d3f;
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --background: #0a0a0b;
+    --foreground: #f5f5f4;
+    --card: #131316;
+    --card-foreground: #f5f5f4;
+    --popover: #131316;
+    --popover-foreground: #f5f5f4;
+    --primary: #ff2d3f;
+    --primary-foreground: #ffffff;
+    --secondary: #1c1a20;
+    --secondary-foreground: #f5f5f4;
+    --muted: #1c1a20;
+    --muted-foreground: #a3a3a3;
+    --accent: #1c1a20;
+    --accent-foreground: #f5f5f4;
+    --destructive: #ff2d3f;
+    --border: rgb(255 255 255 / 0.1);
+    --input: rgb(255 255 255 / 0.14);
+    --ring: #ff2d3f;
+    --sidebar: #0a0a0b;
+    --sidebar-foreground: #f5f5f4;
+    --sidebar-primary: #ff2d3f;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #1c1a20;
+    --sidebar-accent-foreground: #f5f5f4;
+    --sidebar-border: rgb(255 255 255 / 0.1);
+    --sidebar-ring: #ff2d3f;
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
-  html {
-    @apply font-sans;
+
+    html {
+        @apply font-sans;
+        /* Lenis drives scrolling in Phase 3; native smooth scroll would fight it. */
+        scroll-behavior: auto;
+    }
+
+    /* Respect the OS "reduce motion" setting globally. Individual components
+       also check it via useReducedMotion() before running JS-driven motion. */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+@layer components {
+    /* --- Glass surfaces ---------------------------------------------------
+       One definition, reused by every glass component. The ::before layer is
+       the bright top edge that reads as a lit bevel in One UI. */
+    .glass {
+        position: relative;
+        background-color: var(--glass-fill);
+        backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+        border: 1px solid var(--glass-border);
+        box-shadow:
+            0 1px 0 0 rgb(255 255 255 / 0.06) inset,
+            0 8px 32px -8px rgb(0 0 0 / 0.7);
+    }
+
+    .glass-strong {
+        background-color: var(--glass-fill-strong);
+        backdrop-filter: blur(var(--glass-blur-heavy)) saturate(160%);
+        -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(160%);
+    }
+
+    /* Hairline gradient along the top edge — the "catching the light" cue. */
+    .glass-lit::before {
+        content: "";
+        position: absolute;
+        inset-inline: 12%;
+        top: -1px;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            var(--glass-highlight),
+            transparent
+        );
+        pointer-events: none;
+    }
+
+    /* --- Grain ------------------------------------------------------------
+       Self-contained SVG turbulence; no external asset, so it survives the
+       strict CSP. Sits above content but never intercepts pointer events. */
+    .grain::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.18;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    }
+
+    /* --- Editorial micro-label -------------------------------------------
+       The tiny letterspaced caps used in the corners of img-012 / img-058. */
+    .micro-label {
+        font-size: 0.6875rem;
+        line-height: 1;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--color-ash);
+    }
+}
+
+/* Seamless marquee: the track is duplicated once, so -50% lands exactly on
+   the start of the copy. Consumed by <LogoMarquee />. */
+@keyframes genesis-marquee {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+@layer utilities {
+    /* Headline treatment from img-012: bright first line, receding second. */
+    .text-fade-down {
+        background: linear-gradient(180deg, #ffffff 0%, #ffffff 40%, #8b8b90 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* Hides scrollbars on horizontal rails (poster carousel, filter pills). */
+    .no-scrollbar {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
     }
 }

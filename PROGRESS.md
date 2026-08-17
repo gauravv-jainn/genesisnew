@@ -6,7 +6,7 @@ new session.
 | Phase | Scope | Status |
 | --- | --- | --- |
 | 0 | Infra & security foundation | ✅ Code complete — 5 checks pending credentials |
-| 1 | Design system & shared components | ⬜ Not started |
+| 1 | Design system & shared components | ✅ Complete — **needs your call on brand colour** |
 | 2 | Homepage (13 sections) | ⬜ Not started |
 | 3 | Motion pass | ⬜ Not started |
 | 4 | Standalone pages | ⬜ Not started |
@@ -156,6 +156,114 @@ The Genesis Workspace product — client/brand/project management, content
 pipeline, invoicing, automations, influencer CRM, team permissions beyond the
 Insider gate. Out of scope per the brief. The Phase 0 infra is arranged so
 these can be added without re-architecting.
+
+---
+
+## Phase 1 — Design system & shared components
+
+### ⚠️ Decision needed: the brand accent is red, not amber/teal
+
+I read all 37 images in `docs/reference/` before writing any code, as the
+brief instructed. **Two of them are existing Genesis Media artwork, not mood
+references**: `img-012` (an Influencer Campaigns page) and `img-013` (an "Our
+Content" library). Both carry the real GENESIS MEDIA lockup and both are built
+on a **crimson/red** accent — red CTA gradients, a red star glyph, red glows.
+
+The brief's placeholder tokens were `--accent-amber #ff8a3d` and
+`--accent-teal #2dd4bf`. Since §4 said those were "a starting approximation,
+not the final word" and told me to let the references decide, I built:
+
+- **`crimson` `#ff2d3f`** — primary. Sampled from the Genesis CTA gradient and
+  logo mark. Drives buttons, focus rings, brand glows.
+- **`amber` `#ff8a3d`** — secondary, kept from the brief. It genuinely earns
+  its place: the papers-catching-light motif is warm in every image that uses
+  it (img-001, 005, 011, 014, 043), and that motif is the connective thread
+  across Journey / Blogs / Case Studies.
+- **`teal` `#2dd4bf`** — defined but effectively unused. It appears **nowhere**
+  in the references. The only cool accents present are a lime `#c5ff2e`
+  (img-009 pushpins) and a signal green (img-004).
+
+**Confirm before Phase 2**: is crimson right? Everything downstream inherits
+it, so it is cheap to change now and expensive after 13 sections exist. If you
+prefer amber-primary, it is a one-file edit to `app/globals.css`.
+
+### Also found in the references
+
+`img-019` is your **current Wix site** mid-edit, which gave me real Genesis
+copy rather than invented filler. Now in `lib/site-config.ts`:
+
+> "Genesis is a Gen Z-led full-service agency where strategy, content, and
+> technology come together to build iconic brands…"
+
+Note the live site's hero has a typo — "Technolgy". I have **not** reproduced
+it. Flagging so it gets fixed at the source too.
+
+### Built
+
+**Tokens** (`app/globals.css`) — Tailwind v4 `@theme`, dark-only. Surfaces
+(`void`/`ink`/`elevated`/`raised`), accents, text ramp (`bone`/`ash`/`faint`),
+glass variables, and a global `prefers-reduced-motion` reset.
+
+**Glass** is the One UI "Blur" style, decided directly from `img-000` — which
+is literally a labelled comparison of Frosted / Clear (iOS) / Blur (One UI).
+Heavy blur, low-contrast fill, lit top edge, no refraction. `.glass`,
+`.glass-strong`, `.glass-lit`.
+
+**The eight required components**, all in `components/genesis/`:
+
+| Component | File | Reference |
+| --- | --- | --- |
+| Glass pill button (+ segmented) | `glass-button.tsx` | img-012, img-014 |
+| Glass nav | `glass-nav.tsx` | img-013, img-015 |
+| Stat card + stat row | `stat-card.tsx` | img-012, img-036 |
+| Orbiting / draggable cards | `orbiting-cards.tsx` | img-012 |
+| Movie-poster case-study card | `poster-card.tsx` | img-025, img-026 |
+| Animated timeline | `animated-timeline.tsx` | img-004 |
+| Logo marquee | `logo-marquee.tsx` | — |
+| Magnetic floating paper card | `paper-card.tsx` | img-009, img-011, img-053 |
+
+Plus supporting pieces that stop the above from duplicating each other:
+`atmosphere.tsx` (ground + one light + grain), `section-label.tsx`,
+`genesis-mark.tsx` (placeholder logo), `lib/use-magnetic.ts`,
+`lib/site-config.ts`.
+
+**`/style-guide`** renders all of it in isolation. Dev-only: it calls
+`notFound()` in production and is linked from nothing.
+
+### Verified
+
+Build, lint, typecheck all clean; `npm audit` 0 vulnerabilities. Rendered the
+style guide in a browser and confirmed against the SSR HTML that every
+component emits markup. **Three real bugs surfaced only by running it:**
+
+1. **Hydration mismatch in `OrbitingCards`.** Framer Motion serialises style
+   values at reduced precision during SSR, so `17.639320225002095%` on the
+   client met `17.6393%` from the server. Fixed by rounding in the transform
+   so both sides produce identical strings.
+2. **`aspect-2/3` generated no CSS.** Tailwind v4 has no bare-fraction aspect
+   utility — the poster cards had no aspect ratio at all. Now `aspect-[2/3]`,
+   confirmed by grepping `aspect-ratio: 2 / 3` out of the compiled stylesheet.
+3. **CSP blocked Vercel Analytics** (fixed in the previous commit) — the
+   script is same-origin only once deployed to Vercel.
+
+### Still placeholder
+
+- **Typefaces** — Geist (sans) + Instrument Serif (the italic accent word).
+  Both stand-ins for real brand fonts.
+- **Logo** — `genesis-mark.tsx` is reconstructed from the references. One file
+  to swap.
+- **Poster artwork** — generated from a hash of each card's id so cards look
+  distinct and stable across SSR. Deterministic on purpose: `Math.random()`
+  would cause hydration mismatches.
+- **Client logos** — wordmarks, not images.
+- All figures and names are marked `TODO(copy)`.
+
+### Deliberately deferred to Phase 3
+
+Framer Motion and GSAP are installed; only component-intrinsic motion is wired
+(count-up, orbit, magnetic hover, timeline fill, marquee). The `layoutId`
+morphs, the Services→Portfolio 180° pan, and Lenis smooth scroll are the
+Phase 3 motion pass and are not started.
 
 ---
 

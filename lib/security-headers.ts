@@ -26,8 +26,17 @@ function contentSecurityPolicy(): string {
     "object-src": ["'none'"],
     "frame-ancestors": ["'none'"],
     "form-action": ["'self'"],
-    // 'unsafe-eval' is required by the dev-mode React refresh runtime only.
-    "script-src": ["'self'", "'unsafe-inline'", ...(isDev ? ["'unsafe-eval'"] : [])],
+    "script-src": [
+      "'self'",
+      "'unsafe-inline'",
+      // Vercel Analytics serves from the same origin (/_vercel/insights/
+      // script.js) once deployed to Vercel, but falls back to this host
+      // everywhere else — including local dev. Allowlisted per Vercel's own
+      // CSP guidance so the policy behaves identically in both.
+      "https://va.vercel-scripts.com",
+      // Required by the dev-mode React refresh runtime only.
+      ...(isDev ? ["'unsafe-eval'"] : []),
+    ],
     // Tailwind and Framer Motion both write inline style attributes.
     "style-src": ["'self'", "'unsafe-inline'"],
     "img-src": ["'self'", "data:", "blob:", "https:"],
@@ -43,9 +52,10 @@ function contentSecurityPolicy(): string {
       "https://*.ingest.de.sentry.io",
       // Auth0 tenant endpoints.
       "https://*.auth0.com",
-      // Vercel Analytics posts same-origin via /_vercel/insights, but Speed
-      // Insights reports to this host.
+      // Analytics posts to /_vercel/insights/event (same-origin) on Vercel;
+      // these cover Speed Insights and the non-Vercel/dev fallback.
       "https://vitals.vercel-insights.com",
+      "https://va.vercel-scripts.com",
       // Dev server websocket for hot reload.
       ...(isDev ? ["ws:", "http://localhost:*"] : []),
     ],

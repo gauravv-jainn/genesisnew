@@ -248,6 +248,20 @@
     }
 }
 
+/* Idle drift for the vortex sheets. Deliberately a CSS animation rather than
+   a JS-driven one: a hundred concurrent Framer animations run on the main
+   thread and pinned the blog scene at ~43fps, while a hundred CSS animations
+   are handed to the compositor and cost effectively nothing. */
+@keyframes genesis-paper-float {
+    0%, 100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(0, -10px, 0);
+    }
+}
+
 /* Seamless marquee: the track is duplicated once, so -50% lands exactly on
    the start of the copy. Consumed by <LogoMarquee />. */
 @keyframes genesis-marquee {

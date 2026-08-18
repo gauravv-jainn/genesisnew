@@ -32,6 +32,26 @@ export default function BlogPage() {
         }}
       />
 
+      {/*
+        Heading sits ABOVE the scene rather than inside the ring. The
+        reference's centre is occupied by the figure, and overlaying type on
+        it buried both.
+      */}
+      <div className="relative z-[2] mx-auto max-w-3xl px-6 pb-4 text-center">
+        <Reveal>
+          <SectionLabel dot tone="amber" className="justify-center">
+            Journal
+          </SectionLabel>
+          <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl">
+            Thinking out{" "}
+            <span className="font-serif font-normal italic text-amber">loud</span>
+          </h1>
+          <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-ash">
+            Every sheet is a piece. Move your cursor through them.
+          </p>
+        </Reveal>
+      </div>
+
       {posts.length > 0 ? (
         <PaperVortex
           posts={posts.map((post) => ({
@@ -39,38 +59,14 @@ export default function BlogPage() {
             title: post.title,
             category: post.category,
           }))}
-          sheets={32}
-          className="relative z-[2]"
-        >
-          <Reveal>
-            <SectionLabel dot tone="amber" className="justify-center">
-              Journal
-            </SectionLabel>
-            <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl">
-              Thinking out{" "}
-              <span className="font-serif font-normal italic text-amber">
-                loud
-              </span>
-            </h1>
-            <p className="mt-5 text-sm leading-relaxed text-ash">
-              Every sheet is a piece. Move through them.
-            </p>
-          </Reveal>
-        </PaperVortex>
+          className="relative z-[1] -mt-6"
+        />
       ) : (
-        <div className="mx-auto max-w-3xl px-6 py-32 text-center">
-          <SectionLabel dot tone="amber" className="justify-center">
-            Journal
-          </SectionLabel>
-          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-bone">
-            Thinking out{" "}
-            <span className="font-serif font-normal italic text-amber">loud</span>
-          </h1>
-          <p className="mt-5 text-sm text-ash">
-            The first pieces are being written. Check back shortly.
-          </p>
-        </div>
+        <p className="relative z-[2] pb-24 text-center text-sm text-faint">
+          The first pieces are being written. Check back shortly.
+        </p>
       )}
+
     </main>
   );
 }

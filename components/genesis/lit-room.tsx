@@ -1,3 +1,4 @@
+import { paintedWall } from "@/lib/textures";
 import { cn } from "@/lib/utils";
 
 /**
@@ -60,18 +61,32 @@ export function LitRoom({
       />
 
       {/*
-        Painterly texture. Two crossing sets of soft streaks at different
-        angles, plus warm ochre marks — the brushed walls of the reference.
-        Kept very low contrast; it should read as surface, not pattern.
+        Painterly surface. Two turbulence passes at different scales — a broad
+        one for the long brush strokes and a finer one for tooth — plus warm
+        ochre marks dragged vertically, as on the reference's walls. Streak
+        gradients alone read as corduroy; fractal noise reads as paint.
       */}
       <div
-        className="absolute inset-0 opacity-[0.5] mix-blend-soft-light"
+        className="absolute inset-0 opacity-[0.85] mix-blend-soft-light"
         style={{
-          backgroundImage: [
-            "repeating-linear-gradient(94deg, rgb(255 255 255 / 0.05) 0px, transparent 2px, transparent 17px)",
-            "repeating-linear-gradient(86deg, rgb(0 0 0 / 0.16) 0px, transparent 3px, transparent 24px)",
-            "repeating-linear-gradient(91deg, rgb(198 158 78 / 0.08) 0px, transparent 2px, transparent 61px)",
-          ].join(","),
+          backgroundImage: paintedWall({ frequency: 0.005, octaves: 5, opacity: 0.7, seed: 11 }),
+          backgroundSize: "1100px 1100px",
+        }}
+      />
+      <div
+        className="absolute inset-0 opacity-[0.5] mix-blend-overlay"
+        style={{
+          backgroundImage: paintedWall({ frequency: 0.02, octaves: 3, opacity: 0.5, seed: 23 }),
+          backgroundSize: "480px 480px",
+        }}
+      />
+      {/* Ochre drags, the warm marks in the reference's paint. */}
+      <div
+        className="absolute inset-0 opacity-[0.22] mix-blend-color-dodge"
+        style={{
+          backgroundImage: paintedWall({ frequency: 0.004, octaves: 4, opacity: 0.55, seed: 41 }),
+          backgroundSize: "900px 1600px",
+          filter: "sepia(1) saturate(2.4) hue-rotate(-12deg)",
         }}
       />
 

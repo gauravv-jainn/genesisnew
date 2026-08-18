@@ -11,7 +11,9 @@ import {
 import Link from "next/link";
 import { useMemo, type PointerEvent } from "react";
 
+import { paperFibre, sketchMarks } from "@/lib/textures";
 import { LitRoom } from "./lit-room";
+import { StandingFigure } from "./standing-figure";
 import { cn } from "@/lib/utils";
 
 /**
@@ -40,6 +42,20 @@ export type VortexPost = {
   category: string;
 };
 
+/**
+ * Shared texture pools.
+ *
+ * Giving every sheet its own seeded turbulence meant the browser had to
+ * rasterise two unique SVG filter images per sheet — 200+ of them — which
+ * cost more than every transform on the page combined and pinned the scene
+ * at ~42fps. A handful of variants, reused across the cloud, rasterises once
+ * each and is indistinguishable at these sizes.
+ */
+const SKETCH_POOL = Array.from({ length: 8 }, (_, i) => sketchMarks({ seed: i + 1 }));
+const FIBRE_POOL = Array.from({ length: 3 }, (_, i) =>
+  paperFibre({ seed: i + 1, opacity: 0.42 }),
+);
+
 /** Reach of the cursor's influence, in stage percentage points. */
 const FIELD_RADIUS = 30;
 /** Push at the centre of the field. */
@@ -61,6 +77,8 @@ type Placed = {
   bottom_color: string;
   textColor: string;
   interactive: boolean;
+  /** Drives this sheet's own sketch marks and fibre. */
+  seed: number;
   post: VortexPost;
 };
 
@@ -95,7 +113,7 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   if (posts.length === 0) return [];
 
   const placed: Placed[] = [];
-  const silhouettes = 8;
+  const silhouettes = 12;
   const inner = Math.round((sheetCount - silhouettes) * 0.32);
   const ring = sheetCount - silhouettes - inner;
 
@@ -122,10 +140,11 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
       driftDuration: Number((7 + seeded(i, 6) * 6).toFixed(2)),
       driftDelay: Number((seeded(i, 7) * 6).toFixed(2)),
       blur,
-      top_color: `rgb(${shade(247, dark)} ${shade(238, dark)} ${shade(214, dark)})`,
-      bottom_color: `rgb(${shade(214, dark)} ${shade(198, dark)} ${shade(158, dark)})`,
+      top_color: `rgb(${shade(244, dark)} ${shade(230, dark)} ${shade(195, dark)})`,
+      bottom_color: `rgb(${shade(196, dark)} ${shade(174, dark)} ${shade(126, dark)})`,
       textColor: `rgb(${shade(51, dark * 0.45)} ${shade(41, dark * 0.45)} ${shade(26, dark * 0.45)})`,
       interactive,
+      seed: i + 1,
       post: posts[postIndex],
     });
   };
@@ -133,14 +152,14 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   // --- RING: the torus, evenly walked so it closes all the way round -------
   for (let i = 0; i < ring; i += 1) {
     const angle = (i / ring) * Math.PI * 2 + seeded(i, 8) * 0.24;
-    const spread = 0.9 + seeded(i, 1) * 0.28;
+    const spread = 0.98 + seeded(i, 1) * 0.34;
     // Slight extra brightness where the light actually falls.
     const lit = 0.05 + Math.abs(Math.cos(angle)) * 0.16 + seeded(i, 9) * 0.1;
     push(
       i,
       angle,
-      35 * spread,
-      31 * spread,
+      36 * spread,
+      32 * spread,
       0.62 + seeded(i, 2) * 0.42,
       lit,
       0,
@@ -153,7 +172,7 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   for (let i = 0; i < inner; i += 1) {
     const index = ring + i;
     const angle = (i / inner) * Math.PI * 2 + 1.1;
-    const spread = 0.42 + seeded(index, 1) * 0.3;
+    const spread = 0.66 + seeded(index, 1) * 0.26;
     push(
       index,
       angle,
@@ -192,12 +211,15 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
 
 export function PaperVortex({
   posts,
-  sheets: sheetCount = 64,
+  sheets: sheetCount = 108,
+  showFigure = true,
   children,
   className,
 }: {
   posts: VortexPost[];
   sheets?: number;
+  /** The person at the centre of the scene. */
+  showFigure?: boolean;
   children?: React.ReactNode;
   className?: string;
 }) {
@@ -238,6 +260,21 @@ export function PaperVortex({
         className="relative mx-auto w-full max-w-[46rem]"
         style={{ aspectRatio: "1 / 1" }}
       >
+        {/*
+          The figure. Sits at a z-index between the inner tier and the ring,
+          so nearer sheets pass in FRONT of the body while deeper ones sit
+          behind — which is what places them in the same space rather than
+          pasting the person on top of a backdrop.
+        */}
+        {showFigure && (
+          <div
+            className="pointer-events-none absolute left-1/2 z-[16] -translate-x-1/2"
+            style={{ bottom: "13%", height: "56%" }}
+          >
+            <StandingFigure className="h-full" />
+          </div>
+        )}
+
         {children && (
           <div className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 px-6 text-center">
             <div className="pointer-events-auto">{children}</div>
@@ -299,34 +336,47 @@ function Sheet({
   const offsetX = useSpring(rawX, spring);
   const offsetY = useSpring(rawY, spring);
 
+  /**
+   * A realistic sheet — as ONE element.
+   *
+   * Every layer that used to be its own child div is now a background layer
+   * on the sheet itself, composited in a single pass with a per-layer blend
+   * mode. Four nested divs per sheet across a hundred sheets meant 400+ boxes
+   * for the compositor and dropped the page to ~51fps; this collapses that to
+   * one box each.
+   *
+   * Layer order, topmost first:
+   *   1. pencil work, unique to this sheet via its seed
+   *   2. fibre tooth, multiplied so it darkens rather than fogs
+   *   3. the curl — light down one edge, shadow down the other, so the sheet
+   *      reads as bowed rather than as a flat rectangle
+   *   4. the base stock
+   *
+   * Corner radii are deliberately unequal: no two corners of real paper match,
+   * and matched radii are what make CSS paper look like a card.
+   */
   const paper = (
     <div
-      className="relative h-20 w-14 rounded-[2px] sm:h-24 sm:w-16"
+      className="relative h-24 w-[4.4rem] sm:h-28 sm:w-20"
       style={{
-        background: `linear-gradient(158deg, ${sheet.top_color} 0%, ${sheet.bottom_color} 100%)`,
-        boxShadow: "0 14px 30px -16px rgb(0 0 0 / 0.85)",
-        // Blur is confined to the few genuine foreground sheets.
+        backgroundImage: [
+          SKETCH_POOL[sheet.seed % SKETCH_POOL.length],
+          FIBRE_POOL[sheet.seed % FIBRE_POOL.length],
+          "linear-gradient(105deg, rgb(255 252 240 / 0.42) 0%, rgb(255 255 255 / 0) 26%, rgb(0 0 0 / 0) 68%, rgb(20 14 4 / 0.34) 100%)",
+          `linear-gradient(157deg, ${sheet.top_color} 0%, ${sheet.bottom_color} 100%)`,
+        ].join(","),
+        backgroundSize: "100% 100%, 120px 120px, 100% 100%, 100% 100%",
+        backgroundRepeat: "no-repeat, repeat, no-repeat, no-repeat",
+        backgroundBlendMode: "normal, multiply, normal, normal",
+        borderRadius: "2px 3px 2px 4px",
+        boxShadow: "0 8px 18px -10px rgb(0 0 0 / 0.95)",
         filter: sheet.blur ? `blur(${sheet.blur}px)` : undefined,
       }}
     >
-      <div
-        aria-hidden
-        className="absolute inset-2 opacity-25"
-        style={{
-          backgroundImage: `repeating-linear-gradient(180deg, ${sheet.textColor} 0px, ${sheet.textColor} 1px, transparent 1px, transparent 6px)`,
-        }}
-      />
-
       {interactive && (
-        <div className="absolute inset-0 flex flex-col justify-between p-2">
+        <div className="absolute inset-0 flex flex-col justify-end p-2">
           <span
-            className="text-[6px] font-semibold uppercase tracking-[0.16em]"
-            style={{ color: sheet.textColor }}
-          >
-            {post.category}
-          </span>
-          <span
-            className="line-clamp-4 text-[7.5px] font-semibold leading-tight"
+            className="line-clamp-3 text-[7px] font-semibold leading-[1.25]"
             style={{ color: sheet.textColor }}
           >
             {post.title}
@@ -351,30 +401,29 @@ function Sheet({
       }}
     >
       {/*
-        Idle drift and the resting transform share one element. An earlier
-        version nested three animated wrappers per sheet, which tripled the
-        work the compositor had to do every frame for no visual gain.
+        Idle drift is a CSS animation on its own wrapper, so it never touches
+        the main thread; the inner element carries only the resting transform
+        and the hover response.
       */}
-      <motion.div
-        style={{ willChange: "transform" }}
-        initial={{ rotate: sheet.rotate, scale: sheet.scale, y: 0 }}
-        animate={
+      <div
+        className={reduced ? undefined : "motion-safe:animate-[genesis-paper-float_var(--float-duration)_ease-in-out_infinite]"}
+        style={
           reduced
-            ? { rotate: sheet.rotate, scale: sheet.scale, y: 0 }
-            : { rotate: sheet.rotate, scale: sheet.scale, y: [0, -10, 0] }
+            ? undefined
+            : ({
+                "--float-duration": `${sheet.driftDuration}s`,
+                animationDelay: `-${sheet.driftDelay}s`,
+                willChange: "transform",
+              } as React.CSSProperties)
         }
-        transition={{
-          y: {
-            duration: sheet.driftDuration,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: sheet.driftDelay,
-          },
-          rotate: { duration: 0 },
-          scale: { type: "spring", stiffness: 260, damping: 22 },
-        }}
-        whileHover={interactive ? { scale: sheet.scale * 1.3 } : undefined}
       >
+        <motion.div
+          style={{ willChange: "transform" }}
+          initial={{ rotate: sheet.rotate, scale: sheet.scale }}
+          animate={{ rotate: sheet.rotate, scale: sheet.scale }}
+          whileHover={interactive ? { scale: sheet.scale * 1.3 } : undefined}
+          transition={{ type: "spring", stiffness: 260, damping: 22 }}
+        >
         {interactive ? (
           <Link
             href={`/blog/${post.slug}`}
@@ -386,7 +435,8 @@ function Sheet({
         ) : (
           <div aria-hidden>{paper}</div>
         )}
-      </motion.div>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }

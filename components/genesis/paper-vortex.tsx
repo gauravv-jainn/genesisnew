@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { useMemo, type PointerEvent } from "react";
 
+import { LitRoom } from "./lit-room";
 import { cn } from "@/lib/utils";
 
 /**
@@ -43,8 +44,6 @@ export type VortexPost = {
 const FIELD_RADIUS = 30;
 /** Push at the centre of the field. */
 const FIELD_STRENGTH = 16;
-/** Only sheets this close to the viewer are blurred. Keep it small. */
-const BLUR_DEPTH = 0.1;
 
 type Placed = {
   left: number;
@@ -76,62 +75,115 @@ function shade(channel: number, amount: number) {
   return Math.round(channel * (1 - amount));
 }
 
+/**
+ * Builds the scene in three explicit tiers.
+ *
+ * An earlier version drove size and brightness from one continuous depth
+ * curve, which produced an even gradient of paper — a pile, not a vortex.
+ * The reference is clearly tiered:
+ *
+ *   RING        the torus itself. Bright cream sheets in the light, moderate
+ *               and fairly even in size, forming a hole around the figure.
+ *   INNER       fewer, smaller, dimmer sheets nested inside the ring, sitting
+ *               deeper in the room behind the figure.
+ *   SILHOUETTE  a handful of very large near-black sheets along the bottom
+ *               edge, backlit and out of focus, cropped by the frame.
+ *
+ * Tiers make each population independently tunable, which one curve does not.
+ */
 function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   if (posts.length === 0) return [];
 
   const placed: Placed[] = [];
+  const silhouettes = 8;
+  const inner = Math.round((sheetCount - silhouettes) * 0.32);
+  const ring = sheetCount - silhouettes - inner;
 
-  for (let i = 0; i < sheetCount; i += 1) {
-    // Golden-angle stepping spreads sheets evenly without banding, then a
-    // seeded radius spreads them across depth rather than onto one ellipse.
-    //
-    // The radius floor keeps a clearing at the centre of the cloud. The
-    // reference has one: the figure stands in open space with the papers
-    // turning around them. Without it, sheets drift over the heading and
-    // bury it.
-    const angle = i * 2.39996 + 0.4;
-    const radius = 0.52 + seeded(i, 1) * 0.56;
-
-    const rx = 33 * radius;
-    const ry = 32 * radius;
-
-    const front = Math.sin(angle);
-    // Depth combines where it sits front-to-back with how far out it is, so
-    // the cloud has genuine layering instead of one shell.
-    const depth = Math.min(
-      1,
-      Math.max(0, (1 - front) / 2 * 0.68 + (1 - radius / 1.12) * 0.32),
-    );
-
+  const push = (
+    i: number,
+    angle: number,
+    rx: number,
+    ry: number,
+    scale: number,
+    dark: number,
+    blur: number,
+    interactive: boolean,
+    zBias: number,
+  ) => {
     const postIndex =
       (i + Math.floor(seeded(i, 5) * posts.length)) % posts.length;
 
-    // Near sheets are big; far sheets recede hard.
-    const scale = 0.34 + Math.pow(1 - depth, 1.6) * 0.92;
-
-    // Darkness baked into the sheet's own colours — cheaper than a filter and
-    // it composites for free.
-    const dark = 0.02 + depth * 0.58;
-    const isForeground = depth < BLUR_DEPTH;
-    const veryDark = isForeground ? 0.86 : dark;
-
     placed.push({
       left: 50 + rx * Math.cos(angle),
-      top: 47 + ry * front,
+      top: 47 + ry * Math.sin(angle),
       scale: Number(scale.toFixed(3)),
-      depth: Number(depth.toFixed(3)),
-      rotate: Number(((seeded(i, 3) - 0.5) * 68).toFixed(2)),
+      depth: Number(zBias.toFixed(3)),
+      rotate: Number(((seeded(i, 3) - 0.5) * 70).toFixed(2)),
       driftDuration: Number((7 + seeded(i, 6) * 6).toFixed(2)),
       driftDelay: Number((seeded(i, 7) * 6).toFixed(2)),
-      blur: isForeground ? Number((3 + (BLUR_DEPTH - depth) * 40).toFixed(1)) : 0,
-      top_color: `rgb(${shade(247, veryDark)} ${shade(238, veryDark)} ${shade(214, veryDark)})`,
-      bottom_color: `rgb(${shade(214, veryDark)} ${shade(198, veryDark)} ${shade(158, veryDark)})`,
-      textColor: `rgb(${shade(51, dark * 0.5)} ${shade(41, dark * 0.5)} ${shade(26, dark * 0.5)})`,
-      // Only reasonably lit, reasonably large sheets are clickable; tiny dim
-      // ones at the back would be a hostile hit target.
-      interactive: depth < 0.62 && !isForeground,
+      blur,
+      top_color: `rgb(${shade(247, dark)} ${shade(238, dark)} ${shade(214, dark)})`,
+      bottom_color: `rgb(${shade(214, dark)} ${shade(198, dark)} ${shade(158, dark)})`,
+      textColor: `rgb(${shade(51, dark * 0.45)} ${shade(41, dark * 0.45)} ${shade(26, dark * 0.45)})`,
+      interactive,
       post: posts[postIndex],
     });
+  };
+
+  // --- RING: the torus, evenly walked so it closes all the way round -------
+  for (let i = 0; i < ring; i += 1) {
+    const angle = (i / ring) * Math.PI * 2 + seeded(i, 8) * 0.24;
+    const spread = 0.9 + seeded(i, 1) * 0.28;
+    // Slight extra brightness where the light actually falls.
+    const lit = 0.05 + Math.abs(Math.cos(angle)) * 0.16 + seeded(i, 9) * 0.1;
+    push(
+      i,
+      angle,
+      35 * spread,
+      31 * spread,
+      0.62 + seeded(i, 2) * 0.42,
+      lit,
+      0,
+      true,
+      0.42,
+    );
+  }
+
+  // --- INNER: deeper, smaller, dimmer -------------------------------------
+  for (let i = 0; i < inner; i += 1) {
+    const index = ring + i;
+    const angle = (i / inner) * Math.PI * 2 + 1.1;
+    const spread = 0.42 + seeded(index, 1) * 0.3;
+    push(
+      index,
+      angle,
+      33 * spread,
+      29 * spread,
+      0.4 + seeded(index, 2) * 0.22,
+      0.42 + seeded(index, 9) * 0.24,
+      0,
+      false,
+      0.72,
+    );
+  }
+
+  // --- SILHOUETTE: big black sheets across the bottom edge -----------------
+  for (let i = 0; i < silhouettes; i += 1) {
+    const index = ring + inner + i;
+    // Spread across the lower arc only, where the reference places them.
+    const angle = Math.PI * (0.12 + (i / (silhouettes - 1)) * 0.76);
+    const spread = 1.24 + seeded(index, 1) * 0.3;
+    push(
+      index,
+      angle,
+      38 * spread,
+      33 * spread,
+      1.7 + seeded(index, 2) * 0.9,
+      0.94,
+      7 + seeded(index, 4) * 7,
+      false,
+      0.04,
+    );
   }
 
   // Far sheets paint first so nearer ones overlap them.
@@ -140,7 +192,7 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
 
 export function PaperVortex({
   posts,
-  sheets: sheetCount = 54,
+  sheets: sheetCount = 64,
   children,
   className,
 }: {
@@ -166,7 +218,10 @@ export function PaperVortex({
   if (sheets.length === 0) return null;
 
   return (
-    <div className={cn("relative isolate w-full py-10", className)}>
+    <div className={cn("relative isolate w-full overflow-hidden py-10", className)}>
+      {/* The interior the whole scene stands in. */}
+      <LitRoom />
+
       {/*
         The stage IS the container, not a box absolutely positioned inside
         one. Nesting an absolute stage inside a min-height section left the
@@ -183,29 +238,6 @@ export function PaperVortex({
         className="relative mx-auto w-full max-w-[46rem]"
         style={{ aspectRatio: "1 / 1" }}
       >
-        {/* The shaft of light, visible in the air. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-[18%] bottom-0 left-0 right-0"
-          style={{
-            background:
-              "linear-gradient(180deg, rgb(246 232 200 / 0.34) 0%, rgb(240 220 176 / 0.12) 30%, transparent 66%)",
-            clipPath: "polygon(44% 0%, 56% 0%, 86% 100%, 14% 100%)",
-            filter: "blur(20px)",
-          }}
-        />
-
-        {/* The pool it casts on the floor. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-[4%] mx-auto h-[22%] w-[64%]"
-          style={{
-            background:
-              "radial-gradient(closest-side, rgb(246 232 200 / 0.16) 0%, transparent 100%)",
-            filter: "blur(28px)",
-          }}
-        />
-
         {children && (
           <div className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 px-6 text-center">
             <div className="pointer-events-auto">{children}</div>

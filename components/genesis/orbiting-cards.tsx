@@ -97,9 +97,14 @@ function OrbitingCard({
 }) {
   const constraintsRef = useRef<HTMLDivElement>(null);
 
-  // Percentages of the container, so the orbit scales with the viewport.
-  const radiusX = 40;
-  const radiusY = 34;
+  /**
+   * Percentages of the container, so the orbit scales with the viewport.
+   * Kept clear of 50 by roughly a card half-width: at a wider radius the
+   * left/right extremes of the orbit pushed cards past the container edge and
+   * they were clipped by the section's overflow.
+   */
+  const radiusX = 34;
+  const radiusY = 30;
 
   const toRadians = (degrees: number) => ((degrees + offsetDegrees) * Math.PI) / 180;
 

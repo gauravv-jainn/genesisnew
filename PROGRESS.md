@@ -7,7 +7,7 @@ new session.
 | --- | --- | --- |
 | 0 | Infra & security foundation | ✅ Code complete — 5 checks pending credentials |
 | 1 | Design system & shared components | ✅ Complete — **needs your call on brand colour** |
-| 2 | Homepage (13 sections) | ⬜ Not started |
+| 2 | Homepage (13 sections) | ✅ Complete |
 | 3 | Motion pass | ⬜ Not started |
 | 4 | Standalone pages | ⬜ Not started |
 
@@ -137,11 +137,17 @@ npm run db:deploy
 
 ### Hardening follow-ups (not yet done, deliberately)
 
-- **CSP allows `'unsafe-inline'` for `script-src`.** Next.js inlines its
-  hydration payload, so a nonce-free policy must permit it. Proper nonce-based
-  CSP requires injecting a nonce at the proxy layer, which conflicts with the
-  Auth0 proxy owning the response on every request. The policy still blocks
-  third-party scripts, framing, plugins and off-site form posts.
+- **CSP allows `'unsafe-inline'` for `script-src` — a deliberate trade-off,
+  not outstanding debt.** Next inlines its hydration payload, so removing it
+  requires nonces. Next's own documentation is explicit that *"to use a nonce,
+  your page must be dynamically rendered… Static pages are generated at build
+  time, when no request or response headers exist—so no nonce can be
+  injected."* Adopting nonces would therefore force every marketing page off
+  static generation — losing CDN caching and TTFB — to defend against an
+  inline-injection vector this site does not have, since no user-generated
+  content is rendered inline. Revisit only if these pages become dynamic for
+  some other reason. The policy still blocks third-party scripts, framing,
+  plugins and off-site form posts.
 - **Rate limiting falls back to an in-memory limiter** when Upstash is
   unconfigured. That is per-instance and **not sufficient in production** —
   set `UPSTASH_REDIS_REST_URL` / `_TOKEN` before the Phase 4 forms go live.
@@ -264,6 +270,72 @@ Framer Motion and GSAP are installed; only component-intrinsic motion is wired
 (count-up, orbit, magnetic hover, timeline fill, marquee). The `layoutId`
 morphs, the Services→Portfolio 180° pan, and Lenis smooth scroll are the
 Phase 3 motion pass and are not started.
+
+---
+
+## Phase 2 — Homepage
+
+### Built
+
+All 13 sections in the specified order, one component each under
+`app/(home)/components/`:
+
+Hero → Services → Portfolio → Case Studies → Our Journey → AI-Generated
+Content → Influencer Marketing → Branding & Design → Client Logo Wall →
+Testimonials → Journal teaser → Insider teaser → Footer CTA.
+
+Two shared primitives keep the sections from re-deciding the same things:
+`components/genesis/reveal.tsx` (the single scroll fade/slide, plus a stagger
+group) and `app/(home)/components/section-shell.tsx` (label → two-tone heading
+→ body, spacing, and per-section atmosphere). Copy lives entirely in
+`lib/home-content.ts`.
+
+**Route stubs.** `/our-work`, `/blog`, `/blog/[slug]`, `/creator`, `/careers`
+and `/influencer-campaigns` now resolve via a shared `RouteStub` so the
+homepage ships no dead links. These are placeholders, replaced wholesale in
+Phase 4 — the `[slug]` route only resolves the three placeholder posts and
+404s anything else.
+
+### Verified
+
+Build, lint, typecheck clean; `npm audit` 0 vulnerabilities. Every internal
+link on the homepage resolves 200 (checked by extracting hrefs and curling
+each). No horizontal overflow at 375 / 768 / 1440. Mobile nav opens and
+reports `aria-expanded="true"`. All 11 section headings confirmed to reveal to
+full opacity on scroll.
+
+**Four issues found by running it, all fixed:**
+
+1. **Primary CTA below the fold.** At 1440×900 the hero measured 1054px, so
+   "Start a project" (bottom edge 910px) and the scroll cue sat off-screen —
+   the single worst thing a hero can do. The headline is long real copy that
+   wraps to six lines. Fixed by trimming the vertical budget and moving the
+   scroll cue out of flow; hero now measures exactly 900px with both visible.
+2. **`xl:text-7xl` was width-gated only**, so a wide-but-short laptop got a
+   72px headline it had no room for. Now gated on width *and* height.
+3. **Invalid CSS from an arbitrary variant.** Tailwind emitted
+   `(min-width:1280px)and(min-height:960px)` — no spaces, unparseable, 500 on
+   every page. Spaces must be written as underscores in arbitrary variants.
+4. **Orbiting cards clipped** at the section edge in the narrower two-column
+   layout. Orbit radius reduced; verified zero cards escape the container.
+
+### Copy status
+
+Real Genesis material wherever it existed in `docs/reference/`: the hero and
+body copy (img-019), the influencer positioning line and all five figures
+(img-012), and the client and format lists (img-013).
+
+**Invented and must be replaced before launch:**
+- All four case-study results — the numbers are fabricated placeholders.
+- All three testimonials, including names and roles.
+- The journey milestones and dates.
+- The three journal posts.
+- Service descriptions (structure is a guess at the real six-way split).
+
+**Also needs a decision:** client names (Kayali, Tata Motors, ICICI Bank,
+Miraggio, Yonex, Third Wave Coffee, Mauritius Tourism, Kreo Tech, Dot & Key)
+come from Genesis's own artwork, but display rights on the new public site
+should be confirmed.
 
 ---
 

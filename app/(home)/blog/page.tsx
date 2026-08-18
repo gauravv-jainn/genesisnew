@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { PaperVortex } from "@/components/genesis/paper-vortex";
+import { JournalScene } from "@/components/genesis/journal-scene";
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { getAllPosts } from "@/lib/blog";
@@ -11,33 +11,18 @@ export const metadata: Metadata = {
 };
 
 /**
- * /blog — the hub, built to p06_0.
+ * /blog — the hub.
  *
- * The heading stands at the centre of the ring, where the figure stands in
- * the reference; the papers turn around it. Every sheet is a post, and posts
- * repeat around the ring when there are fewer of them than sheets.
+ * The scene is the reference plate with the interactive sheets composited
+ * over it; see components/genesis/journal-scene.tsx for why, and for the
+ * rights note on the plate itself.
  */
 export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <main className="grain relative isolate min-h-dvh overflow-hidden bg-void pt-24">
-      {/* Painterly walls — the brushed dark ground of the reference. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-70"
-        style={{
-          background:
-            "radial-gradient(120% 80% at 50% 0%, rgb(24 26 32 / 1) 0%, rgb(9 10 13 / 1) 55%, rgb(6 6 8 / 1) 100%), repeating-linear-gradient(97deg, rgb(120 100 60 / 0.05) 0px, transparent 3px, transparent 26px)",
-        }}
-      />
-
-      {/*
-        Heading sits ABOVE the scene rather than inside the ring. The
-        reference's centre is occupied by the figure, and overlaying type on
-        it buried both.
-      */}
-      <div className="relative z-[2] mx-auto max-w-3xl px-6 pb-4 text-center">
+    <main className="relative min-h-dvh overflow-hidden bg-void pt-24">
+      <div className="relative z-[2] mx-auto max-w-3xl px-6 pb-6 text-center">
         <Reveal>
           <SectionLabel dot tone="amber" className="justify-center">
             Journal
@@ -53,20 +38,19 @@ export default function BlogPage() {
       </div>
 
       {posts.length > 0 ? (
-        <PaperVortex
+        <JournalScene
           posts={posts.map((post) => ({
             slug: post.slug,
             title: post.title,
             category: post.category,
           }))}
-          className="relative z-[1] -mt-6"
+          className="pb-16"
         />
       ) : (
-        <p className="relative z-[2] pb-24 text-center text-sm text-faint">
+        <p className="pb-24 text-center text-sm text-faint">
           The first pieces are being written. Check back shortly.
         </p>
       )}
-
     </main>
   );
 }

@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useMemo, type PointerEvent } from "react";
 
 import { agedPaper, sketchMarks } from "@/lib/textures";
+import { USE_PHOTO_STOCK, stockCrop } from "@/lib/paper-stock";
 import { LitRoom } from "./lit-room";
 import { StandingFigure } from "./standing-figure";
 import { cn } from "@/lib/utils";
@@ -398,13 +399,31 @@ function Sheet({
           "linear-gradient(104deg, rgb(255 250 234 / 0.42) 0%, rgb(255 255 255 / 0) 24%, rgb(0 0 0 / 0) 66%, rgb(28 19 6 / 0.3) 100%)",
           // 4. warm bleed where the shaft passes through thin stock
           "linear-gradient(184deg, rgb(255 238 198 / 0.5) 0%, rgb(255 238 198 / 0) 22%)",
-          // 5. the aged stock itself
-          STOCK_POOL[sheet.seed % STOCK_POOL.length],
+          // 5. the stock itself — a photographed sheet when one is supplied,
+          //    otherwise the procedural imitation
+          USE_PHOTO_STOCK
+            ? stockCrop(sheet.seed).backgroundImage
+            : STOCK_POOL[sheet.seed % STOCK_POOL.length],
           // 6. depth tint, so far sheets sit back in the room
           `linear-gradient(157deg, ${sheet.top_color} 0%, ${sheet.bottom_color} 100%)`,
         ].join(","),
-        backgroundSize:
-          "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
+        backgroundSize: [
+          "100% 100%",
+          "100% 100%",
+          "100% 100%",
+          "100% 100%",
+          // Each sheet samples its own patch of the photograph.
+          USE_PHOTO_STOCK ? stockCrop(sheet.seed).backgroundSize : "100% 100%",
+          "100% 100%",
+        ].join(","),
+        backgroundPosition: [
+          "center",
+          "center",
+          "center",
+          "center",
+          USE_PHOTO_STOCK ? stockCrop(sheet.seed).backgroundPosition : "center",
+          "center",
+        ].join(","),
         backgroundRepeat: "no-repeat",
         backgroundBlendMode:
           "multiply, overlay, normal, screen, multiply, normal",

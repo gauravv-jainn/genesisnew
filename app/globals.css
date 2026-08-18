@@ -253,12 +253,21 @@
    thread and pinned the blog scene at ~43fps, while a hundred CSS animations
    are handed to the compositor and cost effectively nothing. */
 @keyframes genesis-paper-float {
-    0%, 100% {
-        transform: translate3d(0, 0, 0);
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate3d(2px, -6px, 0) rotate(0.9deg);
     }
 
     50% {
-        transform: translate3d(0, -10px, 0);
+        transform: translate3d(0, -11px, 0) rotate(0deg);
+    }
+
+    75% {
+        transform: translate3d(-2px, -5px, 0) rotate(-0.9deg);
     }
 }
 

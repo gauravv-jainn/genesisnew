@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { JournalScene } from "@/components/genesis/journal-scene";
+import { PaperVortex } from "@/components/genesis/paper-vortex";
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { getAllPosts } from "@/lib/blog";
@@ -13,16 +13,16 @@ export const metadata: Metadata = {
 /**
  * /blog — the hub.
  *
- * The scene is the reference plate with the interactive sheets composited
- * over it; see components/genesis/journal-scene.tsx for why, and for the
- * rights note on the plate itself.
+ * Everything on this page is a real element: the room, the light, the figure
+ * and every single sheet are drawn in CSS and SVG. There is no background
+ * image. Each tilted sheet is an actual post link.
  */
 export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
     <main className="relative min-h-dvh overflow-hidden bg-void pt-24">
-      <div className="relative z-[2] mx-auto max-w-3xl px-6 pb-6 text-center">
+      <div className="relative z-[3] mx-auto max-w-3xl px-6 pb-2 text-center">
         <Reveal>
           <SectionLabel dot tone="amber" className="justify-center">
             Journal
@@ -38,13 +38,12 @@ export default function BlogPage() {
       </div>
 
       {posts.length > 0 ? (
-        <JournalScene
+        <PaperVortex
           posts={posts.map((post) => ({
             slug: post.slug,
             title: post.title,
             category: post.category,
           }))}
-          className="pb-16"
         />
       ) : (
         <p className="pb-24 text-center text-sm text-faint">

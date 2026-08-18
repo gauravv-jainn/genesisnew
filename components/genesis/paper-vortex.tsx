@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { useMemo, type PointerEvent } from "react";
 
-import { paperFibre, sketchMarks } from "@/lib/textures";
+import { agedPaper, sketchMarks } from "@/lib/textures";
 import { LitRoom } from "./lit-room";
 import { StandingFigure } from "./standing-figure";
 import { cn } from "@/lib/utils";
@@ -52,9 +52,30 @@ export type VortexPost = {
  * each and is indistinguishable at these sizes.
  */
 const SKETCH_POOL = Array.from({ length: 8 }, (_, i) => sketchMarks({ seed: i + 1 }));
-const FIBRE_POOL = Array.from({ length: 3 }, (_, i) =>
-  paperFibre({ seed: i + 1, opacity: 0.42 }),
-);
+
+/**
+ * Aged stock: staining, foxing and fold creases, all baked into one image so
+ * a sheet needs a single texture layer instead of three.
+ *
+ * Ten variants, reused across the cloud. Generating one per sheet meant the
+ * browser rasterised a hundred unique turbulence filters, which cost more
+ * than every transform on the page combined; ten are indistinguishable at
+ * these sizes and rasterise once each.
+ */
+const STOCK_POOL = Array.from({ length: 10 }, (_, i) => agedPaper({ seed: i + 1 }));
+
+/**
+ * Slightly irregular sheet outlines. Perfectly rectangular corners are the
+ * loudest tell that paper was drawn by a browser, so each sheet is cut with a
+ * little jitter — under two percent, but enough to break the grid.
+ */
+const EDGE_POOL = Array.from({ length: 6 }, (_, i) => {
+  const j = (salt: number) => {
+    const v = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+    return (v - Math.floor(v)) * 1.8;
+  };
+  return `polygon(${j(1).toFixed(2)}% ${j(2).toFixed(2)}%, ${(100 - j(3)).toFixed(2)}% ${j(4).toFixed(2)}%, ${(100 - j(5)).toFixed(2)}% ${(100 - j(6)).toFixed(2)}%, ${j(7).toFixed(2)}% ${(100 - j(8)).toFixed(2)}%)`;
+});
 
 /** Reach of the cursor's influence, in stage percentage points. */
 const FIELD_RADIUS = 30;
@@ -68,6 +89,9 @@ type Placed = {
   /** 1 at the back, 0 at the very front. */
   depth: number;
   rotate: number;
+  /** Tilt in space. Flat-on sheets read as stickers, not paper. */
+  rotateX: number;
+  rotateY: number;
   /** Idle drift, seconds, staggered per sheet. */
   driftDuration: number;
   driftDelay: number;
@@ -113,7 +137,7 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   if (posts.length === 0) return [];
 
   const placed: Placed[] = [];
-  const silhouettes = 12;
+  const silhouettes = 10;
   const inner = Math.round((sheetCount - silhouettes) * 0.32);
   const ring = sheetCount - silhouettes - inner;
 
@@ -137,11 +161,17 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
       scale: Number(scale.toFixed(3)),
       depth: Number(zBias.toFixed(3)),
       rotate: Number(((seeded(i, 3) - 0.5) * 70).toFixed(2)),
+      // Real paper is almost never square to the eye. A little pitch and yaw
+      // is the single biggest thing separating a sheet from a sticker.
+      rotateX: Number(((seeded(i, 11) - 0.5) * 54).toFixed(2)),
+      rotateY: Number(((seeded(i, 12) - 0.5) * 58).toFixed(2)),
       driftDuration: Number((7 + seeded(i, 6) * 6).toFixed(2)),
       driftDelay: Number((seeded(i, 7) * 6).toFixed(2)),
       blur,
-      top_color: `rgb(${shade(244, dark)} ${shade(230, dark)} ${shade(195, dark)})`,
-      bottom_color: `rgb(${shade(196, dark)} ${shade(174, dark)} ${shade(126, dark)})`,
+      // Every sheet is cut from slightly different stock — a few points of
+      // warmth either way stops the cloud reading as one printed swatch.
+      top_color: `rgb(${shade(244 - seeded(i, 13) * 16, dark)} ${shade(230 - seeded(i, 13) * 18, dark)} ${shade(195 - seeded(i, 14) * 22, dark)})`,
+      bottom_color: `rgb(${shade(196 - seeded(i, 14) * 18, dark)} ${shade(174 - seeded(i, 13) * 16, dark)} ${shade(126 - seeded(i, 15) * 20, dark)})`,
       textColor: `rgb(${shade(51, dark * 0.45)} ${shade(41, dark * 0.45)} ${shade(26, dark * 0.45)})`,
       interactive,
       seed: i + 1,
@@ -178,10 +208,10 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
       angle,
       33 * spread,
       29 * spread,
-      0.4 + seeded(index, 2) * 0.22,
-      0.42 + seeded(index, 9) * 0.24,
+      0.48 + seeded(index, 2) * 0.24,
+      0.4 + seeded(index, 9) * 0.22,
       0,
-      false,
+      true,
       0.72,
     );
   }
@@ -197,10 +227,10 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
       angle,
       38 * spread,
       33 * spread,
-      1.7 + seeded(index, 2) * 0.9,
-      0.94,
-      7 + seeded(index, 4) * 7,
-      false,
+      1.32 + seeded(index, 2) * 0.5,
+      0.5 + seeded(index, 9) * 0.16,
+      0,
+      true,
       0.04,
     );
   }
@@ -337,47 +367,69 @@ function Sheet({
   const offsetY = useSpring(rawY, spring);
 
   /**
-   * A realistic sheet — as ONE element.
+   * A sheet of aged paper.
    *
-   * Every layer that used to be its own child div is now a background layer
-   * on the sheet itself, composited in a single pass with a per-layer blend
-   * mode. Four nested divs per sheet across a hundred sheets meant 400+ boxes
-   * for the compositor and dropped the page to ~51fps; this collapses that to
-   * one box each.
+   * Six layers, composited in a single element so a hundred of them stay
+   * cheap — nested divs per sheet cost more than every transform on the page
+   * combined. Topmost first:
    *
-   * Layer order, topmost first:
-   *   1. pencil work, unique to this sheet via its seed
-   *   2. fibre tooth, multiplied so it darkens rather than fogs
-   *   3. the curl — light down one edge, shadow down the other, so the sheet
-   *      reads as bowed rather than as a flat rectangle
-   *   4. the base stock
+   *   1. pencil work — ruled lines and a boxed diagram, unique per sheet
+   *   2. fibre tooth, multiplied so it darkens the stock rather than fogging it
+   *   3. blotchy aging, also multiplied — the foxing and uneven yellowing that
+   *      separates old paper from a printed swatch
+   *   4. the curl: light down one edge, shadow down the other, so the sheet
+   *      reads as bowed rather than flat
+   *   5. warm bleed at the top edge, where the shaft passes through thin stock
+   *   6. the base stock
    *
-   * Corner radii are deliberately unequal: no two corners of real paper match,
-   * and matched radii are what make CSS paper look like a card.
+   * The outline is cut with a little jitter and the inner shadow rides the
+   * bottom edge, so the sheet has thickness and no two corners match.
    */
   const paper = (
     <div
       className="relative h-24 w-[4.4rem] sm:h-28 sm:w-20"
       style={{
         backgroundImage: [
+          // 1. pencil work
           SKETCH_POOL[sheet.seed % SKETCH_POOL.length],
-          FIBRE_POOL[sheet.seed % FIBRE_POOL.length],
-          "linear-gradient(105deg, rgb(255 252 240 / 0.42) 0%, rgb(255 255 255 / 0) 26%, rgb(0 0 0 / 0) 68%, rgb(20 14 4 / 0.34) 100%)",
+          // 2. the fold: one face turns from the light, the other catches it
+          `linear-gradient(${(sheet.rotate * 0.6 + 168).toFixed(0)}deg, rgb(255 250 232 / 0.34) 0%, rgb(255 250 232 / 0.05) 46%, rgb(46 32 12 / 0.16) 47%, rgb(46 32 12 / 0.02) 100%)`,
+          // 3. curl along the leading edge
+          "linear-gradient(104deg, rgb(255 250 234 / 0.42) 0%, rgb(255 255 255 / 0) 24%, rgb(0 0 0 / 0) 66%, rgb(28 19 6 / 0.3) 100%)",
+          // 4. warm bleed where the shaft passes through thin stock
+          "linear-gradient(184deg, rgb(255 238 198 / 0.5) 0%, rgb(255 238 198 / 0) 22%)",
+          // 5. the aged stock itself
+          STOCK_POOL[sheet.seed % STOCK_POOL.length],
+          // 6. depth tint, so far sheets sit back in the room
           `linear-gradient(157deg, ${sheet.top_color} 0%, ${sheet.bottom_color} 100%)`,
         ].join(","),
-        backgroundSize: "100% 100%, 120px 120px, 100% 100%, 100% 100%",
-        backgroundRepeat: "no-repeat, repeat, no-repeat, no-repeat",
-        backgroundBlendMode: "normal, multiply, normal, normal",
-        borderRadius: "2px 3px 2px 4px",
-        boxShadow: "0 8px 18px -10px rgb(0 0 0 / 0.95)",
+        backgroundSize:
+          "100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%",
+        backgroundRepeat: "no-repeat",
+        backgroundBlendMode:
+          "multiply, overlay, normal, screen, multiply, normal",
+        clipPath: EDGE_POOL[sheet.seed % EDGE_POOL.length],
+        boxShadow: [
+          // Thickness: the sheet sits above what is behind it.
+          "0 1px 2px 0 rgb(0 0 0 / 0.55)",
+          "0 10px 24px -12px rgb(0 0 0 / 0.95)",
+          // Bowed: the underside of the curl falls into shadow.
+          "inset 0 -6px 10px -8px rgb(48 33 10 / 0.75)",
+          "inset 0 4px 6px -6px rgb(255 246 224 / 0.65)",
+        ].join(","),
         filter: sheet.blur ? `blur(${sheet.blur}px)` : undefined,
       }}
     >
       {interactive && (
         <div className="absolute inset-0 flex flex-col justify-end p-2">
           <span
-            className="line-clamp-3 text-[7px] font-semibold leading-[1.25]"
-            style={{ color: sheet.textColor }}
+            className="line-clamp-3 text-[6.5px] font-medium leading-[1.35]"
+            style={{
+              color: sheet.textColor,
+              // Pencil sits ON the fibre; it does not glow off it.
+              mixBlendMode: "multiply",
+              opacity: 0.72,
+            }}
           >
             {post.title}
           </span>
@@ -418,11 +470,34 @@ function Sheet({
         }
       >
         <motion.div
-          style={{ willChange: "transform" }}
-          initial={{ rotate: sheet.rotate, scale: sheet.scale }}
-          animate={{ rotate: sheet.rotate, scale: sheet.scale }}
-          whileHover={interactive ? { scale: sheet.scale * 1.3 } : undefined}
-          transition={{ type: "spring", stiffness: 260, damping: 22 }}
+          style={{
+            willChange: "transform",
+            // Perspective per sheet rather than on the stage: a shared
+            // perspective origin would swing the outer sheets wildly, since
+            // they sit far from the vanishing point.
+            transformStyle: "preserve-3d",
+            perspective: "520px",
+          }}
+          initial={{
+            rotate: sheet.rotate,
+            rotateX: sheet.rotateX,
+            rotateY: sheet.rotateY,
+            scale: sheet.scale,
+          }}
+          animate={{
+            rotate: sheet.rotate,
+            rotateX: sheet.rotateX,
+            rotateY: sheet.rotateY,
+            scale: sheet.scale,
+          }}
+          whileHover={
+            interactive
+              // Straighten toward the viewer on approach, so the sheet
+              // presents itself to be read.
+              ? { scale: sheet.scale * 1.34, rotateX: 0, rotateY: 0, rotate: sheet.rotate * 0.3 }
+              : undefined
+          }
+          transition={{ type: "spring", stiffness: 240, damping: 21 }}
         >
         {interactive ? (
           <Link

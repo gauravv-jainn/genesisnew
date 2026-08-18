@@ -138,7 +138,7 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   if (posts.length === 0) return [];
 
   const placed: Placed[] = [];
-  const silhouettes = 10;
+  const silhouettes = 6;
   const inner = Math.round((sheetCount - silhouettes) * 0.32);
   const ring = sheetCount - silhouettes - inner;
 
@@ -183,15 +183,15 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   // --- RING: the torus, evenly walked so it closes all the way round -------
   for (let i = 0; i < ring; i += 1) {
     const angle = (i / ring) * Math.PI * 2 + seeded(i, 8) * 0.24;
-    const spread = 0.98 + seeded(i, 1) * 0.34;
+    const spread = 0.94 + seeded(i, 1) * 0.24;
     // Slight extra brightness where the light actually falls.
     const lit = 0.05 + Math.abs(Math.cos(angle)) * 0.16 + seeded(i, 9) * 0.1;
     push(
       i,
       angle,
-      36 * spread,
-      32 * spread,
-      0.62 + seeded(i, 2) * 0.42,
+      28 * spread,
+      27 * spread,
+      0.66 + seeded(i, 2) * 0.3,
       lit,
       0,
       true,
@@ -203,13 +203,13 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   for (let i = 0; i < inner; i += 1) {
     const index = ring + i;
     const angle = (i / inner) * Math.PI * 2 + 1.1;
-    const spread = 0.66 + seeded(index, 1) * 0.26;
+    const spread = 0.6 + seeded(index, 1) * 0.24;
     push(
       index,
       angle,
-      33 * spread,
-      29 * spread,
-      0.48 + seeded(index, 2) * 0.24,
+      25 * spread,
+      24 * spread,
+      0.5 + seeded(index, 2) * 0.2,
       0.4 + seeded(index, 9) * 0.22,
       0,
       true,
@@ -222,13 +222,13 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
     const index = ring + inner + i;
     // Spread across the lower arc only, where the reference places them.
     const angle = Math.PI * (0.12 + (i / (silhouettes - 1)) * 0.76);
-    const spread = 1.24 + seeded(index, 1) * 0.3;
+    const spread = 1.0 + seeded(index, 1) * 0.16;
     push(
       index,
       angle,
-      38 * spread,
-      33 * spread,
-      1.32 + seeded(index, 2) * 0.5,
+      31 * spread,
+      30 * spread,
+      1.12 + seeded(index, 2) * 0.26,
       0.5 + seeded(index, 9) * 0.16,
       0,
       true,
@@ -242,7 +242,7 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
 
 export function PaperVortex({
   posts,
-  sheets: sheetCount = 108,
+  sheets: sheetCount = 56,
   showFigure = true,
   children,
   className,
@@ -388,7 +388,7 @@ function Sheet({
    */
   const paper = (
     <div
-      className="relative h-24 w-[4.4rem] sm:h-28 sm:w-20"
+      className="relative h-[3.4rem] w-[2.5rem] sm:h-[4.3rem] sm:w-[3.1rem]"
       style={{
         backgroundImage: [
           // 1. pencil work
@@ -440,9 +440,9 @@ function Sheet({
       }}
     >
       {interactive && (
-        <div className="absolute inset-0 flex flex-col justify-end p-2">
+        <div className="absolute inset-0 flex flex-col justify-end p-1">
           <span
-            className="line-clamp-3 text-[6.5px] font-medium leading-[1.35]"
+            className="line-clamp-3 text-[5px] font-medium leading-[1.3]"
             style={{
               color: sheet.textColor,
               // Pencil sits ON the fibre; it does not glow off it.

@@ -22,22 +22,22 @@ export function StandingFigure({ className }: { className?: string }) {
       <defs>
         {/* Top-down key light: bright at the crown, gone by the waist. */}
         <linearGradient id="genesis-figure-key" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#6d6455" />
-          <stop offset="14%" stopColor="#3f3a33" />
-          <stop offset="42%" stopColor="#1c1a18" />
-          <stop offset="100%" stopColor="#0a0a0b" />
+          <stop offset="0%" stopColor="#3a352d" />
+          <stop offset="12%" stopColor="#221f1a" />
+          <stop offset="38%" stopColor="#121110" />
+          <stop offset="100%" stopColor="#070708" />
         </linearGradient>
 
         {/* Rim along the shoulders where the shaft catches the fabric. */}
         <linearGradient id="genesis-figure-rim" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#c9bda4" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="#c9bda4" stopOpacity="0.34" />
           <stop offset="55%" stopColor="#c9bda4" stopOpacity="0.06" />
           <stop offset="100%" stopColor="#c9bda4" stopOpacity="0" />
         </linearGradient>
 
         <linearGradient id="genesis-figure-skin" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#7e7263" />
-          <stop offset="100%" stopColor="#2e2a25" />
+          <stop offset="0%" stopColor="#5a5045" />
+          <stop offset="100%" stopColor="#1b1815" />
         </linearGradient>
       </defs>
 
@@ -60,7 +60,7 @@ export function StandingFigure({ className }: { className?: string }) {
       {/* Hair, catching the light from above. */}
       <path
         d="M47.5 38 Q49 24 60 24 Q71 24 72.5 38 Q66 31 60 31 Q54 31 47.5 38 Z"
-        fill="#4a4239"
+        fill="#2b2620"
       />
 
       {/* Neck. */}

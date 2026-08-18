@@ -9,7 +9,7 @@ new session.
 | 1 | Design system & shared components | ✅ Complete — **needs your call on brand colour** |
 | 2 | Homepage (13 sections) | ✅ Complete |
 | 3 | Motion pass | ✅ Complete |
-| 4 | Standalone pages | ⬜ Not started |
+| 4 | Standalone pages | ✅ Complete |
 
 ---
 
@@ -399,6 +399,70 @@ pacing and the 160% pin length are taste calls I cannot make from a script.
   thumbnails, video testimonials.
 - Confirm spellings: the document writes "Vikhrant Messay" / "Ajay Devgan".
 - The crimson-vs-amber brand call is still open.
+
+---
+
+## Phase 4 — Standalone pages
+
+### Built
+
+| Route | What it is |
+| --- | --- |
+| `/our-work` | The content library ("Genesis' NETFLIX"). All 8 spec categories as filter tabs over a poster grid. |
+| `/influencer-campaigns` | Deep dive: figures, celebrity collaborations, creator genres, the four-step process, enquiry form. |
+| `/creator` | "I'm a Creator" — why work with Genesis, plus a roster application form. |
+| `/careers` | The waitlist, modelled on img-044: one glass panel, one action. |
+| `/blog` | Hub. Posts render as magnetic floating papers, per the spec's "each paper is a blog". |
+| `/blog/[slug]` | MDX post template with scoped prose styles. |
+| `/insider` | Dashboard shell behind the Auth0 gate. |
+
+**Forms.** One `ContactForm` serves contact, creator and careers. It posts to a
+server action that validates with Zod, rate-limits by IP, writes to
+`contact_submissions`, then records an audit entry — in that order, so nothing
+touches the database before validation passes. A honeypot field catches bots
+and is accepted silently rather than rejected.
+
+**Blog.** Posts are MDX in `content/blog`, parsed with gray-matter and
+validated with Zod — malformed frontmatter fails the build rather than
+rendering blank. The homepage teaser reads the same files as `/blog`, so the
+two cannot drift.
+
+**Insider.** Deliberately narrow. The one live panel is recent contact
+submissions, because that table is genuinely ours; the Workspace modules
+(clients, projects, pipeline, invoicing) appear as locked placeholders so the
+shape is visible without implying they exist.
+
+### Verified
+
+Build, lint, typecheck clean; `npm audit` 0 vulnerabilities.
+
+- **Zero dead links.** Crawled every page, extracted all internal hrefs, and
+  curled each: 9 distinct links, all 200. Unknown blog slugs 404 correctly.
+- **The form works end to end.** A valid submission reaches the action and
+  returns *"not connected to a database yet"* — the DB guard refusing to
+  pretend it saved. With the browser's own `type=email` check bypassed, the
+  server's Zod validation still returns a field-level error and sets
+  `aria-invalid`.
+- **Content library filters**: 9 items, Films → 2, AI Content → 1,
+  `aria-selected` tracked.
+
+### ⚠️ The three blog posts are drafts, so production shows an empty journal
+
+I wrote the two AI posts the spec asks for, plus a creative-process piece. All
+three carry `draft: true`, so they are visible in development and **excluded
+from production** — the production build generated zero post pages, and
+`/blog` will read "No posts published yet".
+
+That is deliberate: they are my drafts, not Genesis's writing, and they end
+with a sign-off note. Publishing is a one-word change per file
+(`draft: false` in the frontmatter) once you have read them.
+
+### Still owed
+
+Unchanged from earlier phases: case-study results, testimonial quotes, journey
+dates, real assets (client logos, avatar stills, portfolio thumbnails), and
+the crimson-vs-amber brand decision. Plus, for these pages specifically:
+real content-library thumbnails and video links.
 
 ---
 

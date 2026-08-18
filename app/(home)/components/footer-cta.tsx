@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Atmosphere } from "@/components/genesis/atmosphere";
+import { ContactForm } from "@/components/genesis/contact-form";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
@@ -48,11 +49,18 @@ export function FooterCta() {
           </div>
         </Reveal>
 
-        {/* Contact + navigation */}
-        <div
-          id="contact"
-          className="mt-20 grid gap-12 border-t border-white/10 pt-12 sm:grid-cols-2 lg:grid-cols-4"
-        >
+        {/* The spec asks for the form to sit last, after the pitch. */}
+        <Reveal delay={0.1} className="mt-16 max-w-2xl" id="contact">
+          <ContactForm
+            type="CONTACT"
+            source="/"
+            submitLabel="Send"
+            messageLabel="What are you launching?"
+          />
+        </Reveal>
+
+        {/* Contact details + navigation */}
+        <div className="mt-20 grid gap-12 border-t border-white/10 pt-12 sm:grid-cols-2 lg:grid-cols-4">
           <Reveal>
             <GenesisMark />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-ash">

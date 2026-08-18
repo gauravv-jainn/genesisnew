@@ -33,6 +33,7 @@ export function Reveal({
   duration = 0.6,
   className,
   as = "div",
+  id,
 }: {
   children: ReactNode;
   direction?: keyof typeof DIRECTION_OFFSET;
@@ -40,12 +41,15 @@ export function Reveal({
   duration?: number;
   className?: string;
   as?: "div" | "section" | "li" | "article" | "header";
+  /** Lets a revealed block double as an anchor target. */
+  id?: string;
 }) {
   const offset = DIRECTION_OFFSET[direction];
   const Component = motion[as];
 
   return (
     <Component
+      id={id}
       initial={{ opacity: 0, ...offset }}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once: true, margin: "-12%" }}

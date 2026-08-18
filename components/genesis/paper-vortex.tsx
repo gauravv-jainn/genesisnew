@@ -90,10 +90,10 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
     // turning around them. Without it, sheets drift over the heading and
     // bury it.
     const angle = i * 2.39996 + 0.4;
-    const radius = 0.66 + seeded(i, 1) * 0.62;
+    const radius = 0.52 + seeded(i, 1) * 0.56;
 
-    const rx = 27 * radius;
-    const ry = 23 * radius;
+    const rx = 33 * radius;
+    const ry = 32 * radius;
 
     const front = Math.sin(angle);
     // Depth combines where it sits front-to-back with how far out it is, so
@@ -107,11 +107,11 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
       (i + Math.floor(seeded(i, 5) * posts.length)) % posts.length;
 
     // Near sheets are big; far sheets recede hard.
-    const scale = 0.4 + Math.pow(1 - depth, 1.5) * 1.25;
+    const scale = 0.34 + Math.pow(1 - depth, 1.6) * 0.92;
 
     // Darkness baked into the sheet's own colours — cheaper than a filter and
     // it composites for free.
-    const dark = 0.06 + depth * 0.72;
+    const dark = 0.02 + depth * 0.58;
     const isForeground = depth < BLUR_DEPTH;
     const veryDark = isForeground ? 0.86 : dark;
 
@@ -124,8 +124,8 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
       driftDuration: Number((7 + seeded(i, 6) * 6).toFixed(2)),
       driftDelay: Number((seeded(i, 7) * 6).toFixed(2)),
       blur: isForeground ? Number((3 + (BLUR_DEPTH - depth) * 40).toFixed(1)) : 0,
-      top_color: `rgb(${shade(239, veryDark)} ${shade(230, veryDark)} ${shade(207, veryDark)})`,
-      bottom_color: `rgb(${shade(186, veryDark)} ${shade(172, veryDark)} ${shade(136, veryDark)})`,
+      top_color: `rgb(${shade(247, veryDark)} ${shade(238, veryDark)} ${shade(214, veryDark)})`,
+      bottom_color: `rgb(${shade(214, veryDark)} ${shade(198, veryDark)} ${shade(158, veryDark)})`,
       textColor: `rgb(${shade(51, dark * 0.5)} ${shade(41, dark * 0.5)} ${shade(26, dark * 0.5)})`,
       // Only reasonably lit, reasonably large sheets are clickable; tiny dim
       // ones at the back would be a hostile hit target.
@@ -140,7 +140,7 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
 
 export function PaperVortex({
   posts,
-  sheets: sheetCount = 34,
+  sheets: sheetCount = 54,
   children,
   className,
 }: {
@@ -158,8 +158,7 @@ export function PaperVortex({
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (prefersReducedMotion || event.pointerType !== "mouse") return;
-    const stage = event.currentTarget.querySelector("[data-vortex-stage]");
-    const bounds = (stage ?? event.currentTarget).getBoundingClientRect();
+    const bounds = event.currentTarget.getBoundingClientRect();
     pointerX.set(((event.clientX - bounds.left) / bounds.width) * 100);
     pointerY.set(((event.clientY - bounds.top) / bounds.height) * 100);
   };
@@ -167,51 +166,48 @@ export function PaperVortex({
   if (sheets.length === 0) return null;
 
   return (
-    <div
-      onPointerMove={handlePointerMove}
-      onPointerLeave={() => {
-        pointerX.set(-999);
-        pointerY.set(-999);
-      }}
-      className={cn(
-        "relative isolate w-full overflow-hidden",
-        "min-h-[40rem] sm:min-h-[48rem] lg:min-h-[56rem]",
-        className,
-      )}
-    >
-      {/* The shaft of light, visible in the air. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(180deg, rgb(246 232 200 / 0.32) 0%, rgb(240 220 176 / 0.11) 26%, transparent 62%)",
-          clipPath: "polygon(43% 0%, 57% 0%, 88% 100%, 12% 100%)",
-          filter: "blur(22px)",
-        }}
-      />
-
-      {/* The pool it casts on the floor. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-[8%] mx-auto h-[26%] w-[62%]"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgb(246 232 200 / 0.15) 0%, transparent 100%)",
-          filter: "blur(30px)",
-        }}
-      />
-
+    <div className={cn("relative isolate w-full py-10", className)}>
       {/*
-        Fixed-aspect stage: percentage offsets against a full-bleed container
-        stretch the cloud flat on a wide monitor.
+        The stage IS the container, not a box absolutely positioned inside
+        one. Nesting an absolute stage inside a min-height section left the
+        cloud floating in the top half with dead space beneath it; making the
+        square itself the layout element centres it by construction.
       */}
       <div
         data-vortex-stage
-        className="absolute inset-0 mx-auto aspect-[4/3] h-full max-h-full w-auto min-w-[38rem]"
+        onPointerMove={handlePointerMove}
+        onPointerLeave={() => {
+          pointerX.set(-999);
+          pointerY.set(-999);
+        }}
+        className="relative mx-auto w-full max-w-[46rem]"
+        style={{ aspectRatio: "1 / 1" }}
       >
+        {/* The shaft of light, visible in the air. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-[18%] bottom-0 left-0 right-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgb(246 232 200 / 0.34) 0%, rgb(240 220 176 / 0.12) 30%, transparent 66%)",
+            clipPath: "polygon(44% 0%, 56% 0%, 86% 100%, 14% 100%)",
+            filter: "blur(20px)",
+          }}
+        />
+
+        {/* The pool it casts on the floor. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-[4%] mx-auto h-[22%] w-[64%]"
+          style={{
+            background:
+              "radial-gradient(closest-side, rgb(246 232 200 / 0.16) 0%, transparent 100%)",
+            filter: "blur(28px)",
+          }}
+        />
+
         {children && (
-          <div className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-6 text-center">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 px-6 text-center">
             <div className="pointer-events-auto">{children}</div>
           </div>
         )}
@@ -273,7 +269,7 @@ function Sheet({
 
   const paper = (
     <div
-      className="relative h-28 w-20 rounded-[2px] sm:h-32 sm:w-24"
+      className="relative h-20 w-14 rounded-[2px] sm:h-24 sm:w-16"
       style={{
         background: `linear-gradient(158deg, ${sheet.top_color} 0%, ${sheet.bottom_color} 100%)`,
         boxShadow: "0 14px 30px -16px rgb(0 0 0 / 0.85)",

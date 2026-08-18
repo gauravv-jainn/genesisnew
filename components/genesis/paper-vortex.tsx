@@ -9,27 +9,28 @@ import {
   type MotionValue,
 } from "framer-motion";
 import Link from "next/link";
-import { useMemo, useRef, type PointerEvent } from "react";
+import { useMemo, type PointerEvent } from "react";
 
 import { cn } from "@/lib/utils";
 
 /**
  * Papers caught in a vortex under a single overhead light — built to p06_0.
  *
- * EVERY sheet is a blog. When there are fewer posts than sheets the posts
- * repeat around the ring in a shuffled order, so the scene keeps the density
- * of the reference without inventing empty paper.
+ * TWO THINGS THIS GETS RIGHT THAT AN EARLIER VERSION DID NOT:
  *
- * The papers are MAGNETIC: the cursor is a field over the whole vortex, and
- * every sheet within range is pushed away from it, hardest at the centre of
- * the field. That is a field effect rather than per-card hover — which is
- * what makes the whole ring feel alive as the pointer crosses it.
+ * 1. It is a CLOUD, not a ring. The reference has papers at many different
+ *    radii, overlapping heavily, layered in front of and behind the centre —
+ *    not a single-file ellipse with an empty middle. Each sheet therefore
+ *    gets its own radius multiplier as well as its own angle.
  *
- * What makes it read as a vortex rather than a ring of cards:
- *   - sheets sit on a tilted ELLIPSE, not a circle
- *   - depth drives scale, brightness, blur and stacking together
- *   - the nearest sheets are large, dark and out of focus, exactly as the
- *     foreground silhouettes in the reference
+ * 2. It stays smooth. Depth is expressed by *baking darkness into each
+ *    sheet's own gradient*, never with `filter: brightness()`, and blur is
+ *    limited to the handful of genuine foreground sheets. CSS filters force
+ *    repaints; thirty-two animated ones drop frames on any machine. Every
+ *    per-frame value here is a transform, which the compositor handles.
+ *
+ * Every sheet is a blog. With fewer posts than sheets, posts repeat around
+ * the cloud in a seeded shuffle so the same one never lands adjacent.
  */
 
 export type VortexPost = {
@@ -38,19 +39,29 @@ export type VortexPost = {
   category: string;
 };
 
-/** How far the cursor's influence reaches, in container percentage points. */
-const FIELD_RADIUS = 26;
-/** How hard sheets are pushed at the centre of the field. */
-const FIELD_STRENGTH = 13;
+/** Reach of the cursor's influence, in stage percentage points. */
+const FIELD_RADIUS = 30;
+/** Push at the centre of the field. */
+const FIELD_STRENGTH = 16;
+/** Only sheets this close to the viewer are blurred. Keep it small. */
+const BLUR_DEPTH = 0.1;
 
 type Placed = {
   left: number;
   top: number;
   scale: number;
-  /** 1 at the back of the ring, 0 at the very front. */
+  /** 1 at the back, 0 at the very front. */
   depth: number;
   rotate: number;
-  skewY: number;
+  /** Idle drift, seconds, staggered per sheet. */
+  driftDuration: number;
+  driftDelay: number;
+  blur: number;
+  /** Paper colours, pre-darkened for depth so no filter is needed. */
+  top_color: string;
+  bottom_color: string;
+  textColor: string;
+  interactive: boolean;
   post: VortexPost;
 };
 
@@ -60,37 +71,65 @@ function seeded(index: number, salt: number) {
   return value - Math.floor(value);
 }
 
-function buildRing(posts: VortexPost[], sheetCount: number): Placed[] {
+/** Mixes a channel toward black by `amount` (0 = untouched, 1 = black). */
+function shade(channel: number, amount: number) {
+  return Math.round(channel * (1 - amount));
+}
+
+function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
   if (posts.length === 0) return [];
 
   const placed: Placed[] = [];
 
   for (let i = 0; i < sheetCount; i += 1) {
-    const angle = (i / sheetCount) * Math.PI * 2 + 0.21;
+    // Golden-angle stepping spreads sheets evenly without banding, then a
+    // seeded radius spreads them across depth rather than onto one ellipse.
+    //
+    // The radius floor keeps a clearing at the centre of the cloud. The
+    // reference has one: the figure stands in open space with the papers
+    // turning around them. Without it, sheets drift over the heading and
+    // bury it.
+    const angle = i * 2.39996 + 0.4;
+    const radius = 0.66 + seeded(i, 1) * 0.62;
 
-    // Tilted ellipse — only slightly wider than tall, as the ring is seen
-    // from a little above. Positions are percentages of the fixed-aspect
-    // stage below, not of the section, so the ring keeps its shape at any
-    // viewport width instead of smearing sideways on wide screens.
-    const rx = 30 + seeded(i, 1) * 7;
-    const ry = 26 + seeded(i, 2) * 6;
+    const rx = 27 * radius;
+    const ry = 23 * radius;
 
-    // sin: -1 at the back of the ring, +1 at the front.
     const front = Math.sin(angle);
-    const depth = (1 - front) / 2;
+    // Depth combines where it sits front-to-back with how far out it is, so
+    // the cloud has genuine layering instead of one shell.
+    const depth = Math.min(
+      1,
+      Math.max(0, (1 - front) / 2 * 0.68 + (1 - radius / 1.12) * 0.32),
+    );
 
-    // Posts repeat around the ring, offset by a seeded jump so the same post
-    // never lands on two adjacent sheets.
     const postIndex =
       (i + Math.floor(seeded(i, 5) * posts.length)) % posts.length;
 
+    // Near sheets are big; far sheets recede hard.
+    const scale = 0.4 + Math.pow(1 - depth, 1.5) * 1.25;
+
+    // Darkness baked into the sheet's own colours — cheaper than a filter and
+    // it composites for free.
+    const dark = 0.06 + depth * 0.72;
+    const isForeground = depth < BLUR_DEPTH;
+    const veryDark = isForeground ? 0.86 : dark;
+
     placed.push({
       left: 50 + rx * Math.cos(angle),
-      top: 46 + ry * front,
-      scale: Number((0.54 + (1 - depth) * 0.9).toFixed(3)),
+      top: 47 + ry * front,
+      scale: Number(scale.toFixed(3)),
       depth: Number(depth.toFixed(3)),
-      rotate: Number(((seeded(i, 3) - 0.5) * 52).toFixed(2)),
-      skewY: Number(((seeded(i, 4) - 0.5) * 24).toFixed(2)),
+      rotate: Number(((seeded(i, 3) - 0.5) * 68).toFixed(2)),
+      driftDuration: Number((7 + seeded(i, 6) * 6).toFixed(2)),
+      driftDelay: Number((seeded(i, 7) * 6).toFixed(2)),
+      blur: isForeground ? Number((3 + (BLUR_DEPTH - depth) * 40).toFixed(1)) : 0,
+      top_color: `rgb(${shade(239, veryDark)} ${shade(230, veryDark)} ${shade(207, veryDark)})`,
+      bottom_color: `rgb(${shade(186, veryDark)} ${shade(172, veryDark)} ${shade(136, veryDark)})`,
+      textColor: `rgb(${shade(51, dark * 0.5)} ${shade(41, dark * 0.5)} ${shade(26, dark * 0.5)})`,
+      // Only reasonably lit, reasonably large sheets are clickable; tiny dim
+      // ones at the back would be a hostile hit target.
+      interactive: depth < 0.62 && !isForeground,
       post: posts[postIndex],
     });
   }
@@ -101,50 +140,42 @@ function buildRing(posts: VortexPost[], sheetCount: number): Placed[] {
 
 export function PaperVortex({
   posts,
-  sheets: sheetCount = 30,
+  sheets: sheetCount = 34,
   children,
   className,
 }: {
   posts: VortexPost[];
-  /** Total papers in the ring. Posts repeat to fill it. */
   sheets?: number;
-  /** Sits at the centre of the ring, where the figure stands. */
   children?: React.ReactNode;
   className?: string;
 }) {
   const prefersReducedMotion = useReducedMotion();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sheets = useMemo(() => buildRing(posts, sheetCount), [posts, sheetCount]);
+  const sheets = useMemo(() => buildCloud(posts, sheetCount), [posts, sheetCount]);
 
-  // Cursor position in container percentage units. Parked far away so no
-  // sheet is displaced until the pointer actually enters.
+  // Cursor position in stage percentage units, parked off-stage until entry.
   const pointerX = useMotionValue(-999);
   const pointerY = useMotionValue(-999);
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (prefersReducedMotion || event.pointerType !== "mouse") return;
-    // Measured against the stage so the field lines up with the sheets.
     const stage = event.currentTarget.querySelector("[data-vortex-stage]");
     const bounds = (stage ?? event.currentTarget).getBoundingClientRect();
     pointerX.set(((event.clientX - bounds.left) / bounds.width) * 100);
     pointerY.set(((event.clientY - bounds.top) / bounds.height) * 100);
   };
 
-  const handlePointerLeave = () => {
-    pointerX.set(-999);
-    pointerY.set(-999);
-  };
-
   if (sheets.length === 0) return null;
 
   return (
     <div
-      ref={containerRef}
       onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
+      onPointerLeave={() => {
+        pointerX.set(-999);
+        pointerY.set(-999);
+      }}
       className={cn(
         "relative isolate w-full overflow-hidden",
-        "min-h-[38rem] sm:min-h-[46rem] lg:min-h-[54rem]",
+        "min-h-[40rem] sm:min-h-[48rem] lg:min-h-[56rem]",
         className,
       )}
     >
@@ -154,7 +185,7 @@ export function PaperVortex({
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgb(246 232 200 / 0.30) 0%, rgb(240 220 176 / 0.10) 26%, transparent 62%)",
+            "linear-gradient(180deg, rgb(246 232 200 / 0.32) 0%, rgb(240 220 176 / 0.11) 26%, transparent 62%)",
           clipPath: "polygon(43% 0%, 57% 0%, 88% 100%, 12% 100%)",
           filter: "blur(22px)",
         }}
@@ -166,19 +197,21 @@ export function PaperVortex({
         className="pointer-events-none absolute inset-x-0 bottom-[8%] mx-auto h-[26%] w-[62%]"
         style={{
           background:
-            "radial-gradient(closest-side, rgb(246 232 200 / 0.16) 0%, transparent 100%)",
+            "radial-gradient(closest-side, rgb(246 232 200 / 0.15) 0%, transparent 100%)",
           filter: "blur(30px)",
         }}
       />
 
       {/*
-        The stage. Fixed aspect and capped width so the ellipse stays an
-        ellipse: percentage offsets against a full-bleed container would
-        stretch the ring flat on a wide monitor.
+        Fixed-aspect stage: percentage offsets against a full-bleed container
+        stretch the cloud flat on a wide monitor.
       */}
-      <div data-vortex-stage className="absolute inset-0 mx-auto aspect-[4/3] h-full max-h-full w-auto min-w-[38rem]">
+      <div
+        data-vortex-stage
+        className="absolute inset-0 mx-auto aspect-[4/3] h-full max-h-full w-auto min-w-[38rem]"
+      >
         {children && (
-          <div className="pointer-events-none absolute left-1/2 top-1/2 z-30 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-6 text-center">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 px-6 text-center">
             <div className="pointer-events-auto">{children}</div>
           </div>
         )}
@@ -187,7 +220,6 @@ export function PaperVortex({
           <Sheet
             key={`${sheet.post.slug}-${index}`}
             sheet={sheet}
-            index={index}
             pointerX={pointerX}
             pointerY={pointerY}
             reduced={Boolean(prefersReducedMotion)}
@@ -200,57 +232,42 @@ export function PaperVortex({
 
 function Sheet({
   sheet,
-  index,
   pointerX,
   pointerY,
   reduced,
 }: {
   sheet: Placed;
-  index: number;
   pointerX: MotionValue<number>;
   pointerY: MotionValue<number>;
   reduced: boolean;
 }) {
-  const { post, depth } = sheet;
-
-  // Nearest sheets fall out of focus and into shadow — the foreground
-  // silhouettes in the reference. They are decorative, so not interactive.
-  const isForeground = depth < 0.16;
-  const blur = isForeground ? 6 + (0.16 - depth) * 26 : depth * 2.2;
-  const brightness = isForeground ? 0.1 : 0.44 + (1 - depth) * 0.7;
+  const { post, depth, interactive } = sheet;
 
   /**
-   * Magnetic displacement. Distance is measured in the same percentage units
-   * the sheet is positioned in, so the field behaves consistently at any
-   * container size. Nearer sheets react more, which reinforces the depth.
-   *
-   * Both axes are computed inline rather than via a shared helper: calling a
-   * hook from a helper function breaks the rules of hooks, even when the call
-   * order happens to be stable.
+   * Magnetic displacement, measured in the same percentage units the sheet is
+   * positioned in so the field behaves identically at any stage size. Both
+   * axes are derived inline: calling a hook from a shared helper breaks the
+   * rules of hooks even when call order is stable.
    */
-  const displacement = (dx: number, dy: number) => {
-    const distance = Math.hypot(dx, dy);
-    if (distance > FIELD_RADIUS || distance === 0) return 0;
-    return (1 - distance / FIELD_RADIUS) * FIELD_STRENGTH * (1.25 - depth);
-  };
-
   const rawX = useTransform<number, number>([pointerX, pointerY], ([px, py]) => {
     const dx = sheet.left - px;
     const dy = sheet.top - py;
-    const force = displacement(dx, dy);
-    if (force === 0) return 0;
-    return Number(((dx / Math.hypot(dx, dy)) * force).toFixed(2));
+    const distance = Math.hypot(dx, dy);
+    if (distance > FIELD_RADIUS || distance === 0) return 0;
+    const force = (1 - distance / FIELD_RADIUS) * FIELD_STRENGTH * (1.3 - depth);
+    return Number(((dx / distance) * force).toFixed(2));
   });
 
   const rawY = useTransform<number, number>([pointerX, pointerY], ([px, py]) => {
     const dx = sheet.left - px;
     const dy = sheet.top - py;
-    const force = displacement(dx, dy);
-    if (force === 0) return 0;
-    return Number(((dy / Math.hypot(dx, dy)) * force).toFixed(2));
+    const distance = Math.hypot(dx, dy);
+    if (distance > FIELD_RADIUS || distance === 0) return 0;
+    const force = (1 - distance / FIELD_RADIUS) * FIELD_STRENGTH * (1.3 - depth);
+    return Number(((dy / distance) * force).toFixed(2));
   });
 
-  const spring = { stiffness: 140, damping: 18, mass: 0.5 };
+  const spring = { stiffness: 130, damping: 17, mass: 0.5 };
   const offsetX = useSpring(rawX, spring);
   const offsetY = useSpring(rawY, spring);
 
@@ -258,28 +275,32 @@ function Sheet({
     <div
       className="relative h-28 w-20 rounded-[2px] sm:h-32 sm:w-24"
       style={{
-        background:
-          "linear-gradient(160deg, #efe6cf 0%, #ddd0b0 46%, #c3b490 100%)",
-        filter: `blur(${blur.toFixed(1)}px) brightness(${brightness.toFixed(2)})`,
-        boxShadow: "0 18px 40px -18px rgb(0 0 0 / 0.9)",
+        background: `linear-gradient(158deg, ${sheet.top_color} 0%, ${sheet.bottom_color} 100%)`,
+        boxShadow: "0 14px 30px -16px rgb(0 0 0 / 0.85)",
+        // Blur is confined to the few genuine foreground sheets.
+        filter: sheet.blur ? `blur(${sheet.blur}px)` : undefined,
       }}
     >
-      {/* Faint ruled marks, standing in for the sketches on the sheets. */}
       <div
         aria-hidden
         className="absolute inset-2 opacity-25"
         style={{
-          backgroundImage:
-            "repeating-linear-gradient(180deg, rgb(60 45 20 / 0.5) 0px, rgb(60 45 20 / 0.5) 1px, transparent 1px, transparent 6px)",
+          backgroundImage: `repeating-linear-gradient(180deg, ${sheet.textColor} 0px, ${sheet.textColor} 1px, transparent 1px, transparent 6px)`,
         }}
       />
 
-      {!isForeground && (
+      {interactive && (
         <div className="absolute inset-0 flex flex-col justify-between p-2">
-          <span className="text-[6px] font-semibold uppercase tracking-[0.16em] text-[#6b5a33]">
+          <span
+            className="text-[6px] font-semibold uppercase tracking-[0.16em]"
+            style={{ color: sheet.textColor }}
+          >
             {post.category}
           </span>
-          <span className="line-clamp-4 text-[7.5px] font-semibold leading-tight text-[#33291a]">
+          <span
+            className="line-clamp-4 text-[7.5px] font-semibold leading-tight"
+            style={{ color: sheet.textColor }}
+          >
             {post.title}
           </span>
         </div>
@@ -295,41 +316,48 @@ function Sheet({
         top: `${sheet.top}%`,
         x: offsetX,
         y: offsetY,
-        zIndex: Math.round((1 - depth) * 20),
+        zIndex: Math.round((1 - depth) * 30),
         translateX: "-50%",
         translateY: "-50%",
+        willChange: "transform",
       }}
     >
+      {/*
+        Idle drift and the resting transform share one element. An earlier
+        version nested three animated wrappers per sheet, which tripled the
+        work the compositor had to do every frame for no visual gain.
+      */}
       <motion.div
-        animate={reduced ? undefined : { y: [0, -8, 0] }}
+        style={{ willChange: "transform" }}
+        initial={{ rotate: sheet.rotate, scale: sheet.scale, y: 0 }}
+        animate={
+          reduced
+            ? { rotate: sheet.rotate, scale: sheet.scale, y: 0 }
+            : { rotate: sheet.rotate, scale: sheet.scale, y: [0, -10, 0] }
+        }
         transition={{
-          duration: 7 + (index % 5),
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: index * 0.22,
+          y: {
+            duration: sheet.driftDuration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: sheet.driftDelay,
+          },
+          rotate: { duration: 0 },
+          scale: { type: "spring", stiffness: 260, damping: 22 },
         }}
+        whileHover={interactive ? { scale: sheet.scale * 1.3 } : undefined}
       >
-        <motion.div
-          style={{
-            rotate: sheet.rotate,
-            skewY: sheet.skewY,
-            scale: sheet.scale,
-          }}
-          whileHover={isForeground ? undefined : { scale: sheet.scale * 1.24, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 20 }}
-        >
-          {isForeground ? (
-            <div aria-hidden>{paper}</div>
-          ) : (
-            <Link
-              href={`/blog/${post.slug}`}
-              aria-label={post.title}
-              className="block rounded-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber"
-            >
-              {paper}
-            </Link>
-          )}
-        </motion.div>
+        {interactive ? (
+          <Link
+            href={`/blog/${post.slug}`}
+            aria-label={post.title}
+            className="block rounded-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber"
+          >
+            {paper}
+          </Link>
+        ) : (
+          <div aria-hidden>{paper}</div>
+        )}
       </motion.div>
     </motion.div>
   );

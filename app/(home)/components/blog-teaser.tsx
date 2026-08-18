@@ -14,8 +14,9 @@ import { SectionShell } from "./section-shell";
 export function BlogTeaser() {
   const posts = getAllPosts().slice(0, 3);
 
-  if (posts.length === 0) return null;
-
+  // The section always renders. Returning null when every post is still a
+  // draft silently dropped the homepage from thirteen sections to twelve in
+  // production, which is not a decision a content state should be making.
   return (
     <SectionShell
       id="journal"
@@ -27,6 +28,15 @@ export function BlogTeaser() {
       origin="top-right"
       intensity={0.16}
     >
+      {posts.length === 0 ? (
+        <Reveal>
+          <div className="glass glass-lit rounded-3xl p-8">
+            <p className="text-sm text-ash">
+              The first pieces are being written. Check back shortly.
+            </p>
+          </div>
+        </Reveal>
+      ) : (
       <Reveal>
         <FloatingPapers
           papers={posts.map((post) => ({
@@ -43,6 +53,7 @@ export function BlogTeaser() {
           }))}
         />
       </Reveal>
+      )}
 
       <Reveal delay={0.1} className="mt-12">
         <GlassButton href="/blog" variant="glass" arrow>

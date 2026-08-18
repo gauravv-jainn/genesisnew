@@ -1,8 +1,9 @@
 import { ArrowDown } from "lucide-react";
 
 import { Atmosphere } from "@/components/genesis/atmosphere";
+import { DocumentWall } from "@/components/genesis/document-wall";
+import { CornerNote } from "@/components/genesis/spotlight";
 import { GlassButton } from "@/components/genesis/glass-button";
-import { PaperCard } from "@/components/genesis/paper-card";
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { hero } from "@/lib/home-content";
@@ -10,9 +11,9 @@ import { hero } from "@/lib/home-content";
 /**
  * Section 1 — Hero.
  *
- * The dramatic single light source with paper caught in it, stated up front:
- * crimson aurora from top-right, floating sheets on the right, and the
- * headline carrying one serif-italic accent word (img-010).
+ * Built to the landing-page reference on page 1 of the spec: a curved wall of
+ * lit documents standing in the dark, with the headline read against it and
+ * one serif-italic accent word.
  */
 export function Hero() {
   return (
@@ -22,6 +23,22 @@ export function Hero() {
       intensity={0.3}
       className="relative min-h-dvh"
     >
+      {/*
+        The landing-page reference on page 1 of the spec: a curved wall of lit
+        documents standing in the dark. Sits behind the headline and is dimmed
+        so type stays the first thing read, not the second.
+      */}
+      <DocumentWall
+        tone="amber"
+        className={[
+          // Sits in the right half so it never fights the headline for
+          // contrast, and fades at the edges so it reads as standing in a
+          // dark room rather than pasted on.
+          "left-auto right-0 w-full lg:w-[62%]",
+          "opacity-90",
+          "[mask-image:radial-gradient(75%_70%_at_55%_50%,black_35%,transparent_100%)]",
+        ].join(" ")}
+      />
       {/*
         The vertical budget is tight: this headline is long real copy, and at
         1440x900 an earlier pass pushed the primary CTA below the fold. Padding
@@ -79,42 +96,12 @@ export function Hero() {
             </Reveal>
           </div>
 
-          {/* The paper motif, introduced here and carried through the page. */}
-          <Reveal delay={0.25} direction="left" className="hidden lg:block">
-            <div className="relative h-[26rem]">
-              <PaperCard
-                rotate={-4}
-                tone="amber"
-                className="absolute left-0 top-4 w-60"
-              >
-                <p className="micro-label mb-2">Campaign</p>
-                <p className="text-sm leading-relaxed text-ash">
-                  Creator matching, brief to delivery.
-                </p>
-              </PaperCard>
-
-              <PaperCard
-                rotate={3.5}
-                tone="crimson"
-                className="absolute right-2 top-28 w-56"
-              >
-                <p className="micro-label mb-2">Content</p>
-                <p className="text-sm leading-relaxed text-ash">
-                  Films, reels and UGC at channel cadence.
-                </p>
-              </PaperCard>
-
-              <PaperCard
-                rotate={-1.5}
-                tone="neutral"
-                className="absolute bottom-2 left-14 w-52"
-              >
-                <p className="micro-label mb-2">Technology</p>
-                <p className="text-sm leading-relaxed text-ash">
-                  AI-assisted production and measurement.
-                </p>
-              </PaperCard>
-            </div>
+          {/* The wall carries the right side now; this annotates it. */}
+          <Reveal delay={0.25} direction="left" className="hidden justify-end lg:flex">
+            <CornerNote index="01">
+              Content, influencer activations and AI — produced in-house, from
+              the first idea to the published post.
+            </CornerNote>
           </Reveal>
         </div>
 

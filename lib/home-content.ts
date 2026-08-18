@@ -1,265 +1,262 @@
-import type { Poster } from "@/components/genesis/poster-card";
 import type { Milestone } from "@/components/genesis/animated-timeline";
 
 /**
  * All homepage copy in one place.
  *
- * Everything marked TODO needs sign-off before launch. Where possible this is
- * REAL Genesis material recovered from docs/reference/ rather than invented
- * filler — the current site's hero and body copy (img-019), the influencer
- * figures and positioning line (img-012), and the client/category lists
- * (img-013). Invented items are labelled as such.
+ * SOURCE OF TRUTH: "Genesis Website Content.pdf" (Layout(Gaurav): FINAL).
+ * Names, clients, services and section order below come from that document.
+ * Anything still invented is marked TODO and must not ship.
+ *
+ * The document also specifies behaviour, recorded here next to the content it
+ * applies to so it does not get lost:
+ *   - Services → Portfolio: "the camera turns 180°"
+ *   - Client logos + testimonials: "movable like Apple Watch apps"
+ *   - Blogs: "each paper is a blog … papers moving like magnetics" (igloo.inc)
+ *   - Overall background: "gradient + noise"
+ *   - Footer: "liquid glass"
  */
 
 // --- Hero -------------------------------------------------------------------
 
 export const hero = {
-  eyebrow: "Gen Z-led · Full-service · AI-first",
-  // Real, from the current genesismedia.co hero. NOTE: the live site spells it
-  // "Technolgy" — corrected here; fix at the source too.
-  headlineLead: "Empowering brands with influencer marketing, creative content &",
-  headlineAccent: "technology",
-  // Real, from the current site's body copy.
+  eyebrow: "Content · Influencers · AI",
+  // Verbatim from the spec, Section 1.
+  headlineLead: "Empowering brands that want to win at content, influencer activations &",
+  headlineAccent: "AI",
+  // The spec asks for "a good hook" and keeps the form to last. Expertise line
+  // is drawn from Section 1's note on where the expertise lies.
   body:
-    "Genesis is a Gen Z-led full-service agency where strategy, content and technology come together to build iconic brands. From influencer activations and UGC to AI-powered campaigns, we help brands spark real engagement across channels.",
+    "Quality production and edits, creative direction, strategy and scripting — the parts that decide whether content performs. Genesis builds all of it in-house.",
   primaryCta: { label: "Start a project", href: "/#contact" },
   secondaryCta: { label: "See our work", href: "/our-work" },
 } as const;
 
-// --- Services ---------------------------------------------------------------
+// --- Services (Section 2) ---------------------------------------------------
 
+// The spec replaces the old services section with exactly these five, and asks
+// that the AI tooling be visible in the framing.
 export const services = {
   label: "What we do",
-  heading: "Six disciplines,",
+  heading: "Five disciplines,",
   headingAccent: "one team",
   body:
-    "Strategy, production and distribution under one roof — so a campaign never loses its thread between the idea and the post.",
-  // TODO(copy): confirm this is the right six-way split of the offering.
+    "Strategy, production and distribution under one roof — with advanced AI tooling running through all of it.",
   items: [
     {
+      title: "Content Production",
+      caption: "quality production & edits",
+      body: "Creative direction, strategy, scripting and post — the full pipeline, produced to a standard that holds up on any feed.",
+    },
+    {
+      title: "AI Content",
+      caption: "avatars, image & video generation",
+      body: "AI avatars, image and video generation, and the tooling that compresses a content workflow from weeks into days.",
+    },
+    {
       title: "Influencer Marketing",
-      caption: "discovery → delivery",
-      body: "Matching brands to the right voices across every niche and platform, then running the campaign end to end.",
-    },
-    {
-      title: "UGC & Creator Content",
-      caption: "always-on volume",
-      body: "Creator-made content built for the feed, produced at the cadence performance channels actually need.",
-    },
-    {
-      title: "Brand Films & Ads",
-      caption: "hero storytelling",
-      body: "The big-format work — brand films, ad films and launch stories that set the tone for everything else.",
-    },
-    {
-      title: "AI-Generated Content",
-      caption: "scale without the shoot",
-      body: "AI-assisted visuals and variants that let one concept ship in fifty forms without fifty production days.",
+      caption: "UGC & celebrity collaborations",
+      body: "Creator and celebrity activations across every genre, from a database of over a lakh creators.",
     },
     {
       title: "Branding & Design",
-      caption: "identity systems",
-      body: "Identity, art direction and design systems that hold together across every surface a brand touches.",
+      caption: "guidelines, design & motion",
+      body: "Identity systems, brand guidelines, motion design and curated content production.",
     },
     {
-      title: "Strategy & Performance",
-      caption: "the decisions underneath",
-      body: "Audience, channel and measurement strategy, so creative choices are made against numbers rather than taste.",
+      title: "Apps & Games",
+      caption: "product & interactive",
+      body: "Interactive products and games — where a campaign needs to be something people use, not just something they watch.",
     },
   ],
 } as const;
 
-// --- Portfolio / Our Work ---------------------------------------------------
+// --- Portfolio (Section 3) --------------------------------------------------
 
-// Real client names and formats, from the "Our Content" library (img-013).
-// TODO(legal): confirm each is cleared for public display on the new site.
+// Real clients, named in the spec. TODO(assets): real thumbnails/reels needed.
 export const portfolio = {
   label: "Selected work",
-  heading: "The library",
-  headingAccent: "keeps growing",
-  body:
-    "Reels, films, ad campaigns and brand stories — the full catalogue lives in Our Work.",
-  posters: [
-    { id: "kayali", client: "Kayali", title: "Fragrance product reel", category: "Reel", meta: ["2025", "0:45"] },
-    { id: "tata-motors", client: "Tata Motors", title: "Brand film", category: "Film", meta: ["2025", "2:10"] },
-    { id: "icici", client: "ICICI Bank", title: "Brand story", category: "Brand Story", meta: ["2024"] },
-    { id: "miraggio", client: "Miraggio", title: "Lifestyle reel", category: "Reel", meta: ["2025"] },
-    { id: "yonex", client: "Yonex", title: "Ad film", category: "Ad Film", meta: ["2024", "1:30"] },
-    { id: "third-wave", client: "Third Wave Coffee", title: "Product reel", category: "Reel", meta: ["2025"] },
-    { id: "mauritius", client: "Mauritius Tourism", title: "Travel film", category: "Travel Film", meta: ["2024"] },
-    { id: "dot-key", client: "Dot & Key", title: "Skincare reel", category: "Reel", meta: ["2025"] },
-  ] satisfies Poster[],
+  heading: "The work behind",
+  headingAccent: "the names",
+  body: "Content, campaigns and films made for brands that do not get second takes.",
+  clients: [
+    { id: "aditya-birla-capital", client: "Aditya Birla Capital", title: "Content & campaign work", category: "Campaign" },
+    { id: "hdfc", client: "HDFC", title: "Content production", category: "Content" },
+    { id: "absli", client: "Aditya Birla Sun Life Insurance", title: "Brand & performance content", category: "Brand" },
+    { id: "mahindra-finance", client: "Mahindra Finance", title: "Influencer & content campaign", category: "Campaign" },
+  ],
 } as const;
 
-// --- Case studies -----------------------------------------------------------
+// --- Case studies (Section 4) -----------------------------------------------
 
 export const caseStudies = {
   label: "Case studies",
   heading: "Work that",
   headingAccent: "moved a number",
-  body: "A few campaigns where the result was measurable, not just visible.",
-  // TODO(data): every figure below is INVENTED and must be replaced with real
-  // reported results before this section goes live.
+  body: "Campaigns where the outcome was measured, not just delivered.",
+  // Clients are real (from the spec). TODO(data): every RESULT figure below is
+  // still a placeholder — replace with reported numbers before launch.
   items: [
-    {
-      id: "cs-kayali",
-      client: "Kayali",
-      title: "A fragrance launch that sold out in nine days",
-      result: "3.2M organic reach",
-      discipline: "Influencer + UGC",
-    },
-    {
-      id: "cs-tata",
-      client: "Tata Motors",
-      title: "Putting a launch film in front of the right drivers",
-      result: "41% lift in recall",
-      discipline: "Brand film",
-    },
-    {
-      id: "cs-icici",
-      client: "ICICI Bank",
-      title: "Making a banking product legible to Gen Z",
-      result: "2.7x engagement rate",
-      discipline: "Brand story",
-    },
-    {
-      id: "cs-yonex",
-      client: "Yonex",
-      title: "An ad film built for the second screen",
-      result: "18M views in six weeks",
-      discipline: "Ad film",
-    },
+    { id: "cs-mahindra", client: "Mahindra", title: "TODO — case study headline", result: "TODO — result", discipline: "Content" },
+    { id: "cs-abc", client: "Aditya Birla Capital", title: "TODO — case study headline", result: "TODO — result", discipline: "Campaign" },
+    { id: "cs-absli", client: "Aditya Birla Sun Life Insurance", title: "TODO — case study headline", result: "TODO — result", discipline: "Brand" },
+    { id: "cs-ab", client: "Aditya Birla", title: "TODO — case study headline", result: "TODO — result", discipline: "Content" },
   ],
 } as const;
 
 // --- Journey ----------------------------------------------------------------
 
-// TODO(data): placeholder milestones and dates — replace with the real story.
+// The spec marks this "//numbers increasing animation".
+// TODO(data): milestones and dates are placeholders — real story needed.
 export const journey = {
   label: "Our journey",
   heading: "How Genesis",
   headingAccent: "got here",
   body: "A short history, told in the moments that changed how we work.",
   milestones: [
-    { date: "2021", title: "Genesis begins", description: "Founded as a creator-first studio, working with a handful of brands and a much larger handful of creators." },
-    { date: "2022", title: "The network scales", description: "The creator roster grows past five figures and campaign work becomes the core of the business." },
-    { date: "2023", title: "Production comes in-house", description: "Brand films and ad films join the offering, so strategy and production stop living in different buildings." },
-    { date: "2024", title: "AI studio opens", description: "AI-assisted content moves from experiment to a standing capability inside campaigns." },
-    { date: "2025", title: "Full-service", description: "Strategy, content, influence and technology operating as one team." },
+    { date: "TODO", title: "Genesis begins", description: "TODO(copy): real milestone required." },
+    { date: "TODO", title: "The creator network scales", description: "TODO(copy): real milestone required." },
+    { date: "TODO", title: "Production comes in-house", description: "TODO(copy): real milestone required." },
+    { date: "TODO", title: "AI studio opens", description: "TODO(copy): real milestone required." },
+    { date: "TODO", title: "Full-service", description: "TODO(copy): real milestone required." },
   ] satisfies Milestone[],
 } as const;
 
 // --- AI content -------------------------------------------------------------
 
+// Spec: "AI tools, Image Generations, AI Avatars, Video Generations, AI videos
+// and AI content to speed up your content workflows and engagement."
 export const aiContent = {
   label: "AI studio",
-  heading: "Fifty variants,",
-  headingAccent: "one shoot",
+  heading: "Speed up the workflow,",
+  headingAccent: "not the standard",
   body:
-    "AI-assisted production lets a single concept ship in every format a channel needs — without booking fifty production days to get there.",
-  features: [
-    { title: "Concept to output in hours", body: "Ideas become finished visuals inside a working session, not a production schedule." },
-    { title: "Every format, one system", body: "One concept, resized and re-cut for each placement without losing the art direction." },
-    { title: "Human-directed throughout", body: "AI does the volume. Direction, taste and final approval stay with the team." },
+    "AI tools, image generation, video generation and a roster of AI avatars — used to compress content workflows and lift engagement, with direction and final approval staying human.",
+  // Named in the spec. TODO(assets): avatar stills/reels required.
+  avatars: [
+    { id: "adi", name: "Adi" },
+    { id: "diya", name: "Diya" },
+    { id: "ivaanat", name: "Ivaanat" },
+    { id: "shivam", name: "Shivam" },
+    { id: "tanvi", name: "Tanvi" },
   ],
+  capabilities: ["AI tools", "Image generation", "AI avatars", "Video generation"],
 } as const;
 
 // --- Influencer marketing ---------------------------------------------------
 
-// Real figures and positioning, from Genesis's own artwork (img-012).
-// TODO(data): confirm these numbers are still current before launch.
 export const influencer = {
   label: "Strategic · Targeted · Impactful",
-  heading: "Influencer",
-  headingAccent: "campaigns",
+  heading: "Influencer marketing,",
+  headingAccent: "UGC & celebrity",
   body:
-    "From discovery to delivery, we connect brands with the right voices to create content that drives results.",
+    "From discovery to delivery, we connect brands with the right voices — creators across every genre, and celebrity collaborations at the top end.",
   databaseStat: {
     value: "1,00,000+",
     label: "Influencer database",
     description: "A curated network of creators across every niche and platform.",
   },
+  // TODO(data): the database figure is from the spec; the remaining three are
+  // placeholders pending real numbers.
   stats: [
-    { value: "500+", label: "Campaigns executed" },
-    { value: "200+", label: "Brands partnered" },
-    { value: "50M+", label: "Content reach" },
-    { value: "20+", label: "Platforms covered" },
+    { value: "1,00,000+", label: "Creator database" },
+    { value: "TODO", label: "Campaigns executed" },
+    { value: "TODO", label: "Brands partnered" },
+    { value: "TODO", label: "Content reach" },
   ],
-  orbit: [
-    { id: "travel", label: "Travel Creator", sublabel: "856K followers" },
-    { id: "fitness", label: "Fitness Creator", sublabel: "2.4M followers", accent: "amber" as const },
-    { id: "lifestyle", label: "Lifestyle Creator", sublabel: "1.2M followers" },
-    { id: "finance", label: "Finance Creator", sublabel: "1.1M followers" },
-    { id: "fashion", label: "Fashion Creator", sublabel: "947K followers" },
+  // Celebrity collaborations named in the spec.
+  // TODO(spelling/legal): the document writes "Vikhrant Messay" and "Ajay
+  // Devgan"; confirm correct spellings and that each is cleared for display.
+  celebrities: [
+    { id: "vikrant", label: "Vikrant Massey", sublabel: "Celebrity collaboration" },
+    { id: "ajay", label: "Ajay Devgn", sublabel: "Celebrity collaboration", accent: "amber" as const },
+    { id: "akash", label: "Akash", sublabel: "Creator" },
+    { id: "rashmi", label: "Rashmi", sublabel: "Creator" },
+    { id: "parvi", label: "Parvi", sublabel: "Creator" },
   ],
 } as const;
 
 // --- Branding & design ------------------------------------------------------
 
+// Spec: "Tripgate Branding & Guidelines, Abhi App logo, Doja and more".
 export const branding = {
   label: "Branding & design",
   heading: "Identity that survives",
   headingAccent: "contact with the feed",
   body:
-    "A brand system is only as good as its worst placement. We design for the sixth-second crop, not just the pitch deck.",
+    "Brand guidelines, design, motion videos and content production — built for the sixth-second crop, not just the pitch deck.",
+  work: [
+    { title: "Tripgate", caption: "Branding & guidelines" },
+    { title: "Abhi App", caption: "Logo & identity" },
+    { title: "Doja", caption: "Content & design" },
+  ],
   capabilities: [
+    "Brand guidelines",
     "Visual identity",
-    "Art direction",
-    "Design systems",
-    "Packaging",
+    "Motion design",
+    "Content production",
     "Campaign toolkits",
-    "Motion language",
+    "Curated content",
   ],
 } as const;
 
-// --- Clients ----------------------------------------------------------------
+// --- Clients (Section 5) ----------------------------------------------------
 
-// Real client names, from img-013. TODO(legal): confirm display rights.
+// Spec: "Same as the existing website ++ @ Ask tanvi" — so this list is the
+// confirmed subset. TODO(assets): full logo dump still owed by Tanvi.
 export const clients = {
-  label: "Trusted by",
-  rowOne: ["KAYALI", "TATA MOTORS", "ICICI BANK", "MIRAGGIO", "YONEX"],
-  rowTwo: ["THIRD WAVE COFFEE", "MAURITIUS TOURISM", "KREO TECH", "DOT & KEY", "GENESIS DRIP"],
+  label: "Clients we've worked with",
+  logos: [
+    "ADITYA BIRLA CAPITAL",
+    "HDFC",
+    "ADITYA BIRLA SUN LIFE INSURANCE",
+    "MAHINDRA FINANCE",
+    "MAHINDRA",
+    "INDUSIND NIPPON LIFE INSURANCE",
+    "TRIPGATE",
+    "ABHI APP",
+  ],
 } as const;
 
-// --- Testimonials -----------------------------------------------------------
+// --- Testimonials (Section 6) -----------------------------------------------
 
-// TODO(copy): every quote, name and role below is INVENTED placeholder text.
-// Nothing here may ship until real, attributed testimonials are supplied.
+// Names and companies are REAL, from the spec. The spec also notes "Start
+// video testimonial project", so these become video cards later.
+// TODO(copy): every QUOTE below is invented placeholder text — real quotes
+// must be collected before launch. Names/roles are as given in the document.
 export const testimonials = {
   label: "What clients say",
   heading: "In their",
   headingAccent: "words",
   items: [
-    {
-      quote: "They moved faster than our internal team could brief. The first cut landed before we'd finished writing the brief for it.",
-      name: "TODO — Client name",
-      role: "TODO — Role, Company",
-    },
-    {
-      quote: "The creator matching was the part that surprised us. They picked voices we'd have never shortlisted, and those were the ones that worked.",
-      name: "TODO — Client name",
-      role: "TODO — Role, Company",
-    },
-    {
-      quote: "We came for the reels and stayed for the strategy. They argue with us about the numbers, which is what we actually needed.",
-      name: "TODO — Client name",
-      role: "TODO — Role, Company",
-    },
+    { quote: "TODO — real quote required.", name: "Anu Raj", role: "Mahindra" },
+    { quote: "TODO — real quote required.", name: "Shreya", role: "Mahindra Finance" },
+    { quote: "TODO — real quote required.", name: "Amey Khopte", role: "Aditya Birla Sun Life Insurance" },
+    { quote: "TODO — real quote required.", name: "Aditya Rane", role: "IndusInd Nippon Life Insurance" },
+    { quote: "TODO — real quote required.", name: "Anandkumar", role: "QuiteBox" },
+    { quote: "TODO — real quote required.", name: "Rishabh Wala", role: "Cinematographer" },
+    { quote: "TODO — real quote required.", name: "Harsh Jain", role: "TODO — company" },
+    { quote: "TODO — real quote required.", name: "Siddhi Sharma", role: "TODO — company" },
+    { quote: "TODO — real quote required.", name: "Rashmi Rai", role: "TODO — company" },
+    { quote: "TODO — real quote required.", name: "Mayank Batwal", role: "TODO — company" },
+    { quote: "TODO — real quote required.", name: "Pooja", role: "TODO — company" },
+    { quote: "TODO — real quote required.", name: "Nancy", role: "TODO — company" },
   ],
 } as const;
 
 // --- Journal / blog teaser --------------------------------------------------
 
-// TODO(content): placeholder articles. Real posts arrive as MDX in Phase 4.
+// Spec: "Write 2 new blogs on AI", "each paper is a blog (floating animation)",
+// "papers moving like magnetics (for reference motion check igloo.inc)".
+// TODO(content): real posts arrive as MDX in Phase 4.
 export const journal = {
   label: "Journal",
   heading: "Thinking out",
   headingAccent: "loud",
   body: "Notes on creators, content and the technology reshaping both.",
   posts: [
-    { slug: "creator-economy-2026", title: "The creator economy is consolidating. Here's what that means for brands.", category: "Industry", readingTime: "6 min read" },
-    { slug: "ugc-that-performs", title: "Why most UGC underperforms, and the three fixes that change it", category: "Playbook", readingTime: "8 min read" },
-    { slug: "ai-in-production", title: "What AI actually replaced in our production pipeline", category: "Inside Genesis", readingTime: "5 min read" },
+    { slug: "ai-content-workflows", title: "TODO — AI blog #1 (spec: write 2 new blogs on AI)", category: "AI", readingTime: "TODO" },
+    { slug: "ai-avatars-in-campaigns", title: "TODO — AI blog #2 (spec: write 2 new blogs on AI)", category: "AI", readingTime: "TODO" },
+    { slug: "creative-process", title: "TODO — creative process / BTS", category: "Inside Genesis", readingTime: "TODO" },
   ],
 } as const;
 
@@ -280,7 +277,7 @@ export const footerCta = {
   heading: "Let's build something",
   headingAccent: "iconic",
   body: "Tell us what you're launching. We'll tell you how we'd approach it.",
-  primaryCta: { label: "Start a project", href: "/#contact" },
-  // TODO(contact): replace with the real routing address and phone number.
+  primaryCta: { label: "Contact us", href: "/#contact" },
+  // TODO(contact): confirm the routing address.
   email: "hello@genesismedia.co",
 } as const;

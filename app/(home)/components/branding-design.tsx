@@ -35,10 +35,18 @@ export function BrandingDesign() {
               }}
             />
             <div className="relative">
-              <p className="micro-label mb-4">The principle</p>
-              <p className="text-balance text-2xl font-semibold leading-snug tracking-tight text-bone">
-                Designed for the sixth-second crop, not the pitch deck.
-              </p>
+              <p className="micro-label mb-5">Selected identity work</p>
+              {/* Named in the spec: Tripgate, Abhi App, Doja. */}
+              <ul className="flex flex-col gap-4">
+                {branding.work.map((item) => (
+                  <li key={item.title} className="border-b border-white/10 pb-3 last:border-0">
+                    <p className="text-lg font-semibold tracking-tight text-bone">
+                      {item.title}
+                    </p>
+                    <p className="mt-0.5 text-xs text-ash">{item.caption}</p>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </Reveal>

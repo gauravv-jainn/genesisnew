@@ -1,4 +1,5 @@
 import { GlassNav } from "@/components/genesis/glass-nav";
+import { SmoothScroll } from "@/components/genesis/smooth-scroll";
 
 /**
  * Marketing shell. The floating nav is fixed-position and lives here rather
@@ -8,6 +9,7 @@ import { GlassNav } from "@/components/genesis/glass-nav";
 export default function HomeLayout({ children }: LayoutProps<"/">) {
   return (
     <>
+      <SmoothScroll />
       <GlassNav />
       {children}
     </>

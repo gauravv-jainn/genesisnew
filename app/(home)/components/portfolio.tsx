@@ -1,5 +1,5 @@
 import { GlassButton } from "@/components/genesis/glass-button";
-import { PosterRail } from "@/components/genesis/poster-card";
+import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { Reveal } from "@/components/genesis/reveal";
 import { portfolio } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
@@ -7,10 +7,20 @@ import { SectionShell } from "./section-shell";
 /**
  * Section 3 — Portfolio.
  *
- * The horizontal poster rail. Bleeds past the container on the right so the
- * row reads as continuing off-screen rather than ending at the margin.
+ * Spec: "[Add minimal Scroll section]" listing Aditya Birla Capital, HDFC,
+ * Aditya Birla Sun Life Insurance and Mahindra Finance.
+ *
+ * This is the receiving end of the Services→Portfolio camera turn (Phase 3),
+ * so the rail is deliberately the first thing the camera lands on.
  */
 export function Portfolio() {
+  const posters: Poster[] = portfolio.clients.map((entry) => ({
+    id: entry.id,
+    client: entry.client,
+    title: entry.title,
+    category: entry.category,
+  }));
+
   return (
     <SectionShell
       id="portfolio"
@@ -24,7 +34,7 @@ export function Portfolio() {
       contentClassName="-mr-6 sm:-mr-10"
     >
       <Reveal>
-        <PosterRail posters={[...portfolio.posters]} />
+        <PosterRail posters={posters} />
       </Reveal>
 
       <Reveal delay={0.1} className="mr-6 mt-10 sm:mr-10">

@@ -8,7 +8,7 @@ new session.
 | 0 | Infra & security foundation | ✅ Code complete — 5 checks pending credentials |
 | 1 | Design system & shared components | ✅ Complete — **needs your call on brand colour** |
 | 2 | Homepage (13 sections) | ✅ Complete |
-| 3 | Motion pass | ⬜ Not started |
+| 3 | Motion pass | ✅ Complete |
 | 4 | Standalone pages | ⬜ Not started |
 
 ---
@@ -336,6 +336,69 @@ body copy (img-019), the influencer positioning line and all five figures
 Miraggio, Yonex, Third Wave Coffee, Mauritius Tourism, Kreo Tech, Dot & Key)
 come from Genesis's own artwork, but display rights on the new public site
 should be confirmed.
+
+---
+
+## Spec document — content corrected
+
+You supplied **"Genesis Website Content.pdf" (Layout(Gaurav): FINAL)**. Its
+images are the same set as `docs/reference/`, but it carries an **annotation
+layer** that was the missing piece. Extracted text is at
+`scratchpad/genesis-content.txt`.
+
+It showed my Phase 2 copy was substantially wrong. Corrected in
+`lib/home-content.ts`:
+
+| Was (invented) | Now (from the spec) |
+| --- | --- |
+| Kayali, Tata Motors, ICICI, Yonex… | **Aditya Birla Capital, HDFC, Aditya Birla Sun Life Insurance, Mahindra Finance** |
+| 6 invented services | **5: Content Production, AI Content, Influencer Marketing, Branding & Design, Apps & Games** |
+| Invented hero line | **"Empowering brands that want to win at content, influencer activations & AI"** |
+| — | **AI avatars: Adi, Diya, Ivaanat, Shivam, Tanvi** |
+| — | **Celebrities: Vikrant Massey, Ajay Devgn, Akash, Rashmi, Parvi** |
+| 3 fabricated testimonials | **12 real names/companies** (Anu Raj–Mahindra, Amey Khopte–ABSLI, Aditya Rane–IndusInd Nippon, …) |
+| — | **Branding work: Tripgate, Abhi App, Doja** |
+
+Behaviour directives from the same document are now implemented, and are
+recorded next to the content they govern.
+
+## Phase 3 — Motion pass
+
+- **Services → Portfolio camera turn.** Spec: *"when going from services to
+  portfolio the camera turns 180*"*. Both sections are the two faces of one
+  stage; GSAP ScrollTrigger pins it and scrubs yaw 0°→180°. Verified scrubbing
+  linearly (0/50/100/150/180) and confirmed absent below 1024px.
+- **Apple Watch clusters.** Spec asks for this twice — client logos
+  *"movable like Apple Watch Apps"* and testimonials *"move around like how
+  apps move around in an apple watch"*. `WatchCluster` puts items on a
+  honeycomb lattice in a draggable plane; each scales by distance from centre,
+  driven by MotionValues so dragging never re-renders.
+- **Lenis smooth scroll**, wired into GSAP's ticker with
+  `lenis.on("scroll", ScrollTrigger.update)` and `lagSmoothing(0)`. Disabled
+  for reduced-motion and coarse pointers.
+- **Magnetic floating paper blogs** already carried the motif; the spec
+  confirms the intent (*"papers moving like magnetics"*, ref igloo.inc).
+
+### ⚠️ Verification limit you should know about
+
+This browser pane **does not emit `scroll` events for programmatic scrolls** —
+`window.scrollTo` moves the page but fires zero events. Every scroll-driven
+library correctly stays at progress 0 under that condition, which made a
+working animation look broken and sent me rewriting it twice before I checked
+the harness instead of the code. Scroll-driven work here is verified by
+dispatching a synthetic `scroll` event after moving.
+
+**The mechanism is confirmed; the *feel* is not.** Scroll the turn yourself —
+pacing and the 160% pin length are taste calls I cannot make from a script.
+
+### Still owed before launch
+
+- Every case-study **result** figure, all 12 testimonial **quotes**, journey
+  milestones and dates, and the three journal posts.
+- Assets: client logo files ("Ask tanvi"), AI avatar stills, portfolio
+  thumbnails, video testimonials.
+- Confirm spellings: the document writes "Vikhrant Messay" / "Ajay Devgan".
+- The crimson-vs-amber brand call is still open.
 
 ---
 

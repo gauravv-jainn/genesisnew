@@ -4,6 +4,7 @@ import { siteConfig } from "@/lib/site-config";
 import { AiContent } from "./components/ai-content";
 import { BlogTeaser } from "./components/blog-teaser";
 import { BrandingDesign } from "./components/branding-design";
+import { CameraPan } from "./components/camera-pan";
 import { CaseStudies } from "./components/case-studies";
 import { ClientLogos } from "./components/client-logos";
 import { FooterCta } from "./components/footer-cta";
@@ -37,8 +38,8 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
-      <Services />
-      <Portfolio />
+      {/* Services and Portfolio are the two faces of one turning stage. */}
+      <CameraPan front={<Services />} back={<Portfolio />} />
       <CaseStudies />
       <Journey />
       <AiContent />

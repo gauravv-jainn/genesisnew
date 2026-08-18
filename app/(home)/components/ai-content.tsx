@@ -6,20 +6,22 @@ import { aiContent } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
 
 /**
- * Section 6 — AI-Generated Content.
+ * Section — AI-generated content.
  *
- * The perspective card arc from img-033: a row of frames receding on both
- * sides of centre, with the feature captions beneath. Depth comes from CSS
- * 3D transforms rather than images, so it costs nothing to load.
+ * Spec: "AI tools, Image Generations, AI Avatars, Video Generations… Some AI
+ * content can be showcased. Ai Avatars: Adi, Diya, Ivaanat, Shivam, Tanvi."
+ *
+ * The avatars are presented as a perspective arc of frames (img-033). Real
+ * avatar stills replace the placeholder frames when the assets land.
  */
 
-// Rotation/offset per card, mirrored around the centre index.
+// Rotation/offset per frame, mirrored around the centre index.
 const ARC = [
-  { rotateY: 38, translateZ: -140, opacity: 0.35 },
-  { rotateY: 22, translateZ: -70, opacity: 0.6 },
+  { rotateY: 38, translateZ: -140, opacity: 0.45 },
+  { rotateY: 22, translateZ: -70, opacity: 0.7 },
   { rotateY: 0, translateZ: 0, opacity: 1 },
-  { rotateY: -22, translateZ: -70, opacity: 0.6 },
-  { rotateY: -38, translateZ: -140, opacity: 0.35 },
+  { rotateY: -22, translateZ: -70, opacity: 0.7 },
+  { rotateY: -38, translateZ: -140, opacity: 0.45 },
 ];
 
 export function AiContent() {
@@ -37,44 +39,56 @@ export function AiContent() {
     >
       <Reveal>
         <div
-          className="flex items-center justify-center gap-3 sm:gap-5"
+          className="flex items-end justify-center gap-3 sm:gap-5"
           style={{ perspective: "1200px" }}
         >
-          {ARC.map((frame, index) => (
-            <div
-              key={index}
-              aria-hidden
-              className="h-44 w-24 shrink-0 overflow-hidden rounded-2xl border border-white/10 sm:h-64 sm:w-40"
-              style={{
-                transform: `perspective(1200px) rotateY(${frame.rotateY}deg) translateZ(${frame.translateZ}px)`,
-                opacity: frame.opacity,
-                // Placeholder frames — real generated stills drop in later.
-                background: `linear-gradient(${150 + index * 20}deg, rgb(45 212 191 / 0.25) 0%, rgb(20 20 24 / 0.9) 55%), radial-gradient(80% 60% at 50% 20%, rgb(255 255 255 / 0.16), transparent 70%)`,
-              }}
-            />
-          ))}
+          {aiContent.avatars.map((avatar, index) => {
+            const frame = ARC[index] ?? ARC[2];
+            return (
+              <figure
+                key={avatar.id}
+                className="shrink-0"
+                style={{
+                  transform: `perspective(1200px) rotateY(${frame.rotateY}deg) translateZ(${frame.translateZ}px)`,
+                  opacity: frame.opacity,
+                }}
+              >
+                <div
+                  className="h-44 w-24 overflow-hidden rounded-2xl border border-white/10 sm:h-64 sm:w-40"
+                  style={{
+                    // TODO(assets): real avatar stills replace this placeholder.
+                    background: `linear-gradient(${150 + index * 20}deg, rgb(45 212 191 / 0.28) 0%, rgb(20 20 24 / 0.92) 55%), radial-gradient(80% 60% at 50% 20%, rgb(255 255 255 / 0.18), transparent 70%)`,
+                  }}
+                />
+                <figcaption className="mt-3 text-center text-xs font-medium text-bone">
+                  {avatar.name}
+                </figcaption>
+              </figure>
+            );
+          })}
         </div>
       </Reveal>
 
+      <Reveal delay={0.08} className="mt-10 flex justify-center">
+        <p className="micro-label">AI avatars</p>
+      </Reveal>
+
+      <RevealGroup className="mx-auto mt-14 flex max-w-2xl flex-wrap justify-center gap-3">
+        {aiContent.capabilities.map((capability) => (
+          <RevealItem key={capability}>
+            <span className="glass inline-flex rounded-full px-4 py-2 text-sm text-bone">
+              {capability}
+            </span>
+          </RevealItem>
+        ))}
+      </RevealGroup>
+
       <Reveal delay={0.1} className="mt-12 flex justify-center">
-        <GlassButton variant="glass" icon={<Sparkles className="size-4" />}>
+        <GlassButton variant="glass" icon={<Sparkles className="size-4" />} arrow>
           {/* TODO(link): points at the AI studio page once it exists. */}
           Explore the AI studio
         </GlassButton>
       </Reveal>
-
-      <RevealGroup className="mt-16 grid gap-8 text-left sm:grid-cols-3">
-        {aiContent.features.map((feature) => (
-          <RevealItem key={feature.title}>
-            <h3 className="text-base font-semibold tracking-tight text-bone">
-              {feature.title}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-ash">
-              {feature.body}
-            </p>
-          </RevealItem>
-        ))}
-      </RevealGroup>
     </SectionShell>
   );
 }

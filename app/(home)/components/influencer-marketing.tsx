@@ -56,8 +56,9 @@ export function InfluencerMarketing() {
         </Reveal>
 
         <Reveal direction="left" delay={0.1}>
+          {/* Spec names these celebrity collaborations explicitly. */}
           <OrbitingCards
-            items={[...influencer.orbit]}
+            items={[...influencer.celebrities]}
             center={
               <div className="glass glass-lit grid size-24 place-items-center rounded-full">
                 <GenesisStar className="size-9" />

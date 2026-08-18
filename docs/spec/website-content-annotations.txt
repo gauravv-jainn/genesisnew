@@ -1,0 +1,151 @@
+
+===== PAGE 1 =====
+Genesis Media Website Content 
+Layout(Gaurav): FINAL
+Buttons (Blur)
+Landing Page - not yet done
+Services and Portfolio
+//the slides move, and when going from services to portfolio the camera turns 180*
+LOGOS:
+Case Studies
+===== PAGE 2 =====
+Our Journey
+===== PAGE 3 =====
+AI Avatars + Tools Stack (in detail explanation of our services)
+TOOLS WE USE, SOME PICS, VIDEOS,  
+IVAANAT, SHIVAM, ADI, DIYA, TANVI.
+Section: Influencer Marketing | UGC & Celebrity Collborations - not yet figured out
+Branding Guidelines & Design:
+(train motion design)
+Branding Guidelines, Design, Motion videos,  & Content Production
+Social Media Icons (like stars)
+===== PAGE 4 =====
+Clients we have worked with (logos dump)
+//movable like Apple Watch Apps
+Testimonials
+===== PAGE 5 =====
+//design not sure yet
+I’m a creator page ⟶  slide up
+//check rough pages
+Work with us
+//maybe a chair visual with an empty bg mountains or beach
+===== PAGE 6 =====
+Blogs
+//each paper is a blog (floating animation) ⟶  might not work
+//add on homepage
+Influencer Campaign
+===== PAGE 7 =====
+//videos playing on their own like a GIF
+Content Library (Genesis’ NETFLIX)
+//redirecting
+CTA button
+===== PAGE 8 =====
+Genesis Insider:
+//insider dashboard etc
+Forms
+===== PAGE 9 =====
+Overall BG Style
+//gradient + noise
+===== PAGE 10 =====
+References:
+Change the narrative to AI, Content, Influencers, Shoot. 
+Button: 
+Homepage 
+Section 1: 
+Empowering Brands that want to win at Content, Influencer Activations & AI     
+1. Write a good hook, remove form, keep it to last. 
+2. Update this reel video with new content. 
+Should have Keywords: Influencers, Content, AI Content. 
+This page should convey the services: AI content, Influencer marketing, and content creation. 
+(Where our expertise lies in QUALITY Production and edits, creative direction, strategy, and 
+scripting).
+===== PAGE 11 =====
+Section 2: 
+1. Create a new entire Service section.
+2. Remove the previous services section and add:
+Content Production, AI Content, Influencer Marketing, Branding & Design, Apps & Games.
+[Some AI aspect too showcases that we use advanced  AI tools].
+===== PAGE 12 =====
+Section 3: Portfolio
+[Add minimal Scroll section]
+Aditya Birla Capital, HDFC, Aditya Birla Sun Life Insurance, and Mahindra Finance.
+===== PAGE 13 =====
+Section 4: Case Studies
+Mahindra, Aditya Birla Capital, Aditya Birla Sunlife Insurance, Aditya Birla
+===== PAGE 14 =====
+
+===== PAGE 15 =====
+Our Journey:
+===== PAGE 16 =====
+//numbers increasing animation
+Section: AI-generated videos 
+AI tools, Image Generations, AI Avatars,  Video Generations, AI videos and AI content to speed up 
+your content workflows and engagement. Some AI content can be showcased 
+Ai Avatars: 
+Adi, Diya, Ivanaat, Shivam, Tanvi
+===== PAGE 17 =====
+portfolio and ai avatar different or together?
+Section: Influencer Marketing | UGC & Celebrity Collborations
+Showcase some numbers/case studies, Genre of Creators 
+and Showcase Vikhrant Messay, Ajay Devgan, Akash, Rashmi, Parvi, & More, Mahindra Finance
+Section: Branding & Design & Content Production
+Tripgate Branding & Guidelines, Abhi App logo, Doja and more interesting content.  
+Curated Content 
+Section 5: Brand logos 
+Same as the existing website ++ @ Ask tanvi
+===== PAGE 18 =====
+Section 6: Testimonials 
+Anu Raj, MAhindra. Shreya, MA Hindra Finance, Harsh Jain, Siddhi Sharma, Rashmi Rai, Pooja, 
+Mayank Batwal. Amey Khopte ABSLI. QuiteBox - Anandkumar, Rishabh Wala - Cinematographer. 
+Aditya Rane, Indusind Nippon Life Insurance, Nancy. 
+Start Video testimonial project.
+===== PAGE 19 =====
+//liquid glass
+Footer:
+Page 2: I’m a Creator
+===== PAGE 20 =====
+
+===== PAGE 21 =====
+Page 3: Career/Work with us
+===== PAGE 22 =====
+
+===== PAGE 23 =====
+Add:
+1. Blog hub - Add all blogs. (blogs)
+===== PAGE 24 =====
+//clicking on those papers - each paper has a different blog - papers moving like magnetics 
+(for reference motion check igloo.inc)
+===== PAGE 25 =====
+1. Write 2 new blogs on AI 
+Influencer Campaigns 
+Numbers: 1,00,000+ Database 
+Influencer Collaborations.
+Numbers
+Contact Us button
+===== PAGE 26 =====
+Content Creation
+An interactive content screen to see content made by Genesis Media 
+Logos.
+===== PAGE 27 =====
+Testimonials :
+//this will like move around like how apps move around in an apple watch
+CTA
+===== PAGE 28 =====
+Landing Page
+Influencer Marketing 
+Ai Content 
+Add creative process (BTS)
+ 
+Content Creation - 
+Create a New Page 
+Add blogs section 
+Add creative process 2 lines or sections
+[Add blog articles linked to the video uploaded on YouTube].
+Change YouTube thumbnail: 
+Genesis Insiders:
+===== PAGE 29 =====
+
+===== PAGE 30 =====
+//overall style
+===== PAGE 31 =====
+//this effect for showcasing images

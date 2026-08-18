@@ -1,32 +1,46 @@
-import { LogoMarquee } from "@/components/genesis/logo-marquee";
+import { Atmosphere } from "@/components/genesis/atmosphere";
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
-import { Atmosphere } from "@/components/genesis/atmosphere";
+import { WatchCluster } from "@/components/genesis/watch-cluster";
 import { clients } from "@/lib/home-content";
 
 /**
- * Section 9 — Client logo wall.
+ * Section 5 — Clients we've worked with.
  *
- * Two rails running in opposite directions so the band reads as motion rather
- * than a static list. Uses its own shell rather than SectionShell because the
- * marquees must bleed the full viewport width, not sit inside the container.
- *
- * TODO(assets): wordmarks stand in for real client logos.
+ * Spec: "Clients we have worked with (logos dump) //movable like Apple Watch
+ * Apps". Wordmarks stand in until the logo files arrive — swapping them for
+ * <img> is a change inside this one map call.
  */
 export function ClientLogos() {
   return (
-    <Atmosphere tone="neutral" origin="center" intensity={0.1} className="py-20 sm:py-24">
-      <div className="mx-auto mb-12 w-full max-w-6xl px-6">
+    <Atmosphere tone="neutral" origin="center" intensity={0.12} className="py-24 sm:py-32">
+      <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal>
           <SectionLabel dot>{clients.label}</SectionLabel>
         </Reveal>
+        <Reveal delay={0.05}>
+          <p className="mt-5 max-w-md text-sm text-ash">
+            Drag the cluster to move through it.
+          </p>
+        </Reveal>
       </div>
 
-      <Reveal>
-        <div className="flex flex-col gap-8">
-          <LogoMarquee logos={[...clients.rowOne]} speedSeconds={44} />
-          <LogoMarquee logos={[...clients.rowTwo]} speedSeconds={52} reverse />
-        </div>
+      <Reveal delay={0.1} className="mt-8">
+        <WatchCluster
+          height={480}
+          cell={150}
+          items={clients.logos.map((logo) => ({
+            id: logo,
+            content: (
+              <div className="glass glass-lit grid size-28 place-items-center rounded-[1.75rem] p-3 text-center sm:size-32">
+                {/* TODO(assets): real client logo files owed (spec: "Ask tanvi"). */}
+                <span className="text-[10px] font-semibold leading-tight tracking-[0.1em] text-bone/70">
+                  {logo}
+                </span>
+              </div>
+            ),
+          }))}
+        />
       </Reveal>
     </Atmosphere>
   );

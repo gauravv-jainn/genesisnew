@@ -1,6 +1,7 @@
 import { Sparkles } from "lucide-react";
 
 import { GlassButton } from "@/components/genesis/glass-button";
+import { ToolsStack } from "@/components/genesis/tools-stack";
 import { RevealGroup, RevealItem, Reveal } from "@/components/genesis/reveal";
 import { aiContent } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
@@ -71,6 +72,16 @@ export function AiContent() {
 
       <Reveal delay={0.08} className="mt-10 flex justify-center">
         <p className="micro-label">AI avatars</p>
+      </Reveal>
+
+      {/* The stack feeding the studio — many inputs converging on one output. */}
+      <Reveal delay={0.12} className="mx-auto mt-20 max-w-4xl">
+        <p className="micro-label mb-8 text-center">Tools we use</p>
+        <ToolsStack
+          tools={[...aiContent.tools]}
+          destination={aiContent.destination}
+          badge="Studio"
+        />
       </Reveal>
 
       <RevealGroup className="mx-auto mt-14 flex max-w-2xl flex-wrap justify-center gap-3">

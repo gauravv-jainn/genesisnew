@@ -140,6 +140,20 @@ export const aiContent = {
     { id: "tanvi", name: "Tanvi" },
   ],
   capabilities: ["AI tools", "Image generation", "AI avatars", "Video generation"],
+  /**
+   * The stack feeding the studio. Spec says "TOOLS WE USE" but does not name
+   * them, so these are the categories rather than vendors.
+   * TODO(content): replace with the actual tools Genesis runs on.
+   */
+  tools: [
+    { label: "Image generation", detail: "stills & keyframes" },
+    { label: "Video generation", detail: "motion & b-roll" },
+    { label: "AI avatars", detail: "presenters" },
+    { label: "Voice & dubbing", detail: "multi-language" },
+    { label: "Edit & post", detail: "assembly" },
+    { label: "Scripting", detail: "concept to board" },
+  ],
+  destination: "Genesis AI Studio",
 } as const;
 
 // --- Influencer marketing ---------------------------------------------------

@@ -1,5 +1,7 @@
 import { FileText, Inbox, LayoutGrid, Lock, Users } from "lucide-react";
 
+import { InsiderRail } from "./insider-rail";
+
 import { Atmosphere } from "@/components/genesis/atmosphere";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
 import { GlassButton } from "@/components/genesis/glass-button";
@@ -71,6 +73,9 @@ export default async function InsiderPage() {
   return (
     <Atmosphere tone="crimson" origin="top-right" intensity={0.14} className="min-h-dvh">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-14">
+        {/* The rail from p08_1 — a floating glass control, not a sidebar. */}
+        <InsiderRail />
+
         <header className="flex flex-wrap items-start justify-between gap-6">
           <div>
             <GenesisMark />

@@ -271,6 +271,17 @@
     }
 }
 
+/* The travelling pulse along the tools-stack curves. */
+@keyframes genesis-flow {
+    from {
+        stroke-dashoffset: 346;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
 /* Seamless marquee: the track is duplicated once, so -50% lands exactly on
    the start of the copy. Consumed by <LogoMarquee />. */
 @keyframes genesis-marquee {

@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/components/genesis/contact-form";
 import { PaperCard } from "@/components/genesis/paper-card";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
+import { SectionLabel } from "@/components/genesis/section-label";
+import { CornerNote, GhostType, Spotlight } from "@/components/genesis/spotlight";
 import { creatorPage } from "@/lib/page-content";
 import { SectionShell } from "../components/section-shell";
 
@@ -12,49 +14,75 @@ export const metadata: Metadata = {
 };
 
 /**
- * /creator — "I'm a Creator".
+ * /creator — "I'm a Creator", built to p05_0.
  *
- * Deliberately plain-spoken: creators read a hundred agency pages, and the
- * things that actually decide it are briefs, money and repeat work.
+ * One hard light from upper right, the offer pinned beneath it as cards at
+ * angles, oversized ghosted type behind, and editorial corner annotations.
+ * The copy stays plain-spoken on purpose: creators read a hundred agency
+ * pages, and what decides it is briefs, money and repeat work.
  */
 export default function CreatorPage() {
   return (
-    <main className="pt-24">
-      <SectionShell
-        label={creatorPage.label}
-        heading={creatorPage.heading}
-        headingAccent={creatorPage.headingAccent}
-        body={creatorPage.body}
-        tone="amber"
-        origin="top-right"
-        intensity={0.24}
-      >
-        <RevealGroup className="grid gap-6 sm:grid-cols-2">
-          {creatorPage.benefits.map((benefit, index) => (
-            <RevealItem key={benefit.title} className="h-full">
-              <PaperCard
-                tone={index % 2 === 0 ? "amber" : "crimson"}
-                rotate={index % 2 === 0 ? -1.6 : 1.4}
-                className="h-full"
-              >
-                <h3 className="text-lg font-semibold tracking-tight text-bone">
-                  {benefit.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ash">
-                  {benefit.body}
-                </p>
-              </PaperCard>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </SectionShell>
+    <main>
+      <section className="grain relative isolate overflow-hidden bg-void pt-36 pb-28 sm:pt-44">
+        <Spotlight x={68} spread={17} tone="warm" intensity={1} reach={96} />
+        <GhostType className="translate-y-2">FOR CREATORS</GhostType>
+
+        <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
+          <div className="flex flex-wrap items-start justify-between gap-8">
+            <Reveal className="max-w-xl">
+              <SectionLabel dot tone="amber">
+                {creatorPage.label}
+              </SectionLabel>
+              <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl lg:text-6xl">
+                {creatorPage.heading}{" "}
+                <span className="font-serif font-normal italic text-amber">
+                  {creatorPage.headingAccent}
+                </span>
+              </h1>
+            </Reveal>
+
+            <Reveal delay={0.1}>
+              <CornerNote index="Creators">{creatorPage.body}</CornerNote>
+            </Reveal>
+          </div>
+
+          <RevealGroup className="mt-16 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+            {creatorPage.benefits.map((benefit, index) => (
+              <RevealItem key={benefit.title} className="h-full">
+                <PaperCard
+                  pinned
+                  tone={index % 3 === 1 ? "crimson" : "amber"}
+                  rotate={index % 2 === 0 ? -2.6 : 2.2}
+                  className="h-full"
+                >
+                  <p className="micro-label mb-3">{`0${index + 1}`}</p>
+                  <h2 className="text-lg font-semibold tracking-tight text-bone">
+                    {benefit.title}
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-ash">
+                    {benefit.body}
+                  </p>
+                </PaperCard>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+
+          <Reveal delay={0.15} className="mt-14 flex justify-end">
+            <CornerNote index="2">
+              Most of our creators come back for the next campaign. That is the
+              whole model, and it only works if the first one was worth doing.
+            </CornerNote>
+          </Reveal>
+        </div>
+      </section>
 
       <SectionShell
         id="apply"
         label="Join the roster"
         heading="Tell us what"
         headingAccent="you make"
-        body="Send your handle and the kind of work you do. We'll come back if there's a fit."
+        body="Send your handles and the kind of work you do. We'll come back if there's a fit."
         tone="crimson"
         origin="bottom"
         intensity={0.2}

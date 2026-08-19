@@ -1,5 +1,3 @@
-import type { Poster } from "@/components/genesis/poster-card";
-
 /**
  * Copy for the standalone pages.
  *
@@ -11,12 +9,9 @@ import type { Poster } from "@/components/genesis/poster-card";
 // --- /our-work — Content Library -------------------------------------------
 
 export const ourWork = {
-  label: "Content library",
-  heading: "Everything we've",
-  headingAccent: "made",
-  body:
-    "Reels, films, ad campaigns, brand stories and AI content — the full catalogue, filterable by format.",
-  // Categories are verbatim from the spec's content-library mockup.
+  heading: "Our Content",
+  body: "Explore content crafted with creativity, strategy and results.",
+  // Verbatim from the Genesis mockup on page 7 of the spec.
   categories: [
     "All",
     "Reels",
@@ -27,19 +22,42 @@ export const ourWork = {
     "AI Content",
     "Event Coverage",
   ],
-  // TODO(assets): real thumbnails and video links required. Clients are real.
+  /**
+   * The exact ten pieces in the mockup, in order. These are the Content
+   * Library's clients — a different set from the Portfolio section's
+   * (Aditya Birla, HDFC, ABSLI, Mahindra Finance). Both are real; they belong
+   * to different sections, and conflating them was an earlier mistake.
+   *
+   * TODO(assets): the spec notes "videos playing on their own like a GIF", so
+   * each item needs a short muted loop. `poster` is the still shown until it
+   * loads; `clip` is the loop. Both are pending real media.
+   */
   items: [
-    { id: "abc-reel", client: "Aditya Birla Capital", title: "Campaign reel", category: "Reels", meta: ["2025"] },
-    { id: "hdfc-film", client: "HDFC", title: "Brand film", category: "Films", meta: ["2025"] },
-    { id: "absli-story", client: "Aditya Birla Sun Life Insurance", title: "Brand story", category: "Brand Stories", meta: ["2024"] },
-    { id: "mahindra-campaign", client: "Mahindra Finance", title: "Influencer campaign", category: "Influencer Campaigns", meta: ["2025"] },
-    { id: "ai-avatars", client: "Genesis AI Studio", title: "AI avatar series", category: "AI Content", meta: ["2025"] },
-    { id: "tripgate-brand", client: "Tripgate", title: "Brand identity film", category: "Films", meta: ["2024"] },
-    { id: "abhi-ad", client: "Abhi App", title: "Product ad", category: "Ads", meta: ["2025"] },
-    { id: "doja-content", client: "Doja", title: "Curated content", category: "Reels", meta: ["2025"] },
-    { id: "event-coverage", client: "Genesis", title: "Event coverage", category: "Event Coverage", meta: ["2025"] },
-  ] satisfies Poster[],
+    { id: "kayali", client: "KAYALI", title: "Product Reel", category: "Reels", badge: "Reel" },
+    { id: "tata-motors", client: "TATA MOTORS", title: "Brand Film", category: "Films", badge: "Film" },
+    { id: "icici", client: "ICICI BANK", title: "Brand Story", category: "Brand Stories", badge: "Brand Story" },
+    { id: "miraggio", client: "MIRAGGIO", title: "Lifestyle Reel", category: "Reels", badge: "Reel" },
+    { id: "yonex", client: "YONEX", title: "Ad Film", category: "Ads", badge: "Ad Film" },
+    { id: "third-wave", client: "THIRD WAVE COFFEE", title: "Product Reel", category: "Reels", badge: "Reel" },
+    { id: "mauritius", client: "MAURITIUS TOURISM", title: "Travel Film", category: "Films", badge: "Travel Film" },
+    { id: "kreo-tech", client: "KREO TECH", title: "Product Film", category: "Films", badge: "Product Film" },
+    { id: "dot-key", client: "DOT & KEY", title: "Skincare Reel", category: "Reels", badge: "Reel" },
+    { id: "genesis-drip", client: "GENESIS DRIP", title: "Event Coverage", category: "Event Coverage", badge: "Event" },
+  ],
 } as const;
+
+/** Sidebar navigation, exactly as listed in the mockup. */
+export const workspaceNav = [
+  { label: "Home", href: "/", icon: "home" },
+  { label: "Our Work", href: "/our-work", icon: "grid" },
+  { label: "Services", href: "/#services", icon: "layers" },
+  { label: "Case Studies", href: "/#case-studies", icon: "file" },
+  { label: "AI Studio", href: "/#ai-studio", icon: "sparkles" },
+  { label: "Influencers", href: "/influencer-campaigns", icon: "users" },
+  { label: "About Us", href: "/#about", icon: "info" },
+  { label: "Insights", href: "/blog", icon: "book" },
+  { label: "Contact", href: "/#contact", icon: "send" },
+] as const;
 
 // --- /influencer-campaigns --------------------------------------------------
 

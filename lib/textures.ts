@@ -24,6 +24,20 @@ export function paintedWall({
   octaves = 5,
   opacity = 0.55,
   seed = 7,
+  /**
+   * Colour baked into the texture. Tinting here rather than with a CSS
+   * `filter: sepia() saturate() hue-rotate()` on the layer matters: a filter
+   * on a full-bleed element forces an offscreen buffer every frame it is
+   * composited, and this scene already has ~56 animated siblings above it.
+   */
+  tint,
+}: {
+  size?: number;
+  frequency?: number;
+  octaves?: number;
+  opacity?: number;
+  seed?: number;
+  tint?: string;
 } = {}) {
   return svgDataUri(`
     <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
@@ -35,7 +49,7 @@ export function paintedWall({
           <feFuncA type="linear" slope="${opacity}"/>
         </feComponentTransfer>
       </filter>
-      <rect width="${size}" height="${size}" filter="url(#p)"/>
+      ${tint ? `<rect width="${size}" height="${size}" fill="${tint}" filter="url(#p)"/>` : `<rect width="${size}" height="${size}" filter="url(#p)"/>`}
     </svg>`);
 }
 

@@ -4,15 +4,36 @@ import { cn } from "@/lib/utils";
 /**
  * The room the vortex stands in — built to p06_0.
  *
- * The reference is not a dark backdrop; it is an interior. Side walls
- * converge toward a back wall, a floor plane recedes toward the viewer, a
- * narrow shaft drops from above and pools on that floor, and a hard vignette
- * crushes the corners. Everything else in the scene sits inside that box.
+ * NO CLIP-PATHS AND NO CSS FILTERS ANYWHERE, and that is the whole point.
  *
- * Painted with layered gradients and clip-paths rather than 3D transforms:
- * a real rotateX floor would put every paper into the same 3D context and
- * fight their own transforms, and this composites far more cheaply.
+ * The previous version cut the floor, both walls and the light shaft out of
+ * `clip-path: polygon(...)` and then blurred them. Blurring a hard polygon
+ * does not remove the edge — it produces a *uniform-width* soft edge, which
+ * the eye still reads as a line. That was the "strong lines" problem exactly.
+ *
+ * In a black-box interior you never actually see the walls, the floor, or
+ * their junction; you only see how the light falls off across them. So the
+ * room is drawn entirely as ALPHA. The walls are a lateral falloff. The floor
+ * is an ellipse centred below the frame, which narrows as it rises — that is
+ * the trapezoid's perspective, drawn as an arc that is itself invisible. The
+ * shaft is a gradient whose CONE SHAPE IS ITS MASK, so there is no boundary
+ * anywhere for an edge to appear on.
+ *
+ * Every layer is static, so each rasterises once and then composites as a
+ * plain quad — which is what lets it sit beneath ~56 animated sheets at 60fps.
  */
+
+/**
+ * The cone. A radial mask whose focus sits ABOVE the element: narrow at the
+ * apex, wide at the floor, and soft in every direction at once. Because the
+ * shape lives in the alpha channel, there is no edge to soften.
+ */
+const SHAFT_CONE_MASK =
+  "radial-gradient(56% 118% at 50% -6%, #000 0%, rgb(0 0 0 / 0.92) 26%, rgb(0 0 0 / 0.55) 52%, rgb(0 0 0 / 0.18) 70%, transparent 84%)";
+
+const SHAFT_CORE_MASK =
+  "radial-gradient(46% 104% at 50% -10%, #000 0%, rgb(0 0 0 / 0.72) 38%, rgb(0 0 0 / 0.22) 62%, transparent 82%)";
+
 export function LitRoom({
   /** Horizontal position of the shaft, percent. */
   lightX = 50,
@@ -22,106 +43,137 @@ export function LitRoom({
   className?: string;
 }) {
   return (
-    <div aria-hidden className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}>
-      {/* Back wall. */}
+    <div
+      aria-hidden
+      className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
+      style={{
+        backgroundColor: "#08080a",
+        // Blend modes below resolve inside this subtree rather than against
+        // the animated sheets above it, so they never force a re-blend.
+        isolation: "isolate",
+        contain: "layout paint style",
+      }}
+    >
+      {/* 1. Depth wash — back wall and both side walls in one layer. The
+             walls are only ever a lateral falloff, so a wide horizontal
+             extent lets the sides reach void long before the centre does. */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, #0b0d11 0%, #121519 42%, #0d0f13 78%, #08090c 100%)",
+            "radial-gradient(78% 122% at 50% 34%, #16181d 0%, #111318 26%, #0d0e12 48%, #0a0b0e 72%, #08080a 100%)",
         }}
       />
 
-      {/* Floor: a trapezoid widening toward the viewer. */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-[46%]"
-        style={{
-          clipPath: "polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)",
-          background:
-            "linear-gradient(180deg, #16181d 0%, #101216 40%, #0a0b0e 100%)",
-        }}
-      />
-
-      {/* Left and right walls, angled inward. */}
-      <div
-        className="absolute inset-y-0 left-0 w-[34%]"
-        style={{
-          clipPath: "polygon(0% 0%, 100% 12%, 100% 78%, 0% 100%)",
-          background:
-            "linear-gradient(90deg, #050608 0%, #0c0e12 60%, #0f1216 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-y-0 right-0 w-[34%]"
-        style={{
-          clipPath: "polygon(100% 0%, 0% 12%, 0% 78%, 100% 100%)",
-          background:
-            "linear-gradient(270deg, #050608 0%, #0c0e12 60%, #0f1216 100%)",
-        }}
-      />
-
-      {/*
-        Painterly surface. Two turbulence passes at different scales — a broad
-        one for the long brush strokes and a finer one for tooth — plus warm
-        ochre marks dragged vertically, as on the reference's walls. Streak
-        gradients alone read as corduroy; fractal noise reads as paint.
-      */}
-      <div
-        className="absolute inset-0 opacity-[0.85] mix-blend-soft-light"
-        style={{
-          backgroundImage: paintedWall({ frequency: 0.005, octaves: 5, opacity: 0.7, seed: 11 }),
-          backgroundSize: "1100px 1100px",
-        }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.5] mix-blend-overlay"
-        style={{
-          backgroundImage: paintedWall({ frequency: 0.02, octaves: 3, opacity: 0.5, seed: 23 }),
-          backgroundSize: "480px 480px",
-        }}
-      />
-      {/* Ochre drags, the warm marks in the reference's paint. */}
-      <div
-        className="absolute inset-0 opacity-[0.22] mix-blend-color-dodge"
-        style={{
-          backgroundImage: paintedWall({ frequency: 0.004, octaves: 4, opacity: 0.55, seed: 41 }),
-          backgroundSize: "900px 1600px",
-          filter: "sepia(1) saturate(2.4) hue-rotate(-12deg)",
-        }}
-      />
-
-      {/* The shaft, visible in the air. */}
-      <div
-        className="absolute top-0 h-[78%]"
-        style={{
-          left: `${lightX}%`,
-          width: "46%",
-          transform: "translateX(-50%)",
-          background:
-            "linear-gradient(180deg, rgb(250 238 208 / 0.34) 0%, rgb(244 226 186 / 0.13) 34%, transparent 78%)",
-          clipPath: "polygon(41% 0%, 59% 0%, 100% 100%, 0% 100%)",
-          filter: "blur(16px)",
-        }}
-      />
-
-      {/* Where it lands on the floor. */}
-      <div
-        className="absolute bottom-[16%] h-[26%] w-[54%]"
-        style={{
-          left: `${lightX}%`,
-          transform: "translateX(-50%)",
-          background:
-            "radial-gradient(closest-side, rgb(250 238 208 / 0.24) 0%, rgb(230 206 160 / 0.08) 52%, transparent 100%)",
-          filter: "blur(24px)",
-        }}
-      />
-
-      {/* Hard vignette — the reference crushes its corners almost to black. */}
+      {/* 2. The floor — an ellipse centred BELOW the bottom edge, so it
+             narrows as it rises. The wall/floor junction is deliberately
+             never drawn; a real black-box has none. */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(72% 62% at 50% 42%, transparent 0%, transparent 42%, rgb(4 4 6 / 0.72) 82%, rgb(2 2 3 / 0.94) 100%)",
+            "radial-gradient(168% 60% at 50% 109%, rgb(25 27 33 / 0.9) 0%, rgb(18 20 25 / 0.58) 34%, rgb(12 13 17 / 0.24) 62%, rgb(9 10 13 / 0.06) 82%, transparent 94%)",
+        }}
+      />
+
+      {/* 3. Paint. Two turbulence tiles; the ochre is baked into the SVG so
+             no CSS filter is needed to tint it. */}
+      <div
+        className="absolute inset-0 opacity-80 mix-blend-soft-light"
+        style={{
+          backgroundImage: paintedWall({
+            frequency: 0.005,
+            octaves: 5,
+            opacity: 0.7,
+            seed: 11,
+          }),
+          backgroundSize: "700px 700px",
+        }}
+      />
+      <div
+        className="absolute inset-0 opacity-[0.34] mix-blend-overlay"
+        style={{
+          backgroundImage: paintedWall({
+            frequency: 0.004,
+            octaves: 4,
+            opacity: 0.55,
+            seed: 41,
+            tint: "#7a5a24",
+          }),
+          backgroundSize: "700px 1240px",
+        }}
+      />
+
+      {/* 4. Haze shoulder — much wider and far fainter than the beam, and
+             unmasked, because a radial gradient is already edgeless. This is
+             the layer that kills any residual "cone edge": the beam's outer
+             falloff gains a second broad shoulder, so no single boundary
+             remains for the eye to latch onto. */}
+      <div
+        className="absolute"
+        style={{
+          left: `${lightX}%`,
+          top: "-6%",
+          width: "108%",
+          height: "94%",
+          transform: "translateX(-50%)",
+          background:
+            "radial-gradient(62% 76% at 50% 2%, rgb(246 232 198 / 0.075) 0%, rgb(240 224 186 / 0.032) 40%, rgb(232 214 176 / 0.012) 62%, transparent 78%)",
+        }}
+      />
+
+      {/* 5. The shaft in the air. Its apex is parked above the frame so the
+             container's top edge crosses the beam where it is narrow and the
+             alpha ramp is still climbing — the frame never cuts it. */}
+      <div
+        className="absolute"
+        style={{
+          left: `${lightX}%`,
+          top: "-10%",
+          width: "62%",
+          height: "104%",
+          transform: "translateX(-50%)",
+          background:
+            "linear-gradient(180deg, rgb(250 240 214 / 0.3) 0%, rgb(246 232 198 / 0.16) 30%, rgb(238 220 180 / 0.06) 58%, transparent 88%)",
+          maskImage: SHAFT_CONE_MASK,
+          WebkitMaskImage: SHAFT_CONE_MASK,
+        }}
+      />
+
+      {/* 6. Hot core, narrower and brighter, so the beam has density rather
+             than being one flat wash. */}
+      <div
+        className="absolute"
+        style={{
+          left: `${lightX}%`,
+          top: "-12%",
+          width: "34%",
+          height: "88%",
+          transform: "translateX(-50%)",
+          background:
+            "linear-gradient(180deg, rgb(255 250 232 / 0.34) 0%, rgb(250 238 206 / 0.13) 34%, transparent 74%)",
+          maskImage: SHAFT_CORE_MASK,
+          WebkitMaskImage: SHAFT_CORE_MASK,
+        }}
+      />
+
+      {/* 7. Where it lands. An ellipse, so the pool has no rim. */}
+      <div
+        className="absolute inset-x-0"
+        style={{
+          bottom: "6%",
+          height: "34%",
+          background:
+            "radial-gradient(42% 100% at 50% 62%, rgb(250 238 206 / 0.2) 0%, rgb(238 220 178 / 0.09) 38%, rgb(220 200 160 / 0.03) 62%, transparent 84%)",
+        }}
+      />
+
+      {/* 8. Vignette — the reference crushes its corners almost to black. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(72% 62% at 50% 42%, transparent 0%, transparent 44%, rgb(4 4 6 / 0.68) 82%, rgb(2 2 3 / 0.94) 100%)",
         }}
       />
     </div>

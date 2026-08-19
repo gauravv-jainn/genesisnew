@@ -20,6 +20,35 @@ export function StandingFigure({ className }: { className?: string }) {
       aria-hidden
     >
       <defs>
+        {/*
+          Fabric. A soft turbulence displacement over the suit gives the wool
+          a nap so the silhouette is not one flat fill. Cheap because the
+          figure renders once and never animates.
+        */}
+        <filter id="genesis-figure-cloth" x="-8%" y="-8%" width="116%" height="116%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.9 1.4"
+            numOctaves="3"
+            seed="4"
+            result="noise"
+          />
+          <feColorMatrix in="noise" type="saturate" values="0" result="grey" />
+          <feComponentTransfer in="grey" result="soft">
+            <feFuncA type="linear" slope="0.16" />
+          </feComponentTransfer>
+          <feComposite in="soft" in2="SourceGraphic" operator="atop" />
+        </filter>
+
+        {/*
+          A hair of blur on the whole figure. Vector edges are perfectly crisp,
+          which is the loudest tell that a person was drawn rather than lit —
+          nothing in a hazy room has a razor outline.
+        */}
+        <filter id="genesis-figure-soften" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="0.55" />
+        </filter>
+
         {/* Top-down key light: bright at the crown, gone by the waist. */}
         <linearGradient id="genesis-figure-key" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#3a352d" />
@@ -41,6 +70,7 @@ export function StandingFigure({ className }: { className?: string }) {
         </linearGradient>
       </defs>
 
+      <g filter="url(#genesis-figure-soften)">
       {/* Legs — wide, straight trousers pooling at the shoe. */}
       <path
         d="M44 168 L40 268 Q40 276 47 276 L55 276 Q58 276 58 268 L59 168 Z"
@@ -94,6 +124,19 @@ export function StandingFigure({ className }: { className?: string }) {
         fill="#0d0c0d"
         opacity="0.85"
       />
+
+      {/* Cloth nap over the whole suit. */}
+      <g filter="url(#genesis-figure-cloth)" opacity="0.75">
+        <path
+          d="M60 58 L38 66 Q28 70 27 82 L23 138 Q22 146 29 147 L34 148 L36 176
+             Q36 182 43 182 L77 182 Q84 182 84 176 L86 148 L91 147 Q98 146 97 138
+             L93 82 Q92 70 82 66 Z"
+          fill="#2a2621"
+        />
+        <path d="M44 168 L40 268 Q40 276 47 276 L55 276 Q58 276 58 268 L59 168 Z" fill="#232019" />
+        <path d="M61 168 L62 268 Q62 276 65 276 L73 276 Q80 276 80 268 L76 168 Z" fill="#232019" />
+      </g>
+      </g>
     </svg>
   );
 }

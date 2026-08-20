@@ -241,13 +241,34 @@ export const influencer = {
     label: "Influencer database",
     description: "A curated network of creators across every niche and platform.",
   },
-  // TODO(data): the database figure is from the spec; the remaining three are
-  // placeholders pending real numbers.
+  /**
+   * These four are read off Genesis's own mockup (spec page 7), which states
+   * them as finished artwork — so they are the client's numbers, not invented
+   * ones. They still want confirming against current reporting before launch,
+   * because a design comp can lag the business.
+   */
   stats: [
-    { value: "1,00,000+", label: "Creator database" },
-    { value: "TODO", label: "Campaigns executed" },
-    { value: "TODO", label: "Brands partnered" },
-    { value: "TODO", label: "Content reach" },
+    { value: "500+", label: "Campaigns Executed" },
+    { value: "200+", label: "Brands Partnered" },
+    { value: "50M+", label: "Content Reach" },
+    { value: "20+", label: "Platforms Covered" },
+  ],
+  /**
+   * The constellation cards. The mockup labels these by NICHE and follower
+   * count — "Travel Creator · 856K Followers" — not by celebrity name, so the
+   * named celebrity collaborations below are a separate list and are not what
+   * rides the orbits.
+   *
+   * Portraits are cropped from that same mockup and live in public/creators.
+   * INTERIM: they are stills lifted from a design comp, at comp resolution.
+   * Replace with real shot photography before launch.
+   */
+  creators: [
+    { id: "lifestyle", label: "Lifestyle Creator", followers: "1.2M Followers", image: "/creators/lifestyle.webp", feature: true },
+    { id: "travel", label: "Travel Creator", followers: "856K Followers", image: "/creators/travel.webp" },
+    { id: "fitness", label: "Fitness Creator", followers: "2.4M Followers", image: "/creators/fitness.webp" },
+    { id: "fashion", label: "Fashion Creator", followers: "947K Followers", image: "/creators/fashion.webp" },
+    { id: "finance", label: "Finance Creator", followers: "1.1M Followers", image: "/creators/finance.webp" },
   ],
   // Celebrity collaborations named in the spec.
   // TODO(spelling/legal): the document writes "Vikhrant Messay" and "Ajay

@@ -42,8 +42,8 @@ export function InfluencerMarketing() {
         }}
       />
 
-      <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
-        <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.92fr]">
+      <div className="relative z-[2] mx-auto w-full max-w-7xl px-6">
+        <div className="grid items-center gap-12 lg:grid-cols-[0.82fr_1.18fr]">
           <div>
             <Reveal>
               {/*
@@ -116,13 +116,12 @@ export function InfluencerMarketing() {
           </div>
 
           <Reveal delay={0.2} direction="left">
-            <CreatorConstellation
-              creators={influencer.celebrities.map((celebrity) => ({
-                id: celebrity.id,
-                label: celebrity.label,
-                followers: celebrity.sublabel,
-              }))}
-            />
+            {/*
+              The mockup labels these by niche and follower count, not by
+              celebrity name — the named celebrity collaborations are a
+              separate list and do not ride the orbits.
+            */}
+            <CreatorConstellation creators={influencer.creators.map((c) => ({ ...c }))} />
           </Reveal>
         </div>
 

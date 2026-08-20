@@ -10,20 +10,29 @@ import { cn } from "@/lib/utils";
  * The creator network — built to the Genesis mockup on page 7.
  *
  * A wireframe globe with orbital rings, creator cards suspended in front of
- * it, and small platform badges riding the same orbits. Red nodes pulse along
- * the network to suggest activity without animating the whole scene.
+ * it, and small portrait badges riding the same orbits carrying platform
+ * chips. Red nodes pulse along the network to suggest activity without
+ * animating the whole scene.
  *
- * Cards ride a slow orbit in two nested layers, so the group has parallax
- * rather than turning as one rigid ring. Everything is driven by MotionValues
- * off the render loop, so nothing here re-renders per frame.
+ * THE MOCKUP IS NOT A RING OF EQUAL CARDS. One card — the lifestyle creator —
+ * is roughly twice the size of the others and sits near the centre, and the
+ * rest are scattered around it at two different depths. A single ring of
+ * identical cards reads as a carousel widget; this reads as a network. So the
+ * featured card orbits at a small radius and a large scale, and the others
+ * alternate between two radii for parallax.
+ *
+ * Everything is driven by MotionValues off the render loop, so nothing here
+ * re-renders per frame.
  */
 
 export type Creator = {
   id: string;
   label: string;
   followers: string;
-  /** Real portrait when supplied; a warm gradient stands in until then. */
+  /** Portrait cropped from the mockup; a warm gradient stands in without one. */
   image?: string;
+  /** The one large, near-centre card. */
+  feature?: boolean;
 };
 
 /** Deterministic pseudo-random, so SSR and the client agree. */
@@ -37,6 +46,51 @@ function portrait(id: string) {
   for (let i = 0; i < id.length; i += 1) hash = (hash * 31 + id.charCodeAt(i)) % 360;
   return `radial-gradient(120% 90% at 30% 15%, hsl(${hash} 34% 46% / 0.95) 0%, transparent 62%),
           linear-gradient(165deg, #2a2530 0%, #14121a 100%)`;
+}
+
+/**
+ * The outer badges: a real portrait with a platform chip clipped to its
+ * corner. lucide-react v1 dropped brand icons, so the glyphs are drawn inline.
+ */
+const PLATFORMS = [
+  { key: "instagram", fill: "linear-gradient(135deg,#f9ce34,#ee2a7b 48%,#6228d7)" },
+  { key: "youtube", fill: "#ff0000" },
+  { key: "linkedin", fill: "#0a66c2" },
+  { key: "instagram", fill: "linear-gradient(135deg,#f9ce34,#ee2a7b 48%,#6228d7)" },
+  { key: "threads", fill: "#ffffff" },
+  { key: "youtube", fill: "#ff0000" },
+  { key: "instagram", fill: "linear-gradient(135deg,#f9ce34,#ee2a7b 48%,#6228d7)" },
+] as const;
+
+function PlatformGlyph({ platform }: { platform: string }) {
+  const common = { viewBox: "0 0 24 24", className: "size-full", "aria-hidden": true } as const;
+
+  if (platform === "youtube") {
+    return (
+      <svg {...common} fill="#fff">
+        <path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15V9l5 3-5 3Z" />
+      </svg>
+    );
+  }
+  if (platform === "linkedin") {
+    return (
+      <svg {...common} fill="#fff">
+        <path d="M6.9 8.4H3.6V20h3.3V8.4ZM5.25 3.5a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8ZM20.4 20h-3.3v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V20H9.8V8.4h3.16v1.59h.05c.44-.84 1.52-1.72 3.12-1.72 3.34 0 3.96 2.2 3.96 5.05V20Z" />
+      </svg>
+    );
+  }
+  if (platform === "threads") {
+    return (
+      <svg {...common} fill="#000">
+        <path d="M16.3 11.5c-.1-.05-.2-.1-.3-.14-.18-3.3-1.98-5.19-5-5.21h-.04c-1.81 0-3.31.77-4.24 2.18l1.66 1.14c.69-1.05 1.78-1.27 2.58-1.27h.03c1 .01 1.75.3 2.23.86.35.41.59.98.7 1.7a12.6 12.6 0 0 0-2.86-.14c-2.88.17-4.73 1.85-4.6 4.19.06 1.19.65 2.21 1.67 2.88.86.56 1.96.84 3.11.78 1.51-.08 2.7-.66 3.53-1.71.63-.8 1.03-1.84 1.2-3.15.72.43 1.25 1 1.55 1.68.5 1.16.53 3.07-1.02 4.62-1.36 1.36-3 1.95-5.47 1.97-2.75-.02-4.83-.9-6.18-2.62C3.6 17.63 3.945 15.36 3.93 12c.015-3.36-.33-5.63.94-7.23C6.22 3.05 8.3 2.17 11.05 2.15c2.77.02 4.88.9 6.28 2.63.69.85 1.2 1.91 1.55 3.15l1.95-.52c-.42-1.52-1.07-2.83-1.96-3.92C17.08 1.28 14.44.16 11.06.14h-.01C7.68.16 5.07 1.28 3.31 3.5 1.74 5.47 1.93 8.2 1.93 12s-.19 6.53 1.38 8.5c1.76 2.22 4.37 3.34 7.74 3.36h.01c3-.02 5.11-.8 6.85-2.54 2.28-2.27 2.21-5.12 1.46-6.87-.54-1.25-1.57-2.27-2.99-2.95Zm-5.08 5.05c-1.27.07-2.59-.5-2.65-1.7-.05-.89.63-1.88 2.73-2 .24-.01.47-.02.7-.02.76 0 1.48.07 2.13.21-.24 3.03-1.66 3.45-2.91 3.51Z" />
+      </svg>
+    );
+  }
+  return (
+    <svg {...common} fill="#fff">
+      <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.72 3.72 0 0 1-1.38-.9 3.72 3.72 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16Zm0 5.68a4.16 4.16 0 1 0 0 8.32 4.16 4.16 0 0 0 0-8.32Zm0 6.86a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4Zm5.3-7.02a.97.97 0 1 1-1.94 0 .97.97 0 0 1 1.94 0Z" />
+    </svg>
+  );
 }
 
 export function CreatorConstellation({
@@ -56,34 +110,37 @@ export function CreatorConstellation({
     angle.set(angle.get() + (delta / 1000) * (360 / 90));
   });
 
+  const orbiting = creators.filter((creator) => !creator.feature);
+
   return (
     <div
-      className={cn("relative isolate mx-auto aspect-square w-full max-w-2xl", className)}
+      className={cn("relative isolate mx-auto aspect-[850/720] w-full", className)}
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
     >
       <Globe />
+
+      {/* Portrait badges ride the widest orbit, behind the cards. */}
+      {PLATFORMS.map((platform, index) => (
+        <PlatformBadge
+          key={index}
+          platform={platform}
+          angle={angle}
+          offset={(360 / PLATFORMS.length) * index + 26}
+          radius={44 + seeded(index, 3) * 5}
+          avatar={`/creators/avatars/a${index + 1}.webp`}
+        />
+      ))}
 
       {creators.map((creator, index) => (
         <OrbitCard
           key={creator.id}
           creator={creator}
           angle={angle}
-          offset={(360 / creators.length) * index}
-          // Alternating radii give the group depth instead of one flat ring.
-          radius={index % 2 === 0 ? 36 : 25}
-          index={index}
-        />
-      ))}
-
-      {/* Platform badges ride the same orbits, further out and smaller. */}
-      {Array.from({ length: 7 }).map((_, index) => (
-        <PlatformBadge
-          key={index}
-          angle={angle}
-          offset={(360 / 7) * index + 26}
-          radius={44 + seeded(index, 3) * 5}
-          index={index}
+          // The feature card barely moves; the rest are spread evenly.
+          offset={creator.feature ? 0 : (360 / orbiting.length) * index}
+          radius={creator.feature ? 7 : index % 2 === 0 ? 37 : 27}
+          avatar={`/creators/avatars/a${(index % 6) + 1}.webp`}
         />
       ))}
     </div>
@@ -149,54 +206,98 @@ function OrbitCard({
   angle,
   offset,
   radius,
-  index,
+  avatar,
 }: {
   creator: Creator;
   angle: MotionValue<number>;
   offset: number;
   radius: number;
-  index: number;
+  avatar: string;
 }) {
   const rad = (deg: number) => ((deg + offset) * Math.PI) / 180;
   // Fixed precision: Framer serialises style values at reduced precision during
   // SSR, so an unrounded float mismatches on hydration.
   const round = (v: number) => Number(v.toFixed(3));
+  const base = creator.feature ? 1 : 0.86;
 
   const left = useTransform(angle, (v) => `${round(50 + radius * Math.cos(rad(v)))}%`);
   const top = useTransform(angle, (v) => `${round(50 + radius * 0.74 * Math.sin(rad(v)))}%`);
   // Cards toward the front sit larger and above.
-  const scale = useTransform(angle, (v) => round(0.86 + 0.2 * ((Math.sin(rad(v)) + 1) / 2)));
+  const scale = useTransform(angle, (v) =>
+    round(base + (creator.feature ? 0.04 : 0.2) * ((Math.sin(rad(v)) + 1) / 2)),
+  );
 
   return (
     <motion.div
       style={{ left, top, scale }}
-      className="absolute z-20 -translate-x-1/2 -translate-y-1/2"
+      // The width lives HERE, on the positioned element, so the percentage
+      // resolves against the constellation container. On the inner card it
+      // resolved against a shrink-to-fit parent and came out ~24% too wide.
+      className={cn(
+        "absolute -translate-x-1/2 -translate-y-1/2",
+        // Measured off the mockup: the centre card is 27% of the constellation
+        // width and the rest are ~17%.
+        creator.feature ? "z-30 w-[27%]" : "z-20 w-[19%]",
+      )}
     >
-      <div className="glass glass-lit w-[8.5rem] overflow-hidden rounded-2xl sm:w-40">
+      <div className="glass glass-lit w-full overflow-hidden rounded-2xl">
         <div
           className="relative aspect-[4/5]"
           style={{ backgroundImage: creator.image ? undefined : portrait(creator.id) }}
         >
           {creator.image && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={creator.image} alt="" className="size-full object-cover" />
+            <img
+              src={creator.image}
+              alt=""
+              className="size-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
           )}
 
-          <span className="glass absolute right-2 top-2 grid size-6 place-items-center rounded-full text-bone">
-            <Play className="size-2.5 fill-current" aria-hidden />
+          <span
+            className={cn(
+              "glass absolute right-2 top-2 grid place-items-center rounded-full text-bone",
+              creator.feature ? "size-9" : "size-6",
+            )}
+          >
+            <Play className={creator.feature ? "size-4 fill-current" : "size-2.5 fill-current"} aria-hidden />
           </span>
 
           {/* The name bar, as in the mockup: avatar, name, follower count. */}
-          <div className="glass glass-strong absolute inset-x-2 bottom-2 flex items-center gap-2 rounded-xl px-2 py-1.5">
-            <span
-              className="size-5 shrink-0 rounded-full"
-              style={{ backgroundImage: portrait(`${creator.id}-a`) }}
+          <div
+            className={cn(
+              "glass glass-strong absolute inset-x-2 bottom-2 flex items-center rounded-xl",
+              creator.feature ? "gap-3 px-3 py-2.5" : "gap-2 px-2 py-1.5",
+            )}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={avatar}
+              alt=""
+              className={cn(
+                "shrink-0 rounded-full object-cover",
+                creator.feature ? "size-9" : "size-5",
+              )}
+              loading="lazy"
+              decoding="async"
             />
             <span className="min-w-0">
-              <span className="block truncate text-[9px] font-medium leading-tight text-bone">
+              <span
+                className={cn(
+                  "block truncate font-medium leading-tight text-bone",
+                  creator.feature ? "text-[13px]" : "text-[9px]",
+                )}
+              >
                 {creator.label}
               </span>
-              <span className="block truncate text-[8px] leading-tight text-ash">
+              <span
+                className={cn(
+                  "block truncate leading-tight text-ash",
+                  creator.feature ? "text-[11px]" : "text-[8px]",
+                )}
+              >
                 {creator.followers}
               </span>
             </span>
@@ -204,28 +305,29 @@ function OrbitCard({
         </div>
       </div>
       <span className="sr-only">{`${creator.label}, ${creator.followers}`}</span>
-      <span aria-hidden className="hidden">{index}</span>
     </motion.div>
   );
 }
 
 function PlatformBadge({
+  platform,
   angle,
   offset,
   radius,
-  index,
+  avatar,
 }: {
+  platform: (typeof PLATFORMS)[number];
   angle: MotionValue<number>;
   offset: number;
   radius: number;
-  index: number;
+  avatar: string;
 }) {
   const rad = (deg: number) => ((deg + offset) * Math.PI) / 180;
   const round = (v: number) => Number(v.toFixed(3));
 
   const left = useTransform(angle, (v) => `${round(50 + radius * Math.cos(rad(v)))}%`);
   const top = useTransform(angle, (v) => `${round(50 + radius * 0.72 * Math.sin(rad(v)))}%`);
-  const opacity = useTransform(angle, (v) => round(0.4 + 0.6 * ((Math.sin(rad(v)) + 1) / 2)));
+  const opacity = useTransform(angle, (v) => round(0.45 + 0.55 * ((Math.sin(rad(v)) + 1) / 2)));
 
   return (
     <motion.div
@@ -233,12 +335,21 @@ function PlatformBadge({
       style={{ left, top, opacity }}
       className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
     >
-      <span
-        className="block size-8 rounded-full ring-1 ring-white/15"
-        style={{ backgroundImage: portrait(`badge-${index}`) }}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={avatar}
+        alt=""
+        className="block size-9 rounded-full object-cover ring-1 ring-white/15"
+        loading="lazy"
+        decoding="async"
       />
       {/* The platform chip clipped to the badge's corner, as in the mockup. */}
-      <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-[4px] bg-crimson/80 ring-1 ring-black/40" />
+      <span
+        className="absolute -bottom-1 -right-1 grid size-4 place-items-center rounded-[5px] p-0.5 ring-1 ring-black/40"
+        style={{ background: platform.fill }}
+      >
+        <PlatformGlyph platform={platform.key} />
+      </span>
     </motion.div>
   );
 }

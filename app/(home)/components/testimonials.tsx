@@ -1,7 +1,7 @@
 import { Reel } from "@/components/genesis/reel";
 import { Reveal } from "@/components/genesis/reveal";
 import { WatchCluster } from "@/components/genesis/watch-cluster";
-import { testimonials } from "@/lib/home-content";
+import { isPending, testimonials } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
 
 /**
@@ -10,11 +10,16 @@ import { SectionShell } from "./section-shell";
  * Spec: "//this will like move around like how apps move around in an apple
  * watch", so this shares the cluster interaction with the client logos.
  *
- * Names and companies are real (from the spec). Every QUOTE is still a
- * placeholder — the spec also notes "Start video testimonial project", so
- * these cells become video cards once that footage exists.
+ * Names and companies are real (from the spec); the quotes are not written
+ * yet. A testimonial is the quote — attributing invented praise to a named
+ * person at a named company is the single worst thing this page could do — so
+ * an entry without one is dropped, and with none left the section stays dark
+ * until real quotes arrive.
  */
 export function Testimonials() {
+  const items = testimonials.items.filter((item) => !isPending(item.quote));
+  if (items.length === 0) return null;
+
   return (
     <SectionShell
       id="testimonials"
@@ -30,7 +35,7 @@ export function Testimonials() {
         <WatchCluster
           height={520}
           cell={190}
-          items={testimonials.items.map((testimonial) => ({
+          items={items.map((testimonial) => ({
             id: testimonial.name,
             content: (
               <figure className="glass glass-lit flex w-40 flex-col gap-3 rounded-3xl p-4 sm:w-44">

@@ -3,7 +3,7 @@ import { BarChart3, Globe, Sparkles, Target, Users } from "lucide-react";
 import { CreatorConstellation } from "@/components/genesis/creator-constellation";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
-import { influencer } from "@/lib/home-content";
+import { influencer, isPending } from "@/lib/home-content";
 
 /**
  * Influencer marketing — built to the Genesis mockup on page 7.
@@ -24,6 +24,9 @@ import { influencer } from "@/lib/home-content";
 const STAT_ICONS = [Target, BarChart3, Sparkles, Globe];
 
 export function InfluencerMarketing() {
+  // An unconfirmed figure is omitted, never printed as a placeholder.
+  const stats = influencer.stats.filter((stat) => !isPending(stat.value));
+
   return (
     <section
       id="influencer"
@@ -127,7 +130,7 @@ export function InfluencerMarketing() {
         <Reveal delay={0.24} className="mt-14">
           <div className="glass glass-lit flex flex-col gap-8 rounded-[1.75rem] px-6 py-7 sm:px-8 lg:flex-row lg:items-center">
             <div className="grid flex-1 grid-cols-2 gap-y-7 lg:grid-cols-4">
-              {influencer.stats.map((stat, index) => {
+              {stats.map((stat, index) => {
                 const Icon = STAT_ICONS[index] ?? Globe;
                 const highlight = index === 0;
 

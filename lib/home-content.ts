@@ -16,6 +16,22 @@ import type { Milestone } from "@/components/genesis/animated-timeline";
  *   - Footer: "liquid glass"
  */
 
+/**
+ * True for any field still waiting on a real value.
+ *
+ * Placeholders are written as "TODO — …" here so they stay greppable, but they
+ * must never reach the page. These sections carry REAL client names — Mahindra,
+ * Aditya Birla — and printing "TODO — real quote required." beside one reads to
+ * a visitor as a claim Genesis is making about that client. Components call
+ * this and omit the element rather than rendering the token.
+ *
+ * Omission is the safe direction: a missing figure is invisible, an invented
+ * one is a lie that has to be retracted.
+ */
+export function isPending(value: string | null | undefined): boolean {
+  return !value || value.trimStart().startsWith("TODO");
+}
+
 // --- Hero -------------------------------------------------------------------
 
 export const hero = {

@@ -3,7 +3,7 @@ import { StatRow } from "@/components/genesis/stat-card";
 import { CornerNote, GhostType, Spotlight } from "@/components/genesis/spotlight";
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
-import { journey } from "@/lib/home-content";
+import { isPending, journey } from "@/lib/home-content";
 
 /**
  * Section 5 — Our Journey.
@@ -16,8 +16,19 @@ import { journey } from "@/lib/home-content";
  * The cool tone is deliberate and is the one place the site goes cold: it
  * separates the retrospective from the warm, present-tense sections either
  * side of it.
+ *
+ * This section IS its timeline — a history with no dated moments in it is not
+ * a history — so with no confirmed milestones it does not render at all. The
+ * figures are filtered the same way; see isPending() in lib/home-content.ts.
  */
 export function Journey() {
+  const milestones = journey.milestones.filter(
+    (milestone) => !isPending(milestone.date) || !isPending(milestone.description),
+  );
+  const figures = journey.figures.filter((figure) => !isPending(figure.value));
+
+  if (milestones.length === 0) return null;
+
   return (
     <section
       id="journey"
@@ -50,7 +61,7 @@ export function Journey() {
           StatRow counts each up once as it scrolls into view.
         */}
         <Reveal delay={0.12} className="mt-14">
-          <StatRow stats={journey.figures.map((figure) => ({ ...figure }))} />
+          <StatRow stats={figures.map((figure) => ({ ...figure }))} />
         </Reveal>
 
         {/*
@@ -80,7 +91,7 @@ export function Journey() {
             />
 
             <AnimatedTimeline
-              milestones={[...journey.milestones]}
+              milestones={milestones}
               tone="teal"
               className="relative"
             />

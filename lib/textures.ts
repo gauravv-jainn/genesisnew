@@ -224,3 +224,98 @@ export function agedPaper({ seed = 1, width = 220, height = 300 } = {}) {
       <rect width="${width}" height="${height}" fill="url(#stain)"/>
     </svg>`);
 }
+
+/**
+ * The printed content of a backlit document — the landing scene on page 1.
+ *
+ * In the reference the sheets are lit from BEHIND, so what reaches the eye is
+ * not ink on paper but the shadow of ink seen through the sheet: a masthead, a
+ * few ruled paragraphs, a ruled table, and on some sheets a photo box. Drawing
+ * that content is what separates a lit document from a plain warm rectangle,
+ * and a plain warm rectangle is what the wall had been rendering.
+ *
+ * Deterministic in `seed`, so SSR and the client agree and no sheet is
+ * identical to its neighbour.
+ */
+export function documentSheet({
+  seed = 1,
+  width = 220,
+  height = 300,
+  ink = "#6d3208",
+}: { seed?: number; width?: number; height?: number; ink?: string } = {}) {
+  // Small deterministic PRNG; Math.random() would break SSR.
+  let state = seed * 9301 + 49297;
+  const rand = () => {
+    state = (state * 9301 + 49297) % 233280;
+    return state / 233280;
+  };
+
+  const pad = width * 0.1;
+  const inner = width - pad * 2;
+  const parts: string[] = [];
+  let y = pad * 1.15;
+
+  // Masthead: a heavy title bar and a short rule under it.
+  parts.push(
+    `<rect x="${pad}" y="${y}" width="${(inner * (0.42 + rand() * 0.26)).toFixed(1)}" height="${(height * 0.022).toFixed(1)}" fill="${ink}" opacity="0.62"/>`,
+  );
+  y += height * 0.05;
+  parts.push(
+    `<rect x="${pad}" y="${y}" width="${inner.toFixed(1)}" height="0.8" fill="${ink}" opacity="0.4"/>`,
+  );
+  y += height * 0.028;
+
+  // Body: ruled paragraphs with ragged right edges.
+  const paragraphs = 2 + Math.floor(rand() * 2);
+  for (let p = 0; p < paragraphs && y < height * 0.56; p += 1) {
+    const lines = 3 + Math.floor(rand() * 4);
+    for (let l = 0; l < lines && y < height * 0.58; l += 1) {
+      const w = inner * (l === lines - 1 ? 0.36 + rand() * 0.3 : 0.82 + rand() * 0.18);
+      parts.push(
+        `<rect x="${pad}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="1.5" fill="${ink}" opacity="${(0.3 + rand() * 0.16).toFixed(2)}"/>`,
+      );
+      y += height * 0.0165;
+    }
+    y += height * 0.016;
+  }
+
+  // A ruled table — the strongest structure in the reference sheets.
+  const rows = 4 + Math.floor(rand() * 3);
+  const cols = 3 + Math.floor(rand() * 2);
+  const tableTop = y + height * 0.012;
+  const rowH = height * 0.026;
+  const tableH = rowH * rows;
+  if (tableTop + tableH < height * 0.94) {
+    for (let r = 0; r <= rows; r += 1) {
+      parts.push(
+        `<rect x="${pad}" y="${(tableTop + r * rowH).toFixed(1)}" width="${inner.toFixed(1)}" height="0.7" fill="${ink}" opacity="0.4"/>`,
+      );
+    }
+    for (let c = 0; c <= cols; c += 1) {
+      parts.push(
+        `<rect x="${(pad + (inner / cols) * c).toFixed(1)}" y="${tableTop.toFixed(1)}" width="0.7" height="${tableH.toFixed(1)}" fill="${ink}" opacity="0.4"/>`,
+      );
+    }
+    // A few filled cells so the table reads as completed, not blank.
+    for (let i = 0; i < rows; i += 1) {
+      const c = Math.floor(rand() * cols);
+      parts.push(
+        `<rect x="${(pad + (inner / cols) * c + 3).toFixed(1)}" y="${(tableTop + rowH * i + rowH * 0.36).toFixed(1)}" width="${((inner / cols) * (0.34 + rand() * 0.36)).toFixed(1)}" height="1.4" fill="${ink}" opacity="0.44"/>`,
+      );
+    }
+    y = tableTop + tableH + height * 0.022;
+  }
+
+  // Roughly every third sheet carries a photo box, as in the reference.
+  if (rand() > 0.62 && y < height * 0.8) {
+    const boxW = inner * 0.3;
+    parts.push(
+      `<rect x="${(width - pad - boxW).toFixed(1)}" y="${y.toFixed(1)}" width="${boxW.toFixed(1)}" height="${(boxW * 1.24).toFixed(1)}" fill="${ink}" opacity="0.3"/>`,
+    );
+  }
+
+  return svgDataUri(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      ${parts.join("")}
+    </svg>`);
+}

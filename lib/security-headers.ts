@@ -40,6 +40,9 @@ function contentSecurityPolicy(): string {
     // Tailwind and Framer Motion both write inline style attributes.
     "style-src": ["'self'", "'unsafe-inline'"],
     "img-src": ["'self'", "data:", "blob:", "https:"],
+    // YouTube embeds for the journal's video-linked articles. Restricted to
+    // the nocookie host, and the frame only mounts on an explicit click.
+    "frame-src": ["'self'", "https://www.youtube-nocookie.com"],
     "font-src": ["'self'", "data:"],
     "media-src": ["'self'", "https:"],
     "worker-src": ["'self'", "blob:"],

@@ -25,6 +25,11 @@ const frontmatterSchema = z.object({
   readingTime: z.string().min(1),
   /** Drafts are hidden in production but visible while developing. */
   draft: z.boolean().optional().default(false),
+  /**
+   * The film this article documents — spec: "[Add blog articles linked to the
+   * video uploaded on YouTube]". Just the id, e.g. dQw4w9WgXcQ.
+   */
+  youtube: z.string().optional(),
 });
 
 export type PostMeta = z.infer<typeof frontmatterSchema> & { slug: string };

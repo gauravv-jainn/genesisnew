@@ -560,6 +560,45 @@ links** across every page · build, lint, typecheck clean · 0 vulnerabilities.
 
 ---
 
+## Media mechanisms — built ahead of the assets
+
+The remaining spec items were all "blocked on assets". Rather than leave them
+as notes, the mechanisms are built, so each turns on with data alone and no
+code change.
+
+| Spec item | Mechanism |
+| --- | --- |
+| *"Update this reel video with new content"* | `<Reel>` in the hero. Set `heroReel.src` and it plays. |
+| *"videos playing on their own like a GIF"* | Library tiles render a muted inline loop when an item has `clip`. |
+| *"TOOLS WE USE, SOME PICS, VIDEOS"* | Same `<Reel>`, ready to sit beside the stack. |
+| *"Start Video testimonial project"* | A testimonial with `clip` becomes a video card; the rest stay text, so the wall fills one person at a time rather than waiting on a full shoot. |
+| *"[blog articles linked to the video uploaded on YouTube]"* | `youtube:` in a post's frontmatter renders the film above the prose. |
+
+Three decisions inside those:
+
+**`<Reel>` does not autoplay under `prefers-reduced-motion`.** It shows the
+poster with a play control instead — auto-playing video is exactly what that
+setting exists to stop.
+
+**Without a source it renders a labelled frame**, correctly sized, rather than
+a stock gradient pretending to be footage. The layout is honest today.
+
+**The YouTube frame only mounts on click**, against `youtube-nocookie`. An
+autoloaded player sets cookies and pulls hundreds of kilobytes before anyone
+asked to watch; clicking is consent, and reading stays fast. CSP gained
+`frame-src 'self' https://www.youtube-nocookie.com` — scoped to that host
+only. Thumbnails go through `next/image` with a remote pattern locked to
+`i.ytimg.com/vi/**`.
+
+### What genuinely cannot be built
+
+Copy that must be true: the 4 case-study results, 12 testimonial quotes,
+journey figures and dates, and the real tools list. Names are real, so
+invented quotes are worse than blanks. Plus credentials, brand assets, and the
+crimson-vs-amber call.
+
+---
+
 ## Repository
 
 Remote is `https://github.com/gauravv-jainn/genesisnew`, set as `origin`.

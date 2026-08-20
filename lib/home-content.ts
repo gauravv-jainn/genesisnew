@@ -31,6 +31,16 @@ export const hero = {
   secondaryCta: { label: "See our work", href: "/our-work" },
 } as const;
 
+/**
+ * The hero reel. Spec: "Update this reel video with new content."
+ * TODO(assets): supply a short muted loop and its poster frame.
+ */
+export const heroReel = {
+  src: undefined as string | undefined,
+  poster: undefined as string | undefined,
+  label: "Showreel",
+} as const;
+
 // --- Services (Section 2) ---------------------------------------------------
 
 // The spec replaces the old services section with exactly these five, and asks
@@ -287,6 +297,11 @@ export const testimonials = {
   label: "What clients say",
   heading: "In their",
   headingAccent: "words",
+  /**
+   * Spec: "Start Video testimonial project." Each entry may carry a `clip`
+   * once that footage exists; entries without one render as text cards.
+   * TODO(assets): video testimonials pending.
+   */
   items: [
     { quote: "TODO — real quote required.", name: "Anu Raj", role: "Mahindra" },
     { quote: "TODO — real quote required.", name: "Shreya", role: "Mahindra Finance" },

@@ -1,3 +1,4 @@
+import { Reel } from "@/components/genesis/reel";
 import { Reveal } from "@/components/genesis/reveal";
 import { WatchCluster } from "@/components/genesis/watch-cluster";
 import { testimonials } from "@/lib/home-content";
@@ -33,6 +34,21 @@ export function Testimonials() {
             id: testimonial.name,
             content: (
               <figure className="glass glass-lit flex w-40 flex-col gap-3 rounded-3xl p-4 sm:w-44">
+                {/*
+                  Spec: "Start Video testimonial project." An entry with a clip
+                  becomes a video card; the rest stay text. Both shapes coexist
+                  so the wall can fill in one person at a time rather than
+                  waiting on a full shoot.
+                */}
+                {"clip" in testimonial && testimonial.clip ? (
+                  <Reel
+                    src={testimonial.clip as string}
+                    label={`${testimonial.name}, ${testimonial.role}`}
+                    aspect="3 / 4"
+                    className="rounded-2xl"
+                  />
+                ) : null}
+
                 <blockquote className="text-[11px] leading-relaxed text-bone/80">
                   &ldquo;{testimonial.quote}&rdquo;
                 </blockquote>

@@ -3,6 +3,8 @@ import { ArrowDown } from "lucide-react";
 import { Atmosphere } from "@/components/genesis/atmosphere";
 import { DocumentWall } from "@/components/genesis/document-wall";
 import { CornerNote } from "@/components/genesis/spotlight";
+import { Reel } from "@/components/genesis/reel";
+import { heroReel } from "@/lib/home-content";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
@@ -96,9 +98,20 @@ export function Hero() {
             </Reveal>
           </div>
 
-          {/* The wall carries the right side now; this annotates it. */}
-          <Reveal delay={0.25} direction="left" className="hidden justify-end lg:flex">
-            <CornerNote index="01">
+          {/*
+            The reel. Spec: "Update this reel video with new content." The
+            frame is labelled and correctly sized before footage exists, so
+            the layout is honest today and upgrades on data alone.
+          */}
+          <Reveal delay={0.25} direction="left" className="hidden lg:block">
+            <Reel
+              src={heroReel.src}
+              poster={heroReel.poster}
+              label={heroReel.label}
+              aspect="4 / 5"
+              className="ml-auto w-full max-w-sm"
+            />
+            <CornerNote index="01" className="ml-auto mt-5">
               Content, influencer activations and AI — produced in-house, from
               the first idea to the published post.
             </CornerNote>

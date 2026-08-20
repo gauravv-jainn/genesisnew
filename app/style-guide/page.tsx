@@ -13,6 +13,8 @@ import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { StatCard, StatRow } from "@/components/genesis/stat-card";
 import { ContactForm } from "@/components/genesis/contact-form";
+import { Reel } from "@/components/genesis/reel";
+import { SocialStars } from "@/components/genesis/social-stars";
 import { DocumentWall } from "@/components/genesis/document-wall";
 import { FloatingPapers } from "@/components/genesis/floating-papers";
 import { GlowWord, IridescentButton } from "@/components/genesis/glow-word";
@@ -229,6 +231,18 @@ export default function StyleGuidePage() {
         <LogoMarquee
           logos={["KAYALI", "TATA MOTORS", "ICICI BANK", "MIRAGGIO", "YONEX", "KREO TECH", "DOT & KEY"]}
         />
+      </Section>
+
+      <Section title="Reel" note="Muted, looping, controlless — the spec's 'playing on their own like a GIF'. Without a src it renders a labelled frame, so layout is correct before footage exists. Does NOT autoplay under prefers-reduced-motion.">
+        <div className="grid gap-5 sm:grid-cols-3">
+          <Reel label="Showreel" aspect="4 / 5" />
+          <Reel label="Behind the scenes" aspect="1 / 1" />
+          <Reel label="Client film" aspect="16 / 9" />
+        </div>
+      </Section>
+
+      <Section title="Social stars" note="The lockup's four-point star as a clip-path, so the hover bloom takes the star's silhouette. Marks drawn inline — lucide v1 dropped its brand icons.">
+        <SocialStars />
       </Section>
 
       <Section title="Scene primitives" note="Spotlight, ghosted display type and editorial corner marks — the language the reference layouts are built from.">

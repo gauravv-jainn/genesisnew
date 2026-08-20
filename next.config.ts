@@ -10,6 +10,17 @@ const nextConfig: NextConfig = {
   // the serverless bundle; Next loads it from node_modules at runtime instead.
   serverExternalPackages: ["googleapis"],
 
+  images: {
+    /**
+     * YouTube still frames for the journal's video-linked articles. Scoped to
+     * the thumbnail host only — a permissive pattern here would let any URL
+     * in the app become an optimisation request against arbitrary origins.
+     */
+    remotePatterns: [
+      { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" },
+    ],
+  },
+
   async headers() {
     return [
       {

@@ -6,6 +6,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { Atmosphere } from "@/components/genesis/atmosphere";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { SectionLabel } from "@/components/genesis/section-label";
+import { YouTubeEmbed } from "@/components/genesis/reel";
 import { formatPostDate, getAllPosts, getPost } from "@/lib/blog";
 
 /**
@@ -67,6 +68,19 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
             )}
           </div>
         </header>
+
+        {/*
+          The film the piece documents, when there is one. Above the prose
+          because the spec pairs article and video as one unit, and the frame
+          only mounts on click so reading costs nothing.
+        */}
+        {post.youtube && (
+          <YouTubeEmbed
+            id={post.youtube}
+            title={post.title}
+            className="mt-12"
+          />
+        )}
 
         {/*
           Prose styles are scoped here rather than added to the global

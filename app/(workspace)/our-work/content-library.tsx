@@ -27,11 +27,35 @@ type ViewMode = "grid" | "list";
  * Tiles without a clip fall back to the generated artwork, so the grid works
  * today and upgrades the moment real media lands.
  */
+/** True while a tile is showing mockup artwork that already carries chrome. */
+function hasOwnChrome(item: { clip?: string; poster?: string; art?: string }) {
+  return !item.clip && !item.poster && Boolean(item.art);
+}
+
 function TileMedia({
   item,
 }: {
-  item: (typeof ourWork.items)[number] & { clip?: string; poster?: string };
+  item: (typeof ourWork.items)[number] & { clip?: string; poster?: string; art?: string };
 }) {
+  // INTERIM ARTWORK. These stills are the cards from Genesis's own Content
+  // Library mockup (spec page 7), chrome included — the mockup bakes its
+  // category pill, play control and caption into the image, so the component
+  // suppresses its own for these tiles rather than drawing a second set on
+  // top. The moment a real clip or poster lands for an item, the branch below
+  // takes over and the data-driven overlays come back with it.
+  if (!item.clip && !item.poster && item.art) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={item.art}
+        alt={`${item.client} — ${item.title}`}
+        className="absolute inset-0 size-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  }
+
   if (item.clip) {
     return (
       <video
@@ -187,24 +211,29 @@ export function ContentLibrary() {
                 key={item.id}
                 className="group relative overflow-hidden rounded-2xl border border-white/10 transition-shadow duration-500 hover:shadow-[0_20px_50px_-18px_rgb(255_45_63/0.45)]"
               >
-                <div className="relative aspect-[3/4] overflow-hidden">
+                <div className="relative aspect-[87/100] overflow-hidden">
                   <TileMedia item={item} />
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.4)_0%,transparent_30%,transparent_46%,rgb(0_0_0/0.9)_100%)]" />
 
-                  <span className="glass absolute left-2.5 top-2.5 rounded-full px-2.5 py-1 text-[10px] font-medium text-bone">
-                    {item.badge}
-                  </span>
+                  {hasOwnChrome(item) ? null : (
+                    <>
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.4)_0%,transparent_30%,transparent_46%,rgb(0_0_0/0.9)_100%)]" />
 
-                  <span className="glass absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-full text-bone opacity-85 transition-opacity duration-300 group-hover:opacity-100">
-                    <Play className="size-3 fill-current" aria-hidden />
-                  </span>
+                      <span className="glass absolute left-2.5 top-2.5 rounded-full px-2.5 py-1 text-[10px] font-medium text-bone">
+                        {item.badge}
+                      </span>
 
-                  <div className="absolute inset-x-0 bottom-0 p-3">
-                    <p className="text-[11px] font-semibold tracking-wide text-bone">
-                      {item.client}
-                    </p>
-                    <p className="mt-0.5 text-[11px] text-ash">{item.title}</p>
-                  </div>
+                      <span className="glass absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-full text-bone opacity-85 transition-opacity duration-300 group-hover:opacity-100">
+                        <Play className="size-3 fill-current" aria-hidden />
+                      </span>
+
+                      <div className="absolute inset-x-0 bottom-0 p-3">
+                        <p className="text-[11px] font-semibold tracking-wide text-bone">
+                          {item.client}
+                        </p>
+                        <p className="mt-0.5 text-[11px] text-ash">{item.title}</p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </article>
             ) : (

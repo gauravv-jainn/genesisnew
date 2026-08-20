@@ -1,54 +1,63 @@
 import { ArrowDown } from "lucide-react";
 
-import { Atmosphere } from "@/components/genesis/atmosphere";
 import { DocumentWall } from "@/components/genesis/document-wall";
-import { CornerNote } from "@/components/genesis/spotlight";
-import { Reel } from "@/components/genesis/reel";
-import { heroReel } from "@/lib/home-content";
 import { GlassButton } from "@/components/genesis/glass-button";
+import { LitRoom } from "@/components/genesis/lit-room";
+import { Reel } from "@/components/genesis/reel";
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
-import { hero } from "@/lib/home-content";
+import { CornerNote } from "@/components/genesis/spotlight";
+import { hero, heroReel } from "@/lib/home-content";
 
 /**
  * Section 1 — Hero.
  *
- * Built to the landing-page reference on page 1 of the spec: a curved wall of
- * lit documents standing in the dark, with the headline read against it and
- * one serif-italic accent word.
+ * Built to the landing reference on page 1 of the spec: a figure facing a
+ * curved wall of lit documents in a dark room. The wall is the subject here,
+ * not a texture — it is the only thing on the page carrying light, and the
+ * headline is read against it.
+ *
+ * TWO THINGS AN EARLIER VERSION GOT WRONG:
+ *
+ * 1. The wall was masked and dimmed until it was a faint smudge. It now
+ *    carries real luminance, with the room's own vignette doing the work of
+ *    keeping it off the type instead of an opacity clamp.
+ *
+ * 2. The reel slot rendered a bordered empty frame in the hero's best real
+ *    estate, which reads as a broken image rather than as a placeholder. The
+ *    reel now appears ONLY when there is footage; until then the wall takes
+ *    that space, which is what the reference shows anyway.
  */
 export function Hero() {
+  const hasReel = Boolean(heroReel.src);
+
   return (
-    <Atmosphere
-      tone="crimson"
-      origin="top-right"
-      intensity={0.3}
-      className="relative min-h-dvh"
-    >
+    <section className="grain relative isolate min-h-dvh overflow-hidden bg-void">
+      {/* The room the wall stands in — edgeless, so nothing reads as a line. */}
+      <LitRoom lightX={62} />
+
+      {/* The wall itself, only when it is not displaced by real footage. */}
+      {!hasReel && (
+        <div
+          className={[
+            // Sits in the right half only, so it never competes with the
+            // headline for contrast, and fades out toward the type rather
+            // than ending on a hard edge.
+            "pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] lg:block",
+            "[mask-image:linear-gradient(90deg,transparent,black_26%,black_100%)]",
+          ].join(" ")}
+        >
+          <DocumentWall tone="amber" />
+        </div>
+      )}
+
       {/*
-        The landing-page reference on page 1 of the spec: a curved wall of lit
-        documents standing in the dark. Sits behind the headline and is dimmed
-        so type stays the first thing read, not the second.
-      */}
-      <DocumentWall
-        tone="amber"
-        className={[
-          // Sits in the right half so it never fights the headline for
-          // contrast, and fades at the edges so it reads as standing in a
-          // dark room rather than pasted on.
-          "left-auto right-0 w-full lg:w-[62%]",
-          "opacity-90",
-          "[mask-image:radial-gradient(75%_70%_at_55%_50%,black_35%,transparent_100%)]",
-        ].join(" ")}
-      />
-      {/*
-        The vertical budget is tight: this headline is long real copy, and at
-        1440x900 an earlier pass pushed the primary CTA below the fold. Padding
-        and type scale are tuned so the CTA stays visible on a laptop, and the
+        The vertical budget is tight: this headline is long real copy. Padding
+        and type scale are tuned so the CTA stays visible at 1440x900, and the
         scroll cue is positioned absolutely so it costs the flow nothing.
       */}
-      <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-center px-6 pb-28 pt-28 sm:pt-32">
-        <div className="grid items-center gap-16 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-center px-6 pb-28 pt-28 sm:pt-32">
+        <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <Reveal>
               <SectionLabel dot>{hero.eyebrow}</SectionLabel>
@@ -56,12 +65,11 @@ export function Hero() {
 
             <Reveal delay={0.05}>
               {/*
-                The largest step is gated on viewport HEIGHT as well as width.
-                This headline is long real copy that wraps to six lines, so at
-                1440x900 a width-only `xl:text-7xl` overflowed the hero and
-                pushed the CTA and scroll cue off-screen.
+                The largest step is gated on viewport HEIGHT as well as width:
+                this headline wraps to several lines, and a width-only rule
+                pushed the CTA off-screen at 1440x900.
+                Underscores become spaces in the emitted media query.
               */}
-              {/* Underscores become spaces in the emitted media query. */}
               <h1 className="mt-6 text-balance text-[2.5rem] font-semibold leading-[1.03] tracking-tight text-bone sm:text-5xl lg:text-6xl [@media(min-width:1280px)_and_(min-height:960px)]:text-7xl">
                 {hero.headlineLead}{" "}
                 <span className="font-serif font-normal italic text-amber">
@@ -98,32 +106,30 @@ export function Hero() {
             </Reveal>
           </div>
 
-          {/*
-            The reel. Spec: "Update this reel video with new content." The
-            frame is labelled and correctly sized before footage exists, so
-            the layout is honest today and upgrades on data alone.
-          */}
+          {/* Right column: real footage when it exists, otherwise an annotation. */}
           <Reveal delay={0.25} direction="left" className="hidden lg:block">
-            <Reel
-              src={heroReel.src}
-              poster={heroReel.poster}
-              label={heroReel.label}
-              aspect="4 / 5"
-              className="ml-auto w-full max-w-sm"
-            />
-            <CornerNote index="01" className="ml-auto mt-5">
-              Content, influencer activations and AI — produced in-house, from
-              the first idea to the published post.
-            </CornerNote>
+            {hasReel ? (
+              <Reel
+                src={heroReel.src}
+                poster={heroReel.poster}
+                label={heroReel.label}
+                aspect="4 / 5"
+                className="ml-auto w-full max-w-sm"
+              />
+            ) : (
+              <CornerNote index="01" className="ml-auto">
+                Content, influencer activations and AI — produced in-house, from
+                the first idea to the published post.
+              </CornerNote>
+            )}
           </Reveal>
         </div>
-
       </div>
 
       {/* Out of flow, so a long headline never pushes the CTA off-screen. */}
       <Reveal
         delay={0.4}
-        className="absolute inset-x-0 bottom-8 flex justify-center"
+        className="absolute inset-x-0 bottom-8 z-[2] flex justify-center"
       >
         <a
           href="#services"
@@ -133,6 +139,6 @@ export function Hero() {
           SCROLL
         </a>
       </Reveal>
-    </Atmosphere>
+    </section>
   );
 }

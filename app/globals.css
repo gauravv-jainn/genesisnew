@@ -282,6 +282,19 @@
     }
 }
 
+/* Network nodes on the creator constellation. */
+@keyframes genesis-node-pulse {
+    0%, 100% {
+        opacity: 0.25;
+        r: 2.2;
+    }
+
+    50% {
+        opacity: 1;
+        r: 3.4;
+    }
+}
+
 /* Seamless marquee: the track is duplicated once, so -50% lands exactly on
    the start of the copy. Consumed by <LogoMarquee />. */
 @keyframes genesis-marquee {

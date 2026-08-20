@@ -5,6 +5,7 @@ import { AiContent } from "./components/ai-content";
 import { BlogTeaser } from "./components/blog-teaser";
 import { BrandingDesign } from "./components/branding-design";
 import { CameraPan } from "./components/camera-pan";
+import { CreativeProcess } from "./components/creative-process";
 import { CaseStudies } from "./components/case-studies";
 import { ClientLogos } from "./components/client-logos";
 import { FooterCta } from "./components/footer-cta";
@@ -42,6 +43,7 @@ export default function HomePage() {
       <CameraPan front={<Services />} back={<Portfolio />} />
       <CaseStudies />
       <Journey />
+      <CreativeProcess />
       <AiContent />
       <InfluencerMarketing />
       <BrandingDesign />

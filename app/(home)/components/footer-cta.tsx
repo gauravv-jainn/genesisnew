@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Atmosphere } from "@/components/genesis/atmosphere";
 import { ContactForm } from "@/components/genesis/contact-form";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
+import { SocialStars } from "@/components/genesis/social-stars";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
 import { footerCta } from "@/lib/home-content";
@@ -59,8 +60,13 @@ export function FooterCta() {
           />
         </Reveal>
 
-        {/* Contact details + navigation */}
-        <div className="mt-20 grid gap-12 border-t border-white/10 pt-12 sm:grid-cols-2 lg:grid-cols-4">
+        {/*
+          Contact details + navigation, on a single sheet of liquid glass —
+          the spec marks the footer "//liquid glass". Heavier blur and a lit
+          top edge, so it reads as one pane the content sits inside rather
+          than a row of boxes.
+        */}
+        <div className="glass glass-strong glass-lit mt-20 grid gap-12 rounded-[2rem] p-8 sm:grid-cols-2 sm:p-10 lg:grid-cols-4">
           <Reveal>
             <GenesisMark />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-ash">
@@ -72,6 +78,9 @@ export function FooterCta() {
             >
               {footerCta.email}
             </a>
+
+            {/* "Social Media Icons (like stars)" — the lockup's star, repeated. */}
+            <SocialStars className="mt-6 -ml-3" />
           </Reveal>
 
           {footerNav.map((group, index) => (

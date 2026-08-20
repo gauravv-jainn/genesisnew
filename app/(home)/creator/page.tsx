@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/genesis/contact-form";
+import { SlideUp } from "@/components/genesis/slide-up";
 import { PaperCard } from "@/components/genesis/paper-card";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
  */
 export default function CreatorPage() {
   return (
+    <SlideUp>
     <main>
       <section className="grain relative isolate overflow-hidden bg-void pt-36 pb-28 sm:pt-44">
         <Spotlight x={68} spread={17} tone="warm" intensity={1} reach={96} />
@@ -98,5 +100,6 @@ export default function CreatorPage() {
         </Reveal>
       </SectionShell>
     </main>
+    </SlideUp>
   );
 }

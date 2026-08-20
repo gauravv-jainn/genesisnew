@@ -33,6 +33,9 @@ export const ourWork = {
    * loads; `clip` is the loop. Both are pending real media.
    */
   items: [
+    // `clip` is a short muted loop (the spec's "videos playing on their own
+    // like a GIF"); `poster` is the still shown until it can play. Both are
+    // optional — a tile without them falls back to generated artwork.
     { id: "kayali", client: "KAYALI", title: "Product Reel", category: "Reels", badge: "Reel" },
     { id: "tata-motors", client: "TATA MOTORS", title: "Brand Film", category: "Films", badge: "Film" },
     { id: "icici", client: "ICICI BANK", title: "Brand Story", category: "Brand Stories", badge: "Brand Story" },
@@ -115,4 +118,32 @@ export const careersPage = {
     "Strategy", "Influencer partnerships", "Design & motion",
     "AI content", "Engineering",
   ],
+} as const;
+
+// --- /content-creation ------------------------------------------------------
+
+/**
+ * Spec, page 28: "Content Creation - Create a New Page / Add blogs section /
+ * Add creative process 2 lines or sections / [Add blog articles linked to the
+ * video uploaded on YouTube]".
+ */
+export const contentCreationPage = {
+  label: "Content creation",
+  heading: "Production that holds up",
+  headingAccent: "on any feed",
+  body:
+    "Creative direction, strategy, scripting, shoot and post — the full pipeline in-house, so a campaign never loses its thread between the idea and the published post.",
+  capabilities: [
+    { title: "Creative direction", body: "The idea, and the argument about whether it is the right one." },
+    { title: "Strategy", body: "Audience, channel and measurement decided before anything is shot." },
+    { title: "Scripting", body: "Concept to board, written for the placement it will actually run in." },
+    { title: "Production", body: "Shoot or generation, with the standard set at the top." },
+    { title: "Edit & post", body: "Assembly, grade and sound — where timing decides whether it works." },
+    { title: "Distribution", body: "Publishing, tracking, and reporting against the numbers agreed up front." },
+  ],
+  /**
+   * TODO(content): the spec wants each article linked to its YouTube video,
+   * and the thumbnails changed. Needs the video IDs.
+   */
+  videoNote: "Articles pair with the film they document.",
 } as const;

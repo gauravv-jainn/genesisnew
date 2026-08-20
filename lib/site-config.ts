@@ -24,6 +24,7 @@ export const siteConfig = {
 export const navItems: NavItem[] = [
   { label: "Work", href: "/our-work" },
   { label: "Services", href: "/#services" },
+  { label: "Content", href: "/content-creation" },
   { label: "Case Studies", href: "/#case-studies" },
   { label: "Influencers", href: "/influencer-campaigns" },
   { label: "Journal", href: "/blog" },
@@ -36,6 +37,7 @@ export const footerNav: { heading: string; items: NavItem[] }[] = [
     heading: "Agency",
     items: [
       { label: "Our Work", href: "/our-work" },
+      { label: "Content Creation", href: "/content-creation" },
       { label: "Case Studies", href: "/#case-studies" },
       { label: "Services", href: "/#services" },
     ],

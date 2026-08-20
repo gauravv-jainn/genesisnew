@@ -17,6 +17,47 @@ import { cn } from "@/lib/utils";
 type ViewMode = "grid" | "list";
 
 /**
+ * A library tile's moving image.
+ *
+ * The spec asks for "videos playing on their own like a GIF", so a tile with
+ * a clip renders a muted, looping, inline-playing video and nothing else —
+ * no controls, no sound, no click-to-play. `preload="metadata"` keeps ten of
+ * them from each pulling a full file on load.
+ *
+ * Tiles without a clip fall back to the generated artwork, so the grid works
+ * today and upgrades the moment real media lands.
+ */
+function TileMedia({
+  item,
+}: {
+  item: (typeof ourWork.items)[number] & { clip?: string; poster?: string };
+}) {
+  if (item.clip) {
+    return (
+      <video
+        src={item.clip}
+        poster={item.poster}
+        muted
+        loop
+        autoPlay
+        playsInline
+        preload="metadata"
+        aria-label={`${item.client} — ${item.title}`}
+        className="absolute inset-0 size-full object-cover"
+      />
+    );
+  }
+
+  return (
+    <div
+      aria-hidden
+      className="absolute inset-0"
+      style={{ backgroundImage: placeholderArt(item.id) }}
+    />
+  );
+}
+
+/**
  * Deterministic placeholder artwork. The spec calls for "videos playing on
  * their own like a GIF", so each tile becomes a muted autoplay loop once real
  * media exists. Until then a stable hashed gradient stands in — stable so the
@@ -146,12 +187,8 @@ export function ContentLibrary() {
                 key={item.id}
                 className="group relative overflow-hidden rounded-2xl border border-white/10 transition-shadow duration-500 hover:shadow-[0_20px_50px_-18px_rgb(255_45_63/0.45)]"
               >
-                <div
-                  className="relative aspect-[3/4]"
-                  // TODO(assets): replaced by a muted autoplay loop per the
-                  // spec's "videos playing on their own like a GIF".
-                  style={{ backgroundImage: placeholderArt(item.id) }}
-                >
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <TileMedia item={item} />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.4)_0%,transparent_30%,transparent_46%,rgb(0_0_0/0.9)_100%)]" />
 
                   <span className="glass absolute left-2.5 top-2.5 rounded-full px-2.5 py-1 text-[10px] font-medium text-bone">

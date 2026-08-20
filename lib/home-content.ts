@@ -112,6 +112,18 @@ export const journey = {
   heading: "How Genesis",
   headingAccent: "got here",
   body: "A short history, told in the moments that changed how we work.",
+  /**
+   * The spec marks this section "//numbers increasing animation", so the
+   * history is fronted by figures that count up as they arrive.
+   * TODO(data): every figure is a placeholder except the creator database,
+   * which is confirmed elsewhere in the spec.
+   */
+  figures: [
+    { value: "1,00,000+", label: "Creators in the network" },
+    { value: "TODO", label: "Campaigns delivered" },
+    { value: "TODO", label: "Brands partnered" },
+    { value: "TODO", label: "Years running" },
+  ],
   milestones: [
     { date: "TODO", title: "Genesis begins", description: "TODO(copy): real milestone required." },
     { date: "TODO", title: "The creator network scales", description: "TODO(copy): real milestone required." },
@@ -154,6 +166,40 @@ export const aiContent = {
     { label: "Scripting", detail: "concept to board" },
   ],
   destination: "Genesis AI Studio",
+} as const;
+
+// --- Creative process (BTS) -------------------------------------------------
+
+/**
+ * Spec, twice: "Add creative process (BTS)" and "Add creative process 2 lines
+ * or sections". Written as what actually happens rather than a tidy funnel —
+ * the unglamorous steps are the ones clients ask about.
+ * TODO(assets): the spec wants behind-the-scenes stills and video per step.
+ */
+export const creativeProcess = {
+  label: "Behind the scenes",
+  heading: "How the work",
+  headingAccent: "actually gets made",
+  body:
+    "The process below is the one we run. It is written down because briefs go wrong in predictable places, and most of them are early.",
+  steps: [
+    {
+      title: "The brief argument",
+      body: "Before anything is made we argue about the brief: who it is for, what should change in their head, and how we will know.",
+    },
+    {
+      title: "Direction, then casting",
+      body: "Creative direction comes first and creators are matched to it. The other order is how brands end up shaped by whoever was free.",
+    },
+    {
+      title: "Production",
+      body: "Scripting, shoot or generation, edit. AI carries the variants; the hero cut gets human attention start to finish.",
+    },
+    {
+      title: "Publish and read the numbers",
+      body: "The metrics were agreed in step one, so this step is arithmetic rather than argument.",
+    },
+  ],
 } as const;
 
 // --- Influencer marketing ---------------------------------------------------

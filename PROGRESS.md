@@ -515,6 +515,51 @@ decision or an asset:
 
 ---
 
+## Spec audit — every annotation checked
+
+Walked the whole annotation list against the code rather than against memory.
+Seven requirements were specified and never built. All are now in:
+
+| Spec annotation | Was | Now |
+| --- | --- | --- |
+| Our Journey — *"//numbers increasing animation"* | No figures at all | Fronted by a `StatRow` that counts up on entry |
+| *"Add creative process (BTS)"* (asked twice) | Missing | New homepage section, pinned-paper treatment |
+| *"Content Creation — Create a New Page"* | Missing | `/content-creation`, with the blogs section and creative process it specifies |
+| *"Social Media Icons (like stars)"* | Missing | The lockup's four-point star, clip-path shaped, in the footer |
+| Footer — *"//liquid glass"* | Plain bordered grid | One heavy-blur pane with a lit top edge |
+| *"I'm a creator page ⟶ slide up"* | Static | Page rises into place on mount; skipped under reduced motion |
+| *"//videos playing on their own like a GIF"* | Gradient only | Tiles render a muted looping inline video when a clip exists |
+
+Two notes on how these were built:
+
+**The video path is a mechanism, not a mock.** A library item with a `clip`
+renders a muted, looping, `playsInline` video with no controls; one without
+falls back to generated artwork. The grid works today and upgrades the moment
+real media lands — no code change, just data.
+
+**`lucide-react` v1 removed its brand icons**, so Instagram/YouTube/LinkedIn
+are drawn inline. Pulling a whole icon package for three glyphs was not a
+trade worth making.
+
+### Verified
+
+All 8 routes 200 · 12 anchored homepage sections in spec order · **0 dead
+links** across every page · build, lint, typecheck clean · 0 vulnerabilities.
+
+### Specified but blocked on assets, not code
+
+- *"TOOLS WE USE, SOME PICS, VIDEOS"* — the stack renders; the pics and videos
+  need supplying.
+- *"Update this reel video with new content"* — the hero has no reel.
+- *"Start Video testimonial project"* — testimonials are text cards until that
+  footage exists.
+- *"[Add blog articles linked to the video uploaded on YouTube]"* and
+  *"Change YouTube thumbnail"* — needs the video IDs.
+- *"Work with us //maybe a chair visual…"* — marked "//design not sure yet" in
+  the spec itself, so deliberately not invented.
+
+---
+
 ## Repository
 
 Remote is `https://github.com/gauravv-jainn/genesisnew`, set as `origin`.

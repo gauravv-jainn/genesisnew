@@ -1,4 +1,5 @@
 import { AnimatedTimeline } from "@/components/genesis/animated-timeline";
+import { StatRow } from "@/components/genesis/stat-card";
 import { CornerNote, GhostType, Spotlight } from "@/components/genesis/spotlight";
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
@@ -45,11 +46,19 @@ export function Journey() {
         </div>
 
         {/*
+          The figures the spec asks for: "//numbers increasing animation".
+          StatRow counts each up once as it scrolls into view.
+        */}
+        <Reveal delay={0.12} className="mt-14">
+          <StatRow stats={journey.figures.map((figure) => ({ ...figure }))} />
+        </Reveal>
+
+        {/*
           The sheet. Lit from the top edge, falling off toward the bottom, with
           a slight perspective tilt so it reads as standing in the room rather
           than pasted onto the page.
         */}
-        <Reveal delay={0.15} className="mt-16">
+        <Reveal delay={0.18} className="mt-14">
           <div
             className="relative rounded-[2px] px-6 py-14 sm:px-14"
             style={{

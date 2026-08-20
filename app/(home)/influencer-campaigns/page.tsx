@@ -6,7 +6,7 @@ import { GenesisStar } from "@/components/genesis/genesis-mark";
 import { OrbitingCards } from "@/components/genesis/orbiting-cards";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { StatRow } from "@/components/genesis/stat-card";
-import { influencer } from "@/lib/home-content";
+import { influencer, isPending } from "@/lib/home-content";
 import { influencerPage } from "@/lib/page-content";
 import { SectionShell } from "../components/section-shell";
 
@@ -35,10 +35,17 @@ export default function InfluencerCampaignsPage() {
       >
         <Reveal>
           <StatRow
-            stats={influencerPage.stats.map((stat, index) => ({
-              ...stat,
-              icon: index === 0 ? <Users className="size-5" /> : undefined,
-            }))}
+            /*
+              Filtered HERE, not just in StatRow: an unconfirmed figure that
+              survives to the client is still serialised into the RSC payload
+              and shipped to the browser, even though nothing renders it.
+            */
+            stats={influencerPage.stats
+              .filter((stat) => !isPending(stat.value))
+              .map((stat, index) => ({
+                ...stat,
+                icon: index === 0 ? <Users className="size-5" /> : undefined,
+              }))}
           />
         </Reveal>
       </SectionShell>

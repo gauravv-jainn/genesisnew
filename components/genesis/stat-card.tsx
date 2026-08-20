@@ -3,6 +3,7 @@
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
+import { isPending } from "@/lib/home-content";
 import { cn } from "@/lib/utils";
 
 /**
@@ -58,7 +59,13 @@ function CountUp({ value, durationMs = 1400 }: { value: string; durationMs?: num
     let frame = 0;
     const start = performance.now();
     const tick = (now: number) => {
-      const progress = Math.min(1, (now - start) / durationMs);
+      // Clamped at BOTH ends. The first rAF callback can carry a timestamp
+      // from the frame already in flight when the effect ran, so `now` may be
+      // earlier than `start`; an unclamped negative progress drives the
+      // ease-out cubic below zero, and the formatter then groups the minus
+      // sign as if it were a digit — which is how a live page came to render
+      // "-,11,839+".
+      const progress = Math.min(1, Math.max(0, (now - start) / durationMs));
       // Ease-out cubic: fast start, settled landing.
       const eased = 1 - Math.pow(1 - progress, 3);
       setDisplay(format(target * eased));
@@ -129,6 +136,13 @@ export function StatRow({
   stats: { value: string; label: string; icon?: ReactNode }[];
   className?: string;
 }) {
+  // The single choke point for figures across the site, so the guarantee that
+  // no placeholder ever reaches a page is enforced HERE rather than at each of
+  // the several call sites. A figure with no confirmed value is omitted; an
+  // invented one would be a claim we cannot support.
+  const shown = stats.filter((stat) => !isPending(stat.value));
+  if (shown.length === 0) return null;
+
   return (
     <div
       className={cn(
@@ -136,7 +150,7 @@ export function StatRow({
         className,
       )}
     >
-      {stats.map((stat, index) => (
+      {shown.map((stat, index) => (
         <motion.div
           key={stat.label}
           initial={{ opacity: 0, y: 12 }}

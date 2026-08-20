@@ -12,6 +12,16 @@ import { PaperCard, PaperStack } from "@/components/genesis/paper-card";
 import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { StatCard, StatRow } from "@/components/genesis/stat-card";
+import { ContactForm } from "@/components/genesis/contact-form";
+import { DocumentWall } from "@/components/genesis/document-wall";
+import { FloatingPapers } from "@/components/genesis/floating-papers";
+import { GlowWord, IridescentButton } from "@/components/genesis/glow-word";
+import { LitRoom } from "@/components/genesis/lit-room";
+import { PaperVortex } from "@/components/genesis/paper-vortex";
+import { CornerNote, GhostType, Spotlight } from "@/components/genesis/spotlight";
+import { StandingFigure } from "@/components/genesis/standing-figure";
+import { ToolsStack } from "@/components/genesis/tools-stack";
+import { WatchCluster } from "@/components/genesis/watch-cluster";
 import { SegmentDemo } from "./segment-demo";
 
 /**
@@ -219,6 +229,109 @@ export default function StyleGuidePage() {
         <LogoMarquee
           logos={["KAYALI", "TATA MOTORS", "ICICI BANK", "MIRAGGIO", "YONEX", "KREO TECH", "DOT & KEY"]}
         />
+      </Section>
+
+      <Section title="Scene primitives" note="Spotlight, ghosted display type and editorial corner marks — the language the reference layouts are built from.">
+        <div className="relative h-80 overflow-hidden rounded-2xl bg-void">
+          <Spotlight x={62} spread={16} tone="warm" />
+          <GhostType>OUR SERVICES</GhostType>
+          <div className="relative z-[2] flex h-full items-end justify-between p-6">
+            <p className="micro-label">Spotlight + GhostType</p>
+            <CornerNote index="Services">
+              The corner annotation, as used across the reference layouts.
+            </CornerNote>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Lit room" note="An interior drawn entirely as alpha — no clip-paths, no CSS filters. Walls are a lateral falloff; the floor is an ellipse centred below the frame.">
+        <div className="relative h-96 overflow-hidden rounded-2xl">
+          <LitRoom />
+        </div>
+      </Section>
+
+      <Section title="Standing figure" note="Drawn silhouette in an oversized suit, lit from directly above. Cloth nap and a feathered outline; nothing in a hazy room has a razor edge.">
+        <div className="relative flex h-80 items-end justify-center overflow-hidden rounded-2xl bg-void pb-6">
+          <LitRoom />
+          <div className="relative z-[2] h-56">
+            <StandingFigure className="h-full" />
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Paper vortex" note="Every sheet is a post link. Posts repeat around the cloud when there are fewer than sheets. Magnetic: the cursor is a field over the whole scene.">
+        <div className="overflow-hidden rounded-2xl bg-void">
+          <PaperVortex
+            sheets={34}
+            posts={[
+              { slug: "ai-content-workflows", title: "What AI actually replaced in our pipeline", category: "AI" },
+              { slug: "ai-avatars-in-campaigns", title: "AI avatars are useful. Just not for what most brands ask.", category: "AI" },
+              { slug: "creative-process", title: "How a Genesis campaign actually gets made", category: "Inside Genesis" },
+            ]}
+          />
+        </div>
+      </Section>
+
+      <Section title="Document wall" note="The curved wall of lit panels from the page-1 landing reference. Pure CSS — no images.">
+        <div className="relative h-72 overflow-hidden rounded-2xl bg-void">
+          <DocumentWall tone="amber" />
+        </div>
+      </Section>
+
+      <Section title="Apple Watch cluster" note='Spec asks for this twice — client logos "movable like Apple Watch Apps" and testimonials the same. Drag it.'>
+        <WatchCluster
+          height={360}
+          cell={130}
+          items={["KAYALI", "TATA MOTORS", "HDFC", "ICICI BANK", "YONEX", "MIRAGGIO", "KREO TECH"].map((logo) => ({
+            id: logo,
+            content: (
+              <div className="glass glass-lit grid size-24 place-items-center rounded-[1.5rem] p-3 text-center">
+                <span className="text-[9px] font-semibold tracking-[0.1em] text-bone/70">
+                  {logo}
+                </span>
+              </div>
+            ),
+          }))}
+        />
+      </Section>
+
+      <Section title="Floating papers" note="The blog-teaser treatment: sheets that drift and straighten under the cursor.">
+        <FloatingPapers
+          papers={[
+            { href: "/blog", eyebrow: "AI", title: "What AI actually replaced in our pipeline", description: "Not the ideas, and not the edit.", footnote: "5 min read" },
+            { href: "/blog", eyebrow: "Playbook", title: "Why most UGC underperforms", description: "And the three fixes that change it.", footnote: "8 min read" },
+            { href: "/blog", eyebrow: "Inside Genesis", title: "How a campaign actually gets made", description: "Including the unglamorous parts.", footnote: "4 min read" },
+          ]}
+        />
+      </Section>
+
+      <Section title="Tools stack" note="Many inputs converging on one output. One SVG, a shared gradient, a stroke-dashoffset pulse.">
+        <ToolsStack
+          destination="Genesis AI Studio"
+          badge="Studio"
+          tools={[
+            { label: "Image generation", detail: "stills & keyframes" },
+            { label: "Video generation", detail: "motion & b-roll" },
+            { label: "AI avatars", detail: "presenters" },
+            { label: "Voice & dubbing", detail: "multi-language" },
+            { label: "Edit & post", detail: "assembly" },
+          ]}
+        />
+      </Section>
+
+      <Section title="Glowing word & iridescent button" note="The waitlist treatment: one word lit from within, held in glass. Emission is text-shadow, not a filter — filters rasterise the whole word.">
+        <div className="flex flex-col items-center gap-10 rounded-2xl bg-void py-16">
+          <GlowWord tone="warm" className="text-4xl sm:text-5xl">
+            waitlist
+          </GlowWord>
+          <IridescentButton href="#">Join waitlist now</IridescentButton>
+        </div>
+      </Section>
+
+      <Section title="Contact form" note="Zod-validated server action, rate limited, honeypot-protected. Errors mirror back per field.">
+        <div className="max-w-2xl">
+          <ContactForm type="CONTACT" source="/style-guide" submitLabel="Send" />
+        </div>
       </Section>
 
       <Section title="Atmosphere" note="Dark ground + one directional light + grain. Sections compose this rather than repeating it.">

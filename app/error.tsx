@@ -1,0 +1,63 @@
+"use client";
+
+import * as Sentry from "@sentry/nextjs";
+import { useEffect } from "react";
+
+import { Atmosphere } from "@/components/genesis/atmosphere";
+import { GlassButton } from "@/components/genesis/glass-button";
+import { SectionLabel } from "@/components/genesis/section-label";
+
+/**
+ * Route-level error boundary.
+ *
+ * Reports to Sentry on mount rather than relying on the global handler: an
+ * error caught by a boundary never reaches `window.onerror`, so without this
+ * it would render a friendly page and be silently lost.
+ *
+ * The digest is surfaced deliberately — it is the only handle a user can give
+ * support that ties their report to a specific server-side failure.
+ */
+export default function ErrorBoundary({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
+  return (
+    <Atmosphere tone="crimson" origin="top" intensity={0.2} className="min-h-dvh">
+      <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center px-6 text-center">
+        <SectionLabel dot>Something went wrong</SectionLabel>
+
+        <h1 className="mt-6 text-balance text-4xl font-semibold leading-[1.1] tracking-tight text-bone sm:text-5xl">
+          This page didn&rsquo;t{" "}
+          <span className="font-serif font-normal italic text-amber">load</span>
+        </h1>
+
+        <p className="mt-5 max-w-md text-sm leading-relaxed text-ash">
+          The error has been reported. Trying again often works — it may have
+          been a momentary fault.
+        </p>
+
+        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <GlassButton onClick={reset} variant="crimson" size="lg">
+            Try again
+          </GlassButton>
+          <GlassButton href="/" variant="glass" size="lg">
+            Back to the homepage
+          </GlassButton>
+        </div>
+
+        {error.digest && (
+          <p className="mt-10 text-xs text-faint">
+            Reference: <code className="text-ash">{error.digest}</code>
+          </p>
+        )}
+      </div>
+    </Atmosphere>
+  );
+}

@@ -466,6 +466,55 @@ real content-library thumbnails and video links.
 
 ---
 
+## Production readiness — closed
+
+The five phases were complete, but the site was missing the things every
+production site needs and nobody specs:
+
+- **`app/not-found.tsx`** — a branded 404. A bare framework error page on a
+  design-led agency site reads as neglect.
+- **`app/error.tsx`** — route-level boundary. It reports to Sentry on mount
+  rather than relying on the global handler: an error caught by a boundary
+  never reaches `window.onerror`, so without this it would render a friendly
+  page and be silently lost. The digest is surfaced because it is the only
+  handle a user can give support that ties their report to a real failure.
+- **`app/global-error.tsx`** — last resort, for failures in the root layout
+  itself. Renders its own `<html>`/`<body>` and uses no design-system
+  components, because at that point the layout they assume has failed. Its
+  plain `<a>` is deliberate and lint-suppressed with the reason: `next/link`
+  would depend on the very thing that just broke.
+- **`app/robots.ts`** — blocks `/insider`, `/style-guide` and `/api/`, so
+  internal surfaces stay out of results even if a URL leaks.
+- **`app/sitemap.ts`** — public routes only, with blog entries from the same
+  MDX loader the pages use, so an unpublished draft can never be advertised.
+
+The **style guide** now covers every component. Ten built after it was first
+written were missing from it: Spotlight/GhostType/CornerNote, LitRoom,
+StandingFigure, PaperVortex, DocumentWall, WatchCluster, FloatingPapers,
+ToolsStack, GlowWord/IridescentButton and ContactForm.
+
+Verified live: robots.txt serves the right rules, sitemap lists 9 URLs, an
+unknown path returns a branded 404, build/lint/typecheck clean, `npm audit`
+0 vulnerabilities.
+
+---
+
+## What is left, and who it belongs to
+
+**Nothing further is blocked on engineering.** Everything remaining needs a
+decision or an asset:
+
+| Owed | Blocks |
+| --- | --- |
+| Neon, Auth0, Google service account, Sentry credentials | The 5 Phase 0 checks; `/insider`; the forms actually storing anything |
+| Case-study results (4), testimonial quotes (12), journey dates | Those sections shipping — names are real, so invented quotes are worse than blanks |
+| Client logo files, AI avatar stills, content-library clips | Placeholder art throughout; the spec wants library tiles "playing on their own like a GIF" |
+| The real tools list | The AI stack shows categories, not vendors |
+| Crimson vs amber brand call | Open since Phase 1 |
+| Upstash Redis credentials | Rate limiting is per-instance until then — not production-safe for public forms |
+
+---
+
 ## Repository
 
 Remote is `https://github.com/gauravv-jainn/genesisnew`, set as `origin`.

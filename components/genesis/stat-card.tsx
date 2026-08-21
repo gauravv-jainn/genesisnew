@@ -143,9 +143,35 @@ export function StatRow({
   const shown = stats.filter((stat) => !isPending(stat.value));
   if (shown.length === 0) return null;
 
-  // Columns follow the number of figures that survived the filter. A lone
-  // confirmed figure in a hard-coded four-column grid reads as three figures
-  // that failed to load, rather than as one figure.
+  /**
+   * A LONE figure gets its own treatment rather than one cell of a bar.
+   *
+   * Adapting the column count was not enough: at `grid-cols-1` the single
+   * figure still sat at text-2xl against the left edge of a full-width glass
+   * bar with about 85% of it empty, which reads as three figures that failed
+   * to load. Spec page 16 asks for "//numbers increasing animation" and the
+   * image on that page sets the numeral at display scale — roughly a sixth of
+   * the frame height. So one figure becomes a statement, and the chassis goes.
+   */
+  if (shown.length === 1) {
+    const [only] = shown;
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-10%" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className={cn("flex flex-col items-start gap-3", className)}
+      >
+        <p className="text-6xl font-semibold leading-none tracking-tight text-bone [font-variant-numeric:tabular-nums] sm:text-7xl lg:text-8xl">
+          <CountUp value={only.value} />
+        </p>
+        <p className="micro-label">{only.label}</p>
+      </motion.div>
+    );
+  }
+
+  // Columns follow the number of figures that survived the filter.
   const columns =
     shown.length >= 4
       ? "grid-cols-2 lg:grid-cols-4"

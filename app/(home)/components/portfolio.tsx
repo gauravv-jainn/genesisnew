@@ -31,13 +31,17 @@ export function Portfolio() {
       tone="crimson"
       origin="top"
       intensity={0.18}
+      // This face is clamped to 100dvh by the camera turn, and SectionShell's
+      // default lg:py-40 spends 320px of that on padding alone. Tightened so
+      // the whole section — rail, CTA and all — lands inside the turn.
+      className="py-12 sm:py-12 lg:py-12"
       contentClassName="-mr-6 sm:-mr-10"
     >
       <Reveal>
         <PosterRail posters={posters} />
       </Reveal>
 
-      <Reveal delay={0.1} className="mr-6 mt-10 sm:mr-10">
+      <Reveal delay={0.1} className="mr-6 mt-7 sm:mr-10">
         <GlassButton href="/our-work" variant="glass" arrow>
           Browse the full library
         </GlassButton>

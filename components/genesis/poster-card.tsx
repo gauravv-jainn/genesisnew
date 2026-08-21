@@ -70,7 +70,13 @@ export function PosterCard({
         "group relative shrink-0 overflow-hidden rounded-3xl border border-white/10",
         "shadow-[0_18px_50px_-18px_rgb(0_0_0/0.9)]",
         "transition-shadow duration-500 hover:shadow-[0_26px_70px_-16px_rgb(255_45_63/0.4)]",
-        priority ? "w-[clamp(15rem,26vw,20rem)]" : "w-[clamp(12rem,20vw,16rem)]",
+        // Spec page 12 asks Portfolio for a "minimal Scroll section", and the
+        // scroll IS the section. At the previous widths four posters plus
+        // their gaps measured 1144px inside a 1104px container — the track was
+        // the container width to the pixel, so `snap-x snap-mandatory` was
+        // inert, `no-scrollbar` hid a scrollbar that could never appear, and
+        // the negative right margin advertised a bleed that did not exist.
+        priority ? "w-[clamp(15rem,26vw,21rem)]" : "w-[clamp(12rem,20vw,18rem)]",
         className,
       )}
     >

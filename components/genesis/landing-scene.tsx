@@ -119,22 +119,32 @@ export function LandingScene({ className }: { className?: string }) {
 
       {/* 4. THE WALL, above the atmosphere. Nothing warm is laid over it, so
              the sheets keep the luminance they are drawn with. */}
-      <div className="absolute inset-x-0 top-[2%] h-[72%]">
+      {/*
+        The wall, sized in CONTAINER UNITS so it holds its share of the frame
+        at any width. Everything here was fixed px, which made the wall 59% of
+        a 1440 frame, 44% of 1920, 33% of a 2560 ultrawide — and on a phone
+        cropped the entire idea out of existence. `container-type: size` is
+        what lets cqw/cqh resolve against this box rather than the viewport.
+      */}
+      <div
+        className="absolute inset-x-0 top-[2%] h-[72%]"
+        style={{ containerType: "size" }}
+      >
         <DocumentWall
           panels={5}
           tone="amber"
-          radius={620}
+          radius="58cqw"
           // Wider arc so the outer sheets reach toward the frame edges: in
           // p01_1 the lit sheets span x=6% to x=96% of the frame.
           step={24}
-          height={524}
+          height="80cqh"
           // ZERO. The reference's five sheets are IDENTICAL rectangles — the
           // size difference on screen is perspective doing its job. Shrinking
           // the flanks as well made the centre peak in both size AND depth,
           // which is what produced the pyramid.
           falloff={0}
           intensity={1}
-          perspective={1150}
+          perspective="80cqw"
         />
       </div>
 
@@ -145,9 +155,46 @@ export function LandingScene({ className }: { className?: string }) {
         className="absolute inset-x-0 bottom-0 h-[44%]"
         style={{
           background:
-            "linear-gradient(180deg, rgb(180 66 8 / 0) 0%, rgb(214 88 10 / 0.34) 16%, rgb(172 62 8 / 0.44) 48%, rgb(122 42 6 / 0.5) 80%, rgb(88 30 5 / 0.58) 100%)",
+            "linear-gradient(180deg, rgb(180 66 8 / 0) 0%, rgb(206 82 12 / 0.32) 14%, rgb(224 102 22 / 0.44) 44%, rgb(246 140 48 / 0.56) 74%, rgb(255 176 84 / 0.62) 91%, rgb(168 68 16 / 0.5) 100%)",
         }}
       />
+
+      {/*
+        5b. THE WALL, MIRRORED. p01_1's lower third has a mean luminance of 65
+        but a maximum of rgb(255,249,220) — near-white speculars — and the five
+        sheets are legibly reflected as vertical streaks down the water. Ours
+        had no mirror image at all, so the brightest, largest object in the
+        frame cast nothing and the floor never resolved as water: it read as a
+        flat brown gradient with a haze on it.
+
+        Same geometry, flipped, blurred and masked away downward. Static, so it
+        rasterises once like every other layer here.
+      */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 overflow-hidden"
+        style={{
+          top: "74%",
+          height: "48%",
+          containerType: "size",
+          transform: "scaleY(-1)",
+          opacity: 0.5,
+          filter: "blur(4px)",
+          maskImage: "linear-gradient(180deg, transparent 4%, #000 62%, #000 100%)",
+          WebkitMaskImage: "linear-gradient(180deg, transparent 4%, #000 62%, #000 100%)",
+        }}
+      >
+        <DocumentWall
+          panels={5}
+          tone="amber"
+          radius="58cqw"
+          step={24}
+          height="120cqh"
+          falloff={0}
+          intensity={0.9}
+          perspective="80cqw"
+        />
+      </div>
 
       {/* 6. The specular column: the wall's light reflected straight down the
              water toward the viewer. This is the brightest thing in the lower
@@ -157,7 +204,7 @@ export function LandingScene({ className }: { className?: string }) {
         className="absolute inset-x-0 bottom-0 h-[44%]"
         style={{
           background:
-            "radial-gradient(34% 104% at 50% -8%, rgb(255 206 128 / 0.8) 0%, rgb(255 158 54 / 0.5) 26%, rgb(236 104 16 / 0.24) 54%, transparent 82%)",
+            "radial-gradient(15% 104% at 50% 4%, rgb(255 249 220 / 0.85) 0%, rgb(255 232 182 / 0.5) 30%, rgb(255 196 118 / 0.22) 58%, transparent 82%), radial-gradient(38% 110% at 50% -6%, rgb(255 214 142 / 0.72) 0%, rgb(255 162 62 / 0.46) 30%, rgb(236 104 16 / 0.22) 58%, transparent 84%)",
         }}
       />
 
@@ -175,9 +222,32 @@ export function LandingScene({ className }: { className?: string }) {
         }}
       />
 
-      {/* 8. Blocks standing in the water, and their reflections. */}
+      {/*
+        8. Blocks standing in the water, and their reflections.
+
+        THREE FACES EACH, not one rectangle. p01_1's floor is a field of true
+        boxes, every one with a lit top face and two differently-shaded sides
+        over three or four depth bands. Ten axis-aligned rectangles with a
+        single inset highlight line read as dark smudges pasted on the gradient
+        — one hairline cannot manufacture volume — so the floor had no
+        measurable depth, which is the entire job those blocks exist to do.
+      */}
       {BLOCKS.map((block, index) => (
         <div key={index}>
+          {/* Top face: the plane the light actually lands on. */}
+          <div
+            className="absolute"
+            style={{
+              left: `${block.x}%`,
+              top: `${block.y - block.h * 0.26}%`,
+              width: `${block.w}%`,
+              height: `${block.h * 0.3}%`,
+              clipPath: "polygon(16% 0%, 100% 0%, 84% 100%, 0% 100%)",
+              background:
+                "linear-gradient(168deg, rgb(214 132 62 / 0.85) 0%, rgb(154 82 32 / 0.8) 100%)",
+            }}
+          />
+          {/* Front face. */}
           <div
             className="absolute"
             style={{
@@ -187,7 +257,21 @@ export function LandingScene({ className }: { className?: string }) {
               height: `${block.h}%`,
               background:
                 "linear-gradient(178deg, rgb(112 56 22 / 0.94) 0%, rgb(58 25 9 / 0.95) 40%, rgb(30 12 4 / 0.96) 100%)",
-              boxShadow: "0 -1.5px 0 0 rgb(255 206 148 / 0.62) inset",
+              maskImage: "linear-gradient(180deg, black 0%, black 76%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(180deg, black 0%, black 76%, transparent 100%)",
+            }}
+          />
+          {/* Side face, turned away from the wall and so darker. */}
+          <div
+            className="absolute"
+            style={{
+              left: `${block.x + block.w * 0.86}%`,
+              top: `${block.y}%`,
+              width: `${block.w * 0.2}%`,
+              height: `${block.h}%`,
+              clipPath: "polygon(0% 0%, 100% 12%, 100% 100%, 0% 100%)",
+              background:
+                "linear-gradient(178deg, rgb(58 27 10 / 0.95) 0%, rgb(22 9 3 / 0.96) 100%)",
               maskImage: "linear-gradient(180deg, black 0%, black 76%, transparent 100%)",
               WebkitMaskImage: "linear-gradient(180deg, black 0%, black 76%, transparent 100%)",
             }}
@@ -264,7 +348,7 @@ export function LandingScene({ className }: { className?: string }) {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(86% 78% at 50% 46%, transparent 0%, transparent 40%, rgb(58 20 4 / 0.4) 72%, rgb(26 8 2 / 0.78) 100%), linear-gradient(180deg, rgb(18 6 1 / 0.72) 0%, rgb(24 8 2 / 0.34) 12%, transparent 26%)",
+            "radial-gradient(96% 92% at 50% 52%, transparent 0%, transparent 52%, rgb(58 20 4 / 0.26) 80%, rgb(30 10 2 / 0.5) 100%), linear-gradient(180deg, rgb(18 6 1 / 0.72) 0%, rgb(24 8 2 / 0.34) 12%, transparent 26%)",
         }}
       />
     </div>

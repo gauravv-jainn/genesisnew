@@ -49,27 +49,38 @@ function lerpRgb(from: string, to: string, t: number) {
 export function DocumentWall({
   panels = 7,
   tone = "amber",
-  /** Cylinder radius in px. Larger = a flatter, wider wall. */
-  radius = 520,
+  /**
+   * Cylinder radius as a CSS LENGTH, not a number. Larger = a flatter, wider
+   * wall.
+   *
+   * Every dimension here used to be a fixed px number, which meant the wall
+   * was 59% of a 1440px frame, 44% of 1920 and 33% of a 2560 ultrawide — a
+   * small glowing fan floating in a big empty room on a large monitor — while
+   * at 390px only the centre sheet and two slivers survived, cropping the
+   * entire idea out of existence. Passing a length lets the landing scene
+   * drive it from container units so the wall's outer edge always lands near
+   * the frame edge; the derived panel width follows through calc().
+   */
+  radius = "520px",
   /** Angle between adjacent panels, degrees. */
   step = 15,
-  /** Height of the centre panel in px; flanks fall away from this. */
-  height = 460,
-  /** Falloff in px between the centre panel and the outermost. */
-  falloff = 150,
+  /** Height of the centre panel, as a CSS length. */
+  height = "460px",
+  /** 0–1. Flanks shrink toward this share of `height`. 0 keeps them equal. */
+  falloff = 0.33,
   /** 0–1. How hot the sheets burn. The landing scene runs near 1. */
   intensity = 0.62,
-  perspective = 1100,
+  perspective = "1100px",
   className,
 }: {
   panels?: number;
   tone?: "amber" | "crimson" | "cool";
-  radius?: number;
+  radius?: string;
   step?: number;
-  height?: number;
+  height?: string;
   falloff?: number;
   intensity?: number;
-  perspective?: number;
+  perspective?: string;
   className?: string;
 }) {
   const TONES = {
@@ -85,13 +96,16 @@ export function DocumentWall({
   const middle = (panels - 1) / 2;
 
   // Chord width for one step, minus a hair so the sheets do not intersect.
-  const width = 2 * radius * Math.tan((step * Math.PI) / 360) * 0.94;
+  // Derived from the radius through calc(), so it tracks whatever unit the
+  // caller expressed the radius in.
+  const widthFactor = 2 * Math.tan((step * Math.PI) / 360) * 0.94;
+  const width = `calc(${radius} * ${widthFactor.toFixed(5)})`;
 
   return (
     <div
       aria-hidden
       className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
-      style={{ perspective: `${perspective}px`, perspectiveOrigin: "50% 46%" }}
+      style={{ perspective, perspectiveOrigin: "50% 46%" }}
     >
       {/*
         CONCAVE, wrapping toward the camera.
@@ -109,15 +123,16 @@ export function DocumentWall({
       */}
       <div
         className="absolute left-1/2 top-1/2"
-        style={{ transformStyle: "preserve-3d", transform: `translateZ(${radius}px)` }}
+        style={{ transformStyle: "preserve-3d", transform: `translateZ(${radius})` }}
       >
         {Array.from({ length: panels }).map((_, index) => {
           const offset = index - middle;
           const angle = offset * step;
           const distance = middle === 0 ? 0 : Math.abs(offset) / middle;
 
-          // The centre sheet stands tallest; the flanks fall away.
-          const panelHeight = height - distance * falloff;
+          // The centre sheet stands tallest; the flanks fall away. A ratio
+          // rather than a px delta, so it survives the change to CSS lengths.
+          const panelHeight = `calc(${height} * ${(1 - distance * falloff).toFixed(4)})`;
           // How far this panel's colour is pushed toward the flank orange.
           const turn = distance * 0.9;
           const lit = (c: string) => lerpRgb(lerpRgb(c, flank, turn), "0 0 0", 1 - intensity);
@@ -127,11 +142,11 @@ export function DocumentWall({
               key={index}
               className="absolute rounded-[2px]"
               style={{
-                width: `${width.toFixed(1)}px`,
-                height: `${panelHeight.toFixed(0)}px`,
-                left: `${(-width / 2).toFixed(1)}px`,
-                top: `${(-panelHeight / 2).toFixed(0)}px`,
-                transform: `rotateY(${angle}deg) translateZ(-${radius}px)`,
+                width,
+                height: panelHeight,
+                left: `calc(${width} / -2)`,
+                top: `calc(${panelHeight} / -2)`,
+                transform: `rotateY(${angle}deg) translateZ(calc(${radius} * -1))`,
                 // Hottest at the top, where the source sits behind the wall.
                 //
                 // The falloff is applied to the COLOUR, not to alpha. Dimming
@@ -141,8 +156,8 @@ export function DocumentWall({
                 // see-through.
                 background: `linear-gradient(177deg,
                   rgb(${lit(hot)}) 0%,
-                  rgb(${lit(mid)}) 34%,
-                  rgb(${lit(mid)}) 66%,
+                  rgb(${lit(mid)}) 20%,
+                  rgb(${lit(mid)}) 68%,
                   rgb(${lit(rim)}) 100%)`,
                 boxShadow: `0 0 78px 12px rgb(${mid} / ${(0.22 * intensity).toFixed(3)})`,
               }}

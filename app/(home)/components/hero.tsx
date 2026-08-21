@@ -49,8 +49,18 @@ export function Hero() {
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
+          // Masked so it only covers the band the copy occupies. A scrim run
+          // full-height darkened the left half of the WALL as well, and since
+          // it is expressed in percentages it did so at every viewport width —
+          // which is why the wall measured 68% of the frame at 1024, 1440 and
+          // 2560 alike, against the reference's 89%. The wall's own band is
+          // now untouched and the headline still has its ground.
+          maskImage:
+            "linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 0.35) 26%, #000 38%, #000 100%)",
+          WebkitMaskImage:
+            "linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 0.35) 26%, #000 38%, #000 100%)",
           background:
-            "linear-gradient(94deg, rgb(44 14 3 / 0.8) 0%, rgb(50 17 4 / 0.66) 22%, rgb(56 20 5 / 0.44) 40%, rgb(60 22 6 / 0.18) 55%, transparent 70%), linear-gradient(0deg, rgb(44 15 3 / 0.55) 0%, transparent 36%)",
+            "linear-gradient(94deg, rgb(44 14 3 / 0.86) 0%, rgb(50 17 4 / 0.72) 24%, rgb(56 20 5 / 0.48) 42%, rgb(60 22 6 / 0.2) 56%, transparent 72%)",
         }}
       />
 

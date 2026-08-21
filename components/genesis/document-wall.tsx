@@ -24,12 +24,26 @@ import { cn } from "@/lib/utils";
  * and hence `intensity` — the landing scene runs this near 1, where the
  * sheets are close to white-hot, while decorative uses run it far lower.
  */
-/** Scales a "r g b" triple toward black, keeping the sheet fully opaque. */
-function dim(rgb: string, k: number) {
-  return rgb
-    .split(" ")
-    .map((channel) => Math.round(Math.min(255, Number(channel) * k)))
-    .join(" ");
+/**
+ * Interpolates one "r g b" triple toward another.
+ *
+ * This is how the flanks are darkened, and it replaced a plain multiply.
+ * Sampled down p01_1's sheets with a median (which rejects the printed ink):
+ *
+ *     centre sheet  y19% rgb(252,235,108)  y29% rgb(252,175, 48)
+ *     outer  sheet  y20% rgb(246,111, 12)  y30% rgb(250,133, 20)
+ *
+ * Red is pegged at 246-252 on every sheet at every height. The flanks are not
+ * greyer versions of the centre — they are the SAME red pushed much further
+ * into orange, and darker only because green and blue have collapsed (R-B goes
+ * +144 at the centre's top to +234 on the outer sheet). A neutral multiply
+ * cannot express that: it drains ivory to olive-khaki, which is what turned
+ * the outer sheets into dusty parchment that dissolved into the room glow.
+ */
+function lerpRgb(from: string, to: string, t: number) {
+  const a = from.split(" ").map(Number);
+  const b = to.split(" ").map(Number);
+  return a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(" ");
 }
 
 export function DocumentWall({
@@ -59,12 +73,15 @@ export function DocumentWall({
   className?: string;
 }) {
   const TONES = {
-    amber: { hot: "255 226 140", mid: "255 140 30", rim: "184 62 6" },
-    crimson: { hot: "255 228 230", mid: "255 88 100", rim: "196 26 46" },
-    cool: { hot: "234 244 255", mid: "156 190 232", rim: "84 124 184" },
+    // Stops read straight off p01_1; `flank` is the colour the outermost
+    // sheet actually is, and every stop is interpolated toward it by the
+    // panel's distance from centre.
+    amber: { hot: "252 235 108", mid: "252 190 55", rim: "236 132 22", flank: "246 111 12" },
+    crimson: { hot: "255 228 230", mid: "255 88 100", rim: "196 26 46", flank: "214 34 52" },
+    cool: { hot: "234 244 255", mid: "156 190 232", rim: "84 124 184", flank: "96 140 200" },
   } as const;
 
-  const { hot, mid, rim } = TONES[tone];
+  const { hot, mid, rim, flank } = TONES[tone];
   const middle = (panels - 1) / 2;
 
   // Chord width for one step, minus a hair so the sheets do not intersect.
@@ -76,9 +93,23 @@ export function DocumentWall({
       className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
       style={{ perspective: `${perspective}px`, perspectiveOrigin: "50% 46%" }}
     >
+      {/*
+        CONCAVE, wrapping toward the camera.
+
+        The previous composition was `rotateY(θ) translateZ(R)` under a parent
+        at `translateZ(-R)`, which puts a panel at z = R(cos θ − 1): the flanks
+        RECEDE. Combined with a centre panel that was also the tallest, the
+        wall rendered as a symmetric pyramid — a fan folding away from you,
+        which is the same "bar chart" failure this file's history already
+        records once.
+
+        Flipping the sign of the inner translate gives z = R(1 − cos θ), so the
+        flanks come FORWARD and the wall closes around the figure the way the
+        reference's amphitheatre does.
+      */}
       <div
         className="absolute left-1/2 top-1/2"
-        style={{ transformStyle: "preserve-3d", transform: `translateZ(-${radius}px)` }}
+        style={{ transformStyle: "preserve-3d", transform: `translateZ(${radius}px)` }}
       >
         {Array.from({ length: panels }).map((_, index) => {
           const offset = index - middle;
@@ -87,8 +118,9 @@ export function DocumentWall({
 
           // The centre sheet stands tallest; the flanks fall away.
           const panelHeight = height - distance * falloff;
-          // Flanks turn from the light, so they read dimmer without a filter.
-          const brightness = (1 - distance * 0.4) * intensity;
+          // How far this panel's colour is pushed toward the flank orange.
+          const turn = distance * 0.9;
+          const lit = (c: string) => lerpRgb(lerpRgb(c, flank, turn), "0 0 0", 1 - intensity);
 
           return (
             <div
@@ -99,7 +131,7 @@ export function DocumentWall({
                 height: `${panelHeight.toFixed(0)}px`,
                 left: `${(-width / 2).toFixed(1)}px`,
                 top: `${(-panelHeight / 2).toFixed(0)}px`,
-                transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
+                transform: `rotateY(${angle}deg) translateZ(-${radius}px)`,
                 // Hottest at the top, where the source sits behind the wall.
                 //
                 // The falloff is applied to the COLOUR, not to alpha. Dimming
@@ -108,11 +140,11 @@ export function DocumentWall({
                 // and a sheet turned away from a light gets darker, not
                 // see-through.
                 background: `linear-gradient(177deg,
-                  rgb(${dim(hot, 1.06 * brightness)}) 0%,
-                  rgb(${dim(hot, brightness)}) 46%,
-                  rgb(${dim(mid, 0.96 * brightness)}) 78%,
-                  rgb(${dim(rim, 0.72 * brightness)}) 100%)`,
-                boxShadow: `0 0 120px 34px rgb(${mid} / ${(0.34 * brightness).toFixed(3)})`,
+                  rgb(${lit(hot)}) 0%,
+                  rgb(${lit(mid)}) 34%,
+                  rgb(${lit(mid)}) 66%,
+                  rgb(${lit(rim)}) 100%)`,
+                boxShadow: `0 0 78px 12px rgb(${mid} / ${(0.22 * intensity).toFixed(3)})`,
               }}
             >
               {/* The print, read as shadow through a backlit sheet. */}

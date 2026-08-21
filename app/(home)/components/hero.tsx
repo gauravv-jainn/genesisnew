@@ -37,14 +37,20 @@ export function Hero() {
       {/*
         Legibility scrim. The reference is dark down its left edge and bright
         through the centre, so this both matches it and buys the contrast the
-        headline needs over a mid-tone floor.
+        headline needs.
+
+        Measured, not guessed: with the wall corrected to its reference
+        luminance the headline's worst line fell to 2.7:1 against white, under
+        the 3.0:1 WCAG AA floor for large text. The ramp is carried further
+        across the frame and is fully clear by 70%, so the scene's right half —
+        the wall, the figure, the water — is untouched.
       */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
           background:
-            "linear-gradient(94deg, rgb(52 18 4 / 0.66) 0%, rgb(58 21 5 / 0.4) 24%, rgb(64 24 6 / 0.14) 48%, transparent 68%), linear-gradient(0deg, rgb(48 17 4 / 0.5) 0%, transparent 36%)",
+            "linear-gradient(94deg, rgb(44 14 3 / 0.8) 0%, rgb(50 17 4 / 0.66) 22%, rgb(56 20 5 / 0.44) 40%, rgb(60 22 6 / 0.18) 55%, transparent 70%), linear-gradient(0deg, rgb(44 15 3 / 0.55) 0%, transparent 36%)",
         }}
       />
 

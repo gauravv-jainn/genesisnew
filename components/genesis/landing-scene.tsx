@@ -81,7 +81,7 @@ export function LandingScene({ className }: { className?: string }) {
     <div
       aria-hidden
       className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
-      style={{ backgroundColor: "#331004", isolation: "isolate", contain: "layout paint style" }}
+      style={{ backgroundColor: "#260c03", isolation: "isolate", contain: "layout paint style" }}
     >
       {/* 1. The room. Warm before the wall adds anything — the reference has
              no neutral grey anywhere in it. */}
@@ -89,7 +89,7 @@ export function LandingScene({ className }: { className?: string }) {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(96% 88% at 50% 20%, #d8631a 0%, #a8440f 26%, #7e2f08 48%, #5c2006 70%, #451705 88%, #331004 100%)",
+            "radial-gradient(104% 96% at 50% 44%, #a8440f 0%, #8a3409 24%, #6b2607 46%, #4c1a05 68%, #351104 86%, #260c03 100%)",
         }}
       />
 
@@ -98,7 +98,7 @@ export function LandingScene({ className }: { className?: string }) {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(46% 44% at 50% 22%, rgb(255 214 150 / 0.72) 0%, rgb(255 170 78 / 0.42) 32%, rgb(226 110 26 / 0.16) 58%, transparent 80%)",
+            "radial-gradient(48% 46% at 50% 48%, rgb(255 214 150 / 0.72) 0%, rgb(255 170 78 / 0.42) 32%, rgb(226 110 26 / 0.16) 58%, transparent 80%)",
         }}
       />
 
@@ -111,7 +111,7 @@ export function LandingScene({ className }: { className?: string }) {
             octaves: 5,
             opacity: 0.6,
             seed: 19,
-            tint: "#ffc981",
+            tint: "#ffab4d",
           }),
           backgroundSize: "900px 900px",
         }}
@@ -124,9 +124,15 @@ export function LandingScene({ className }: { className?: string }) {
           panels={5}
           tone="amber"
           radius={620}
-          step={20}
+          // Wider arc so the outer sheets reach toward the frame edges: in
+          // p01_1 the lit sheets span x=6% to x=96% of the frame.
+          step={24}
           height={524}
-          falloff={156}
+          // ZERO. The reference's five sheets are IDENTICAL rectangles — the
+          // size difference on screen is perspective doing its job. Shrinking
+          // the flanks as well made the centre peak in both size AND depth,
+          // which is what produced the pyramid.
+          falloff={0}
           intensity={1}
           perspective={1150}
         />
@@ -139,7 +145,7 @@ export function LandingScene({ className }: { className?: string }) {
         className="absolute inset-x-0 bottom-0 h-[44%]"
         style={{
           background:
-            "linear-gradient(180deg, rgb(150 58 10 / 0) 0%, rgb(186 78 16 / 0.3) 16%, rgb(146 56 10 / 0.4) 48%, rgb(104 40 10 / 0.46) 80%, rgb(78 30 8 / 0.55) 100%)",
+            "linear-gradient(180deg, rgb(180 66 8 / 0) 0%, rgb(214 88 10 / 0.34) 16%, rgb(172 62 8 / 0.44) 48%, rgb(122 42 6 / 0.5) 80%, rgb(88 30 5 / 0.58) 100%)",
         }}
       />
 
@@ -151,7 +157,7 @@ export function LandingScene({ className }: { className?: string }) {
         className="absolute inset-x-0 bottom-0 h-[44%]"
         style={{
           background:
-            "radial-gradient(34% 104% at 50% -8%, rgb(255 226 176 / 0.72) 0%, rgb(255 180 92 / 0.42) 26%, rgb(232 122 34 / 0.18) 54%, transparent 80%)",
+            "radial-gradient(34% 104% at 50% -8%, rgb(255 206 128 / 0.8) 0%, rgb(255 158 54 / 0.5) 26%, rgb(236 104 16 / 0.24) 54%, transparent 82%)",
         }}
       />
 
@@ -161,7 +167,7 @@ export function LandingScene({ className }: { className?: string }) {
         className="absolute inset-x-0 bottom-0 h-[44%] opacity-[0.5]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(180deg, rgb(255 224 176 / 0.3) 0px, rgb(255 224 176 / 0.3) 1px, transparent 1px, transparent 7px)",
+            "repeating-linear-gradient(180deg, rgb(255 198 118 / 0.32) 0px, rgb(255 198 118 / 0.32) 1px, transparent 1px, transparent 7px)",
           maskImage:
             "linear-gradient(180deg, transparent 0%, black 20%, black 60%, transparent 96%)",
           WebkitMaskImage:
@@ -246,13 +252,19 @@ export function LandingScene({ className }: { className?: string }) {
         }}
       />
 
-      {/* 11. Vignette. The reference crushes its corners, which is what keeps a
-              frame this bright from reading as flat. */}
+      {/* 11. Vignette, plus a smoke dome across the top.
+
+              In p01_1 the ceiling above the wall means lum 62 and the
+              top-left corner lum 21 — a near-black cap that frames the wall.
+              Ours lit the room from 20-22% of the frame, ABOVE the wall, so
+              the top of the frame read as a sunrise at lum ~113 and roughly
+              doubled the ambient the sheets had to beat. Both sources now sit
+              behind the wall's mid-height and the top band is crushed back. */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(84% 76% at 50% 36%, transparent 0%, transparent 44%, rgb(74 28 6 / 0.28) 76%, rgb(44 16 4 / 0.56) 100%)",
+            "radial-gradient(86% 78% at 50% 46%, transparent 0%, transparent 40%, rgb(58 20 4 / 0.4) 72%, rgb(26 8 2 / 0.78) 100%), linear-gradient(180deg, rgb(18 6 1 / 0.72) 0%, rgb(24 8 2 / 0.34) 12%, transparent 26%)",
         }}
       />
     </div>

@@ -733,6 +733,76 @@ hero reel, the AI avatar stills, and the case-study headlines and figures.
 
 ---
 
+## Design critique pass — 2026-08-21
+
+Full critique in **`DESIGN_CRITIQUE.md`**, judged on the rendered DOM at
+1440x900 and 375x812. This is what changed.
+
+### The finding
+
+The scenes were never the problem. The connective tissue was, and it was
+measurable:
+
+| | before | after | a designed system |
+| --- | --- | --- | --- |
+| Distinct type steps | **35** | 22 | 7–9 |
+| Distinct type sizes | 20 | **11** | 7–9 |
+| Distinct spacings | **25** | 19 | 8–10 |
+| Distinct radii | **10** | **5** | 3–4 |
+| Elevation tiers | **1** | **3** | 3–4 |
+| Motion presets | **1** | **3** | — |
+
+Every one of those is the signature of decisions taken per call site instead of
+once.
+
+### Fixed
+
+- **Type scale.** Every integer 8→16px was in use, then a hole between 20 and
+  36 so card titles had no step and collapsed onto body size. Eight named steps
+  now, line-height and tracking attached; `h3` at 28px is the step that did not
+  exist and is used 36 times.
+- **Spacing.** Snapped to a 4-based scale. Six values (6, 10, 14, 28…) existed
+  only because someone reached for `gap-2.5` in the moment.
+- **Elevation.** `raised` was used *zero* times, and `void`/`ink` differ by two
+  luminance levels — invisible. One box-shadow covered 88 elements, so nothing
+  read as above anything. Four tiers now, surface and shadow moving together,
+  plus `.glass-chip` so a 28px pill stops wearing a 32px card shadow.
+- **Radius.** Ten values → four. The 2px on the Journey broadsheet stays; that
+  one is representational.
+- **Lime on a crimson brand.** `#c5ff2e` on ten Services pushpins, hardcoded.
+  Now crimson. I also had to correct myself: I reported "0 non-brand accents"
+  after the previous pass, but that grep only checked teal and violet and
+  missed all ten.
+- **Motion.** 51 reveals, every one at 0.6s, 14 of 16 sections on the default
+  direction. Three presets now, chosen by what the thing *is* — and `scene`
+  applies no translation at all, because something the size of the document
+  wall moving 24px reads as a hitch rather than an entrance.
+- **Composition.** `SectionShell` gains `align="split"`. Eleven sections ran
+  the centred boxed arrangement; several had already hand-rolled a split header
+  rather than use the shell, which said the shell was missing the mode.
+- **Dead code.** `components/ui/button.tsx` — the only shadcn component in the
+  tree, imported by nothing.
+
+### Two defects this pass caused or caught
+
+- **Caused.** The mechanical type remap conflated a card *title* and a body
+  *standfirst*, both of which happened to be 18px, and promoted both to `h3`.
+  Standfirsts jumped 16→28px. Fixed to `lead`. That is what a find-and-replace
+  does when the utility name encodes size instead of role — and it is the
+  argument for the named scale.
+- **Caught.** At 375px the influencer headline ran to x=417 in a 375px viewport
+  and was clipped silently by `overflow:hidden` — no scrollbar, nothing to
+  notice. Cause was `min-width: auto` on a grid item refusing to shrink below
+  its longest line. Found by measuring, not by looking.
+
+### Deliberately left
+
+- Section rhythm steps 56/80/112px stay off the published scale. Snapping them
+  re-flows every section and I cannot screenshot sections to verify.
+- `text-[5px]` in the paper vortex — representational, like the paper radius.
+
+---
+
 ## Repository
 
 Remote is `https://github.com/gauravv-jainn/genesisnew`, set as `origin`.

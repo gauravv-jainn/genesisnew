@@ -599,6 +599,107 @@ crimson-vs-amber call.
 
 ---
 
+## Design QA pass — 2026-08-21
+
+Full audit of every section and page against `docs/reference/`,
+`docs/spec/pages/` and the spec annotations. Findings are in **`AUDIT.md`**
+with file:line evidence and measured values; this is what was fixed.
+
+### Method, and its limits
+
+Playwright is not installed and no browser automation is available. The in-app
+browser pane went hidden mid-session and returns black frames. Verification was
+therefore: headless Chrome full-viewport captures, DOM and computed-style
+measurement, pixel sampling of the reference images, and code-level comparison
+against the tokens. Two consequences worth knowing:
+
+- Numbers in `AUDIT.md` and in the commit messages are **measured**, not
+  estimated — sampled from the reference files and from the served HTML.
+- Sections more than one viewport down the page **cannot** be captured
+  headlessly, because the hero is `min-h-dvh` and therefore always equals the
+  viewport height. Those were verified through the DOM instead, which is more
+  precise for geometry and gives no picture. Where that limits a claim, the
+  commit says so.
+
+Coverage was uneven: four section groups were audited in depth, the global
+layer was measured directly, and five were audited at code level only. The
+table in `AUDIT.md` marks which is which.
+
+### Fixed — foundational
+
+Every section inherits these, so they were fixed once rather than chased.
+
+| Finding | Before | After |
+| --- | --- | --- |
+| Glass fill | +3.4 luminance lift | +10.8 (bright ground), ~+16.5 (dark) |
+| Nav | hardcoded 3% / blur(12px), bypassing the tokens | `.glass` / `.glass-strong` |
+| `GhostType` | 3.5% white — below the grain's own 3.36 amplitude | 12%, and it wraps |
+| Poster placeholder art | hue 92/105/135 — lime and green | brand arc 350°–30° |
+| Teal | joint-most-used tone, in none of the references | 0 non-brand accents site-wide |
+
+Genesis's own artwork was the calibration source: a glass panel in `p07_0`
+sits +18.6 above its ground, the lit database card +29.9.
+
+### Fixed — sections
+
+- **Hero.** Wall curvature was inverted — flanks receded where the reference
+  has them coming forward, which with a taller centre panel rendered a
+  symmetric pyramid. Sheet colour used a neutral multiply, draining ivory to
+  olive-khaki; the reference pegs red at 246–252 on every sheet and collapses
+  only green and blue. Room was lit from above the wall, doubling the ambient
+  the sheets had to beat. Scene-only, against the reference: mean luminance
+  93.4 → 108.9 (ref 107.0), warmth +128 → +174 (ref +180).
+- **Case Studies.** Wrong archetype — a 2×2 glass grid where spec page 13's
+  images are movie-poster stages. Now on `PosterRail` with the crimson bloom.
+- **Journey.** The newspaper composited 8% lighter than the page. Paper and ink
+  are now sampled from `p15_0` (paper lum 201→147, ink 46→68), which required
+  a `surface="light"` timeline: white type measured 3.6:1 on the corrected
+  paper, under the 4.5:1 body floor. Titles now 5.2–9.6:1, body 5.0–8.2:1.
+  Rail widened from a 1px hairline; its `to-transparent` end stop had made the
+  bottom third invisible even at full scroll.
+- **Creative Process.** Display type was 1.2:1 where the reference is ~12:1, so
+  nothing was occluded because nothing was visible. Geometry was mine from the
+  previous session and only the tilt magnitude was right: card aspect
+  1.20–1.46 → **0.81** (reference 0.81), overlap 0–4% → 36%, tilts now all one
+  way. Card fills inverted to dark, as the reference's are.
+- **Services.** A three-up feature grid tilted 2.2–2.6° — a rendering artefact,
+  not a decision. Now a scattered arc at 8–13° with 25–31% overlap and three
+  size steps. It also did not fit: at ~1000px inside a 100dvh face, two of the
+  five disciplines sat below a fold that could not be scrolled, because Lenis
+  hijacks the wheel and the face's `overflow-y-auto` never ran. Now 807px with
+  zero overflow, and `data-lenis-prevent` as the safety net.
+- **AI Studio.** Showed five accents, none of them the brand's primary.
+  Re-keyed to faint → amber → crimson.
+- **Portfolio.** The "minimal Scroll section" did not scroll — the track was
+  the container width to the pixel. Now 112px of real scroll, and the face
+  re-fitted to the turn.
+- **Stat row.** One confirmed figure now renders as a display statement rather
+  than as one cell of a four-up bar with 85% of it empty.
+
+### Not fixed, and why
+
+- **Camera pan still reads as a card flip** (`AUDIT.md` 2.5). Two coplanar
+  faces with hidden backfaces means the middle of the turn is an empty frame.
+  Making it read as one room needs the ground, grain and light lifted out of
+  the rotating stage and the faces separated in Z. Real work, not a tweak.
+- **Hero scene is fixed-px** (1.5) so it is 59% of a 1440 frame, 44% of 1920,
+  and crops out on a phone. Needs container units throughout.
+- **The water has no mirror** (1.6) and the blocks have no volume (1.7).
+- **Avatar arc is a centred cluster** (4.5) where the reference is a wall that
+  bleeds off both edges.
+- **Tools-stack curves miss their labels** by ~46px (4.6).
+- **The four thin pages** (`careers`, `creator`, `content-creation`,
+  `influencer-campaigns`) remain 88–99% shadow with zero images. No Genesis
+  mockup exists for any of them and almost no copy is written.
+
+### Still needs you
+
+Unchanged from the list below, plus: `AUDIT.md` ends with a "Blocked on the
+client" table naming who owns each item. The three that block the most are the
+hero reel, the AI avatar stills, and the case-study headlines and figures.
+
+---
+
 ## Repository
 
 Remote is `https://github.com/gauravv-jainn/genesisnew`, set as `origin`.

@@ -15,7 +15,8 @@ export function InsiderTeaser() {
   return (
     <SectionShell
       id="insider"
-      tone="teal"
+      // Teal appears NOWHERE in the references (PROGRESS.md:190).
+      tone="crimson"
       origin="center"
       intensity={0.12}
     >

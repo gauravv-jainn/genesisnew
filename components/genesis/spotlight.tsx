@@ -117,18 +117,30 @@ export function GhostType({
         className,
       )}
     >
+      {/*
+        At 3.5% white over #08080a this composited to about #111112 — roughly
+        nine levels of luminance, which is BELOW the measured amplitude of the
+        grain layer painted on top of it (3.36 std). It was mathematically
+        present and visually absent, so every section relying on it for scale
+        got nothing. img-009 shows it as a legible mid-grey the cards occlude.
+
+        It also wrapped nowhere: `whitespace-nowrap` at clamp(...,22rem) meant
+        a multi-word phrase overflowed and cropped to nonsense. It now wraps.
+      */}
       <p
-        className="whitespace-nowrap text-center font-semibold leading-[0.82] tracking-tighter"
+        className="text-balance text-center font-semibold leading-[0.82] tracking-tighter"
         style={
           outlined
             ? {
                 fontSize: "clamp(6rem, 20vw, 22rem)",
+                maxWidth: "min(100%, 18ch)",
                 color: "transparent",
                 WebkitTextStroke: "1px rgb(255 255 255 / 0.07)",
               }
             : {
                 fontSize: "clamp(6rem, 20vw, 22rem)",
-                color: "rgb(255 255 255 / 0.035)",
+                maxWidth: "min(100%, 18ch)",
+                color: "rgb(255 255 255 / 0.12)",
               }
         }
       >

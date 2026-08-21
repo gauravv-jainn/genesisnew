@@ -28,19 +28,25 @@ export function GlassNav() {
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:pt-6">
-      <motion.nav
-        initial={false}
-        animate={{
-          backgroundColor: condensed
-            ? "rgba(255,255,255,0.07)"
-            : "rgba(255,255,255,0.03)",
-          backdropFilter: condensed ? "blur(28px)" : "blur(12px)",
-        }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+      {/*
+        DRIVEN BY THE TOKENS, not by hardcoded values. This component used to
+        animate between rgba(255,255,255,0.03) and 0.07 with blur(12px)/28px of
+        its own, which meant the most visible glass surface on the site opted
+        out of the one place glass is defined — and sat at 3% where the token
+        was 5%. Measured on the hero it lifted its background by +3.4 luminance
+        against the +18.6 of Genesis's own artwork.
+
+        It now wears .glass and swaps to .glass-strong once scrolled, so it
+        inherits any future change to --glass-fill. Framer cannot interpolate
+        between CSS custom properties, so the crossfade is a CSS transition
+        rather than an animate prop.
+      */}
+      <nav
         className={cn(
-          "pointer-events-auto flex w-full max-w-5xl items-center gap-4 rounded-full",
+          "glass glass-lit pointer-events-auto flex w-full max-w-5xl items-center gap-4 rounded-full",
           "border border-white/10 px-4 py-2.5 sm:px-5",
-          "shadow-[0_8px_32px_-8px_rgb(0_0_0/0.7)]",
+          "transition-[background-color,backdrop-filter] duration-500 ease-out",
+          condensed && "glass-strong",
         )}
       >
         <Link
@@ -86,7 +92,7 @@ export function GlassNav() {
             {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile sheet */}
       <AnimatePresence>

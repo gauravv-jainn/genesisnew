@@ -33,7 +33,8 @@ export function AiContent() {
       heading={aiContent.heading}
       headingAccent={aiContent.headingAccent}
       body={aiContent.body}
-      tone="teal"
+      // Teal appears NOWHERE in the references (PROGRESS.md:190). This section was painting itself mint-green inside a crimson brand.
+      tone="crimson"
       origin="center"
       intensity={0.14}
       align="center"

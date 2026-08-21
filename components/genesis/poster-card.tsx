@@ -38,10 +38,17 @@ function placeholderArt(id: string) {
   for (let i = 0; i < id.length; i += 1) {
     hash = (hash * 31 + id.charCodeAt(i)) % 360;
   }
-  const hue = hash;
-  const partner = (hue + 40) % 360;
-  return `radial-gradient(120% 90% at 30% 15%, hsl(${hue} 70% 45% / 0.85) 0%, transparent 60%),
-          radial-gradient(90% 80% at 80% 90%, hsl(${partner} 65% 35% / 0.75) 0%, transparent 65%),
+  // Constrained to the BRAND ARC, crimson 350deg through amber 30deg, rather
+  // than the full wheel. An unconstrained hash put three of the four live
+  // portfolio ids at hue 92, 105 and 135 — lime and green billboards under the
+  // names Aditya Birla Capital, HDFC and Mahindra Finance, on a site whose
+  // whole palette is crimson and amber. Saturation and lightness are pulled
+  // back to graphite too: this is unphotographed work, and it should read as
+  // restrained rather than as the loudest colour on the page.
+  const hue = (350 + (hash % 41)) % 360;
+  const partner = (hue + 14) % 360;
+  return `radial-gradient(120% 90% at 30% 15%, hsl(${hue} 48% 26% / 0.9) 0%, transparent 60%),
+          radial-gradient(90% 80% at 80% 90%, hsl(${partner} 40% 18% / 0.8) 0%, transparent 65%),
           linear-gradient(160deg, #1a1820 0%, #0c0b0f 100%)`;
 }
 

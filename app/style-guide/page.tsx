@@ -166,7 +166,8 @@ export default function StyleGuidePage() {
             ]}
           />
           <p className="text-xs text-faint">
-            TODO(copy): all figures above are placeholders pending real numbers.
+            Figures here are sample values, shown to demonstrate the count-up and
+            the bar&apos;s layout. Real numbers live in lib/home-content.ts.
           </p>
         </div>
       </Section>
@@ -195,10 +196,10 @@ export default function StyleGuidePage() {
       <Section title="Animated timeline" note="The lit rail fills as the section scrolls.">
         <AnimatedTimeline
           milestones={[
-            { date: "Mar 2024", title: "Genesis founded", description: "TODO(copy): placeholder milestone." },
-            { date: "Aug 2024", title: "First brand film", description: "TODO(copy): placeholder milestone." },
-            { date: "Feb 2025", title: "Creator network at 50K", description: "TODO(copy): placeholder milestone." },
-            { date: "Nov 2025", title: "AI studio launched", description: "TODO(copy): placeholder milestone." },
+            { date: "Mar 2024", title: "Genesis founded", description: "Sample copy — a one-line milestone, long enough to show how the description wraps beneath its title." },
+            { date: "Aug 2024", title: "First brand film", description: "Sample copy — a shorter entry, to show the rail with uneven row heights." },
+            { date: "Feb 2025", title: "Creator network at 50K", description: "Sample copy — used here only to demonstrate the timeline component." },
+            { date: "Nov 2025", title: "AI studio launched", description: "Sample copy — the final entry, where the rail fades out." },
           ]}
         />
       </Section>
@@ -219,9 +220,9 @@ export default function StyleGuidePage() {
           </div>
           <PaperStack
             items={[
-              { title: "Preparation", caption: "research, inspiration", body: "TODO(copy): placeholder." },
-              { title: "Incubation", caption: "letting ideas simmer", body: "TODO(copy): placeholder." },
-              { title: "Illumination", caption: "refine & execute", body: "TODO(copy): placeholder." },
+              { title: "Preparation", caption: "research, inspiration", body: "Sample copy, at roughly the length a real step runs to, so the card's height and text block can be judged." },
+              { title: "Incubation", caption: "letting ideas simmer", body: "Sample copy — deliberately shorter, to show the cards at uneven heights." },
+              { title: "Illumination", caption: "refine & execute", body: "Sample copy for the third card in the row." },
             ]}
           />
         </div>

@@ -84,25 +84,30 @@ export function Journey() {
             className="relative rounded-[2px] px-6 py-14 sm:px-14"
             style={{
               background:
-                "linear-gradient(180deg, rgb(232 238 248 / 0.10) 0%, rgb(210 222 240 / 0.055) 38%, rgb(160 176 200 / 0.02) 100%)",
+                "linear-gradient(180deg, rgb(185 204 214) 0%, rgb(168 189 201) 30%, rgb(152 174 187) 58%, rgb(138 161 174) 100%)",
               boxShadow:
-                "0 -1px 0 0 rgb(226 238 255 / 0.35) inset, 0 60px 120px -50px rgb(0 0 0 / 0.9)",
+                "0 -1px 0 0 rgb(240 248 255 / 0.75) inset, 0 60px 140px -46px rgb(0 0 0 / 0.95), 0 0 90px 10px rgb(190 214 246 / 0.12)",
               transform: "perspective(1600px) rotateX(1.6deg)",
             }}
           >
-            {/* Fold lines, as on a broadsheet. */}
+            {/*
+              Column rules and one horizontal fold — a broadsheet is ruled into
+              many columns, and p15_0 shows exactly that. A single centre cross
+              read as a crease on a blank sheet, not as newsprint.
+            */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.05]"
+              className="pointer-events-none absolute inset-0 opacity-[0.16]"
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, transparent 49.9%, rgb(255 255 255) 50%, transparent 50.1%), linear-gradient(180deg, transparent 49.9%, rgb(255 255 255) 50%, transparent 50.1%)",
+                  "repeating-linear-gradient(90deg, transparent 0 11.9%, rgb(28 48 63 / 0.55) 11.9% 12%), linear-gradient(180deg, transparent 49.7%, rgb(28 48 63 / 0.4) 50%, transparent 50.3%)",
               }}
             />
 
             <AnimatedTimeline
               milestones={milestones}
               tone="teal"
+              surface="light"
               className="relative"
             />
           </div>
@@ -113,7 +118,7 @@ export function Journey() {
             className="h-16 rounded-b-[50%]"
             style={{
               background:
-                "linear-gradient(180deg, rgb(200 214 235 / 0.05) 0%, transparent 100%)",
+                "linear-gradient(180deg, rgb(138 161 174 / 0.85) 0%, rgb(96 116 130 / 0.4) 40%, transparent 100%)",
               filter: "blur(2px)",
             }}
           />

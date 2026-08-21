@@ -25,12 +25,22 @@ export type Milestone = {
 export function AnimatedTimeline({
   milestones,
   tone = "amber",
+  surface = "dark",
   className,
 }: {
   milestones: Milestone[];
   tone?: "amber" | "crimson" | "teal";
+  /**
+   * "light" sets the timeline in dark ink for a pale ground. Journey prints
+   * its history on a lit broadsheet: sampled from p15_0 the paper runs lum
+   * 201 at the top to 147 at the foot and the ink sits at lum 46-68, so white
+   * type on it would land at 3.6:1 — under the 4.5:1 body-text floor — while
+   * dark ink lands well clear.
+   */
+  surface?: "dark" | "light";
   className?: string;
 }) {
+  const light = surface === "light";
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -48,12 +58,16 @@ export function AnimatedTimeline({
 
   const scaleY = useTransform(progress, [0, 1], [0, 1]);
 
+  // NOT `to-transparent`. The lit rail is already revealed by scaleY, so a
+  // transparent end stop meant that even at scroll progress 1 the bottom third
+  // of the rail was invisible by construction — the fade was being applied
+  // twice, once by the mask and once by the gradient.
   const railColor =
     tone === "crimson"
-      ? "from-crimson via-crimson-soft to-transparent"
+      ? "from-crimson via-crimson-soft to-crimson"
       : tone === "teal"
-        ? "from-teal via-teal/60 to-transparent"
-        : "from-amber via-amber-light to-transparent";
+        ? "from-teal via-teal/70 to-teal/80"
+        : "from-amber via-amber-light to-amber";
 
   const glowColor =
     tone === "crimson"
@@ -64,18 +78,36 @@ export function AnimatedTimeline({
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>
+      {/*
+        img-004 is a THICK glowing spline with light bleeding several pixels
+        off it. This was `w-px bg-white/10` — a 1px hairline, the faintest
+        thing on the page, where the reference makes it the hero of the
+        section. Widened, and given a separate wider glow plate so light
+        actually bleeds rather than sitting inside a 1px box-shadow.
+      */}
+
       {/* Unlit rail */}
       <div
         aria-hidden
-        className="absolute left-[7.5rem] top-0 h-full w-px bg-white/10 sm:left-[9.5rem]"
+        className={cn(
+          "absolute left-[7.5rem] top-0 h-full w-[3px] -translate-x-1/2 rounded-full sm:left-[9.5rem]",
+          light ? "bg-[#16232e]/20" : "bg-white/12",
+        )}
+      />
+
+      {/* Bleed plate — wider and softer than the rail it sits under. */}
+      <motion.div
+        aria-hidden
+        style={{ scaleY, background: glowColor, filter: "blur(7px)" }}
+        className="absolute left-[7.5rem] top-0 h-full w-[11px] -translate-x-1/2 origin-top rounded-full opacity-70 sm:left-[9.5rem]"
       />
 
       {/* Lit rail, driven by scroll progress */}
       <motion.div
         aria-hidden
-        style={{ scaleY, boxShadow: `0 0 18px 1px ${glowColor}` }}
+        style={{ scaleY, boxShadow: `0 0 14px 1px ${glowColor}` }}
         className={cn(
-          "absolute left-[7.5rem] top-0 h-full w-px origin-top bg-gradient-to-b sm:left-[9.5rem]",
+          "absolute left-[7.5rem] top-0 h-full w-[3px] -translate-x-1/2 origin-top rounded-full bg-gradient-to-b sm:left-[9.5rem]",
           railColor,
         )}
       />
@@ -98,7 +130,14 @@ export function AnimatedTimeline({
             */}
             <div className="flex justify-end pr-0">
               {!isPending(milestone.date) && (
-                <span className="glass rounded-full px-3 py-1.5 text-[11px] font-medium tracking-wide text-bone">
+                <span
+                  className={cn(
+                    "rounded-full px-3 py-1.5 text-[11px] font-medium tracking-wide",
+                    light
+                      ? "border border-[#1c2b38]/20 bg-[#1c2b38]/8 text-[#1c2b38]"
+                      : "glass text-bone",
+                  )}
+                >
                   {milestone.date}
                 </span>
               )}
@@ -107,16 +146,29 @@ export function AnimatedTimeline({
             {/* Node sitting on the rail */}
             <span
               aria-hidden
-              className="absolute left-[7.5rem] top-2.5 size-2.5 -translate-x-1/2 rounded-full border border-white/25 bg-ink sm:left-[9.5rem]"
-              style={{ boxShadow: `0 0 12px 2px ${glowColor}` }}
+              className={cn(
+                "absolute left-[7.5rem] top-1 size-5 -translate-x-1/2 rounded-full sm:left-[9.5rem]",
+                light ? "border border-[#16232e]/30 bg-[#e6eef5]" : "glass border border-white/30",
+              )}
+              style={{ boxShadow: `0 0 16px 3px ${glowColor}` }}
             />
 
             <div className="pl-4">
-              <h3 className="text-lg font-semibold tracking-tight text-bone">
+              <h3
+                className={cn(
+                  "text-lg font-semibold tracking-tight",
+                  light ? "text-[#16232e]" : "text-bone",
+                )}
+              >
                 {milestone.title}
               </h3>
               {!isPending(milestone.description) && (
-                <p className="mt-2 max-w-prose text-sm leading-relaxed text-ash">
+                <p
+                  className={cn(
+                    "mt-2 max-w-prose text-sm leading-relaxed",
+                    light ? "text-[#20303e]" : "text-ash",
+                  )}
+                >
                   {milestone.description}
                 </p>
               )}

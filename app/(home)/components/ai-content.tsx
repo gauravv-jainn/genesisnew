@@ -59,7 +59,7 @@ export function AiContent() {
                   className="h-44 w-24 overflow-hidden rounded-2xl border border-white/10 sm:h-64 sm:w-40"
                   style={{
                     // TODO(assets): real avatar stills replace this placeholder.
-                    background: `linear-gradient(${150 + index * 20}deg, rgb(45 212 191 / 0.28) 0%, rgb(20 20 24 / 0.92) 55%), radial-gradient(80% 60% at 50% 20%, rgb(255 255 255 / 0.18), transparent 70%)`,
+                    background: `linear-gradient(${150 + index * 20}deg, rgb(255 45 63 / 0.24) 0%, rgb(20 20 24 / 0.92) 55%), radial-gradient(80% 60% at 50% 20%, rgb(255 255 255 / 0.18), transparent 70%)`,
                   }}
                 />
                 <figcaption className="mt-3 text-center text-xs font-medium text-bone">

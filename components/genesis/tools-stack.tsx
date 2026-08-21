@@ -51,9 +51,9 @@ export function ToolsStack({
       >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#2dd4bf" stopOpacity="0.15" />
-            <stop offset="45%" stopColor="#4ade80" stopOpacity="0.75" />
-            <stop offset="80%" stopColor="#a78bfa" stopOpacity="0.9" />
+            <stop offset="0%" stopColor="#6b6b70" stopOpacity="0.2" />
+            <stop offset="45%" stopColor="#ff8a3d" stopOpacity="0.75" />
+            <stop offset="80%" stopColor="#ff2d3f" stopOpacity="0.9" />
             <stop offset="100%" stopColor="#ff2d3f" stopOpacity="0.7" />
           </linearGradient>
 
@@ -100,7 +100,7 @@ export function ToolsStack({
                   }
                 />
                 {/* Emitter dot at the source. */}
-                <circle cx="150" cy={startY} r="3" fill="#4ade80" opacity="0.85" />
+                <circle cx="150" cy={startY} r="3" fill="#ff8a3d" opacity="0.85" />
               </g>
             );
           })}
@@ -108,7 +108,7 @@ export function ToolsStack({
 
         {/* Where everything arrives. */}
         <circle cx={FOCUS_X} cy={FOCUS_Y} r="5" fill="#ffffff" opacity="0.9" />
-        <circle cx={FOCUS_X} cy={FOCUS_Y} r="14" fill="#a78bfa" opacity="0.16" />
+        <circle cx={FOCUS_X} cy={FOCUS_Y} r="14" fill="#ff2d3f" opacity="0.18" />
       </svg>
 
       {/* Source labels, laid over the SVG at the same vertical rhythm. */}
@@ -148,7 +148,7 @@ export function ToolsStack({
           className="h-[3px] w-full max-w-[14rem] rounded-full"
           style={{
             background:
-              "linear-gradient(90deg, #2dd4bf 0%, #4ade80 34%, #a78bfa 70%, #ff2d3f 100%)",
+              "linear-gradient(90deg, #6b6b70 0%, #ff8a3d 46%, #ff2d3f 100%)",
           }}
         />
       </div>

@@ -208,21 +208,31 @@ export const creativeProcess = {
   headingAccent: "actually gets made",
   body:
     "The process below is the one we run. It is written down because briefs go wrong in predictable places, and most of them are early.",
+  /**
+   * `caption` is what the card shows; `body` is the full sentence, kept for
+   * the places that have room for it. The reference for this section sets
+   * each stage as a title over a short parenthetical, and a paragraph on a
+   * tilted overlapping card is unreadable however good the paragraph is.
+   */
   steps: [
     {
       title: "The brief argument",
+      caption: "who it is for, what should change, how we will know",
       body: "Before anything is made we argue about the brief: who it is for, what should change in their head, and how we will know.",
     },
     {
       title: "Direction, then casting",
+      caption: "direction first, creators matched to it",
       body: "Creative direction comes first and creators are matched to it. The other order is how brands end up shaped by whoever was free.",
     },
     {
       title: "Production",
+      caption: "script, shoot or generate, edit",
       body: "Scripting, shoot or generation, edit. AI carries the variants; the hero cut gets human attention start to finish.",
     },
     {
       title: "Publish and read the numbers",
+      caption: "measured against the metrics agreed in step one",
       body: "The metrics were agreed in step one, so this step is arithmetic rather than argument.",
     },
   ],

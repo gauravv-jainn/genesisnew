@@ -28,17 +28,32 @@ import { cn } from "@/lib/utils";
 const STEP_ICONS = [MessagesSquare, Compass, Clapperboard, TrendingUp];
 
 /**
- * Positions on the stage, as percentages of it. Read off the reference's arc:
- * high at the outsides, dropping through the middle, angles growing toward
- * the edges. Four cards rather than the reference's five, because four is
- * what Genesis's process actually has.
+ * Positions on the stage, as percentages of it.
+ *
+ * MEASURED OFF p27_1, and the first attempt got all three of these wrong. The
+ * reference's five cards are PORTRAIT (~24% wide against 58% of canvas
+ * height), they overlap each other by 30-40% of a card width, and they all
+ * lean the SAME way at -10 to -14 degrees. The first pass produced four
+ * landscape cards, evenly spaced, overlapping by 0-4%, tilted alternately —
+ * which is a grid that slipped, exactly what it was rebuilt to stop being.
+ *
+ * Four cards rather than five, because four is what Genesis's process has.
  */
 const SCATTER = [
-  { left: "1%", top: "12%", rotate: -9 },
-  { left: "25%", top: "44%", rotate: -5 },
-  { left: "50%", top: "41%", rotate: 4 },
-  { left: "74%", top: "9%", rotate: 8 },
+  { left: "0%", top: "4%", rotate: -13 },
+  { left: "20.4%", top: "26%", rotate: -11 },
+  { left: "40.8%", top: "12%", rotate: -9 },
+  { left: "61.2%", top: "32%", rotate: -12 },
 ];
+
+/**
+ * Card box as a share of the stage. 30% wide at a 20.4% step overlaps by 32%
+ * of a card width and still reaches 91% across, which is the only combination
+ * that satisfies both constraints with four cards instead of the reference's
+ * five. 56% tall makes the box portrait, as the reference's are.
+ */
+const CARD_WIDTH = "30%";
+const CARD_HEIGHT = "56%";
 
 export function CreativeProcess() {
   return (
@@ -81,17 +96,25 @@ export function CreativeProcess() {
           below are stable — percentage positions inside an auto-height box
           collapse, which is the bug that once left a whole wall at height 0.
         */}
-        <div className="relative mt-16 lg:mt-20 lg:aspect-[848/430]">
+        <div className="relative mt-16 lg:mt-20 lg:aspect-[848/560]">
           {/*
-            Display type behind the cards, which cover most of it — the
-            reference's signature move. Bright enough to read as a backdrop
-            rather than as a watermark, and clipped by the stage.
+            Display type behind the cards, which cover most of it.
+
+            THIS IS THE MOVE THAT MAKES p27_1 LOOK LIKE p27_1, and it was
+            missing. The reference sets "Creative Flow" in pure white at about
+            12:1 against its red ground, as the largest thing in the frame,
+            with the cards crossing it — that occlusion is the entire reason
+            the composition reads as layered. At white/[0.09] over this
+            section's ground the glyphs landed at roughly 1.2:1, so nothing was
+            occluded because nothing was visible.
           */}
           <p
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-[2%] hidden select-none text-center font-semibold leading-[0.8] tracking-tighter text-white/[0.09] lg:block"
-            style={{ fontSize: "clamp(7rem, 17vw, 16rem)" }}
+            className="pointer-events-none absolute inset-x-0 -top-[6%] hidden select-none text-center font-semibold leading-[0.78] tracking-tighter text-white/70 lg:block"
+            style={{ fontSize: "clamp(7rem, 16vw, 15rem)" }}
           >
+            CREATIVE
+            <br />
             PROCESS
           </p>
 
@@ -114,10 +137,18 @@ export function CreativeProcess() {
                 // position here would be fighting it.
                 <div
                   key={step.title}
-                  className="absolute w-[25%]"
-                  style={{ left: place.left, top: place.top, zIndex: 10 + index }}
+                  className="absolute"
+                  style={{
+                    left: place.left,
+                    top: place.top,
+                    width: CARD_WIDTH,
+                    height: CARD_HEIGHT,
+                    zIndex: 10 + index,
+                  }}
                 >
-                  <Reveal delay={0.08 * index}>
+                  {/* h-full has to be carried through Reveal, or the card
+                      sizes to its content and the sized wrapper does nothing. */}
+                  <Reveal delay={0.08 * index} className="h-full">
                     <StepCard step={step} index={index} rotate={place.rotate} />
                   </Reveal>
                 </div>
@@ -135,7 +166,7 @@ function StepCard({
   index,
   rotate = 0,
 }: {
-  step: { title: string; body: string };
+  step: { title: string; caption: string };
   index: number;
   rotate?: number;
 }) {
@@ -144,10 +175,14 @@ function StepCard({
   return (
     <article
       className={cn(
-        "glass glass-lit group/card h-full rounded-[1.5rem] p-6 transition-transform duration-500 will-change-transform",
-        // The cards sit over a red ground, so their fill carries a little of it
-        // rather than reading as neutral glass pasted on top.
-        "bg-[linear-gradient(158deg,rgb(255_45_63/0.14)_0%,rgb(255_255_255/0.04)_46%,rgb(0_0_0/0.18)_100%)]",
+        "glass glass-lit flex h-full flex-col justify-between rounded-[1.5rem] p-6 transition-transform duration-500 will-change-transform",
+        // DARK slabs over a bright ground, which is what p27_1 actually shows:
+        // its card fills sample at rgb(3,3,3), (15,6,4) and (80,32,2) against
+        // a red peaking at (162,23,4). The previous fill added crimson at 0.14
+        // and white at 0.04 on top of .glass's own white, which netted a
+        // LIGHTENING wash — pale pink rectangles pasted on dark maroon, and
+        // backdrop-filter paid for on four elements for no visual return.
+        "bg-[linear-gradient(158deg,rgb(0_0_0/0.5)_0%,rgb(24_5_9/0.68)_54%,rgb(0_0_0/0.78)_100%)]",
       )}
       style={{ transform: rotate ? `rotate(${rotate}deg)` : undefined }}
     >
@@ -155,10 +190,12 @@ function StepCard({
         <Icon className="size-[18px]" aria-hidden />
       </span>
 
-      <h3 className="mt-6 text-balance text-xl font-semibold leading-tight tracking-tight text-bone">
-        {step.title}
-      </h3>
-      <p className="mt-2.5 text-[13px] leading-relaxed text-bone/55">{step.body}</p>
+      <div>
+        <h3 className="text-balance text-xl font-semibold leading-tight tracking-tight text-bone">
+          {step.title}
+        </h3>
+        <p className="mt-2.5 text-[13px] leading-relaxed text-bone/60">{step.caption}</p>
+      </div>
     </article>
   );
 }

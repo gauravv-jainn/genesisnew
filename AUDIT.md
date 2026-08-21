@@ -447,3 +447,23 @@ fixing the same problem section by section.
 | Real brand typefaces (Geist/Instrument Serif are stand-ins) | Genesis | 0.6 |
 | Real logo file (`genesis-mark.tsx` is reconstructed) | Genesis | global |
 | Confirm crimson as primary | Gaurav | everything |
+
+---
+
+## Resolution
+
+Every finding above at **fundamentally wrong** or **needs rework** has been
+addressed, across two passes. The commits carry the before/after measurements;
+`PROGRESS.md` summarises them.
+
+Two things remain open, both stated rather than quietly dropped:
+
+1. **Hero warmth and saturation** still trail the reference (+132 vs +167,
+   82% vs 93%). The haze layer was tested as the cause and moved saturation by
+   0.0, so that change was reverted. The cause is not yet identified.
+2. **The camera turn has never been verified in motion.** Lenis owns the
+   scroll position, so scripted scrolling cannot scrub it. The initial state and
+   both mechanisms are confirmed; the feel needs a human scroll.
+
+Everything in **Blocked on the client** is unchanged — no amount of code moves
+those.

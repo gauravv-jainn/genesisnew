@@ -676,21 +676,54 @@ sits +18.6 above its ground, the lit database card +29.9.
 - **Stat row.** One confirmed figure now renders as a display statement rather
   than as one cell of a four-up bar with 85% of it empty.
 
-### Not fixed, and why
+### The second pass — everything above that had been deferred
 
-- **Camera pan still reads as a card flip** (`AUDIT.md` 2.5). Two coplanar
-  faces with hidden backfaces means the middle of the turn is an empty frame.
-  Making it read as one room needs the ground, grain and light lifted out of
-  the rotating stage and the faces separated in Z. Real work, not a tweak.
-- **Hero scene is fixed-px** (1.5) so it is 59% of a 1440 frame, 44% of 1920,
-  and crops out on a phone. Needs container units throughout.
-- **The water has no mirror** (1.6) and the blocks have no volume (1.7).
-- **Avatar arc is a centred cluster** (4.5) where the reference is a wall that
-  bleeds off both edges.
-- **Tools-stack curves miss their labels** by ~46px (4.6).
-- **The four thin pages** (`careers`, `creator`, `content-creation`,
-  `influencer-campaigns`) remain 88–99% shadow with zero images. No Genesis
-  mockup exists for any of them and almost no copy is written.
+All seven items previously listed here as "not fixed" are now done.
+
+- **Camera pan no longer reads as a card flip.** The ground, grain and light
+  were lifted out of the rotating stage so they carry through the turn — at the
+  halfway point you now see a lit room instead of the empty black frame two
+  coplanar hidden-backface faces produce. The stage also pulls back to 0.94 and
+  returns, because a camera arcing around a subject does not hold a constant
+  distance. And **"the slides move"** — the spec's first clause on page 1, which
+  was never implemented — now runs: the poster rail is scrubbed sideways by the
+  same progress that drives the yaw.
+- **The hero scene scales.** `radius`/`height`/`perspective` are CSS lengths
+  driven from container units, with the panel width following through
+  `calc()`. That exposed a second cause: the wall still measured a constant 68%
+  of the frame at 1024, 1440 and 2560 because the legibility scrim was
+  darkening the left half at every width. Masked to the copy band, the wall now
+  spans **88.8%** against the reference's 88.9% — and headline contrast went
+  *up*, 3.9:1 to 4.3:1.
+- **The water reflects.** A second wall renders into the floor, flipped and
+  masked. Profiling also caught the tone running backwards: the reference
+  brightens toward the camera (46 → 106 → 198), ours darkened (94 → 60 → 30).
+  Lower third mean 46.0 → 75.1 against 63.1.
+- **Blocks have three faces each** — a lit top and two shaded sides, where ten
+  flat rectangles with one hairline could never read as volume.
+- **The avatar arc is a wall**, full-bleed and clipping at both edges (span 61%
+  → 103.6% of viewport), with the opacity ramp gone: rotation and depth carry
+  the curve, and fading the flanks was what made it read as a carousel.
+- **Tools-stack curves meet their labels.** Labels now come off the same
+  expression as the emitters instead of `justify-between` with percentage
+  padding; misalignment ~46px → **0px** on all six rows. `FOCUS_X` also moved
+  off the wordmark it was being drawn 150px inside.
+- **The thin pages.** `/influencer-campaigns` leads with the real creator
+  constellation (99.1% shadow → 91.8%, 0 images → 17). `/careers` was checked
+  against its own reference first and was too dark even for that (95.4% vs
+  75.7%); it now has the lit bank and silhouetted growth that reference's
+  structure calls for, at 84.1%. `/content-creation` and `/creator` improved on
+  their own from the glass-fill correction.
+
+### Known gaps
+
+- Hero warmth and saturation still trail the reference (+132 vs +167, 82% vs
+  93%). I tested the haze layer as the cause; it moved saturation by 0.0, so
+  that edit was reverted rather than kept on a guess. Not yet explained.
+- The camera turn's *feel* has never been verified. Lenis owns the scroll
+  position, so scripted scrolling drives ScrollTrigger to the end and leaves it
+  there rather than scrubbing. Initial state and both mechanisms are confirmed;
+  the motion needs a human.
 
 ### Still needs you
 

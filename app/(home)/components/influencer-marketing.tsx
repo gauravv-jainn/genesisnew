@@ -44,7 +44,15 @@ export function InfluencerMarketing() {
 
       <div className="relative z-[2] mx-auto w-full max-w-7xl px-6">
         <div className="grid items-center gap-12 lg:grid-cols-[0.82fr_1.18fr]">
-          <div>
+          {/*
+            min-w-0 is load-bearing. A grid item defaults to `min-width: auto`,
+            which refuses to shrink below its content's longest unbreakable
+            run — so at 375px the 44px headline held "Influencer marketing," on
+            one line, expanded its column to 393px, and was silently clipped by
+            the section's overflow:hidden at 417px against a 375px viewport.
+            With min-w-0 the column can shrink and the line wraps instead.
+          */}
+          <div className="min-w-0">
             <Reveal>
               {/*
                 Light weight and a receding second line — the mockup's

@@ -143,6 +143,11 @@ export function PosterRail({
   return (
     <div
       ref={railRef}
+      // Marks this element for the Services -> Portfolio camera turn, which
+      // scrubs its scrollLeft from the same progress that drives the yaw so
+      // the work is already travelling when the camera arrives. That is the
+      // "the slides move" half of the spec's note on page 1.
+      data-poster-rail
       className={cn(
         "no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-4",
         className,

@@ -8,12 +8,30 @@ import { useEffect, useRef, type ReactNode } from "react";
  * The Services → Portfolio camera turn.
  *
  * Spec: "the slides move, and when going from services to portfolio the
- * camera turns 180*".
+ * camera turns 180*". Two clauses, and both are implemented here.
  *
- * Services and Portfolio are mounted as the two faces of one stage. GSAP
- * ScrollTrigger pins the stage and scrubs its yaw from 0° to -180°, so the
- * viewer reads it as the camera swinging around to face the other side rather
- * than one section replacing another.
+ * WHY IT USED TO READ AS A CARD FLIP. Two coplanar faces with
+ * `backface-visibility: hidden` is the CSS flip-card recipe: at 90° both faces
+ * are edge-on and neither is drawn, so the middle of the transition was an
+ * empty black frame and the ground, grain and light jumped discontinuously at
+ * the swap. A page turning over, not a camera moving.
+ *
+ * Three things fix that, and they work together:
+ *
+ *   1. A ROOM THAT PERSISTS. The ground, grain and key light now live outside
+ *      the rotating stage, so they carry continuously through the turn. At the
+ *      halfway point you are looking at a lit room rather than at nothing,
+ *      which is the whole difference between "the camera moved" and "the card
+ *      flipped".
+ *
+ *   2. THE CAMERA PULLS BACK to come around. The stage dips to 0.94 at the
+ *      midpoint and returns. A camera swinging around a subject does not hold
+ *      a constant distance, and this is the cue that sells the move as one.
+ *
+ *   3. THE SLIDES MOVE. The poster rail on the far face is scrubbed sideways
+ *      by the same progress that drives the yaw, so the work is already in
+ *      motion when the camera arrives on it. That is the spec's first clause,
+ *      and it was previously unimplemented.
  *
  * VERIFICATION NOTE: this effect cannot be exercised by scripting
  * `window.scrollTo` in a headless/automated browser — that moves the scroll
@@ -59,9 +77,12 @@ export function CameraPan({
         gsap.set(backFace, { rotateY: 180 });
         gsap.set(stage, { transformStyle: "preserve-3d" });
 
-        const tween = gsap.to(stage, {
-          rotateY: -180,
-          ease: "none",
+        // The rail that "the slides move" refers to. Queried rather than
+        // threaded through as a ref, because the far face is an opaque
+        // ReactNode from the caller's side.
+        const rail = backFace.querySelector<HTMLElement>("[data-poster-rail]");
+
+        const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: root,
             start: "top top",
@@ -74,10 +95,34 @@ export function CameraPan({
           },
         });
 
+        timeline
+          .to(stage, { rotateY: -180, ease: "none", duration: 1 }, 0)
+          // Pull back through the middle and settle — a camera arcing around a
+          // subject does not hold a constant distance.
+          .to(stage, { scale: 0.94, ease: "sine.inOut", duration: 0.5 }, 0)
+          .to(stage, { scale: 1, ease: "sine.inOut", duration: 0.5 }, 0.5);
+
+        if (rail) {
+          // Scrub the rail across most of its overflow, so the work is already
+          // travelling when the camera lands on it. Recomputed on refresh so a
+          // resize cannot leave it scrolled past the end.
+          timeline.fromTo(
+            rail,
+            { scrollLeft: 0 },
+            {
+              scrollLeft: () => Math.max(0, rail.scrollWidth - rail.clientWidth) * 0.85,
+              ease: "none",
+              duration: 1,
+            },
+            0,
+          );
+        }
+
         return () => {
-          tween.scrollTrigger?.kill();
-          tween.kill();
+          timeline.scrollTrigger?.kill();
+          timeline.kill();
           gsap.set([stage, backFace], { clearProps: "all" });
+          if (rail) rail.scrollLeft = 0;
         };
       },
     );
@@ -87,7 +132,25 @@ export function CameraPan({
 
   return (
     <div ref={rootRef}>
-      <div className="lg:h-dvh lg:overflow-hidden lg:[perspective:1800px]">
+      <div className="relative lg:h-dvh lg:overflow-hidden lg:[perspective:1800px]">
+        {/*
+          The room the turn happens inside. OUTSIDE the rotating stage, so it
+          does not turn with the faces and is what you see at the halfway point
+          when both faces are edge-on. Without this the midpoint is black.
+        */}
+        <div
+          aria-hidden
+          className="grain pointer-events-none absolute inset-0 hidden bg-void lg:block"
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(78% 62% at 62% 8%, rgb(255 176 92 / 0.16) 0%, rgb(255 138 61 / 0.06) 34%, transparent 68%), radial-gradient(120% 80% at 50% 108%, rgb(24 20 26 / 0.9) 0%, transparent 70%)",
+            }}
+          />
+        </div>
+
         <div ref={stageRef} className="lg:relative lg:h-full">
           <Face>{front}</Face>
           <Face ref={backFaceRef}>{back}</Face>

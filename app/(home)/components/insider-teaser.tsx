@@ -21,7 +21,7 @@ export function InsiderTeaser() {
       intensity={0.12}
     >
       <Reveal>
-        <div className="glass glass-strong glass-lit relative overflow-hidden rounded-[2rem] p-10 sm:p-14">
+        <div className="glass glass-strong glass-lit relative overflow-hidden rounded-panel p-10 sm:p-14">
           {/* Faint grid, reading as "system" rather than "marketing". */}
           <div
             aria-hidden
@@ -35,19 +35,19 @@ export function InsiderTeaser() {
 
           <div className="relative flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-xl">
-              <p className="micro-label flex items-center gap-2.5">
+              <p className="micro-label flex items-center gap-3">
                 <Lock className="size-3.5 text-teal" aria-hidden />
                 {insider.label}
               </p>
 
-              <h2 className="mt-5 text-balance text-3xl font-semibold leading-tight tracking-tight text-bone sm:text-4xl">
+              <h2 className="mt-6 text-balance text-h2 font-semibold leading-tight tracking-tight text-bone sm:text-h2">
                 {insider.heading}{" "}
                 <span className="font-serif font-normal italic text-teal">
                   {insider.headingAccent}
                 </span>
               </h2>
 
-              <p className="mt-5 text-pretty text-sm leading-relaxed text-ash sm:text-base">
+              <p className="mt-6 text-pretty text-small leading-relaxed text-ash sm:text-body">
                 {insider.body}
               </p>
             </div>

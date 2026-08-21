@@ -240,7 +240,7 @@ function OrbitCard({
         creator.feature ? "z-30 w-[27%]" : "z-20 w-[19%]",
       )}
     >
-      <div className="glass glass-lit w-full overflow-hidden rounded-2xl">
+      <div className="glass glass-lit w-full overflow-hidden rounded-card">
         <div
           className="relative aspect-[4/5]"
           style={{ backgroundImage: creator.image ? undefined : portrait(creator.id) }}
@@ -268,8 +268,8 @@ function OrbitCard({
           {/* The name bar, as in the mockup: avatar, name, follower count. */}
           <div
             className={cn(
-              "glass glass-strong absolute inset-x-2 bottom-2 flex items-center rounded-xl",
-              creator.feature ? "gap-3 px-3 py-2.5" : "gap-2 px-2 py-1.5",
+              "glass glass-strong absolute inset-x-2 bottom-2 flex items-center rounded-card",
+              creator.feature ? "gap-3 px-3 py-3" : "gap-2 px-2 py-2",
             )}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -287,7 +287,7 @@ function OrbitCard({
               <span
                 className={cn(
                   "block truncate font-medium leading-tight text-bone",
-                  creator.feature ? "text-[13px]" : "text-[9px]",
+                  creator.feature ? "text-small" : "text-micro",
                 )}
               >
                 {creator.label}
@@ -295,7 +295,7 @@ function OrbitCard({
               <span
                 className={cn(
                   "block truncate leading-tight text-ash",
-                  creator.feature ? "text-[11px]" : "text-[8px]",
+                  creator.feature ? "text-micro" : "text-micro",
                 )}
               >
                 {creator.followers}
@@ -345,7 +345,7 @@ function PlatformBadge({
       />
       {/* The platform chip clipped to the badge's corner, as in the mockup. */}
       <span
-        className="absolute -bottom-1 -right-1 grid size-4 place-items-center rounded-[5px] p-0.5 ring-1 ring-black/40"
+        className="absolute -bottom-1 -right-1 grid size-4 place-items-center rounded-field p-0.5 ring-1 ring-black/40"
         style={{ background: platform.fill }}
       >
         <PlatformGlyph platform={platform.key} />

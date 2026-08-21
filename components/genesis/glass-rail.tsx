@@ -62,8 +62,8 @@ export function GlassRail({
             {/* Label on hover, so the rail stays icons-only at rest. */}
             <span
               className={cn(
-                "pointer-events-none absolute left-full ml-3 hidden whitespace-nowrap rounded-lg",
-                "glass px-2.5 py-1 text-[11px] text-bone opacity-0 transition-opacity duration-200",
+                "pointer-events-none absolute left-full ml-3 hidden whitespace-nowrap rounded-field",
+                "glass px-3 py-1 text-micro text-bone opacity-0 transition-opacity duration-200",
                 "group-hover:opacity-100 lg:block",
               )}
             >

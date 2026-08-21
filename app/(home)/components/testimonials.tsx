@@ -41,26 +41,26 @@ export function Testimonials() {
       origin="top"
       intensity={0.14}
     >
-      <Reveal>
+      <Reveal variant="scene">
         <WatchCluster
           height={520}
           cell={190}
           items={items.map((testimonial) => ({
             id: testimonial.name,
             content: (
-              <figure className="glass glass-lit flex w-40 flex-col gap-3 rounded-3xl p-4 sm:w-44">
+              <figure className="glass glass-lit flex w-40 flex-col gap-3 rounded-panel p-4 sm:w-44">
                 {"clip" in testimonial && testimonial.clip ? (
                   <Reel
                     src={testimonial.clip as string}
                     label={`${testimonial.name}, ${testimonial.role}`}
                     aspect="3 / 4"
-                    className="rounded-2xl"
+                    className="rounded-card"
                   />
                 ) : null}
 
                 {/* Only ever rendered when the quote is real. */}
                 {!isPending(testimonial.quote) && (
-                  <blockquote className="text-[11px] leading-relaxed text-bone/80">
+                  <blockquote className="text-micro leading-relaxed text-bone/80">
                     &ldquo;{testimonial.quote}&rdquo;
                   </blockquote>
                 )}
@@ -72,9 +72,9 @@ export function Testimonials() {
                       : "border-t border-white/10 pt-3"
                   }
                 >
-                  <p className="text-xs font-medium text-bone">{testimonial.name}</p>
+                  <p className="text-small font-medium text-bone">{testimonial.name}</p>
                   {!isPending(testimonial.role) && (
-                    <p className="mt-0.5 text-[10px] text-faint">{testimonial.role}</p>
+                    <p className="mt-0.5 text-micro text-faint">{testimonial.role}</p>
                   )}
                 </figcaption>
               </figure>

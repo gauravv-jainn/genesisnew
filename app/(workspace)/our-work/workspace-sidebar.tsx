@@ -42,8 +42,8 @@ export function WorkspaceSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-full shrink-0 flex-col gap-6 border-white/8 p-5 lg:h-full lg:w-56 lg:border-r">
-      <Link href="/" className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson">
+    <aside className="flex w-full shrink-0 flex-col gap-6 border-white/8 p-6 lg:h-full lg:w-56 lg:border-r">
+      <Link href="/" className="rounded-field focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson">
         <GenesisMark />
       </Link>
 
@@ -58,7 +58,7 @@ export function WorkspaceSidebar() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "group flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] transition-colors duration-200",
+                "group flex shrink-0 items-center gap-3 rounded-card px-3 py-3 text-small transition-colors duration-200",
                 active
                   ? "bg-white/[0.07] text-bone"
                   : "text-ash hover:bg-white/[0.04] hover:text-bone",
@@ -83,14 +83,14 @@ export function WorkspaceSidebar() {
         </GlassButton>
 
         {/* The promo card at the foot of the rail. */}
-        <div className="glass relative overflow-hidden rounded-2xl p-4">
+        <div className="glass relative overflow-hidden rounded-card p-4">
           <div
             aria-hidden
             className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgb(255_45_63/0.22),transparent_60%)]"
           />
           <GenesisStar className="absolute right-3 top-3 size-4" />
-          <p className="relative text-xs text-ash">Let&rsquo;s create</p>
-          <p className="relative mt-0.5 text-sm font-medium leading-tight text-bone">
+          <p className="relative text-small text-ash">Let&rsquo;s create</p>
+          <p className="relative mt-0.5 text-small font-medium leading-tight text-bone">
             something impactful
           </p>
         </div>

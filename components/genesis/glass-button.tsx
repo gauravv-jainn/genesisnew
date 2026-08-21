@@ -35,9 +35,9 @@ type GlassButtonProps = {
 };
 
 const SIZES = {
-  sm: "h-9 px-4 text-[13px] gap-1.5",
-  md: "h-11 px-5 text-sm gap-2",
-  lg: "h-14 px-7 text-base gap-2.5",
+  sm: "h-9 px-4 text-small gap-2",
+  md: "h-11 px-6 text-small gap-2",
+  lg: "h-14 px-8 text-body gap-3",
 } as const;
 
 const VARIANTS = {
@@ -152,7 +152,7 @@ export function GlassSegment({
             type="button"
             onClick={() => onChange(option.value)}
             className={cn(
-              "relative h-10 rounded-full px-5 text-sm font-medium transition-colors duration-300",
+              "relative h-10 rounded-full px-6 text-small font-medium transition-colors duration-300",
               active ? "text-[#2b1a0d]" : "text-ash hover:text-bone",
             )}
           >

@@ -157,20 +157,20 @@ function OrbitingCard({
           whileHover={{ scale: 1.05 }}
           className={cn(
             "glass glass-lit cursor-grab active:cursor-grabbing",
-            "flex w-max items-center gap-2.5 rounded-2xl px-3 py-2 ring-1",
+            "flex w-max items-center gap-3 rounded-card px-3 py-2 ring-1",
             accentRing,
           )}
         >
           {/* Avatar stand-in — real creator imagery is not available yet. */}
-          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-white/10 text-[11px] font-semibold text-bone">
+          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-white/10 text-micro font-semibold text-bone">
             {item.label.slice(0, 2).toUpperCase()}
           </span>
           <span className="min-w-0">
-            <span className="block whitespace-nowrap text-xs font-medium text-bone">
+            <span className="block whitespace-nowrap text-small font-medium text-bone">
               {item.label}
             </span>
             {item.sublabel && (
-              <span className="block whitespace-nowrap text-[10px] text-ash">
+              <span className="block whitespace-nowrap text-micro text-ash">
                 {item.sublabel}
               </span>
             )}

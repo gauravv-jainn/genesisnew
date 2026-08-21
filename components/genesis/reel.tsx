@@ -45,7 +45,7 @@ export function Reel({
   const [playing, setPlaying] = useState(false);
 
   const frame = cn(
-    "relative overflow-hidden rounded-2xl border border-white/10 bg-elevated",
+    "relative overflow-hidden rounded-card border border-white/10 bg-elevated",
     className,
   );
 
@@ -131,7 +131,7 @@ export function YouTubeEmbed({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/10 bg-elevated",
+        "relative overflow-hidden rounded-card border border-white/10 bg-elevated",
         className,
       )}
       style={{ aspectRatio: "16 / 9" }}

@@ -53,7 +53,7 @@ export function LogoMarquee({
             {logos.map((logo) => (
               <span
                 key={`${copy}-${logo}`}
-                className="whitespace-nowrap text-lg font-semibold tracking-[0.12em] text-bone/35 transition-colors duration-300 hover:text-bone/80"
+                className="whitespace-nowrap text-h3 font-semibold tracking-[0.12em] text-bone/35 transition-colors duration-300 hover:text-bone/80"
               >
                 {logo}
               </span>

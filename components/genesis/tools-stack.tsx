@@ -136,14 +136,14 @@ export function ToolsStack({
               top: `${((40 + index * (320 / Math.max(1, tools.length - 1))) / 400) * 100}%`,
               transform: "translateY(-50%)",
             }}
-            className="glass flex items-center justify-end gap-2 rounded-lg px-2.5 py-1.5 text-right"
+            className="glass flex items-center justify-end gap-2 rounded-field px-3 py-2 text-right"
           >
             <span className="min-w-0">
-              <span className="block truncate text-[11px] font-medium text-bone">
+              <span className="block truncate text-micro font-medium text-bone">
                 {tool.label}
               </span>
               {tool.detail && (
-                <span className="block truncate text-[9px] text-faint">
+                <span className="block truncate text-micro text-faint">
                   {tool.detail}
                 </span>
               )}
@@ -155,11 +155,11 @@ export function ToolsStack({
       {/* The destination mark. */}
       <div className="absolute right-0 top-1/2 flex w-[42%] -translate-y-1/2 flex-col items-start gap-2 pl-6">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-semibold tracking-tight text-bone sm:text-2xl">
+          <span className="text-h3 font-semibold tracking-tight text-bone sm:text-h3">
             {destination}
           </span>
           {badge && (
-            <span className="glass rounded-full px-2 py-0.5 text-[10px] text-ash">
+            <span className="glass rounded-full px-2 py-0.5 text-micro text-ash">
               {badge}
             </span>
           )}

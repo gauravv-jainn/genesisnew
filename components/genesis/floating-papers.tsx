@@ -66,18 +66,18 @@ export function FloatingPapers({
                 {paper.badge}
               </div>
 
-              <h3 className="mt-5 text-balance text-lg font-semibold leading-snug tracking-tight text-bone transition-colors group-hover:text-amber-light">
+              <h3 className="mt-6 text-balance text-h3 font-semibold leading-snug tracking-tight text-bone transition-colors group-hover:text-amber-light">
                 {paper.title}
               </h3>
 
               {paper.description && (
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-ash">
+                <p className="mt-3 flex-1 text-small leading-relaxed text-ash">
                   {paper.description}
                 </p>
               )}
 
               {paper.footnote && (
-                <p className="mt-6 text-xs text-faint">{paper.footnote}</p>
+                <p className="mt-6 text-small text-faint">{paper.footnote}</p>
               )}
             </Link>
           </PaperCard>

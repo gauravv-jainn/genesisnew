@@ -46,7 +46,7 @@ export function CaseStudies() {
       origin="top-right"
       intensity={0.2}
     >
-      <Reveal>
+      <Reveal variant="scene">
         {/*
           The stage. img-025 sits its rail inside a broad crimson bloom rather
           than on flat black — that glow is what makes the posters read as lit

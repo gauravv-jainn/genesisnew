@@ -23,11 +23,23 @@
     /* Serif italic, reserved for a single accent word in a headline. */
     --font-serif: var(--font-serif);
 
-    /* --- Surfaces --------------------------------------------------------- */
+    /* --- Surfaces: a real elevation ladder ----------------------------------
+       There was no elevation. `raised` was used ZERO times, `elevated` and
+       `ink` twice each, and `void`/`ink` differed by two luminance levels —
+       invisible on any display. So the whole site was one black with white
+       overlays, which is the flat-dark-theme failure: nothing reads as sitting
+       above anything else.
+
+       Four tiers now, and the surface tone and the shadow move together —
+       see --shadow-raised/panel/float below. A card has to be a LIGHTER
+       SURFACE, not a bordered region of the same black. */
     --color-void: #08080a;
     --color-ink: #0a0a0b;
+    --color-raised: #111014;
+    --color-panel: #17161c;
+    --color-float: #1e1c24;
+    /* Retained: `elevated` predates the ladder and still has two callers. */
     --color-elevated: #131316;
-    --color-raised: #1c1a20;
 
     /* --- Brand accents ---------------------------------------------------- */
     /* Primary. Sampled from the Genesis CTA gradient + logo mark (img-012). */
@@ -43,7 +55,40 @@
        for rare cool-side contrast (see PROGRESS.md). */
     --color-teal: #2dd4bf;
 
-    /* --- Type ------------------------------------------------------------- */
+    /* --- Type scale --------------------------------------------------------
+       EIGHT STEPS. The page previously resolved 35 distinct size/weight pairs,
+       with every integer from 8px to 16px in use and a hole between 20px and
+       36px — so card titles had no step of their own and collapsed onto the
+       body size. The same size also drifted between line-heights (60px at both
+       61.2 and 63; 18px at both 28 and 24.75), which is what happens when the
+       rhythm is set per call site.
+
+       `h3` at 28px is the step that did not exist. Weights collapse to three:
+       300 display, 500 UI, 600 headings. */
+    --text-display: 4.75rem;
+    --text-display--line-height: 0.92;
+    --text-display--letter-spacing: -0.03em;
+    --text-h1: 3.5rem;
+    --text-h1--line-height: 0.98;
+    --text-h1--letter-spacing: -0.025em;
+    --text-h2: 2.5rem;
+    --text-h2--line-height: 1.05;
+    --text-h2--letter-spacing: -0.02em;
+    --text-h3: 1.75rem;
+    --text-h3--line-height: 1.15;
+    --text-h3--letter-spacing: -0.015em;
+    --text-lead: 1.1875rem;
+    --text-lead--line-height: 1.55;
+    --text-lead--letter-spacing: -0.005em;
+    --text-body: 1rem;
+    --text-body--line-height: 1.6;
+    --text-small: 0.875rem;
+    --text-small--line-height: 1.5;
+    --text-micro: 0.6875rem;
+    --text-micro--line-height: 1;
+    --text-micro--letter-spacing: 0.28em;
+
+    /* --- Text colour ------------------------------------------------------- */
     --color-bone: #f5f5f4;
     --color-ash: #a3a3a3;
     --color-faint: #6b6b70;
@@ -76,6 +121,15 @@
     --color-foreground: var(--foreground);
     --color-background: var(--background);
 
+    /* --- Radius: four steps, not ten ----------------------------------------
+       The page resolved 2, 5, 10, 14, 18, 22, 24, 28, 32 and pill, with
+       nothing connecting them. `field` for inputs and chips, `card`, `panel`,
+       and the pill. The 2px on the Journey broadsheet is deliberate and stays
+       inline — that one is representational, it is paper. */
+    --radius-field: 0.5rem;
+    --radius-card: 0.75rem;
+    --radius-panel: 1.5rem;
+
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -83,6 +137,13 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    /* --- Elevation shadows --------------------------------------------------
+       There was exactly ONE real box-shadow across the entire page — the glass
+       shadow, on 88 elements — so everything sat at the same depth. */
+    --shadow-raised: 0 2px 8px -2px rgb(0 0 0 / 0.6);
+    --shadow-panel: 0 12px 32px -8px rgb(0 0 0 / 0.7);
+    --shadow-float: 0 28px 64px -16px rgb(0 0 0 / 0.85);
 }
 
 :root {
@@ -205,13 +266,39 @@
         border: 1px solid var(--glass-border);
         box-shadow:
             0 1px 0 0 rgb(255 255 255 / 0.06) inset,
-            0 8px 32px -8px rgb(0 0 0 / 0.7);
+            var(--shadow-panel);
     }
 
+    /* Overlays: heavier blur AND a deeper shadow, so a floating surface reads
+       as further from the page than a card lying in it. There was previously
+       one shadow on 88 elements, which put everything at the same depth. */
     .glass-strong {
         background-color: var(--glass-fill-strong);
         backdrop-filter: blur(var(--glass-blur-heavy)) saturate(160%);
         -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(160%);
+        box-shadow:
+            0 1px 0 0 rgb(255 255 255 / 0.08) inset,
+            var(--shadow-float);
+    }
+
+    /* Small inline surfaces — chips, pills, badges. Shallow shadow, and no
+       border, because a hairline at this size is what makes a chip look
+       pasted on rather than sitting on the page. */
+    .glass-chip {
+        position: relative;
+        background-color: var(--glass-fill);
+        backdrop-filter: blur(14px) saturate(130%);
+        -webkit-backdrop-filter: blur(14px) saturate(130%);
+        box-shadow: var(--shadow-raised);
+    }
+
+    /* An opaque panel for surfaces that do NOT sit over anything worth
+       blurring. backdrop-filter over a flat ground costs a buffer and returns
+       nothing; this gets the elevation without paying for it. */
+    .surface-panel {
+        background-color: var(--color-panel);
+        border: 1px solid rgb(255 255 255 / 0.07);
+        box-shadow: var(--shadow-panel);
     }
 
     /* Hairline gradient along the top edge — the "catching the light" cue. */

@@ -67,7 +67,7 @@ export function PosterCard({
       whileHover={{ y: -10 }}
       transition={{ type: "spring", stiffness: 300, damping: 24 }}
       className={cn(
-        "group relative shrink-0 overflow-hidden rounded-3xl border border-white/10",
+        "group relative shrink-0 overflow-hidden rounded-panel border border-white/10",
         "shadow-[0_18px_50px_-18px_rgb(0_0_0/0.9)]",
         "transition-shadow duration-500 hover:shadow-[0_26px_70px_-16px_rgb(255_45_63/0.4)]",
         // Spec page 12 asks Portfolio for a "minimal Scroll section", and the
@@ -92,7 +92,7 @@ export function PosterCard({
         {/* Legibility scrim for the title block. */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45)_0%,transparent_28%,transparent_45%,rgb(0_0_0/0.88)_100%)]" />
 
-        <span className="glass absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-medium tracking-wide text-bone">
+        <span className="glass absolute left-3 top-3 rounded-full px-3 py-1 text-micro font-medium tracking-wide text-bone">
           {poster.category}
         </span>
 
@@ -102,19 +102,19 @@ export function PosterCard({
 
         <div className="absolute inset-x-0 bottom-0 p-4">
           {poster.client && (
-            <p className="micro-label mb-1.5 !text-[10px] !tracking-[0.22em] text-bone/70">
+            <p className="micro-label mb-2 !text-micro !tracking-[0.22em] text-bone/70">
               {poster.client}
             </p>
           )}
-          <h3 className="text-balance text-[15px] font-semibold leading-tight text-bone">
+          <h3 className="text-balance text-small font-semibold leading-tight text-bone">
             {poster.title}
           </h3>
           {poster.meta && poster.meta.length > 0 && (
-            <div className="mt-2.5 flex flex-wrap gap-1.5">
+            <div className="mt-3 flex flex-wrap gap-2">
               {poster.meta.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-bone/80"
+                  className="rounded-full bg-white/10 px-2 py-0.5 text-micro text-bone/80"
                 >
                   {item}
                 </span>

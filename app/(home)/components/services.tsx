@@ -59,7 +59,7 @@ export function Services() {
             <SectionLabel dot tone="amber">
               {services.label}
             </SectionLabel>
-            <h2 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl">
+            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
               {services.heading}{" "}
               <span className="font-serif font-normal italic text-amber">
                 {services.headingAccent}
@@ -74,9 +74,9 @@ export function Services() {
 
         {/* Below lg: a plain readable grid. An overlapping arc at phone width
             is illegible, not atmospheric. */}
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:hidden">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:hidden">
           {services.items.map((service, index) => (
-            <Reveal key={service.title} delay={0.05 * index}>
+            <Reveal key={service.title} delay={0.05 * index} variant="card">
               <ServiceCard service={service} index={index} />
             </Reveal>
           ))}
@@ -99,7 +99,7 @@ export function Services() {
                   zIndex: 10 + index,
                 }}
               >
-                <Reveal delay={0.06 * index} className="h-full">
+                <Reveal delay={0.06 * index} variant="card" className="h-full">
                   <ServiceCard service={service} index={index} rotate={place.rotate} />
                 </Reveal>
               </div>
@@ -129,10 +129,10 @@ function ServiceCard({
     >
       <p className="micro-label">{`0${index + 1}`}</p>
       <div>
-        <h3 className="text-balance text-xl font-semibold leading-tight tracking-tight text-bone">
+        <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
           {service.title}
         </h3>
-        <p className="mt-2 text-[13px] leading-relaxed text-amber/75">{service.caption}</p>
+        <p className="mt-2 text-small leading-relaxed text-amber/75">{service.caption}</p>
       </div>
     </PaperCard>
   );

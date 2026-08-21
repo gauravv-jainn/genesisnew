@@ -30,14 +30,14 @@ export function BlogTeaser() {
     >
       {posts.length === 0 ? (
         <Reveal>
-          <div className="glass glass-lit rounded-3xl p-8">
-            <p className="text-sm text-ash">
+          <div className="glass glass-lit rounded-panel p-8">
+            <p className="text-small text-ash">
               The first pieces are being written. Check back shortly.
             </p>
           </div>
         </Reveal>
       ) : (
-      <Reveal>
+      <Reveal variant="scene">
         <FloatingPapers
           papers={posts.map((post) => ({
             href: `/blog/${post.slug}`,
@@ -46,7 +46,7 @@ export function BlogTeaser() {
             description: post.description,
             footnote: `${formatPostDate(post.date)} · ${post.readingTime}`,
             badge: post.draft ? (
-              <span className="rounded-full border border-amber/40 px-2 py-0.5 text-[10px] text-amber">
+              <span className="rounded-full border border-amber/40 px-2 py-0.5 text-micro text-amber">
                 Draft
               </span>
             ) : undefined,

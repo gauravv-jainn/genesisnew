@@ -39,7 +39,7 @@ export default function ContentCreationPage() {
               <SectionLabel dot tone="amber">
                 {contentCreationPage.label}
               </SectionLabel>
-              <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
                 {contentCreationPage.heading}{" "}
                 <span className="font-serif font-normal italic text-amber">
                   {contentCreationPage.headingAccent}
@@ -62,10 +62,10 @@ export default function ContentCreationPage() {
                   className="h-full"
                 >
                   <p className="micro-label mb-3">{`0${index + 1}`}</p>
-                  <h2 className="text-lg font-semibold tracking-tight text-bone">
+                  <h2 className="text-h3 font-semibold tracking-tight text-bone">
                     {capability.title}
                   </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-ash">
+                  <p className="mt-3 text-small leading-relaxed text-ash">
                     {capability.body}
                   </p>
                 </PaperCard>
@@ -88,12 +88,12 @@ export default function ContentCreationPage() {
         <RevealGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {creativeProcess.steps.map((step, index) => (
             <RevealItem key={step.title} className="h-full">
-              <div className="glass glass-lit flex h-full flex-col rounded-3xl p-6">
+              <div className="glass glass-lit flex h-full flex-col rounded-panel p-6">
                 <p className="micro-label">{`0${index + 1}`}</p>
-                <h3 className="mt-4 text-lg font-semibold tracking-tight text-bone">
+                <h3 className="mt-4 text-h3 font-semibold tracking-tight text-bone">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ash">{step.body}</p>
+                <p className="mt-3 text-small leading-relaxed text-ash">{step.body}</p>
               </div>
             </RevealItem>
           ))}

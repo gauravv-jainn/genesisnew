@@ -36,7 +36,7 @@ export default function CreatorPage() {
               <SectionLabel dot tone="amber">
                 {creatorPage.label}
               </SectionLabel>
-              <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
                 {creatorPage.heading}{" "}
                 <span className="font-serif font-normal italic text-amber">
                   {creatorPage.headingAccent}
@@ -59,10 +59,10 @@ export default function CreatorPage() {
                   className="h-full"
                 >
                   <p className="micro-label mb-3">{`0${index + 1}`}</p>
-                  <h2 className="text-lg font-semibold tracking-tight text-bone">
+                  <h2 className="text-h3 font-semibold tracking-tight text-bone">
                     {benefit.title}
                   </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-ash">
+                  <p className="mt-3 text-small leading-relaxed text-ash">
                     {benefit.body}
                   </p>
                 </PaperCard>

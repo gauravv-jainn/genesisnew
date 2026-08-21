@@ -49,15 +49,15 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
             {post.category}
           </SectionLabel>
 
-          <h1 className="mt-6 text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-bone sm:text-5xl">
+          <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.08] tracking-tight text-bone sm:text-h1">
             {post.title}
           </h1>
 
-          <p className="mt-5 text-pretty text-lg leading-relaxed text-ash">
+          <p className="mt-6 text-pretty text-h3 leading-relaxed text-ash">
             {post.description}
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center gap-3 text-xs text-faint">
+          <div className="mt-8 flex flex-wrap items-center gap-3 text-small text-faint">
             <span>{formatPostDate(post.date)}</span>
             <span aria-hidden>·</span>
             <span>{post.readingTime}</span>
@@ -89,17 +89,17 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         */}
         <div
           className={[
-            "mt-12 text-[15px] leading-[1.75] text-ash",
-            "[&_h2]:mt-12 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-bone",
-            "[&_h3]:mt-10 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-bone",
-            "[&_p]:mt-5",
-            "[&_ul]:mt-5 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mt-2",
-            "[&_ol]:mt-5 [&_ol]:list-decimal [&_ol]:pl-5",
+            "mt-12 text-small leading-[1.75] text-ash",
+            "[&_h2]:mt-12 [&_h2]:text-h3 [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-bone",
+            "[&_h3]:mt-10 [&_h3]:text-h3 [&_h3]:font-semibold [&_h3]:text-bone",
+            "[&_p]:mt-6",
+            "[&_ul]:mt-6 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mt-2",
+            "[&_ol]:mt-6 [&_ol]:list-decimal [&_ol]:pl-6",
             "[&_strong]:font-semibold [&_strong]:text-bone",
             "[&_a]:text-amber [&_a]:underline [&_a]:underline-offset-4",
             "[&_blockquote]:mt-8 [&_blockquote]:border-l-2 [&_blockquote]:border-amber/50",
-            "[&_blockquote]:pl-5 [&_blockquote]:text-sm [&_blockquote]:text-faint",
-            "[&_code]:rounded [&_code]:bg-white/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[13px]",
+            "[&_blockquote]:pl-6 [&_blockquote]:text-small [&_blockquote]:text-faint",
+            "[&_code]:rounded [&_code]:bg-white/10 [&_code]:px-2 [&_code]:py-0.5 [&_code]:text-small",
           ].join(" ")}
         >
           <MDXRemote source={post.content} />
@@ -111,7 +111,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           </GlassButton>
           <Link
             href="/#contact"
-            className="text-sm text-ash underline underline-offset-4 hover:text-bone"
+            className="text-small text-ash underline underline-offset-4 hover:text-bone"
           >
             Work with us
           </Link>

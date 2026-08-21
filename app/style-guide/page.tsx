@@ -55,10 +55,10 @@ export default function StyleGuidePage() {
     <div className="min-h-dvh bg-ink pb-32">
       <div className="mx-auto max-w-6xl px-6 pt-20">
         <SectionLabel dot>Phase 1 · Design system</SectionLabel>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-bone">
+        <h1 className="mt-4 text-h2 font-semibold tracking-tight text-bone">
           Genesis <span className="font-serif italic text-amber">style guide</span>
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ash">
+        <p className="mt-3 max-w-2xl text-small leading-relaxed text-ash">
           Every shared component in isolation. Dev-only route — returns 404 in
           production and is not linked from any navigation.
         </p>
@@ -80,13 +80,13 @@ export default function StyleGuidePage() {
             ["ash", "#a3a3a3"],
             ["faint", "#6b6b70"],
           ].map(([name, hex]) => (
-            <div key={name} className="rounded-xl border border-white/10 p-2">
+            <div key={name} className="rounded-card border border-white/10 p-2">
               <div
-                className="h-14 w-full rounded-lg border border-white/10"
+                className="h-14 w-full rounded-field border border-white/10"
                 style={{ backgroundColor: hex }}
               />
-              <p className="mt-2 text-[11px] font-medium text-bone">{name}</p>
-              <p className="text-[10px] text-faint">{hex}</p>
+              <p className="mt-2 text-micro font-medium text-bone">{name}</p>
+              <p className="text-micro text-faint">{hex}</p>
             </div>
           ))}
         </div>
@@ -95,13 +95,13 @@ export default function StyleGuidePage() {
       <Section title="Typography">
         <div className="space-y-6">
           <SectionLabel dot>Micro label · letterspaced caps</SectionLabel>
-          <h2 className="text-5xl font-semibold tracking-tight text-bone">
+          <h2 className="text-h1 font-semibold tracking-tight text-bone">
             Built for the <span className="font-serif italic text-amber">thinkers</span>
           </h2>
-          <h3 className="text-fade-down text-4xl font-semibold tracking-tight">
+          <h3 className="text-fade-down text-h2 font-semibold tracking-tight">
             Two-tone headline treatment
           </h3>
-          <p className="max-w-prose text-sm leading-relaxed text-ash">
+          <p className="max-w-prose text-small leading-relaxed text-ash">
             Body copy sits at ash on ink. Line length is capped near 65
             characters so long-form sections stay readable at desktop widths.
           </p>
@@ -109,15 +109,15 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Glass surfaces" note="One UI 'Blur' — heavy blur, low-contrast fill, lit top edge. Not the iOS 'Clear' style.">
-        <div className="relative overflow-hidden rounded-3xl">
+        <div className="relative overflow-hidden rounded-panel">
           {/* A busy ground so the blur has something to actually blur. */}
           <div className="absolute inset-0 bg-[conic-gradient(from_180deg,#ff2d3f,#ff8a3d,#2dd4bf,#ff2d3f)] opacity-40 blur-2xl" />
           <div className="relative grid gap-4 p-8 sm:grid-cols-3">
-            <div className="glass rounded-2xl p-6 text-sm text-bone">.glass</div>
-            <div className="glass glass-lit rounded-2xl p-6 text-sm text-bone">
+            <div className="glass rounded-card p-6 text-small text-bone">.glass</div>
+            <div className="glass glass-lit rounded-card p-6 text-small text-bone">
               .glass .glass-lit
             </div>
-            <div className="glass glass-strong glass-lit rounded-2xl p-6 text-sm text-bone">
+            <div className="glass glass-strong glass-lit rounded-card p-6 text-small text-bone">
               .glass-strong
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function StyleGuidePage() {
               { value: "20+", label: "Platforms covered", icon: <Globe className="size-5" /> },
             ]}
           />
-          <p className="text-xs text-faint">
+          <p className="text-small text-faint">
             Figures here are sample values, shown to demonstrate the count-up and
             the bar&apos;s layout. Real numbers live in lib/home-content.ts.
           </p>
@@ -209,13 +209,13 @@ export default function StyleGuidePage() {
           <div className="flex flex-wrap gap-8">
             <PaperCard pinned className="w-64">
               <p className="micro-label mb-2">Pinned</p>
-              <p className="text-sm text-ash">
+              <p className="text-small text-ash">
                 Hover to straighten and lift. Rotation resets on approach.
               </p>
             </PaperCard>
             <PaperCard tone="crimson" rotate={2.5} className="w-64">
               <p className="micro-label mb-2">Crimson sheen</p>
-              <p className="text-sm text-ash">Directional light along the top edge.</p>
+              <p className="text-small text-ash">Directional light along the top edge.</p>
             </PaperCard>
           </div>
           <PaperStack
@@ -235,7 +235,7 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Reel" note="Muted, looping, controlless — the spec's 'playing on their own like a GIF'. Without a src it renders a labelled frame, so layout is correct before footage exists. Does NOT autoplay under prefers-reduced-motion.">
-        <div className="grid gap-5 sm:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-3">
           <Reel label="Showreel" aspect="4 / 5" />
           <Reel label="Behind the scenes" aspect="1 / 1" />
           <Reel label="Client film" aspect="16 / 9" />
@@ -247,7 +247,7 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Scene primitives" note="Spotlight, ghosted display type and editorial corner marks — the language the reference layouts are built from.">
-        <div className="relative h-80 overflow-hidden rounded-2xl bg-void">
+        <div className="relative h-80 overflow-hidden rounded-card bg-void">
           <Spotlight x={62} spread={16} tone="warm" />
           <GhostType>OUR SERVICES</GhostType>
           <div className="relative z-[2] flex h-full items-end justify-between p-6">
@@ -260,13 +260,13 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Lit room" note="An interior drawn entirely as alpha — no clip-paths, no CSS filters. Walls are a lateral falloff; the floor is an ellipse centred below the frame.">
-        <div className="relative h-96 overflow-hidden rounded-2xl">
+        <div className="relative h-96 overflow-hidden rounded-card">
           <LitRoom />
         </div>
       </Section>
 
       <Section title="Standing figure" note="Drawn silhouette in an oversized suit, lit from directly above. Cloth nap and a feathered outline; nothing in a hazy room has a razor edge.">
-        <div className="relative flex h-80 items-end justify-center overflow-hidden rounded-2xl bg-void pb-6">
+        <div className="relative flex h-80 items-end justify-center overflow-hidden rounded-card bg-void pb-6">
           <LitRoom />
           <div className="relative z-[2] h-56">
             <StandingFigure className="h-full" />
@@ -275,7 +275,7 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Paper vortex" note="Every sheet is a post link. Posts repeat around the cloud when there are fewer than sheets. Magnetic: the cursor is a field over the whole scene.">
-        <div className="overflow-hidden rounded-2xl bg-void">
+        <div className="overflow-hidden rounded-card bg-void">
           <PaperVortex
             sheets={34}
             posts={[
@@ -288,7 +288,7 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Document wall" note="The curved wall of lit panels from the page-1 landing reference. Pure CSS — no images.">
-        <div className="relative h-72 overflow-hidden rounded-2xl bg-void">
+        <div className="relative h-72 overflow-hidden rounded-card bg-void">
           <DocumentWall tone="amber" />
         </div>
       </Section>
@@ -300,8 +300,8 @@ export default function StyleGuidePage() {
           items={["KAYALI", "TATA MOTORS", "HDFC", "ICICI BANK", "YONEX", "MIRAGGIO", "KREO TECH"].map((logo) => ({
             id: logo,
             content: (
-              <div className="glass glass-lit grid size-24 place-items-center rounded-[1.5rem] p-3 text-center">
-                <span className="text-[9px] font-semibold tracking-[0.1em] text-bone/70">
+              <div className="glass glass-lit grid size-24 place-items-center rounded-panel p-3 text-center">
+                <span className="text-micro font-semibold tracking-[0.1em] text-bone/70">
                   {logo}
                 </span>
               </div>
@@ -335,8 +335,8 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Glowing word & iridescent button" note="The waitlist treatment: one word lit from within, held in glass. Emission is text-shadow, not a filter — filters rasterise the whole word.">
-        <div className="flex flex-col items-center gap-10 rounded-2xl bg-void py-16">
-          <GlowWord tone="warm" className="text-4xl sm:text-5xl">
+        <div className="flex flex-col items-center gap-10 rounded-card bg-void py-16">
+          <GlowWord tone="warm" className="text-h2 sm:text-h1">
             waitlist
           </GlowWord>
           <IridescentButton href="#">Join waitlist now</IridescentButton>
@@ -352,8 +352,8 @@ export default function StyleGuidePage() {
       <Section title="Atmosphere" note="Dark ground + one directional light + grain. Sections compose this rather than repeating it.">
         <div className="grid gap-4 sm:grid-cols-3">
           {(["crimson", "amber", "teal"] as const).map((tone) => (
-            <Atmosphere key={tone} tone={tone} origin="top-right" className="rounded-2xl">
-              <div className="flex h-40 items-end p-5">
+            <Atmosphere key={tone} tone={tone} origin="top-right" className="rounded-card">
+              <div className="flex h-40 items-end p-6">
                 <span className="micro-label">{tone}</span>
               </div>
             </Atmosphere>
@@ -376,8 +376,8 @@ function Section({
   return (
     <section className="mx-auto mt-24 max-w-6xl px-6">
       <div className="mb-8 border-b border-white/10 pb-4">
-        <h2 className="text-xl font-semibold tracking-tight text-bone">{title}</h2>
-        {note && <p className="mt-2 max-w-2xl text-xs leading-relaxed text-faint">{note}</p>}
+        <h2 className="text-h3 font-semibold tracking-tight text-bone">{title}</h2>
+        {note && <p className="mt-2 max-w-2xl text-small leading-relaxed text-faint">{note}</p>}
       </div>
       {children}
     </section>

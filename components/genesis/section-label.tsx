@@ -25,7 +25,7 @@ export function SectionLabel({
         : "bg-crimson";
 
   return (
-    <p className={cn("micro-label flex items-center gap-2.5", className)}>
+    <p className={cn("micro-label flex items-center gap-3", className)}>
       {dot && (
         <span
           aria-hidden

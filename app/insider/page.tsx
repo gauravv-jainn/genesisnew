@@ -79,10 +79,10 @@ export default async function InsiderPage() {
         <header className="flex flex-wrap items-start justify-between gap-6">
           <div>
             <GenesisMark />
-            <h1 className="mt-6 text-3xl font-semibold tracking-tight text-bone">
+            <h1 className="mt-6 text-h2 font-semibold tracking-tight text-bone">
               {user.name ?? user.email}
             </h1>
-            <p className="mt-2 text-sm text-ash">
+            <p className="mt-2 text-small text-ash">
               {user.email} · role {user.role}
             </p>
           </div>
@@ -93,31 +93,31 @@ export default async function InsiderPage() {
         </header>
 
         {/* Live: inbound submissions from the public forms. */}
-        <section className="glass glass-lit rounded-3xl p-6 sm:p-8">
+        <section className="glass glass-lit rounded-panel p-6 sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <SectionLabel dot>Inbound</SectionLabel>
-            <span className="text-xs text-faint">
+            <span className="text-small text-faint">
               {submissions ? `${submissions.length} most recent` : "unavailable"}
             </span>
           </div>
 
           {submissions === null ? (
-            <p className="mt-6 text-sm text-ash">
+            <p className="mt-6 text-small text-ash">
               Not connected to the database yet. Once{" "}
-              <code className="rounded bg-white/10 px-1.5 py-0.5">DATABASE_URL</code>{" "}
+              <code className="rounded bg-white/10 px-2 py-0.5">DATABASE_URL</code>{" "}
               is set, submissions from the contact, creator and careers forms
               appear here.
             </p>
           ) : submissions.length === 0 ? (
-            <p className="mt-6 text-sm text-ash">
+            <p className="mt-6 text-small text-ash">
               No submissions yet. The forms on /creator, /careers and the
               homepage all write here.
             </p>
           ) : (
             <div className="mt-6 overflow-x-auto">
-              <table className="w-full min-w-[36rem] text-left text-sm">
+              <table className="w-full min-w-[36rem] text-left text-small">
                 <thead>
-                  <tr className="border-b border-white/10 text-xs text-faint">
+                  <tr className="border-b border-white/10 text-small text-faint">
                     <th scope="col" className="pb-3 font-medium">Name</th>
                     <th scope="col" className="pb-3 font-medium">Email</th>
                     <th scope="col" className="pb-3 font-medium">Type</th>
@@ -150,18 +150,18 @@ export default async function InsiderPage() {
             {WORKSPACE_MODULES.map((module) => (
               <div
                 key={module.title}
-                className="glass flex flex-col gap-3 rounded-2xl p-5 opacity-60"
+                className="glass flex flex-col gap-3 rounded-card p-6 opacity-60"
               >
                 <div className="flex items-center justify-between">
                   <module.icon className="size-5 text-ash" aria-hidden />
                   <Lock className="size-3.5 text-faint" aria-hidden />
                 </div>
-                <p className="text-sm font-medium text-bone">{module.title}</p>
-                <p className="text-xs text-faint">Separate build</p>
+                <p className="text-small font-medium text-bone">{module.title}</p>
+                <p className="text-small text-faint">Separate build</p>
               </div>
             ))}
           </div>
-          <p className="mt-5 max-w-2xl text-xs leading-relaxed text-faint">
+          <p className="mt-6 max-w-2xl text-small leading-relaxed text-faint">
             The Genesis Workspace — client and project management, the content
             production pipeline, invoicing and automations — is a separate
             build. The infrastructure here (auth, database, storage, audit

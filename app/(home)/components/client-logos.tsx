@@ -19,22 +19,22 @@ export function ClientLogos() {
           <SectionLabel dot>{clients.label}</SectionLabel>
         </Reveal>
         <Reveal delay={0.05}>
-          <p className="mt-5 max-w-md text-sm text-ash">
+          <p className="mt-6 max-w-md text-small text-ash">
             Drag the cluster to move through it.
           </p>
         </Reveal>
       </div>
 
-      <Reveal delay={0.1} className="mt-8">
+      <Reveal delay={0.1} variant="scene" className="mt-8">
         <WatchCluster
           height={480}
           cell={150}
           items={clients.logos.map((logo) => ({
             id: logo,
             content: (
-              <div className="glass glass-lit grid size-28 place-items-center rounded-[1.75rem] p-3 text-center sm:size-32">
+              <div className="glass glass-lit grid size-28 place-items-center rounded-panel p-3 text-center sm:size-32">
                 {/* TODO(assets): real client logo files owed (spec: "Ask tanvi"). */}
-                <span className="text-[10px] font-semibold leading-tight tracking-[0.1em] text-bone/70">
+                <span className="text-micro font-semibold leading-tight tracking-[0.1em] text-bone/70">
                   {logo}
                 </span>
               </div>

@@ -102,24 +102,24 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "glass glass-lit group relative flex items-start gap-5 rounded-3xl p-6 sm:p-7",
+        "glass glass-lit group relative flex items-start gap-6 rounded-panel p-6 sm:p-8",
         "bg-[linear-gradient(135deg,rgb(255_45_63/0.10)_0%,transparent_55%)]",
         className,
       )}
     >
       {icon && (
-        <div className="grid size-14 shrink-0 place-items-center rounded-2xl border border-crimson/25 bg-crimson/10 text-crimson">
+        <div className="grid size-14 shrink-0 place-items-center rounded-card border border-crimson/25 bg-crimson/10 text-crimson">
           {icon}
         </div>
       )}
 
       <div className="min-w-0 flex-1">
-        <p className="text-3xl font-semibold tracking-tight text-bone sm:text-4xl">
+        <p className="text-h2 font-semibold tracking-tight text-bone sm:text-h2">
           <CountUp value={value} />
         </p>
         <p className="micro-label mt-2">{label}</p>
         {description && (
-          <p className="mt-3 text-sm leading-relaxed text-ash">{description}</p>
+          <p className="mt-3 text-small leading-relaxed text-ash">{description}</p>
         )}
       </div>
 
@@ -147,7 +147,7 @@ export function StatRow({
    * A LONE figure gets its own treatment rather than one cell of a bar.
    *
    * Adapting the column count was not enough: at `grid-cols-1` the single
-   * figure still sat at text-2xl against the left edge of a full-width glass
+   * figure still sat at text-h3 against the left edge of a full-width glass
    * bar with about 85% of it empty, which reads as three figures that failed
    * to load. Spec page 16 asks for "//numbers increasing animation" and the
    * image on that page sets the numeral at display scale — roughly a sixth of
@@ -163,7 +163,7 @@ export function StatRow({
         transition={{ duration: 0.6, ease: "easeOut" }}
         className={cn("flex flex-col items-start gap-3", className)}
       >
-        <p className="text-6xl font-semibold leading-none tracking-tight text-bone [font-variant-numeric:tabular-nums] sm:text-7xl lg:text-8xl">
+        <p className="text-h1 font-semibold leading-none tracking-tight text-bone [font-variant-numeric:tabular-nums] sm:text-display lg:text-8xl">
           <CountUp value={only.value} />
         </p>
         <p className="micro-label">{only.label}</p>
@@ -184,7 +184,7 @@ export function StatRow({
   return (
     <div
       className={cn(
-        "glass glass-lit grid gap-y-8 rounded-3xl px-6 py-8 sm:px-8",
+        "glass glass-lit grid gap-y-8 rounded-panel px-6 py-8 sm:px-8",
         columns,
         className,
       )}
@@ -203,15 +203,15 @@ export function StatRow({
           )}
         >
           {stat.icon && (
-            <div className="grid size-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-bone">
+            <div className="grid size-11 shrink-0 place-items-center rounded-card border border-white/10 bg-white/5 text-bone">
               {stat.icon}
             </div>
           )}
           <div className="min-w-0">
-            <p className="text-2xl font-semibold tracking-tight text-bone">
+            <p className="text-h3 font-semibold tracking-tight text-bone">
               <CountUp value={stat.value} />
             </p>
-            <p className="mt-1 text-[13px] leading-tight text-ash">{stat.label}</p>
+            <p className="mt-1 text-small leading-tight text-ash">{stat.label}</p>
           </div>
         </motion.div>
       ))}

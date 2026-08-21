@@ -26,7 +26,7 @@ export function FooterCta() {
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal>
           <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <h2 className="max-w-2xl text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl lg:text-6xl">
+            <h2 className="max-w-2xl text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
               {footerCta.heading}{" "}
               <span className="font-serif font-normal italic text-amber">
                 {footerCta.headingAccent}
@@ -34,7 +34,7 @@ export function FooterCta() {
             </h2>
 
             <div className="flex flex-col items-start gap-4">
-              <p className="max-w-sm text-sm leading-relaxed text-ash">
+              <p className="max-w-sm text-small leading-relaxed text-ash">
                 {footerCta.body}
               </p>
               <GlassButton
@@ -66,15 +66,15 @@ export function FooterCta() {
           top edge, so it reads as one pane the content sits inside rather
           than a row of boxes.
         */}
-        <div className="glass glass-strong glass-lit mt-20 grid gap-12 rounded-[2rem] p-8 sm:grid-cols-2 sm:p-10 lg:grid-cols-4">
+        <div className="glass glass-strong glass-lit mt-20 grid gap-12 rounded-panel p-8 sm:grid-cols-2 sm:p-10 lg:grid-cols-4">
           <Reveal>
             <GenesisMark />
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-ash">
+            <p className="mt-6 max-w-xs text-small leading-relaxed text-ash">
               {siteConfig.description}
             </p>
             <a
               href={`mailto:${footerCta.email}`}
-              className="mt-5 inline-block text-sm text-bone underline-offset-4 transition-colors hover:text-crimson hover:underline"
+              className="mt-6 inline-block text-small text-bone underline-offset-4 transition-colors hover:text-crimson hover:underline"
             >
               {footerCta.email}
             </a>
@@ -86,12 +86,12 @@ export function FooterCta() {
           {footerNav.map((group, index) => (
             <Reveal key={group.heading} delay={0.05 * (index + 1)}>
               <p className="micro-label">{group.heading}</p>
-              <ul className="mt-5 flex flex-col gap-3">
+              <ul className="mt-6 flex flex-col gap-3">
                 {group.items.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="text-sm text-ash transition-colors hover:text-bone"
+                      className="text-small text-ash transition-colors hover:text-bone"
                     >
                       {item.label}
                     </Link>
@@ -102,7 +102,7 @@ export function FooterCta() {
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col gap-2 border-t border-white/10 py-8 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-2 border-t border-white/10 py-8 text-small text-faint sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>

@@ -33,17 +33,17 @@ export default function ErrorBoundary({
       <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center px-6 text-center">
         <SectionLabel dot>Something went wrong</SectionLabel>
 
-        <h1 className="mt-6 text-balance text-4xl font-semibold leading-[1.1] tracking-tight text-bone sm:text-5xl">
+        <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.1] tracking-tight text-bone sm:text-h1">
           This page didn&rsquo;t{" "}
           <span className="font-serif font-normal italic text-amber">load</span>
         </h1>
 
-        <p className="mt-5 max-w-md text-sm leading-relaxed text-ash">
+        <p className="mt-6 max-w-md text-small leading-relaxed text-ash">
           The error has been reported. Trying again often works — it may have
           been a momentary fault.
         </p>
 
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <GlassButton onClick={reset} variant="crimson" size="lg">
             Try again
           </GlassButton>
@@ -53,7 +53,7 @@ export default function ErrorBoundary({
         </div>
 
         {error.digest && (
-          <p className="mt-10 text-xs text-faint">
+          <p className="mt-10 text-small text-faint">
             Reference: <code className="text-ash">{error.digest}</code>
           </p>
         )}

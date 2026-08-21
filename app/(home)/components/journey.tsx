@@ -53,7 +53,7 @@ export function Journey() {
             <SectionLabel dot tone="crimson">
               {journey.label}
             </SectionLabel>
-            <h2 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl">
+            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
               {journey.heading}{" "}
               <span className="font-serif font-normal italic text-[#cfe3ff]">
                 {journey.headingAccent}
@@ -79,7 +79,7 @@ export function Journey() {
           a slight perspective tilt so it reads as standing in the room rather
           than pasted onto the page.
         */}
-        <Reveal delay={0.18} className="mt-14">
+        <Reveal delay={0.18} variant="scene" className="mt-14">
           <div
             className="relative rounded-[2px] px-6 py-14 sm:px-14"
             style={{

@@ -115,20 +115,20 @@ export default function CareersPage() {
         </Reveal>
 
         <Reveal delay={0.05}>
-          <h1 className="mt-8 text-balance text-4xl font-semibold leading-[1.15] tracking-tight text-bone sm:text-5xl lg:text-6xl">
+          <h1 className="mt-8 text-balance text-h2 font-semibold leading-[1.15] tracking-tight text-bone sm:text-h1 lg:text-h1">
             {careersPage.heading}
           </h1>
         </Reveal>
 
         {/* The lit word, held in glass — the whole point of the reference. */}
         <Reveal delay={0.12}>
-          <GlowWord tone="warm" className="mt-6 text-4xl sm:text-5xl lg:text-6xl">
+          <GlowWord tone="warm" className="mt-6 text-h2 sm:text-h1 lg:text-h1">
             {careersPage.headingAccent}
           </GlowWord>
         </Reveal>
 
         <Reveal delay={0.18}>
-          <p className="mt-10 max-w-lg text-pretty text-sm leading-relaxed text-ash sm:text-base">
+          <p className="mt-10 max-w-lg text-pretty text-small leading-relaxed text-ash sm:text-body">
             {careersPage.body}
           </p>
         </Reveal>
@@ -145,7 +145,7 @@ export default function CareersPage() {
 
         {/* TODO(copy): confirm before launch — this is a scarcity claim. */}
         <Reveal delay={0.3}>
-          <p className="mt-6 text-xs text-faint">
+          <p className="mt-6 text-small text-faint">
             We open roles in batches. Only a few spots each round.
           </p>
         </Reveal>
@@ -154,10 +154,10 @@ export default function CareersPage() {
           <Reveal>
             <p className="micro-label">Disciplines we hire for</p>
           </Reveal>
-          <RevealGroup className="mt-6 flex flex-wrap justify-center gap-2.5">
+          <RevealGroup className="mt-6 flex flex-wrap justify-center gap-3">
             {careersPage.disciplines.map((discipline) => (
               <RevealItem key={discipline}>
-                <span className="glass rounded-full px-4 py-2 text-[13px] text-ash">
+                <span className="glass-chip rounded-full px-4 py-2 text-small text-ash">
                   {discipline}
                 </span>
               </RevealItem>

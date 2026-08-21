@@ -78,9 +78,9 @@ export default function InfluencerCampaignsPage() {
         <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {influencer.celebrities.map((celebrity) => (
             <RevealItem key={celebrity.id}>
-              <article className="glass glass-lit flex h-full flex-col justify-between gap-6 rounded-2xl p-6">
+              <article className="glass glass-lit flex h-full flex-col justify-between gap-6 rounded-card p-6">
                 <p className="micro-label">{celebrity.sublabel}</p>
-                <h3 className="text-balance text-xl font-semibold leading-tight tracking-tight text-bone">
+                <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
                   {celebrity.label}
                 </h3>
               </article>
@@ -91,7 +91,7 @@ export default function InfluencerCampaignsPage() {
         <RevealGroup className="mt-14 flex flex-wrap justify-center gap-3">
           {influencerPage.genres.map((genre) => (
             <RevealItem key={genre}>
-              <span className="glass rounded-full px-4 py-2 text-sm text-bone">
+              <span className="glass-chip rounded-full px-4 py-2 text-small text-bone">
                 {genre}
               </span>
             </RevealItem>
@@ -110,12 +110,12 @@ export default function InfluencerCampaignsPage() {
         <RevealGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {influencerPage.process.map((step, index) => (
             <RevealItem key={step.title} className="h-full">
-              <div className="glass glass-lit flex h-full flex-col rounded-3xl p-6">
+              <div className="glass glass-lit flex h-full flex-col rounded-panel p-6">
                 <p className="micro-label">{`0${index + 1}`}</p>
-                <h3 className="mt-4 text-lg font-semibold tracking-tight text-bone">
+                <h3 className="mt-4 text-h3 font-semibold tracking-tight text-bone">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ash">{step.body}</p>
+                <p className="mt-3 text-small leading-relaxed text-ash">{step.body}</p>
               </div>
             </RevealItem>
           ))}

@@ -21,12 +21,12 @@ export function GenesisMark({
   }
 
   return (
-    <span className={cn("inline-flex items-start gap-1.5", className)}>
+    <span className={cn("inline-flex items-start gap-2", className)}>
       <span className="flex flex-col leading-none">
-        <span className="text-[15px] font-semibold tracking-[0.14em] text-bone">
+        <span className="text-small font-semibold tracking-[0.14em] text-bone">
           GENESIS
         </span>
-        <span className="mt-1 text-[8px] font-medium tracking-[0.52em] text-ash">
+        <span className="mt-1 text-micro font-medium tracking-[0.52em] text-ash">
           MEDIA
         </span>
       </span>

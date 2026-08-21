@@ -27,10 +27,10 @@ export default function OurWorkPage() {
         }}
       />
 
-      <div className="relative flex min-h-[calc(100dvh-1.5rem)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0c0b10]/85 backdrop-blur-2xl sm:min-h-[calc(100dvh-3rem)] lg:flex-row">
+      <div className="relative flex min-h-[calc(100dvh-1.5rem)] flex-col overflow-hidden rounded-panel border border-white/10 bg-[#0c0b10]/85 backdrop-blur-2xl sm:min-h-[calc(100dvh-3rem)] lg:flex-row">
         <WorkspaceSidebar />
 
-        <div className="min-w-0 flex-1 overflow-y-auto p-5 sm:p-8">
+        <div className="min-w-0 flex-1 overflow-y-auto p-6 sm:p-8">
           <ContentLibrary />
         </div>
       </div>

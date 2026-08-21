@@ -42,12 +42,12 @@ export function ContactForm({
       <div
         role="status"
         className={cn(
-          "glass glass-lit rounded-3xl p-8 text-center",
+          "glass glass-lit rounded-panel p-8 text-center",
           className,
         )}
       >
-        <p className="text-lg font-semibold text-bone">Received</p>
-        <p className="mt-2 text-sm text-ash">{state.message}</p>
+        <p className="text-h3 font-semibold text-bone">Received</p>
+        <p className="mt-2 text-small text-ash">{state.message}</p>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export function ContactForm({
   return (
     <form
       action={formAction}
-      className={cn("glass glass-lit rounded-3xl p-6 sm:p-8", className)}
+      className={cn("glass glass-lit rounded-panel p-6 sm:p-8", className)}
     >
       <input type="hidden" name="type" value={type} />
       <input type="hidden" name="source" value={source} />
@@ -72,7 +72,7 @@ export function ContactForm({
         />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2">
         <Field
           label="Name"
           name="name"
@@ -109,12 +109,12 @@ export function ContactForm({
       </div>
 
       {state.status === "error" && state.message && (
-        <p role="alert" className="mt-5 text-sm text-crimson-soft">
+        <p role="alert" className="mt-6 text-small text-crimson-soft">
           {state.message}
         </p>
       )}
 
-      <div className="mt-7">
+      <div className="mt-8">
         <SubmitButton label={submitLabel} />
       </div>
     </form>
@@ -154,7 +154,7 @@ function Field({
   const id = `field-${name}`;
   const errorId = `${id}-error`;
   const shared = cn(
-    "w-full rounded-xl border bg-white/[0.04] px-4 py-3 text-sm text-bone",
+    "w-full rounded-card border bg-white/[0.04] px-4 py-3 text-small text-bone",
     "placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-crimson",
     error ? "border-crimson/60" : "border-white/12",
   );
@@ -190,7 +190,7 @@ function Field({
       )}
 
       {error && (
-        <p id={errorId} className="mt-2 text-xs text-crimson-soft">
+        <p id={errorId} className="mt-2 text-small text-crimson-soft">
           {error}
         </p>
       )}

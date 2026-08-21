@@ -37,11 +37,11 @@ export function Portfolio() {
       className="py-12 sm:py-12 lg:py-12"
       contentClassName="-mr-6 sm:-mr-10"
     >
-      <Reveal>
+      <Reveal variant="scene">
         <PosterRail posters={posters} />
       </Reveal>
 
-      <Reveal delay={0.1} className="mr-6 mt-7 sm:mr-10">
+      <Reveal delay={0.1} className="mr-6 mt-8 sm:mr-10">
         <GlassButton href="/our-work" variant="glass" arrow>
           Browse the full library
         </GlassButton>

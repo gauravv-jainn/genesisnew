@@ -175,7 +175,7 @@ export function CornerNote({
   return (
     <div
       className={cn(
-        "flex max-w-56 flex-col gap-2 text-[11px] leading-relaxed text-ash",
+        "flex max-w-56 flex-col gap-2 text-micro leading-relaxed text-ash",
         align === "right" ? "items-end text-right" : "items-start text-left",
         className,
       )}

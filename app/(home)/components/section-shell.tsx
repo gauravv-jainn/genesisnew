@@ -69,8 +69,8 @@ export function SectionShell({
               <Reveal delay={0.05}>
                 <h2
                   className={cn(
-                    "mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone",
-                    "sm:text-5xl lg:text-6xl",
+                    "mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone",
+                    "sm:text-h1 lg:text-h1",
                   )}
                 >
                   {heading}
@@ -90,7 +90,7 @@ export function SectionShell({
               <Reveal delay={0.1}>
                 <p
                   className={cn(
-                    "mt-6 max-w-2xl text-pretty text-base leading-relaxed text-ash sm:text-lg",
+                    "mt-6 max-w-2xl text-pretty text-body leading-relaxed text-ash sm:text-h3",
                     align === "center" && "mx-auto",
                   )}
                 >

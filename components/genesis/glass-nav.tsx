@@ -44,7 +44,7 @@ export function GlassNav() {
       <nav
         className={cn(
           "glass glass-lit pointer-events-auto flex w-full max-w-5xl items-center gap-4 rounded-full",
-          "border border-white/10 px-4 py-2.5 sm:px-5",
+          "border border-white/10 px-4 py-3 sm:px-6",
           "transition-[background-color,backdrop-filter] duration-500 ease-out",
           condensed && "glass-strong",
         )}
@@ -63,7 +63,7 @@ export function GlassNav() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="rounded-full px-3 py-2 text-[13px] text-ash transition-colors duration-200 hover:bg-white/5 hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
+                className="rounded-full px-3 py-2 text-small text-ash transition-colors duration-200 hover:bg-white/5 hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
               >
                 {item.label}
               </Link>
@@ -102,7 +102,7 @@ export function GlassNav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="glass glass-strong pointer-events-auto absolute inset-x-4 top-20 rounded-3xl p-4 lg:hidden"
+            className="glass glass-strong pointer-events-auto absolute inset-x-4 top-20 rounded-panel p-4 lg:hidden"
           >
             <div className="mb-3 flex items-center justify-between">
               <span className="micro-label">Menu</span>
@@ -121,7 +121,7 @@ export function GlassNav() {
                   <Link
                     href={item.href}
                     onClick={() => setMenuOpen(false)}
-                    className="block rounded-xl px-3 py-3 text-sm text-ash transition-colors hover:bg-white/5 hover:text-bone"
+                    className="block rounded-card px-3 py-3 text-small text-ash transition-colors hover:bg-white/5 hover:text-bone"
                   >
                     {item.label}
                   </Link>

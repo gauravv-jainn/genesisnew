@@ -19,17 +19,17 @@ export default function NotFound() {
       <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center px-6 text-center">
         <SectionLabel dot>Page not found</SectionLabel>
 
-        <h1 className="mt-6 text-balance text-4xl font-semibold leading-[1.1] tracking-tight text-bone sm:text-5xl">
+        <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.1] tracking-tight text-bone sm:text-h1">
           That page doesn&rsquo;t{" "}
           <span className="font-serif font-normal italic text-amber">exist</span>
         </h1>
 
-        <p className="mt-5 max-w-md text-sm leading-relaxed text-ash">
+        <p className="mt-6 max-w-md text-small leading-relaxed text-ash">
           The link may be old, or the page may have moved. Everything else is
           still where you left it.
         </p>
 
-        <div className="mt-9">
+        <div className="mt-8">
           <GlassButton href="/" variant="crimson" size="lg" arrow>
             Back to the homepage
           </GlassButton>
@@ -37,12 +37,12 @@ export default function NotFound() {
 
         <nav aria-label="Site sections" className="mt-14">
           <p className="micro-label">Or try</p>
-          <ul className="mt-5 flex flex-wrap justify-center gap-2.5">
+          <ul className="mt-6 flex flex-wrap justify-center gap-3">
             {navItems.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="glass rounded-full px-4 py-2 text-[13px] text-ash transition-colors hover:text-bone"
+                  className="glass rounded-full px-4 py-2 text-small text-ash transition-colors hover:text-bone"
                 >
                   {item.label}
                 </Link>

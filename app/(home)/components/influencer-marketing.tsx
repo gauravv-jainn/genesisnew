@@ -76,7 +76,7 @@ export function InfluencerMarketing() {
             </Reveal>
 
             <Reveal delay={0.1}>
-              <p className="mt-6 max-w-md text-pretty text-base leading-relaxed text-ash">
+              <p className="mt-6 max-w-md text-pretty text-body leading-relaxed text-ash">
                 {influencer.body}
               </p>
             </Reveal>
@@ -84,22 +84,22 @@ export function InfluencerMarketing() {
             {/* The database card: red-tinted glass, icon well, circular arrow. */}
             <Reveal delay={0.16}>
               <div
-                className="glass glass-lit mt-9 flex items-center gap-6 rounded-[1.75rem] p-6 sm:p-7"
+                className="glass glass-lit mt-8 flex items-center gap-6 rounded-panel p-6 sm:p-8"
                 style={{
                   background:
                     "linear-gradient(102deg, rgb(255 45 63 / 0.17) 0%, rgb(255 45 63 / 0.05) 42%, rgb(255 255 255 / 0.03) 100%)",
                 }}
               >
-                <div className="grid size-16 shrink-0 place-items-center rounded-2xl border border-crimson/35 bg-crimson/10 text-crimson">
+                <div className="grid size-16 shrink-0 place-items-center rounded-card border border-crimson/35 bg-crimson/10 text-crimson">
                   <Users className="size-7" aria-hidden />
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-[2rem] font-medium leading-none tracking-tight text-bone">
+                  <p className="text-h2 font-medium leading-none tracking-tight text-bone">
                     {influencer.databaseStat.value}
                   </p>
-                  <p className="micro-label mt-2.5">{influencer.databaseStat.label}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-ash">
+                  <p className="micro-label mt-3">{influencer.databaseStat.label}</p>
+                  <p className="mt-3 text-small leading-relaxed text-ash">
                     {influencer.databaseStat.description}
                   </p>
                 </div>
@@ -109,13 +109,13 @@ export function InfluencerMarketing() {
                   aria-label="See influencer campaigns"
                   className="grid size-12 shrink-0 place-items-center rounded-full border border-white/20 text-bone transition-colors hover:border-crimson hover:bg-crimson/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
                 >
-                  <span aria-hidden className="text-lg leading-none">→</span>
+                  <span aria-hidden className="text-h3 leading-none">→</span>
                 </a>
               </div>
             </Reveal>
           </div>
 
-          <Reveal delay={0.2} direction="left">
+          <Reveal delay={0.2} direction="left" variant="scene">
             {/*
               The mockup labels these by niche and follower count, not by
               celebrity name — the named celebrity collaborations are a
@@ -127,8 +127,8 @@ export function InfluencerMarketing() {
 
         {/* The figures bar — the CTA lives inside it, as in the mockup. */}
         <Reveal delay={0.24} className="mt-14">
-          <div className="glass glass-lit flex flex-col gap-8 rounded-[1.75rem] px-6 py-7 sm:px-8 lg:flex-row lg:items-center">
-            <div className="grid flex-1 grid-cols-2 gap-y-7 lg:grid-cols-4">
+          <div className="glass glass-lit flex flex-col gap-8 rounded-panel px-6 py-8 sm:px-8 lg:flex-row lg:items-center">
+            <div className="grid flex-1 grid-cols-2 gap-y-8 lg:grid-cols-4">
               {stats.map((stat, index) => {
                 const Icon = STAT_ICONS[index] ?? Globe;
                 const highlight = index === 0;
@@ -137,13 +137,13 @@ export function InfluencerMarketing() {
                   <div
                     key={stat.label}
                     className={cnJoin(
-                      "flex items-center gap-3.5 px-1",
+                      "flex items-center gap-4 px-1",
                       index > 0 ? "lg:border-l lg:border-white/10 lg:pl-6" : "",
                     )}
                   >
                     <span
                       className={cnJoin(
-                        "grid size-11 shrink-0 place-items-center rounded-xl border",
+                        "grid size-11 shrink-0 place-items-center rounded-card border",
                         highlight
                           ? "border-crimson/35 bg-crimson/10 text-crimson"
                           : "border-white/12 bg-white/5 text-bone",
@@ -152,10 +152,10 @@ export function InfluencerMarketing() {
                       <Icon className="size-5" aria-hidden />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-xl font-medium leading-none tracking-tight text-bone">
+                      <span className="block text-h3 font-medium leading-none tracking-tight text-bone">
                         {stat.value}
                       </span>
-                      <span className="mt-1.5 block text-[13px] leading-tight text-ash">
+                      <span className="mt-2 block text-small leading-tight text-ash">
                         {stat.label}
                       </span>
                     </span>

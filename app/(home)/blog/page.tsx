@@ -27,11 +27,11 @@ export default function BlogPage() {
           <SectionLabel dot tone="amber" className="justify-center">
             Journal
           </SectionLabel>
-          <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl">
+          <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
             Thinking out{" "}
             <span className="font-serif font-normal italic text-amber">loud</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-ash">
+          <p className="mx-auto mt-6 max-w-md text-small leading-relaxed text-ash">
             Every sheet is a piece. Move your cursor through them.
           </p>
         </Reveal>
@@ -46,7 +46,7 @@ export default function BlogPage() {
           }))}
         />
       ) : (
-        <p className="pb-24 text-center text-sm text-faint">
+        <p className="pb-24 text-center text-small text-faint">
           The first pieces are being written. Check back shortly.
         </p>
       )}

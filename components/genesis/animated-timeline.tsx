@@ -132,7 +132,7 @@ export function AnimatedTimeline({
               {!isPending(milestone.date) && (
                 <span
                   className={cn(
-                    "rounded-full px-3 py-1.5 text-[11px] font-medium tracking-wide",
+                    "rounded-full px-3 py-2 text-micro font-medium tracking-wide",
                     light
                       ? "border border-[#1c2b38]/20 bg-[#1c2b38]/8 text-[#1c2b38]"
                       : "glass text-bone",
@@ -156,7 +156,7 @@ export function AnimatedTimeline({
             <div className="pl-4">
               <h3
                 className={cn(
-                  "text-lg font-semibold tracking-tight",
+                  "text-h3 font-semibold tracking-tight",
                   light ? "text-[#16232e]" : "text-bone",
                 )}
               >
@@ -165,7 +165,7 @@ export function AnimatedTimeline({
               {!isPending(milestone.description) && (
                 <p
                   className={cn(
-                    "mt-2 max-w-prose text-sm leading-relaxed",
+                    "mt-2 max-w-prose text-small leading-relaxed",
                     light ? "text-[#20303e]" : "text-ash",
                   )}
                 >

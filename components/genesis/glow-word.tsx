@@ -83,7 +83,7 @@ export function IridescentButton({
       href={href}
       className={cn(
         "group relative inline-flex items-center justify-center overflow-hidden rounded-full",
-        "px-8 py-4 text-[15px] font-medium text-[#1b1620]",
+        "px-8 py-4 text-small font-medium text-[#1b1620]",
         "transition-transform duration-300 hover:scale-[1.03]",
         className,
       )}

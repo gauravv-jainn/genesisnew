@@ -78,7 +78,7 @@ export function CreativeProcess() {
             <SectionLabel dot tone="crimson">
               {creativeProcess.label}
             </SectionLabel>
-            <h2 className="mt-5 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-bone sm:text-5xl">
+            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
               {creativeProcess.heading}{" "}
               <span className="font-serif font-normal italic text-crimson-soft">
                 {creativeProcess.headingAccent}
@@ -87,7 +87,7 @@ export function CreativeProcess() {
           </Reveal>
 
           <Reveal delay={0.1} className="max-w-sm">
-            <p className="text-sm leading-relaxed text-bone/60">{creativeProcess.body}</p>
+            <p className="text-small leading-relaxed text-bone/60">{creativeProcess.body}</p>
           </Reveal>
         </div>
 
@@ -119,7 +119,7 @@ export function CreativeProcess() {
           </p>
 
           {/* Below lg: a plain readable column. */}
-          <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:hidden">
+          <RevealGroup className="grid gap-6 sm:grid-cols-2 lg:hidden">
             {creativeProcess.steps.map((step, index) => (
               <RevealItem key={step.title}>
                 <StepCard step={step} index={index} />
@@ -148,7 +148,7 @@ export function CreativeProcess() {
                 >
                   {/* h-full has to be carried through Reveal, or the card
                       sizes to its content and the sized wrapper does nothing. */}
-                  <Reveal delay={0.08 * index} className="h-full">
+                  <Reveal delay={0.08 * index} variant="card" className="h-full">
                     <StepCard step={step} index={index} rotate={place.rotate} />
                   </Reveal>
                 </div>
@@ -175,7 +175,7 @@ function StepCard({
   return (
     <article
       className={cn(
-        "glass glass-lit flex h-full flex-col justify-between rounded-[1.5rem] p-6 transition-transform duration-500 will-change-transform",
+        "glass glass-lit flex h-full flex-col justify-between rounded-panel p-6 transition-transform duration-500 will-change-transform",
         // DARK slabs over a bright ground, which is what p27_1 actually shows:
         // its card fills sample at rgb(3,3,3), (15,6,4) and (80,32,2) against
         // a red peaking at (162,23,4). The previous fill added crimson at 0.14
@@ -191,10 +191,10 @@ function StepCard({
       </span>
 
       <div>
-        <h3 className="text-balance text-xl font-semibold leading-tight tracking-tight text-bone">
+        <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
           {step.title}
         </h3>
-        <p className="mt-2.5 text-[13px] leading-relaxed text-bone/60">{step.caption}</p>
+        <p className="mt-3 text-small leading-relaxed text-bone/60">{step.caption}</p>
       </div>
     </article>
   );

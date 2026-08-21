@@ -116,35 +116,35 @@ export function ContentLibrary() {
   return (
     <div className="flex min-w-0 flex-1 flex-col">
       {/* Heading + controls */}
-      <div className="flex flex-wrap items-start justify-between gap-5">
+      <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-bone">
+          <h1 className="text-h2 font-semibold tracking-tight text-bone">
             {ourWork.heading}
           </h1>
-          <p className="mt-1.5 text-sm text-ash">{ourWork.body}</p>
+          <p className="mt-2 text-small text-ash">{ourWork.body}</p>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <label className="glass flex h-10 items-center gap-2 rounded-xl px-3">
+        <div className="flex items-center gap-3">
+          <label className="glass flex h-10 items-center gap-2 rounded-card px-3">
             <Search className="size-4 shrink-0 text-faint" aria-hidden />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search content..."
               aria-label="Search content"
-              className="w-40 bg-transparent text-sm text-bone placeholder:text-faint focus:outline-none sm:w-56"
+              className="w-40 bg-transparent text-small text-bone placeholder:text-faint focus:outline-none sm:w-56"
             />
           </label>
 
           <button
             type="button"
             aria-label="Filters"
-            className="glass grid size-10 shrink-0 place-items-center rounded-xl text-ash transition-colors hover:text-bone"
+            className="glass grid size-10 shrink-0 place-items-center rounded-card text-ash transition-colors hover:text-bone"
           >
             <SlidersHorizontal className="size-4" aria-hidden />
           </button>
 
-          <div className="glass flex shrink-0 items-center rounded-xl p-1" role="group" aria-label="View mode">
+          <div className="glass flex shrink-0 items-center rounded-card p-1" role="group" aria-label="View mode">
             {([["grid", LayoutGrid], ["list", List]] as const).map(([mode, Icon]) => (
               <button
                 key={mode}
@@ -153,7 +153,7 @@ export function ContentLibrary() {
                 aria-pressed={view === mode}
                 aria-label={`${mode} view`}
                 className={cn(
-                  "grid size-8 place-items-center rounded-lg transition-colors",
+                  "grid size-8 place-items-center rounded-field transition-colors",
                   view === mode ? "bg-white/10 text-bone" : "text-faint hover:text-ash",
                 )}
               >
@@ -168,7 +168,7 @@ export function ContentLibrary() {
       <div
         role="tablist"
         aria-label="Filter by format"
-        className="no-scrollbar -mx-1 mt-7 flex gap-2 overflow-x-auto px-1 pb-1"
+        className="no-scrollbar -mx-1 mt-8 flex gap-2 overflow-x-auto px-1 pb-1"
       >
         {ourWork.categories.map((category) => {
           const isActive = category === active;
@@ -180,7 +180,7 @@ export function ContentLibrary() {
               aria-selected={isActive}
               onClick={() => setActive(category)}
               className={cn(
-                "flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-200",
+                "flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-small font-medium transition-colors duration-200",
                 isActive
                   ? "bg-white/[0.11] text-bone"
                   : "glass text-ash hover:text-bone",
@@ -195,11 +195,11 @@ export function ContentLibrary() {
 
       {/* The catalogue */}
       {visible.length === 0 ? (
-        <p className="mt-14 text-sm text-faint">Nothing matches that yet.</p>
+        <p className="mt-14 text-small text-faint">Nothing matches that yet.</p>
       ) : (
         <div
           className={cn(
-            "mt-7",
+            "mt-8",
             view === "grid"
               ? "grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5"
               : "flex flex-col gap-3",
@@ -209,7 +209,7 @@ export function ContentLibrary() {
             view === "grid" ? (
               <article
                 key={item.id}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 transition-shadow duration-500 hover:shadow-[0_20px_50px_-18px_rgb(255_45_63/0.45)]"
+                className="group relative overflow-hidden rounded-card border border-white/10 transition-shadow duration-500 hover:shadow-[0_20px_50px_-18px_rgb(255_45_63/0.45)]"
               >
                 <div className="relative aspect-[87/100] overflow-hidden">
                   <TileMedia item={item} />
@@ -218,7 +218,7 @@ export function ContentLibrary() {
                     <>
                       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.4)_0%,transparent_30%,transparent_46%,rgb(0_0_0/0.9)_100%)]" />
 
-                      <span className="glass absolute left-2.5 top-2.5 rounded-full px-2.5 py-1 text-[10px] font-medium text-bone">
+                      <span className="glass absolute left-2.5 top-2.5 rounded-full px-3 py-1 text-micro font-medium text-bone">
                         {item.badge}
                       </span>
 
@@ -227,10 +227,10 @@ export function ContentLibrary() {
                       </span>
 
                       <div className="absolute inset-x-0 bottom-0 p-3">
-                        <p className="text-[11px] font-semibold tracking-wide text-bone">
+                        <p className="text-micro font-semibold tracking-wide text-bone">
                           {item.client}
                         </p>
-                        <p className="mt-0.5 text-[11px] text-ash">{item.title}</p>
+                        <p className="mt-0.5 text-micro text-ash">{item.title}</p>
                       </div>
                     </>
                   )}
@@ -239,17 +239,17 @@ export function ContentLibrary() {
             ) : (
               <article
                 key={item.id}
-                className="glass flex items-center gap-4 rounded-2xl p-3"
+                className="glass flex items-center gap-4 rounded-card p-3"
               >
                 <div
-                  className="size-14 shrink-0 rounded-xl"
+                  className="size-14 shrink-0 rounded-card"
                   style={{ backgroundImage: placeholderArt(item.id) }}
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-bone">{item.client}</p>
-                  <p className="mt-0.5 text-xs text-ash">{item.title}</p>
+                  <p className="text-small font-semibold text-bone">{item.client}</p>
+                  <p className="mt-0.5 text-small text-ash">{item.title}</p>
                 </div>
-                <span className="glass shrink-0 rounded-full px-2.5 py-1 text-[10px] text-bone">
+                <span className="glass shrink-0 rounded-full px-3 py-1 text-micro text-bone">
                   {item.badge}
                 </span>
               </article>
@@ -261,7 +261,7 @@ export function ContentLibrary() {
       <div className="mt-10 flex justify-center">
         <button
           type="button"
-          className="glass flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] text-ash transition-colors hover:text-bone"
+          className="glass flex items-center gap-2 rounded-full px-6 py-3 text-small text-ash transition-colors hover:text-bone"
         >
           Load More Content
           <span

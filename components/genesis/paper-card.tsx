@@ -47,7 +47,7 @@ export function PaperCard({
       whileHover={prefersReducedMotion ? undefined : { rotate: 0, y: -6, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 220, damping: 20 }}
       className={cn(
-        "glass glass-lit relative rounded-2xl p-6",
+        "glass glass-lit relative rounded-card p-6",
         "shadow-[0_20px_60px_-24px_rgb(0_0_0/0.95)]",
         className,
       )}
@@ -55,7 +55,7 @@ export function PaperCard({
       {/* The light falling across the sheet. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-2xl"
+        className="pointer-events-none absolute inset-0 rounded-card"
         style={{
           background: `linear-gradient(155deg, ${sheen} 0%, transparent 45%)`,
         }}
@@ -75,8 +75,8 @@ function Pushpin() {
       aria-hidden
       className="absolute -top-3 left-1/2 z-10 -translate-x-1/2"
     >
-      <span className="block size-4 rounded-full bg-[#c5ff2e] shadow-[0_0_14px_3px_rgb(197_255_46/0.55)]" />
-      <span className="mx-auto block h-3 w-px bg-[#8fbf22]" />
+      <span className="block size-4 rounded-full bg-[#ff2d3f] shadow-[0_0_14px_3px_rgb(197_255_46/0.55)]" />
+      <span className="mx-auto block h-3 w-px bg-[#a8121f]" />
     </span>
   );
 }
@@ -109,14 +109,14 @@ export function PaperStack({
           rotate={index % 2 === 0 ? -2.5 : 2}
           className="h-full"
         >
-          <h3 className="text-lg font-semibold tracking-tight text-bone">
+          <h3 className="text-h3 font-semibold tracking-tight text-bone">
             {item.title}
           </h3>
           {item.caption && (
-            <p className="mt-1 text-xs text-ash/80">{item.caption}</p>
+            <p className="mt-1 text-small text-ash/80">{item.caption}</p>
           )}
           {item.body && (
-            <p className="mt-3 text-sm leading-relaxed text-ash">{item.body}</p>
+            <p className="mt-3 text-small leading-relaxed text-ash">{item.body}</p>
           )}
         </PaperCard>
       ))}

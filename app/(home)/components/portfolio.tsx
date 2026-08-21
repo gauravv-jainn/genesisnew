@@ -28,6 +28,7 @@ export function Portfolio() {
       heading={portfolio.heading}
       headingAccent={portfolio.headingAccent}
       body={portfolio.body}
+      align="split"
       tone="crimson"
       origin="top"
       intensity={0.18}

@@ -17,6 +17,7 @@ export function BrandingDesign() {
       heading={branding.heading}
       headingAccent={branding.headingAccent}
       body={branding.body}
+      align="split"
       tone="neutral"
       origin="top-left"
       intensity={0.12}

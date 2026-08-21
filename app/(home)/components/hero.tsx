@@ -87,7 +87,7 @@ export function Hero() {
             </Reveal>
 
             <Reveal delay={0.12}>
-              <p className="mt-6 max-w-xl text-pretty text-body leading-relaxed text-bone/75 sm:text-h3">
+              <p className="mt-6 max-w-xl text-pretty text-body text-bone/75 sm:text-lead">
                 {hero.body}
               </p>
             </Reveal>

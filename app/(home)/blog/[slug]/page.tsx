@@ -53,7 +53,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
             {post.title}
           </h1>
 
-          <p className="mt-6 text-pretty text-h3 leading-relaxed text-ash">
+          <p className="mt-6 text-pretty text-lead text-ash">
             {post.description}
           </p>
 

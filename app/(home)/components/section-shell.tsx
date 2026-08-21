@@ -38,7 +38,7 @@ export function SectionShell({
   tone?: "crimson" | "amber" | "teal" | "neutral";
   origin?: "top" | "top-right" | "top-left" | "center" | "bottom";
   intensity?: number;
-  align?: "left" | "center";
+  align?: "left" | "center" | "split";
   className?: string;
   contentClassName?: string;
 }) {
@@ -50,15 +50,25 @@ export function SectionShell({
       className={cn("py-24 sm:py-32 lg:py-40", className)}
     >
       <section id={id} className="mx-auto w-full max-w-6xl px-6">
+        {/*
+          `split` sets the heading left and the standfirst right, on a grid.
+          Eleven sections were running the centred, boxed arrangement, which is
+          the symmetric-SaaS-template tell the brief warns about — and several
+          sections already hand-rolled a split header rather than use the shell,
+          which is a sign the shell was missing the mode rather than that the
+          sections were being wilful.
+        */}
         {(label || heading || body) && (
           <header
             className={cn(
-              "flex flex-col",
+              align === "split"
+                ? "grid items-end gap-x-12 gap-y-6 lg:grid-cols-[1.1fr_0.9fr]"
+                : "flex flex-col",
               align === "center" && "items-center text-center",
             )}
           >
             {label && (
-              <Reveal>
+              <Reveal className={align === "split" ? "lg:col-start-1" : undefined}>
                 <SectionLabel dot tone={tone === "neutral" ? "crimson" : tone}>
                   {label}
                 </SectionLabel>
@@ -66,7 +76,7 @@ export function SectionShell({
             )}
 
             {heading && (
-              <Reveal delay={0.05}>
+              <Reveal delay={0.05} className={align === "split" ? "lg:col-start-1" : undefined}>
                 <h2
                   className={cn(
                     "mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone",
@@ -87,10 +97,11 @@ export function SectionShell({
             )}
 
             {body && (
-              <Reveal delay={0.1}>
+              <Reveal delay={0.1} className={align === "split" ? "lg:pb-2" : undefined}>
                 <p
                   className={cn(
-                    "mt-6 max-w-2xl text-pretty text-body leading-relaxed text-ash sm:text-h3",
+                    "text-pretty text-body text-ash sm:text-lead",
+                    align === "split" ? "max-w-md lg:mt-0" : "mt-6 max-w-2xl",
                     align === "center" && "mx-auto",
                   )}
                 >

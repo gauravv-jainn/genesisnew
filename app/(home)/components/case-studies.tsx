@@ -42,6 +42,7 @@ export function CaseStudies() {
       heading={caseStudies.heading}
       headingAccent={caseStudies.headingAccent}
       body={caseStudies.body}
+      align="split"
       tone="crimson"
       origin="top-right"
       intensity={0.2}

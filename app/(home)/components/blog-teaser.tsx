@@ -24,6 +24,7 @@ export function BlogTeaser() {
       heading={journal.heading}
       headingAccent={journal.headingAccent}
       body={journal.body}
+      align="split"
       tone="amber"
       origin="top-right"
       intensity={0.16}

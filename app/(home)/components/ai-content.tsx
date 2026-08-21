@@ -16,13 +16,24 @@ import { SectionShell } from "./section-shell";
  * avatar stills replace the placeholder frames when the assets land.
  */
 
-// Rotation/offset per frame, mirrored around the centre index.
+/**
+ * Rotation and depth per frame, mirrored around the centre.
+ *
+ * NO OPACITY RAMP. img-033 is a continuous curved WALL of panels running edge
+ * to edge and bleeding off both sides of the frame, every one at full
+ * brightness — the outermost right panel is the most vivid thing in the
+ * picture. Fading the flanks to 0.45 and 0.7 produced the generic 3D-carousel
+ * look instead: five small fanned playing cards at descending scale AND
+ * descending opacity in the middle of a wide empty section, where the
+ * reference is a wall you feel you are standing inside. Rotation and depth
+ * carry the curve; brightness does not have to.
+ */
 const ARC = [
-  { rotateY: 38, translateZ: -140, opacity: 0.45 },
-  { rotateY: 22, translateZ: -70, opacity: 0.7 },
-  { rotateY: 0, translateZ: 0, opacity: 1 },
-  { rotateY: -22, translateZ: -70, opacity: 0.7 },
-  { rotateY: -38, translateZ: -140, opacity: 0.45 },
+  { rotateY: 42, translateZ: -150 },
+  { rotateY: 24, translateZ: -68 },
+  { rotateY: 0, translateZ: 0 },
+  { rotateY: -24, translateZ: -68 },
+  { rotateY: -42, translateZ: -150 },
 ];
 
 export function AiContent() {
@@ -39,9 +50,16 @@ export function AiContent() {
       intensity={0.14}
       align="center"
     >
-      <Reveal>
+      {/*
+        FULL-BLEED. The arc used to sit inside SectionShell's max-w-6xl, so
+        five 160x256 frames totalling 880px floated in a 1104px column with
+        ~110px of dead space each side, capped and never scaled up. The
+        reference runs edge to edge and clips at both sides, which is what
+        makes it read as a wall rather than as a widget.
+      */}
+      <Reveal className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden">
         <div
-          className="flex items-end justify-center gap-3 sm:gap-5"
+          className="flex items-end justify-center gap-1 sm:gap-1.5"
           style={{ perspective: "1200px" }}
         >
           {aiContent.avatars.map((avatar, index) => {
@@ -52,11 +70,10 @@ export function AiContent() {
                 className="shrink-0"
                 style={{
                   transform: `perspective(1200px) rotateY(${frame.rotateY}deg) translateZ(${frame.translateZ}px)`,
-                  opacity: frame.opacity,
                 }}
               >
                 <div
-                  className="h-44 w-24 overflow-hidden rounded-2xl border border-white/10 sm:h-64 sm:w-40"
+                  className="aspect-[2/3] w-[clamp(8rem,19vw,20rem)] overflow-hidden rounded-2xl border border-white/10"
                   style={{
                     // TODO(assets): real avatar stills replace this placeholder.
                     background: `linear-gradient(${150 + index * 20}deg, rgb(255 45 63 / 0.24) 0%, rgb(20 20 24 / 0.92) 55%), radial-gradient(80% 60% at 50% 20%, rgb(255 255 255 / 0.18), transparent 70%)`,
@@ -69,10 +86,6 @@ export function AiContent() {
             );
           })}
         </div>
-      </Reveal>
-
-      <Reveal delay={0.08} className="mt-10 flex justify-center">
-        <p className="micro-label">AI avatars</p>
       </Reveal>
 
       {/* The stack feeding the studio — many inputs converging on one output. */}

@@ -38,7 +38,9 @@ export function ToolsStack({
   const glowId = `tools-glow-${raw}`;
 
   // Curves converge on this point, in viewBox units.
-  const FOCUS_X = 560;
+  // Left of the destination block's edge, with air between them. At 560 the
+  // curves and the focus dot were drawn ~150px INSIDE the wordmark.
+  const FOCUS_X = 445;
   const FOCUS_Y = 200;
 
   return (
@@ -111,11 +113,29 @@ export function ToolsStack({
         <circle cx={FOCUS_X} cy={FOCUS_Y} r="14" fill="#ff2d3f" opacity="0.18" />
       </svg>
 
-      {/* Source labels, laid over the SVG at the same vertical rhythm. */}
-      <ul className="absolute inset-y-0 left-0 flex w-[21%] flex-col justify-between py-[9%]">
-        {tools.map((tool) => (
+      {/*
+        Source labels, positioned from THE SAME NUMBERS as the curves.
+
+        They used to be laid out with `justify-between` and `py-[9%]`, which is
+        a different rhythm from `startY = 40 + index * (320 / (n - 1))`. The
+        two only agreed in the middle: the first and last curves left their dot
+        roughly 46px — a label and a half — from the label they were supposed
+        to be emitting from, so the top and bottom rows visibly floated
+        unconnected. Percentage padding on a box whose height comes from the
+        SVG's aspect ratio was never going to line up with viewBox units.
+      */}
+      <ul className="absolute inset-y-0 left-0 w-[21%]">
+        {tools.map((tool, index) => (
           <li
             key={tool.label}
+            style={{
+              position: "absolute",
+              insetInline: 0,
+              // Same expression as startY, expressed as a share of the 400-unit
+              // viewBox height.
+              top: `${((40 + index * (320 / Math.max(1, tools.length - 1))) / 400) * 100}%`,
+              transform: "translateY(-50%)",
+            }}
             className="glass flex items-center justify-end gap-2 rounded-lg px-2.5 py-1.5 text-right"
           >
             <span className="min-w-0">

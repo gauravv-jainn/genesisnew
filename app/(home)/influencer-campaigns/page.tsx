@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Users } from "lucide-react";
 
 import { ContactForm } from "@/components/genesis/contact-form";
-import { GenesisStar } from "@/components/genesis/genesis-mark";
-import { OrbitingCards } from "@/components/genesis/orbiting-cards";
+import { CreatorConstellation } from "@/components/genesis/creator-constellation";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { StatRow } from "@/components/genesis/stat-card";
 import { influencer, isPending } from "@/lib/home-content";
@@ -20,6 +19,12 @@ export const metadata: Metadata = {
  *
  * Spec asks for numbers, genre of creators, celebrity showcases and a contact
  * CTA. Structure follows that order.
+ *
+ * This page measured 99.1% of its pixels in shadow with zero images — the
+ * emptiest screen on the site — while the homepage's own influencer section,
+ * built to Genesis's artwork on p07_0, is the richest. The difference was that
+ * the constellation and its photography lived only on the homepage. It leads
+ * here now, which is the page the spec actually devotes to this subject.
  */
 export default function InfluencerCampaignsPage() {
   return (
@@ -34,6 +39,10 @@ export default function InfluencerCampaignsPage() {
         intensity={0.28}
       >
         <Reveal>
+          <CreatorConstellation creators={influencer.creators.map((c) => ({ ...c }))} />
+        </Reveal>
+
+        <Reveal delay={0.1} className="mt-12">
           <StatRow
             /*
               Filtered HERE, not just in StatRow: an unconfirmed figure that
@@ -60,16 +69,24 @@ export default function InfluencerCampaignsPage() {
         origin="top-left"
         intensity={0.16}
       >
-        <Reveal>
-          <OrbitingCards
-            items={[...influencer.celebrities]}
-            center={
-              <div className="glass glass-lit grid size-24 place-items-center rounded-full">
-                <GenesisStar className="size-9" />
-              </div>
-            }
-          />
-        </Reveal>
+        {/*
+          The named collaborations, as cards rather than on an orbit. They are
+          NAMES, not photographs — an orbit of text discs reads as a widget,
+          and the constellation above already carries the motion this page
+          needs.
+        */}
+        <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {influencer.celebrities.map((celebrity) => (
+            <RevealItem key={celebrity.id}>
+              <article className="glass glass-lit flex h-full flex-col justify-between gap-6 rounded-2xl p-6">
+                <p className="micro-label">{celebrity.sublabel}</p>
+                <h3 className="text-balance text-xl font-semibold leading-tight tracking-tight text-bone">
+                  {celebrity.label}
+                </h3>
+              </article>
+            </RevealItem>
+          ))}
+        </RevealGroup>
 
         <RevealGroup className="mt-14 flex flex-wrap justify-center gap-3">
           {influencerPage.genres.map((genre) => (

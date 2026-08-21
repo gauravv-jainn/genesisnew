@@ -22,15 +22,63 @@ export const metadata: Metadata = {
 export default function CareersPage() {
   return (
     <main className="relative isolate min-h-dvh overflow-hidden bg-void">
-      {/* The ground glow the scene sits in. */}
+      {/*
+        The ground the scene grows out of.
+
+        p05_1 puts a lit botanical bed across its lower half — that bed is
+        where all of its light comes from, and it is why the reference sits at
+        75.7% shadow with a mean luminance of 34.9 while this page sat at 95.4%
+        and 18.1: a page-wide 22%-alpha wash is not a light source.
+
+        The bed itself is photography and cannot be reproduced here. Its
+        STRUCTURE can: a bright bank low in the frame with growth silhouetted
+        against it, so the light has something to come from and something to
+        rake across.
+      */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(72% 46% at 50% 104%, rgb(120 190 160 / 0.22) 0%, rgb(60 120 110 / 0.09) 38%, transparent 72%), radial-gradient(60% 40% at 50% 30%, rgb(255 236 200 / 0.05) 0%, transparent 70%)",
+            "radial-gradient(58% 26% at 50% 72%, rgb(186 236 204 / 0.55) 0%, rgb(104 192 176 / 0.3) 34%, rgb(44 104 104 / 0.13) 58%, transparent 80%), radial-gradient(86% 40% at 50% 88%, rgb(120 200 180 / 0.22) 0%, transparent 68%), radial-gradient(56% 30% at 50% 30%, rgb(255 236 200 / 0.07) 0%, transparent 70%)",
         }}
       />
+
+      {/* Growth rising into the light, silhouetted against the bank. */}
+      <svg
+        aria-hidden
+        viewBox="0 0 1200 300"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-x-0 top-[46%] h-[34%] w-full"
+      >
+        <defs>
+          <linearGradient id="careers-stem" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="#04120f" stopOpacity="0.96" />
+            <stop offset="70%" stopColor="#08201c" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#0d2c26" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {Array.from({ length: 46 }).map((_, i) => {
+          const seeded = (salt: number) => {
+            const v = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+            return v - Math.floor(v);
+          };
+          const x = seeded(1) * 1200;
+          const h = 90 + seeded(2) * 175;
+          const lean = (seeded(3) - 0.5) * 60;
+          const w = 1.4 + seeded(4) * 2.4;
+          return (
+            <path
+              key={i}
+              d={`M ${x.toFixed(1)} 300 Q ${(x + lean * 0.4).toFixed(1)} ${(300 - h * 0.55).toFixed(1)} ${(x + lean).toFixed(1)} ${(300 - h).toFixed(1)}`}
+              stroke="url(#careers-stem)"
+              strokeWidth={w.toFixed(2)}
+              fill="none"
+              strokeLinecap="round"
+            />
+          );
+        })}
+      </svg>
 
       {/* Motes drifting in the light. Deterministic so SSR matches. */}
       <div aria-hidden className="pointer-events-none absolute inset-0">

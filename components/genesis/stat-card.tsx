@@ -143,10 +143,23 @@ export function StatRow({
   const shown = stats.filter((stat) => !isPending(stat.value));
   if (shown.length === 0) return null;
 
+  // Columns follow the number of figures that survived the filter. A lone
+  // confirmed figure in a hard-coded four-column grid reads as three figures
+  // that failed to load, rather than as one figure.
+  const columns =
+    shown.length >= 4
+      ? "grid-cols-2 lg:grid-cols-4"
+      : shown.length === 3
+        ? "grid-cols-1 sm:grid-cols-3"
+        : shown.length === 2
+          ? "grid-cols-1 sm:grid-cols-2"
+          : "grid-cols-1";
+
   return (
     <div
       className={cn(
-        "glass glass-lit grid grid-cols-2 gap-y-8 rounded-3xl px-6 py-8 sm:px-8 lg:grid-cols-4",
+        "glass glass-lit grid gap-y-8 rounded-3xl px-6 py-8 sm:px-8",
+        columns,
         className,
       )}
     >

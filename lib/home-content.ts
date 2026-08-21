@@ -335,6 +335,21 @@ export const testimonials = {
   heading: "In their",
   headingAccent: "words",
   /**
+   * Used while no quote has been collected. The names and companies below are
+   * real; the quotes are not written yet. A section headed "In their words"
+   * containing no words is a promise the page cannot keep — but deleting the
+   * section throws away a dozen real client relationships to avoid two
+   * unwritten fields. So until the first quote lands the section presents
+   * itself as what it can honestly be, and flips back on its own the moment
+   * a real quote exists.
+   */
+  awaiting: {
+    label: "Clients & collaborators",
+    heading: "The people",
+    headingAccent: "we work with",
+    body: "Named clients and collaborators from delivered projects. Drag to move through the wall.",
+  },
+  /**
    * Spec: "Start Video testimonial project." Each entry may carry a `clip`
    * once that footage exists; entries without one render as text cards.
    * TODO(assets): video testimonials pending.

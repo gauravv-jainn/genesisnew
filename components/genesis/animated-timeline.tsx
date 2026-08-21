@@ -3,6 +3,7 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 
+import { isPending } from "@/lib/home-content";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,8 +16,8 @@ import { cn } from "@/lib/utils";
  */
 
 export type Milestone = {
-  /** e.g. "Mar 2024". */
-  date: string;
+  /** e.g. "Mar 2024". Absent while the date is still unwritten. */
+  date?: string;
   title: string;
   description?: string;
 };
@@ -82,18 +83,25 @@ export function AnimatedTimeline({
       <ol className="relative flex flex-col gap-14">
         {milestones.map((milestone, index) => (
           <motion.li
-            key={`${milestone.date}-${milestone.title}`}
+            key={milestone.title}
             initial={{ opacity: 0, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-20%" }}
             transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
             className="relative grid grid-cols-[7.5rem_1fr] items-start gap-x-8 sm:grid-cols-[9.5rem_1fr]"
           >
-            {/* Date pill, right-aligned against the rail */}
+            {/*
+              Date pill, right-aligned against the rail. Omitted entirely when
+              the date is unwritten: the column keeps its width so the rail
+              stays straight, but nothing is printed in it. An unwritten date
+              must never surface as a placeholder next to real history.
+            */}
             <div className="flex justify-end pr-0">
-              <span className="glass rounded-full px-3 py-1.5 text-[11px] font-medium tracking-wide text-bone">
-                {milestone.date}
-              </span>
+              {!isPending(milestone.date) && (
+                <span className="glass rounded-full px-3 py-1.5 text-[11px] font-medium tracking-wide text-bone">
+                  {milestone.date}
+                </span>
+              )}
             </div>
 
             {/* Node sitting on the rail */}
@@ -107,7 +115,7 @@ export function AnimatedTimeline({
               <h3 className="text-lg font-semibold tracking-tight text-bone">
                 {milestone.title}
               </h3>
-              {milestone.description && (
+              {!isPending(milestone.description) && (
                 <p className="mt-2 max-w-prose text-sm leading-relaxed text-ash">
                   {milestone.description}
                 </p>

@@ -17,17 +17,27 @@ import { isPending, journey } from "@/lib/home-content";
  * separates the retrospective from the warm, present-tense sections either
  * side of it.
  *
- * This section IS its timeline — a history with no dated moments in it is not
- * a history — so with no confirmed milestones it does not render at all. The
- * figures are filtered the same way; see isPending() in lib/home-content.ts.
+ * WHAT IS REAL HERE. All five milestone TITLES come from the spec — Genesis
+ * begins, the creator network scales, production comes in-house, the AI studio
+ * opens, full-service. Only their dates and one-line descriptions are unwritten.
+ *
+ * An earlier pass required a date before a milestone could render, which
+ * filtered out all five and removed the section from the page. That was the
+ * wrong test: the shape of the history is the titles and their order, and both
+ * are known. AnimatedTimeline omits the date pill and the description for any
+ * milestone that lacks them, so the rail renders on what is true and fills in
+ * as the copy lands. Figures are still filtered by value; see isPending().
  */
 export function Journey() {
-  const milestones = journey.milestones.filter(
-    (milestone) => !isPending(milestone.date) || !isPending(milestone.description),
-  );
+  // Unwritten fields are stripped HERE rather than only at render. This is a
+  // client component, so anything left on the object is serialised into the
+  // RSC payload and shipped to the browser even though nothing displays it.
+  const milestones = journey.milestones.map((milestone) => ({
+    title: milestone.title,
+    ...(isPending(milestone.date) ? {} : { date: milestone.date }),
+    ...(isPending(milestone.description) ? {} : { description: milestone.description }),
+  }));
   const figures = journey.figures.filter((figure) => !isPending(figure.value));
-
-  if (milestones.length === 0) return null;
 
   return (
     <section

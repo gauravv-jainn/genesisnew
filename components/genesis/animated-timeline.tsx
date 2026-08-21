@@ -112,7 +112,7 @@ export function AnimatedTimeline({
         )}
       />
 
-      <ol className="relative flex flex-col gap-14">
+      <ol className="relative flex flex-col gap-16">
         {milestones.map((milestone, index) => (
           <motion.li
             key={milestone.title}

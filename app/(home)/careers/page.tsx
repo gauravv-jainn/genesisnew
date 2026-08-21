@@ -128,7 +128,7 @@ export default function CareersPage() {
         </Reveal>
 
         <Reveal delay={0.18}>
-          <p className="mt-10 max-w-lg text-pretty text-small leading-relaxed text-ash sm:text-body">
+          <p className="mt-12 max-w-lg text-pretty text-small leading-relaxed text-ash sm:text-body">
             {careersPage.body}
           </p>
         </Reveal>

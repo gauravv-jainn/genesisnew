@@ -36,7 +36,7 @@ export function LogoMarquee({
       )}
     >
       <div
-        className="flex w-max animate-[genesis-marquee_var(--marquee-duration)_linear_infinite] items-center gap-14 group-hover:[animation-play-state:paused] motion-reduce:animate-none"
+        className="flex w-max animate-[genesis-marquee_var(--marquee-duration)_linear_infinite] items-center gap-16 group-hover:[animation-play-state:paused] motion-reduce:animate-none"
         style={
           {
             "--marquee-duration": `${speedSeconds}s`,
@@ -48,7 +48,7 @@ export function LogoMarquee({
           <div
             key={copy}
             aria-hidden={copy === 1}
-            className="flex shrink-0 items-center gap-14"
+            className="flex shrink-0 items-center gap-16"
           >
             {logos.map((logo) => (
               <span

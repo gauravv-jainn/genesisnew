@@ -795,11 +795,38 @@ once.
   notice. Cause was `min-width: auto` on a grid item refusing to shrink below
   its longest line. Found by measuring, not by looking.
 
-### Deliberately left
+### The rhythm steps, now also on the scale
 
-- Section rhythm steps 56/80/112px stay off the published scale. Snapping them
-  re-flows every section and I cannot screenshot sections to verify.
-- `text-[5px]` in the paper vortex — representational, like the paper radius.
+The three section rhythm steps (56/80/112px) were initially left off the
+published scale because snapping them re-flows every section and I cannot
+screenshot sections to verify. They are now snapped as well — 56→64, 80→96,
+112→128, plus 40→48, 144→128 and 176→160 — and verified by measuring section
+heights and the pinned faces rather than by eye.
+
+Two things that constraint surfaced:
+
+- **The portfolio face was already overflowing by 33px**, a regression from the
+  earlier 20→24 snap, which had pushed the "Browse the full library" CTA under
+  a fold that only exists because the section is pinned. Both camera-turn faces
+  now measure exactly 900/900 with zero overflow.
+- **Portfolio's own padding deliberately sits BELOW the rhythm step.** A face
+  inside the turn is clamped to 100dvh, and that constraint outranks the
+  spacing scale. Written down in the component rather than left as a mystery.
+
+Measured on the live DOM, the resolved values are now exactly the published
+scales:
+
+```
+spacing   4  8  12  16  24  32  48  64  96  128  160
+type      11  14  16  19  28  40  56  80
+radius    8  12  24  pill
+```
+
+Still off, and correctly so: `2px` (a 0.5-step chip padding and the Journey
+broadsheet's paper radius), `text-[5px]` in the paper vortex, and the
+viewport-scaled display clamps. The 112/142/283px values that showed up in the
+first sweep turned out to be inline lattice coordinates in WatchCluster and the
+creator constellation — geometry, not rhythm, and correctly excluded.
 
 ---
 

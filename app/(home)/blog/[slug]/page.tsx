@@ -44,7 +44,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
   return (
     <Atmosphere tone="amber" origin="top" intensity={0.2} className="min-h-dvh pt-32">
       <article className="mx-auto w-full max-w-3xl px-6 pb-32">
-        <header className="border-b border-white/10 pb-10">
+        <header className="border-b border-white/10 pb-12">
           <SectionLabel dot tone="amber">
             {post.category}
           </SectionLabel>
@@ -91,7 +91,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           className={[
             "mt-12 text-small leading-[1.75] text-ash",
             "[&_h2]:mt-12 [&_h2]:text-h3 [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-bone",
-            "[&_h3]:mt-10 [&_h3]:text-h3 [&_h3]:font-semibold [&_h3]:text-bone",
+            "[&_h3]:mt-12 [&_h3]:text-h3 [&_h3]:font-semibold [&_h3]:text-bone",
             "[&_p]:mt-6",
             "[&_ul]:mt-6 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mt-2",
             "[&_ol]:mt-6 [&_ol]:list-decimal [&_ol]:pl-6",
@@ -105,7 +105,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           <MDXRemote source={post.content} />
         </div>
 
-        <footer className="mt-16 flex flex-wrap items-center gap-4 border-t border-white/10 pt-10">
+        <footer className="mt-16 flex flex-wrap items-center gap-4 border-t border-white/10 pt-12">
           <GlassButton href="/blog" variant="glass" arrow>
             More from the journal
           </GlassButton>

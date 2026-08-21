@@ -271,7 +271,7 @@ export function PaperVortex({
   if (sheets.length === 0) return null;
 
   return (
-    <div className={cn("relative isolate w-full overflow-hidden py-10", className)}>
+    <div className={cn("relative isolate w-full overflow-hidden py-12", className)}>
       {/* The interior the whole scene stands in. */}
       <LitRoom />
 

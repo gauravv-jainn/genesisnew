@@ -89,7 +89,7 @@ export function AiContent() {
       </Reveal>
 
       {/* The stack feeding the studio — many inputs converging on one output. */}
-      <Reveal delay={0.12} className="mx-auto mt-20 max-w-4xl">
+      <Reveal delay={0.12} className="mx-auto mt-24 max-w-4xl">
         <p className="micro-label mb-8 text-center">Tools we use</p>
         <ToolsStack
           tools={[...aiContent.tools]}
@@ -98,7 +98,7 @@ export function AiContent() {
         />
       </Reveal>
 
-      <RevealGroup className="mx-auto mt-14 flex max-w-2xl flex-wrap justify-center gap-3">
+      <RevealGroup className="mx-auto mt-16 flex max-w-2xl flex-wrap justify-center gap-3">
         {aiContent.capabilities.map((capability) => (
           <RevealItem key={capability}>
             <span className="glass inline-flex rounded-full px-4 py-2 text-small text-bone">

@@ -34,12 +34,12 @@ export function RouteStub({
           {description}
         </p>
 
-        <p className="mt-10 rounded-card border border-white/10 bg-white/[0.03] px-6 py-4 text-small text-faint">
+        <p className="mt-12 rounded-card border border-white/10 bg-white/[0.03] px-6 py-4 text-small text-faint">
           This page is a placeholder. It is built out in Phase 4 — the link
           resolves today so the site has no dead ends.
         </p>
 
-        <div className="mt-10">
+        <div className="mt-12">
           <GlassButton href="/" variant="glass" arrow>
             Back to the homepage
           </GlassButton>

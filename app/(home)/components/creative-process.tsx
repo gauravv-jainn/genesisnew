@@ -73,7 +73,7 @@ export function CreativeProcess() {
       />
 
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
-        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+        <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
           <Reveal className="max-w-xl">
             <SectionLabel dot tone="crimson">
               {creativeProcess.label}
@@ -96,7 +96,7 @@ export function CreativeProcess() {
           below are stable — percentage positions inside an auto-height box
           collapse, which is the bug that once left a whole wall at height 0.
         */}
-        <div className="relative mt-16 lg:mt-20 lg:aspect-[848/560]">
+        <div className="relative mt-16 lg:mt-24 lg:aspect-[848/560]">
           {/*
             Display type behind the cards, which cover most of it.
 

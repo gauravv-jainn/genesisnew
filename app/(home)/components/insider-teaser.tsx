@@ -21,7 +21,7 @@ export function InsiderTeaser() {
       intensity={0.12}
     >
       <Reveal>
-        <div className="glass glass-strong glass-lit relative overflow-hidden rounded-panel p-10 sm:p-14">
+        <div className="glass glass-strong glass-lit relative overflow-hidden rounded-panel p-12 sm:p-16">
           {/* Faint grid, reading as "system" rather than "marketing". */}
           <div
             aria-hidden

@@ -195,7 +195,7 @@ export function ContentLibrary() {
 
       {/* The catalogue */}
       {visible.length === 0 ? (
-        <p className="mt-14 text-small text-faint">Nothing matches that yet.</p>
+        <p className="mt-16 text-small text-faint">Nothing matches that yet.</p>
       ) : (
         <div
           className={cn(
@@ -258,7 +258,7 @@ export function ContentLibrary() {
         </div>
       )}
 
-      <div className="mt-10 flex justify-center">
+      <div className="mt-12 flex justify-center">
         <button
           type="button"
           className="glass flex items-center gap-2 rounded-full px-6 py-3 text-small text-ash transition-colors hover:text-bone"

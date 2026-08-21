@@ -42,7 +42,7 @@ export function Journey() {
   return (
     <section
       id="journey"
-      className="grain relative isolate overflow-hidden bg-void py-28 sm:py-36"
+      className="grain relative isolate overflow-hidden bg-void py-32 sm:py-32"
     >
       <Spotlight x={50} spread={13} tone="cool" intensity={1.05} reach={98} />
       <GhostType>SINCE DAY ONE</GhostType>
@@ -70,7 +70,7 @@ export function Journey() {
           The figures the spec asks for: "//numbers increasing animation".
           StatRow counts each up once as it scrolls into view.
         */}
-        <Reveal delay={0.12} className="mt-14">
+        <Reveal delay={0.12} className="mt-16">
           <StatRow stats={figures.map((figure) => ({ ...figure }))} />
         </Reveal>
 
@@ -79,9 +79,9 @@ export function Journey() {
           a slight perspective tilt so it reads as standing in the room rather
           than pasted onto the page.
         */}
-        <Reveal delay={0.18} variant="scene" className="mt-14">
+        <Reveal delay={0.18} variant="scene" className="mt-16">
           <div
-            className="relative rounded-[2px] px-6 py-14 sm:px-14"
+            className="relative rounded-[2px] px-6 py-16 sm:px-16"
             style={{
               background:
                 "linear-gradient(180deg, rgb(185 204 214) 0%, rgb(168 189 201) 30%, rgb(152 174 187) 58%, rgb(138 161 174) 100%)",

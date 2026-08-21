@@ -29,7 +29,7 @@ export default function ContentCreationPage() {
 
   return (
     <main>
-      <section className="grain relative isolate overflow-hidden bg-void pt-36 pb-24 sm:pt-44">
+      <section className="grain relative isolate overflow-hidden bg-void pt-32 pb-24 sm:pt-40">
         <Spotlight x={44} spread={17} tone="warm" intensity={0.95} reach={96} />
         <GhostType>CONTENT</GhostType>
 

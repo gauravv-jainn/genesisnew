@@ -113,7 +113,7 @@ export function SectionShell({
         )}
 
         {children && (
-          <div className={cn("mt-14 sm:mt-16", contentClassName)}>{children}</div>
+          <div className={cn("mt-16 sm:mt-16", contentClassName)}>{children}</div>
         )}
       </section>
     </Atmosphere>

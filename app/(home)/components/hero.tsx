@@ -64,7 +64,7 @@ export function Hero() {
         }}
       />
 
-      <div className="relative z-[2] mx-auto w-full max-w-7xl px-6 pb-24 pt-32 sm:pb-28">
+      <div className="relative z-[2] mx-auto w-full max-w-7xl px-6 pb-24 pt-32 sm:pb-32">
         <div className="grid items-end gap-12 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <Reveal>

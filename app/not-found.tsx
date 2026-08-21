@@ -35,7 +35,7 @@ export default function NotFound() {
           </GlassButton>
         </div>
 
-        <nav aria-label="Site sections" className="mt-14">
+        <nav aria-label="Site sections" className="mt-16">
           <p className="micro-label">Or try</p>
           <ul className="mt-6 flex flex-wrap justify-center gap-3">
             {navItems.map((item) => (

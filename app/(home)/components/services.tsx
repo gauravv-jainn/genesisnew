@@ -46,7 +46,7 @@ export function Services() {
   return (
     <section
       id="services"
-      className="grain relative isolate overflow-hidden bg-void py-20 sm:py-24"
+      className="grain relative isolate overflow-hidden bg-void py-24 sm:py-24"
     >
       {/* One narrow source, raking in from upper right as in img-009. */}
       <Spotlight x={72} spread={8} rake={-28} tone="warm" intensity={1.15} reach={96} />
@@ -84,7 +84,7 @@ export function Services() {
 
         {/* lg and up: the scattered arc, in a stage sized so the whole section
             fits inside the camera pan's 100dvh face. */}
-        <div className="relative mt-10 hidden lg:block lg:aspect-[1104/470]">
+        <div className="relative mt-12 hidden lg:block lg:aspect-[1104/470]">
           {services.items.map((service, index) => {
             const place = SCATTER[index] ?? SCATTER[SCATTER.length - 1];
             return (

@@ -53,7 +53,7 @@ export default function StyleGuidePage() {
 
   return (
     <div className="min-h-dvh bg-ink pb-32">
-      <div className="mx-auto max-w-6xl px-6 pt-20">
+      <div className="mx-auto max-w-6xl px-6 pt-24">
         <SectionLabel dot>Phase 1 · Design system</SectionLabel>
         <h1 className="mt-4 text-h2 font-semibold tracking-tight text-bone">
           Genesis <span className="font-serif italic text-amber">style guide</span>
@@ -141,7 +141,7 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Brand mark" note="Placeholder, reconstructed from the references. Replace when real logo files land.">
-        <div className="flex flex-wrap items-center gap-10">
+        <div className="flex flex-wrap items-center gap-12">
           <GenesisMark />
           <GenesisStar className="size-8" />
         </div>
@@ -205,7 +205,7 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Magnetic floating paper cards" note="The connective motif — paper caught in a single light.">
-        <div className="space-y-10">
+        <div className="space-y-12">
           <div className="flex flex-wrap gap-8">
             <PaperCard pinned className="w-64">
               <p className="micro-label mb-2">Pinned</p>
@@ -335,7 +335,7 @@ export default function StyleGuidePage() {
       </Section>
 
       <Section title="Glowing word & iridescent button" note="The waitlist treatment: one word lit from within, held in glass. Emission is text-shadow, not a filter — filters rasterise the whole word.">
-        <div className="flex flex-col items-center gap-10 rounded-card bg-void py-16">
+        <div className="flex flex-col items-center gap-12 rounded-card bg-void py-16">
           <GlowWord tone="warm" className="text-h2 sm:text-h1">
             waitlist
           </GlowWord>

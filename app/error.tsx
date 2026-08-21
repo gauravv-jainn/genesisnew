@@ -53,7 +53,7 @@ export default function ErrorBoundary({
         </div>
 
         {error.digest && (
-          <p className="mt-10 text-small text-faint">
+          <p className="mt-12 text-small text-faint">
             Reference: <code className="text-ash">{error.digest}</code>
           </p>
         )}

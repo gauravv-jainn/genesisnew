@@ -35,14 +35,20 @@ export function Portfolio() {
       // This face is clamped to 100dvh by the camera turn, and SectionShell's
       // default lg:py-40 spends 320px of that on padding alone. Tightened so
       // the whole section — rail, CTA and all — lands inside the turn.
-      className="py-12 sm:py-12 lg:py-12"
+      //
+      // These two sit BELOW the section rhythm step on purpose. A face inside
+      // the camera turn is clamped to 100dvh, and that constraint outranks the
+      // spacing scale: at the rhythm step this face overflowed by 33px, which
+      // put the "Browse the full library" CTA under a fold that only exists
+      // because the section is pinned.
+      className="py-8 sm:py-8 lg:py-8"
       contentClassName="-mr-6 sm:-mr-10"
     >
       <Reveal variant="scene">
         <PosterRail posters={posters} />
       </Reveal>
 
-      <Reveal delay={0.1} className="mr-6 mt-8 sm:mr-10">
+      <Reveal delay={0.1} className="mr-6 mt-6 sm:mr-12">
         <GlassButton href="/our-work" variant="glass" arrow>
           Browse the full library
         </GlassButton>

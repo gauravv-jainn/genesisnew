@@ -26,7 +26,7 @@ export default function CreatorPage() {
   return (
     <SlideUp>
     <main>
-      <section className="grain relative isolate overflow-hidden bg-void pt-36 pb-28 sm:pt-44">
+      <section className="grain relative isolate overflow-hidden bg-void pt-32 pb-32 sm:pt-40">
         <Spotlight x={68} spread={17} tone="warm" intensity={1} reach={96} />
         <GhostType className="translate-y-2">FOR CREATORS</GhostType>
 
@@ -70,7 +70,7 @@ export default function CreatorPage() {
             ))}
           </RevealGroup>
 
-          <Reveal delay={0.15} className="mt-14 flex justify-end">
+          <Reveal delay={0.15} className="mt-16 flex justify-end">
             <CornerNote index="2">
               Most of our creators come back for the next campaign. That is the
               whole model, and it only works if the first one was worth doing.

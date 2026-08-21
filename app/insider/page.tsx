@@ -72,7 +72,7 @@ export default async function InsiderPage() {
 
   return (
     <Atmosphere tone="crimson" origin="top-right" intensity={0.14} className="min-h-dvh">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-14">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 py-16">
         {/* The rail from p08_1 — a floating glass control, not a sidebar. */}
         <InsiderRail />
 

@@ -66,7 +66,7 @@ export function FooterCta() {
           top edge, so it reads as one pane the content sits inside rather
           than a row of boxes.
         */}
-        <div className="glass glass-strong glass-lit mt-20 grid gap-12 rounded-panel p-8 sm:grid-cols-2 sm:p-10 lg:grid-cols-4">
+        <div className="glass glass-strong glass-lit mt-24 grid gap-12 rounded-panel p-8 sm:grid-cols-2 sm:p-12 lg:grid-cols-4">
           <Reveal>
             <GenesisMark />
             <p className="mt-6 max-w-xs text-small leading-relaxed text-ash">
@@ -102,7 +102,7 @@ export function FooterCta() {
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col gap-2 border-t border-white/10 py-8 text-small text-faint sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-2 border-t border-white/10 py-8 text-small text-faint sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>

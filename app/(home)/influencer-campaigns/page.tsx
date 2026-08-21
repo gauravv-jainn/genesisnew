@@ -88,7 +88,7 @@ export default function InfluencerCampaignsPage() {
           ))}
         </RevealGroup>
 
-        <RevealGroup className="mt-14 flex flex-wrap justify-center gap-3">
+        <RevealGroup className="mt-16 flex flex-wrap justify-center gap-3">
           {influencerPage.genres.map((genre) => (
             <RevealItem key={genre}>
               <span className="glass-chip rounded-full px-4 py-2 text-small text-bone">

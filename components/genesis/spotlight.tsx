@@ -22,6 +22,11 @@ export function Spotlight({
   intensity = 1,
   /** Where the light lands, as a percentage of container height. */
   reach = 92,
+  /**
+   * Degrees off vertical. img-009's shaft rakes in at roughly 25-35 degrees;
+   * a purely vertical cone reads as ambient haze rather than as a source.
+   */
+  rake = 0,
   className,
 }: {
   x?: number;
@@ -29,6 +34,7 @@ export function Spotlight({
   tone?: "warm" | "cool" | "crimson";
   intensity?: number;
   reach?: number;
+  rake?: number;
   className?: string;
 }) {
   const TONES = {
@@ -54,10 +60,11 @@ export function Spotlight({
           left: `${x}%`,
           width: `${halfWidth * 2}%`,
           height: `${reach}%`,
-          transform: "translateX(-50%)",
-          background: `linear-gradient(to bottom, rgb(${core} / ${0.28 * intensity}) 0%, rgb(${edge} / ${0.1 * intensity}) 45%, transparent 100%)`,
+          transform: `translateX(-50%) rotate(${rake}deg)`,
+          transformOrigin: "50% 0",
+          background: `linear-gradient(to bottom, rgb(${core} / ${0.46 * intensity}) 0%, rgb(${core} / ${0.24 * intensity}) 28%, rgb(${edge} / ${0.12 * intensity}) 62%, transparent 100%)`,
           clipPath: "polygon(46% 0%, 54% 0%, 100% 100%, 0% 100%)",
-          filter: "blur(18px)",
+          filter: "blur(10px)",
         }}
       />
 
@@ -65,7 +72,7 @@ export function Spotlight({
       <div
         className="absolute"
         style={{
-          left: `${x}%`,
+          left: `${x + Math.tan((rake * Math.PI) / 180) * reach * 0.5}%`,
           top: `${reach - 12}%`,
           width: `${halfWidth * 2.4}%`,
           height: "22%",

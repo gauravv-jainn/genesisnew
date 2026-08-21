@@ -111,6 +111,11 @@ function Face({
   return (
     <div
       ref={ref}
+      // Lenis hijacks the wheel globally, so a face's `overflow-y-auto` never
+      // actually ran and any content past the fold was unreachable. This opts
+      // the face out of the smooth-scroll handler. Both faces are now composed
+      // to fit 100dvh anyway, so this is the safety net rather than the plan.
+      data-lenis-prevent
       className="no-scrollbar lg:absolute lg:inset-0 lg:overflow-y-auto lg:[backface-visibility:hidden]"
     >
       {children}

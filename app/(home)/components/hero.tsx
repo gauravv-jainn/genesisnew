@@ -68,17 +68,44 @@ export function Hero() {
         <div className="grid items-end gap-12 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <Reveal>
-              <SectionLabel dot>{hero.eyebrow}</SectionLabel>
+              {/*
+                The eyebrow carries its own ground. Over the lit wall its grey
+                measured 1.4:1, and even pure white would only have reached
+                3.4:1 against the 4.5:1 an 11px label needs — no colour choice
+                fixes that. Raising the page scrim far enough to reach it cost
+                20 points of wall span, so the fix is local: a chip, which also
+                reads as a deliberate label rather than type floating on a
+                photograph.
+
+                A DARK chip, not .glass-chip. Glass is a white fill: over a
+                bright ground it lightens, and the glass version only reached
+                3.9:1. The tool has to match which way the ground needs to
+                move.
+              */}
+              <SectionLabel
+                dot
+                className="!inline-flex w-fit !text-bone rounded-full border border-white/12 bg-[rgb(18_7_2/0.72)] px-4 py-2 backdrop-blur-md"
+              >
+                {hero.eyebrow}
+              </SectionLabel>
             </Reveal>
 
             <Reveal delay={0.05}>
+              {/*
+                MEASURE, not just size. At max-w-3xl the last line ran to
+                x=688 on a 1280 viewport and the "AI" accent landed directly on
+                the walking figure's head — the headline's final word covering
+                the one piece of storytelling in the scene. The reference keeps
+                its copy in the dark flanking zones and clear of the figure.
+                max-w-xl holds the column left of the figure at every width.
+              */}
               {/*
                 Gated on viewport HEIGHT as well as width: this headline wraps
                 to several lines and a width-only rule pushed the CTA
                 off-screen at 1440x900. Underscores become spaces in the
                 emitted media query.
               */}
-              <h1 className="mt-6 max-w-3xl text-balance text-h2 font-semibold leading-[1.02] tracking-tight text-bone drop-shadow-[0_2px_24px_rgb(12_4_1/0.9)] sm:text-h1 lg:text-h1 [@media(min-width:1280px)_and_(min-height:960px)]:text-display">
+              <h1 className="mt-6 max-w-xl text-balance text-h2 font-semibold leading-[1.02] tracking-tight text-bone drop-shadow-[0_2px_24px_rgb(12_4_1/0.9)] sm:text-h1 lg:text-h1 [@media(min-width:1280px)_and_(min-height:960px)]:text-display">
                 {hero.headlineLead}{" "}
                 <span className="font-serif font-normal italic text-amber-light">
                   {hero.headlineAccent}

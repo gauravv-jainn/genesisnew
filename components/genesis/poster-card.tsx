@@ -89,6 +89,22 @@ export function PosterCard({
             : { backgroundImage: placeholderArt(poster.id) }
         }
       >
+        {/*
+          With no artwork the client is the subject rather than a caption at
+          the foot of an empty rectangle. Set large and centred, so the card
+          reads as a deliberate typographic poster instead of a missing image.
+        */}
+        {!poster.image && (
+          <div className="absolute inset-0 grid place-items-center px-5 pb-12">
+            <p className="text-balance text-center text-h3 font-semibold leading-[1.1] tracking-tight text-bone/90">
+              {/* Whichever field carries the recognisable name. Case studies
+                  with no written story put the client in `title`; portfolio
+                  entries carry both. */}
+              {poster.client ?? poster.title}
+            </p>
+          </div>
+        )}
+
         {/* Legibility scrim for the title block. */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45)_0%,transparent_28%,transparent_45%,rgb(0_0_0/0.88)_100%)]" />
 
@@ -101,14 +117,16 @@ export function PosterCard({
         </span>
 
         <div className="absolute inset-x-0 bottom-0 p-4">
-          {poster.client && (
+          {poster.client && poster.image && (
             <p className="micro-label mb-2 !text-micro !tracking-[0.22em] text-bone/70">
               {poster.client}
             </p>
           )}
-          <h3 className="text-balance text-small font-semibold leading-tight text-bone">
-            {poster.title}
-          </h3>
+          {!(!poster.image && !poster.client) && (
+            <h3 className="text-balance text-small font-semibold leading-tight text-bone">
+              {poster.title}
+            </h3>
+          )}
           {poster.meta && poster.meta.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
               {poster.meta.map((item) => (
@@ -149,7 +167,7 @@ export function PosterRail({
       // "the slides move" half of the spec's note on page 1.
       data-poster-rail
       className={cn(
-        "no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-4",
+        "no-scrollbar flex snap-x snap-mandatory items-center gap-4 overflow-x-auto px-1 pb-4",
         className,
       )}
     >

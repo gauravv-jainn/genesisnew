@@ -67,14 +67,6 @@ export function Journey() {
         </div>
 
         {/*
-          The figures the spec asks for: "//numbers increasing animation".
-          StatRow counts each up once as it scrolls into view.
-        */}
-        <Reveal delay={0.12} className="mt-16">
-          <StatRow stats={figures.map((figure) => ({ ...figure }))} />
-        </Reveal>
-
-        {/*
           The sheet. Lit from the top edge, falling off toward the bottom, with
           a slight perspective tilt so it reads as standing in the room rather
           than pasted onto the page.
@@ -104,15 +96,32 @@ export function Journey() {
               }}
             />
 
-            <AnimatedTimeline
-              milestones={milestones}
+            <div className="relative grid gap-12 lg:grid-cols-[1fr_0.62fr] lg:gap-16">
+              <AnimatedTimeline
+                milestones={milestones}
               // Crimson, not teal. This section reads cold because its PAPER is
               // cold — sampled straight off p15_0 — so the accent no longer has to
               // carry that, and teal appears nowhere in the references.
-              tone="crimson"
-              surface="light"
-              className="relative"
-            />
+                tone="crimson"
+                surface="light"
+                className="relative"
+              />
+
+              {/*
+                The right column of the page. Dark ink on paper, and the rule
+                down its inside edge is a column rule — the same device the
+                sheet's own ruling uses.
+              */}
+              <div className="lg:border-l lg:border-[#1c2b38]/15 lg:pl-16">
+                <StatRow
+                  stats={figures.map((figure) => ({ ...figure }))}
+                  surface="light"
+                />
+                <p className="mt-8 max-w-xs text-small leading-relaxed text-[#20303e]">
+                  {journey.body}
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* The sheet curling away at its foot. */}

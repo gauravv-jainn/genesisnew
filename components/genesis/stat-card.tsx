@@ -131,9 +131,16 @@ export function StatCard({
 /** The horizontal glass bar of figures from img-012. */
 export function StatRow({
   stats,
+  surface = "dark",
   className,
 }: {
   stats: { value: string; label: string; icon?: ReactNode }[];
+  /**
+   * "light" sets the figure in dark ink for a pale ground — Journey prints its
+   * headline figure on the broadsheet, where bone-on-paper would be unreadable
+   * for the same reason the timeline needed it.
+   */
+  surface?: "dark" | "light";
   className?: string;
 }) {
   // The single choke point for figures across the site, so the guarantee that
@@ -163,10 +170,17 @@ export function StatRow({
         transition={{ duration: 0.6, ease: "easeOut" }}
         className={cn("flex flex-col items-start gap-3", className)}
       >
-        <p className="text-h1 font-semibold leading-none tracking-tight text-bone [font-variant-numeric:tabular-nums] sm:text-display lg:text-8xl">
+        <p
+          className={cn(
+            "text-h1 font-semibold leading-none tracking-tight [font-variant-numeric:tabular-nums] sm:text-display",
+            surface === "light" ? "text-[#16232e]" : "text-bone",
+          )}
+        >
           <CountUp value={only.value} />
         </p>
-        <p className="micro-label">{only.label}</p>
+        <p className={cn("micro-label", surface === "light" && "!text-[#20303e]")}>
+          {only.label}
+        </p>
       </motion.div>
     );
   }

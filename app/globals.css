@@ -366,6 +366,14 @@
         @apply bg-background text-foreground;
     }
 
+    /* Anchor targets must clear the fixed nav. Without this every in-page
+       link — and every #section deep link — lands with its heading tucked
+       under the nav bar. */
+    section[id],
+    [id] {
+        scroll-margin-top: 6.5rem;
+    }
+
     html {
         @apply font-sans;
         /* Lenis drives scrolling in Phase 3; native smooth scroll would fight it. */

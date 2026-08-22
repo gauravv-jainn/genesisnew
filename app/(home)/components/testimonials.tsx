@@ -49,7 +49,17 @@ export function Testimonials() {
           items={items.map((testimonial) => ({
             id: testimonial.name,
             content: (
-              <figure className="glass glass-lit flex w-40 flex-col gap-3 rounded-panel p-4 sm:w-44">
+              <figure
+                className={
+                  hasQuotes
+                    ? "glass glass-lit flex w-40 flex-col gap-3 rounded-panel p-4 sm:w-44"
+                    : // With no quote the card is a NAME, so it is built like
+                      // one: a real card with the name as its subject rather
+                      // than two lines of small type in a pill. Same problem
+                      // the poster cards had, same answer.
+                      "glass glass-lit flex aspect-[4/3] w-44 flex-col justify-end rounded-panel p-5 sm:w-48"
+                }
+              >
                 {"clip" in testimonial && testimonial.clip ? (
                   <Reel
                     src={testimonial.clip as string}
@@ -73,9 +83,13 @@ export function Testimonials() {
                       : "border-t border-white/10 pt-3"
                   }
                 >
-                  <p className="text-small font-medium text-bone">{testimonial.name}</p>
+                  <p className={hasQuotes ? "text-small font-medium text-bone" : "text-balance text-h3 font-semibold leading-tight tracking-tight text-bone"}>
+                    {testimonial.name}
+                  </p>
                   {!isPending(testimonial.role) && (
-                    <p className="mt-0.5 text-micro text-faint">{testimonial.role}</p>
+                    <p className={hasQuotes ? "mt-1 text-micro text-faint" : "mt-2 text-small text-ash"}>
+                      {testimonial.role}
+                    </p>
                   )}
                 </figcaption>
               </figure>

@@ -1,13 +1,26 @@
-import { RevealGroup, RevealItem, Reveal } from "@/components/genesis/reveal";
+import { Reveal } from "@/components/genesis/reveal";
 import { branding } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
 
 /**
  * Section 8 — Branding & Design.
  *
- * A bento arrangement (img-021, img-028): one tall statement tile beside a
- * grid of capability chips. Deliberately quieter than the sections either
- * side of it, so the page has a trough between Influencer and the logo wall.
+ * A bento arrangement (img-021, img-028): one tall statement tile beside the
+ * capabilities. Deliberately quieter than the sections either side of it, so
+ * the page has a trough between Influencer and the logo wall.
+ *
+ * QUIET IS NOT THE SAME AS UNLIT. This was the flattest thing on the page: a
+ * `tone="neutral"` section with no light at all, next to a grid of six
+ * identical grey rectangles carrying one 14px word each. Every other section
+ * on this site is lit; this one just had the light switched off, which does
+ * not read as restraint, it reads as unfinished.
+ *
+ * Two changes. The section gets an amber wash — the secondary accent, so it
+ * stays quieter than the crimson sections around it without being dark. And
+ * the capabilities stop being a 3x2 grid of equal boxes: they are a LIST of
+ * disciplines, not six things of equal weight, so they are set as a rule-
+ * separated column with the count carried in the eyebrow, which is what the
+ * editorial references do with a list.
  */
 export function BrandingDesign() {
   return (
@@ -18,9 +31,9 @@ export function BrandingDesign() {
       headingAccent={branding.headingAccent}
       body={branding.body}
       align="split"
-      tone="neutral"
+      tone="amber"
       origin="top-left"
-      intensity={0.12}
+      intensity={0.16}
     >
       <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
         <Reveal>
@@ -52,17 +65,35 @@ export function BrandingDesign() {
           </div>
         </Reveal>
 
-        <RevealGroup className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {branding.capabilities.map((capability) => (
-            <RevealItem key={capability}>
-              <div className="glass flex h-full min-h-28 items-end rounded-card p-6 transition-colors duration-300 hover:bg-white/10">
-                <span className="text-small font-medium leading-tight text-bone">
-                  {capability}
-                </span>
-              </div>
-            </RevealItem>
-          ))}
-        </RevealGroup>
+        <Reveal delay={0.06}>
+          <div className="glass glass-lit relative flex h-full flex-col rounded-panel p-8">
+            <p className="micro-label mb-6">
+              What we make · {String(branding.capabilities.length).padStart(2, "0")}
+            </p>
+
+            {/*
+              A rule-separated list, numbered. Six equal boxes said these were
+              six interchangeable things; a list says they are a set of
+              disciplines with an order, and it lets the type carry the section
+              instead of six rectangles carrying it.
+            */}
+            <ul className="flex flex-1 flex-col justify-between">
+              {branding.capabilities.map((capability, index) => (
+                <li
+                  key={capability}
+                  className="flex items-baseline gap-6 border-b border-white/10 py-4 last:border-0"
+                >
+                  <span className="micro-label shrink-0 !text-amber/70">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-h3 font-medium leading-tight tracking-tight text-bone">
+                    {capability}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
       </div>
     </SectionShell>
   );

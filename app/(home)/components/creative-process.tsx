@@ -78,7 +78,7 @@ export function CreativeProcess() {
             <SectionLabel dot tone="crimson">
               {creativeProcess.label}
             </SectionLabel>
-            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
+            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-scene sm:text-h1">
               {creativeProcess.heading}{" "}
               <span className="font-serif font-normal italic text-crimson-soft">
                 {creativeProcess.headingAccent}
@@ -87,7 +87,7 @@ export function CreativeProcess() {
           </Reveal>
 
           <Reveal delay={0.1} className="max-w-sm">
-            <p className="text-small leading-relaxed text-bone/60">{creativeProcess.body}</p>
+            <p className="text-small leading-relaxed text-scene-dim">{creativeProcess.body}</p>
           </Reveal>
         </div>
 
@@ -191,10 +191,10 @@ function StepCard({
       </span>
 
       <div>
-        <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
+        <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-scene">
           {step.title}
         </h3>
-        <p className="mt-3 text-small leading-relaxed text-bone/60">{step.caption}</p>
+        <p className="mt-3 text-small leading-relaxed text-scene-dim">{step.caption}</p>
       </div>
     </article>
   );

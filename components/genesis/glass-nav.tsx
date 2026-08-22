@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { GlassButton } from "./glass-button";
+import { ThemeToggle } from "./theme-toggle";
 import { GenesisMark } from "./genesis-mark";
 import { navItems } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
@@ -72,7 +73,9 @@ export function GlassNav() {
         </ul>
 
         <div className="ml-auto flex items-center gap-2">
-          <GlassButton
+          <ThemeToggle className="hidden lg:inline-flex" />
+
+                <GlassButton
             href="/#contact"
             variant="crimson"
             size="sm"

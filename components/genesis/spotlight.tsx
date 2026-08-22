@@ -142,12 +142,12 @@ export function GhostType({
                 fontSize: "clamp(6rem, 20vw, 22rem)",
                 maxWidth: "min(100%, 18ch)",
                 color: "transparent",
-                WebkitTextStroke: "1px rgb(255 255 255 / 0.07)",
+                WebkitTextStroke: "1px var(--ghost-outline)",
               }
             : {
                 fontSize: "clamp(6rem, 20vw, 22rem)",
                 maxWidth: "min(100%, 18ch)",
-                color: "rgb(255 255 255 / 0.12)",
+                color: "var(--ghost-ink)",
               }
         }
       >

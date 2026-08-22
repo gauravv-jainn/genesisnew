@@ -32,16 +32,32 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // The site is dark-only by design, so `dark` is pinned rather than
-    // toggled. Phase 1 replaces the shadcn defaults with Genesis tokens.
+    // `suppressHydrationWarning` because the script below stamps `data-theme`
+    // on this element before React hydrates. Without it React reports the
+    // mismatch it is being asked to tolerate.
     <html
       lang="en"
-      className={cn(
-        "dark font-sans",
-        geist.variable,
-        instrumentSerif.variable,
-      )}
+      suppressHydrationWarning
+      className={cn("dark font-sans", geist.variable, instrumentSerif.variable)}
     >
+      <head>
+        {/*
+          NO-FLASH THEME STAMP. This has to run before first paint, which is
+          why it is an inline blocking script rather than an effect: an effect
+          runs after hydration, and the visitor would see a full dark page
+          repaint to light. Nothing else on the site is allowed to be a
+          render-blocking script; this one earns it because the alternative is
+          visible.
+
+          Absent from storage means "follow the OS", so nothing is stamped and
+          the prefers-color-scheme block in globals.css resolves it.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("genesis-theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className="bg-background text-foreground antialiased">
         {children}
         <Analytics />

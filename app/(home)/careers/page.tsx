@@ -14,6 +14,13 @@ export const metadata: Metadata = {
 /**
  * /careers — the waitlist, built to p05_1.
  *
+ * PINNED DARK. This page is a lit scene, not a surface: one word glowing in
+ * darkness over a lit bank. In light mode the glow had nothing to shine
+ * against — the glowing word vanished entirely and the scene became a pale
+ * fog. `.scene-dark` re-declares the dark tokens for this subtree so the
+ * composition holds in either theme, while the nav outside it still follows
+ * the visitor's choice.
+ *
  * The reference is one idea: a single word lit from within, held in a glass
  * capsule, over a dark scene that glows from below. Everything else on the
  * page defers to it — one action, one line of scarcity, nothing to navigate
@@ -21,7 +28,7 @@ export const metadata: Metadata = {
  */
 export default function CareersPage() {
   return (
-    <main className="relative isolate min-h-dvh overflow-hidden bg-void">
+    <main className="scene-dark relative isolate min-h-dvh overflow-hidden bg-void">
       {/*
         The ground the scene grows out of.
 

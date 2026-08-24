@@ -13,10 +13,19 @@ export const metadata: Metadata = {
  * /our-work — the content library the spec calls "Genesis' NETFLIX",
  * built to the Genesis mockup on page 7: a rail on the left, the catalogue
  * on the right, framed as a single window floating on the dark ground.
+ *
+ * PINNED DARK IN BOTH THEMES. The window is a fixed dark chrome — #0c0b10 at
+ * 85% over a purple wash — because that is what the mockup shows and what
+ * every media library does, Netflix and Spotify included: artwork reads
+ * against dark and washes out against white. Without the pin the chrome
+ * stayed dark while the type flipped with the theme, so the page heading
+ * rendered near-black on near-black. Pinning the surface is the honest fix;
+ * flipping the chrome would mean designing a second library that no
+ * reference asks for.
  */
 export default function OurWorkPage() {
   return (
-    <main className="relative min-h-dvh overflow-hidden bg-void px-3 py-3 sm:px-6 sm:py-6">
+    <main className="scene-dark relative min-h-dvh overflow-hidden bg-void px-3 py-3 sm:px-6 sm:py-6">
       {/* Ambient wash behind the window, as in the mockup. */}
       <div
         aria-hidden

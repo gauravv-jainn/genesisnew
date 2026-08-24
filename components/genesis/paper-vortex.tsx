@@ -436,7 +436,12 @@ function Sheet({
           "inset 0 -6px 10px -8px rgb(48 33 10 / 0.75)",
           "inset 0 4px 6px -6px rgb(255 246 224 / 0.65)",
         ].join(","),
-        filter: sheet.blur ? `blur(${sheet.blur}px)` : undefined,
+        // SPREAD, not `: undefined`. An explicit undefined style value is
+        // serialised differently server- and client-side, and React reports
+        // the whole subtree as a hydration mismatch because of it — which is
+        // what was putting a runtime error on /blog. Omitting the key entirely
+        // when there is no blur is the same intent without the mismatch.
+        ...(sheet.blur ? { filter: `blur(${sheet.blur}px)` } : {}),
       }}
     >
       {interactive && (

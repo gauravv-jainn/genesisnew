@@ -105,6 +105,12 @@
     /* Oversized display type sitting behind content. Flips: white at 12% is
        invisible on an off-white ground, and that type is what gives several
        sections their scale. */
+    /* The one cool accent on the site, used by the Journey heading. It sits
+       on the PAGE ground, not on a lit object, so unlike the inks in
+       animated-timeline and stat-card it has to flip: #cfe3ff measures about
+       1.2:1 on cream, which is not a faint accent, it is an invisible one. */
+    --color-cool-accent: var(--cool-accent);
+
     --color-ghost: var(--ghost-ink);
     --color-ghost-outline: var(--ghost-outline);
 
@@ -201,6 +207,17 @@
     --glass-highlight: rgb(255 255 255 / 0.3);
 
     --ghost-ink: rgb(255 255 255 / 0.12);
+
+    /* Spotlight behaviour, see components/genesis/spotlight.tsx. On a dark
+       ground a spotlight is ADDITIVE — the beam is the bright thing. On a
+       bright ground adding light does almost nothing except shift the hue
+       yellow, so the light theme spends these the other way: the beam nearly
+       off, and a veil that darkens everything the beam does NOT reach. Same
+       reading, right physics for the ground. */
+    --spot-beam: 1;
+    --spot-veil: 0;
+
+    --cool-accent: #cfe3ff;
     --ghost-outline: rgb(255 255 255 / 0.07);
 
     --radius: 0.625rem;
@@ -295,6 +312,9 @@
     --glass-highlight: rgb(255 255 255 / 0.9);
 
     --ghost-ink: rgb(22 20 27 / 0.09);
+    --spot-beam: 0.22;
+    --spot-veil: 1;
+    --cool-accent: #35607f;
     --ghost-outline: rgb(22 20 27 / 0.07);
 
     /* Shadows carry less alpha on a light ground or they read as smudges. */
@@ -341,6 +361,9 @@
         --glass-highlight: rgb(255 255 255 / 0.9);
 
         --ghost-ink: rgb(22 20 27 / 0.09);
+        --spot-beam: 0.22;
+        --spot-veil: 1;
+        --cool-accent: #35607f;
         --ghost-outline: rgb(22 20 27 / 0.07);
 
         --shadow-raised: 0 1px 3px -1px rgb(22 20 27 / 0.12);
@@ -387,6 +410,11 @@
 
     --ghost-ink: rgb(255 255 255 / 0.12);
     --ghost-outline: rgb(255 255 255 / 0.07);
+
+    /* A pinned-dark scene keeps the additive beam. */
+    --spot-beam: 1;
+    --spot-veil: 0;
+    --cool-accent: #cfe3ff;
 
     --shadow-raised: 0 2px 8px -2px rgb(0 0 0 / 0.6);
     --shadow-panel: 0 12px 32px -8px rgb(0 0 0 / 0.7);

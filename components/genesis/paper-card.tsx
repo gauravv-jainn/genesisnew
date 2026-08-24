@@ -68,14 +68,22 @@ export function PaperCard({
   );
 }
 
-/** The lime pushpin from img-009. */
+/**
+ * The pushpin from img-009.
+ *
+ * Its head was lime once and the head is now crimson, but the GLOW was left
+ * behind at rgb(197 255 46) — so every pinned card on the site wore a lime
+ * halo around a red pin, a hue that appears nowhere else in the brand and
+ * reads as a rendering fault rather than a choice. A pin glows its own
+ * colour.
+ */
 function Pushpin() {
   return (
     <span
       aria-hidden
       className="absolute -top-3 left-1/2 z-10 -translate-x-1/2"
     >
-      <span className="block size-4 rounded-full bg-[#ff2d3f] shadow-[0_0_14px_3px_rgb(197_255_46/0.55)]" />
+      <span className="block size-4 rounded-full bg-[#ff2d3f] shadow-[0_0_14px_3px_rgb(255_45_63/0.5)]" />
       <span className="mx-auto block h-3 w-px bg-[#a8121f]" />
     </span>
   );

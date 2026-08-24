@@ -62,7 +62,7 @@ export function Spotlight({
           height: `${reach}%`,
           transform: `translateX(-50%) rotate(${rake}deg)`,
           transformOrigin: "50% 0",
-          background: `linear-gradient(to bottom, rgb(${core} / ${0.46 * intensity}) 0%, rgb(${core} / ${0.24 * intensity}) 28%, rgb(${edge} / ${0.12 * intensity}) 62%, transparent 100%)`,
+          background: `linear-gradient(to bottom, rgb(${core} / calc(${0.46 * intensity} * var(--spot-beam, 1))) 0%, rgb(${core} / calc(${0.24 * intensity} * var(--spot-beam, 1))) 28%, rgb(${edge} / calc(${0.12 * intensity} * var(--spot-beam, 1))) 62%, transparent 100%)`,
           clipPath: "polygon(46% 0%, 54% 0%, 100% 100%, 0% 100%)",
           filter: "blur(10px)",
         }}
@@ -77,8 +77,21 @@ export function Spotlight({
           width: `${halfWidth * 2.4}%`,
           height: "22%",
           transform: "translateX(-50%)",
-          background: `radial-gradient(closest-side, rgb(${core} / ${0.3 * intensity}) 0%, rgb(${edge} / ${0.12 * intensity}) 45%, transparent 100%)`,
+          background: `radial-gradient(closest-side, rgb(${core} / calc(${0.3 * intensity} * var(--spot-beam, 1))) 0%, rgb(${edge} / calc(${0.12 * intensity} * var(--spot-beam, 1))) 45%, transparent 100%)`,
           filter: "blur(26px)",
+        }}
+      />
+
+      {/*
+        The veil. On a bright ground a spotlight cannot be a brighter patch —
+        the paper is already the brightest thing available — so it becomes
+        the absence of light everywhere else. Zero-alpha in dark mode, where
+        the cone above does the work instead. See --spot-veil in globals.css.
+      */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(120% 90% at ${x}% 0%, transparent 0%, transparent 34%, rgb(64 44 22 / calc(0.06 * var(--spot-veil, 0))) 62%, rgb(38 26 14 / calc(0.13 * var(--spot-veil, 0))) 100%)`,
         }}
       />
 
@@ -90,7 +103,7 @@ export function Spotlight({
           width: "34%",
           height: "34%",
           transform: "translateX(-50%)",
-          background: `radial-gradient(closest-side, rgb(${core} / ${0.42 * intensity}) 0%, transparent 100%)`,
+          background: `radial-gradient(closest-side, rgb(${core} / calc(${0.42 * intensity} * var(--spot-beam, 1))) 0%, transparent 100%)`,
           filter: "blur(40px)",
         }}
       />

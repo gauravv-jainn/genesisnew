@@ -830,17 +830,95 @@ creator constellation — geometry, not rhythm, and correctly excluded.
 
 ---
 
+## Light theme audit — every route, both themes
+
+The light theme shipped as a token flip, and a token flip is exactly the
+thing that cannot carry a page whose subject is light itself. Walked all
+nine routes in both themes and found one bug repeated in five places, plus a
+real runtime error.
+
+### Scenes do not flip
+
+`/careers`, `/our-work` and `/blog` are LIT SCENES — a glowing meadow bank, a
+dark media-library window, a dark room full of lit paper. The chrome around
+them was hardcoded dark; only the type flipped. Results: `/careers` lost its
+glowing headline word entirely (a glow has nothing to shine against on
+off-white), `/our-work` rendered "Our Content" near-black on `#0c0b10`, and
+`/blog` put a razor seam through its standfirst — half the sentence on cream,
+half on black.
+
+Added a `.scene-dark` utility that re-pins the whole token set inside a
+subtree. It sets `color` as well as `background-color`: with only the
+background pinned, any text relying on inheritance keeps the light theme's
+foreground and still lands dark-on-dark. `body:has(.scene-dark) header` takes
+the nav with it, so a light bar never floats on a black page.
+
+The same fault, one level down, hit the poster cards: a billboard is a dark
+object, so every client name rendered black-on-black in light mode. Those
+labels now use `--color-scene`. **The two `.glass` chips on each card
+deliberately still flip** — glass is a white fill, so it lightens the poster
+beneath it and its label has to darken to match. Which token a label wants
+depends on what is directly behind it, not on which component it lives in.
+
+### A spotlight cannot be brighter than paper
+
+On a dark ground a spotlight is additive: the beam is the bright thing. On
+cream there is nothing left to brighten, so the beam only shifted the hue and
+landed as a yellow stain. Light works the other way round on paper — a lit
+patch reads because everything else is darker. `--spot-beam` drops to 0.22 in
+the light theme and `--spot-veil` brings in the falloff instead.
+
+### Math.sin is not the same number on the server and the client
+
+`/blog` carried a hydration error that survived three wrong guesses. The diff
+was one character deep: server `x2="81.48208398713905"`, client
+`x2="81.4820839871827"`. Both the textures and the vortex hashed with
+`Math.sin(seed * 12.9898 + salt * 78.233) * 43758.5453`, and Math.sin is
+transcendental — implementations are not required to agree to the last bit,
+and Node and V8-in-Chrome don't. Those values are interpolated into SVG
+coordinates, baked into a data URI, baked into an inline style, so React
+discarded the server render of all 56 sheets. Replaced with an integer hash;
+`Math.imul` and the bitwise operators are exactly specified and cannot drift.
+Rounding the coordinates also took the page from 540KB to 499KB.
+
+**Two debugging notes worth keeping.** React's dev-mode hydration diff prints
+the server side through the CSSOM, so every value comes back re-serialised
+and every property looks like it mismatches. And comparing the DOM against
+the server HTML proves nothing, because React logs attribute mismatches
+without patching them — the DOM still holds the server's values, so the two
+always agree. Only the fiber's props are the client's actual expectation.
+
+### The mobile hero
+
+The scrim is a 94deg ramp, clear by 72% across, because on desktop the copy
+sits low and left. At 375px that is 270px, and the headline runs to 351px —
+so the last quarter of every line sat on the wall at its brightest.
+Headline 1.93:1 against a 3.0 floor; body copy 1.31:1 against 4.5. Below
+`sm` the scrim now runs full-width and ramps vertically: 7.85:1 and 7.21:1.
+
+Those figures are computed, not sampled, and the reason is worth recording:
+this hero sets amber type on an amber wall, so neither a brightness threshold
+nor a chroma filter separates glyphs from ground — both keep returning the
+type as if it were background. Alpha-compositing the scrim at its actual
+alpha over the brightest measured wall pixel is exact and needs no such
+separation.
+
+### Also
+
+The pushpin glow was `rgb(197 255 46)` — lime, left behind when the pin head
+was changed to crimson, on every pinned card on the site. Journey's cool
+accent `#cfe3ff` measured about 1.2:1 on cream; now `--cool-accent`, which
+flips. Checked the other hardcoded inks and the rest correctly do not flip:
+they sit on lit objects — the newspaper sheet, the glass buttons, the glow
+capsule — not on the page ground.
+
+---
+
 ## Repository
 
 Remote is `https://github.com/gauravv-jainn/genesisnew`, set as `origin`.
 
-**Commits are local — nothing has been pushed.** This machine has no GitHub
-credentials (no `gh` CLI, no SSH key, no credential helper), so pushing is
-yours to run:
-
-```bash
-git push -u origin main
-```
+Pushing works from this machine; `main` is up to date with `origin/main`.
 
 ## Commands
 

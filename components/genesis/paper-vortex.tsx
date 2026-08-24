@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { useMemo, type PointerEvent } from "react";
 
-import { agedPaper, sketchMarks } from "@/lib/textures";
+import { agedPaper, seededRandom, sketchMarks } from "@/lib/textures";
 import { USE_PHOTO_STOCK, stockCrop } from "@/lib/paper-stock";
 import { LitRoom } from "./lit-room";
 import { StandingFigure } from "./standing-figure";
@@ -71,10 +71,7 @@ const STOCK_POOL = Array.from({ length: 10 }, (_, i) => agedPaper({ seed: i + 1 
  * little jitter — under two percent, but enough to break the grid.
  */
 const EDGE_POOL = Array.from({ length: 6 }, (_, i) => {
-  const j = (salt: number) => {
-    const v = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453;
-    return (v - Math.floor(v)) * 1.8;
-  };
+  const j = (salt: number) => seededRandom(i + 1, salt) * 1.8;
   return `polygon(${j(1).toFixed(2)}% ${j(2).toFixed(2)}%, ${(100 - j(3)).toFixed(2)}% ${j(4).toFixed(2)}%, ${(100 - j(5)).toFixed(2)}% ${(100 - j(6)).toFixed(2)}%, ${j(7).toFixed(2)}% ${(100 - j(8)).toFixed(2)}%)`;
 });
 
@@ -107,10 +104,32 @@ type Placed = {
   post: VortexPost;
 };
 
-/** Deterministic pseudo-random so server and client markup agree. */
+/**
+ * Joins per-layer background values.
+ *
+ * When every layer wants the same value — which is the case whenever the
+ * photographic stock is off — CSS already repeats a single value across all
+ * layers, so this returns just that one. That is shorter CSS, and it also
+ * keeps `background-position` a single value: the CSSOM expands a
+ * multi-value `background-position` into `-x`/`-y` pairs and re-serialises
+ * the result, which React's hydration check then reads back as different
+ * from the string it authored and reports as a mismatch on every sheet.
+ */
+function layers(values: string[]) {
+  return values.every((value) => value === values[0])
+    ? values[0]
+    : values.join(", ");
+}
+
+/**
+ * Deterministic pseudo-random so server and client markup agree.
+ *
+ * Shares the integer hash the textures use. The sin-based version this
+ * replaces agreed with itself on one machine but not between Node and the
+ * browser, and these numbers end up in inline styles — see seededRandom().
+ */
 function seeded(index: number, salt: number) {
-  const value = Math.sin(index * 12.9898 + salt * 78.233) * 43758.5453;
-  return value - Math.floor(value);
+  return seededRandom(index, salt);
 }
 
 /** Mixes a channel toward black by `amount` (0 = untouched, 1 = black). */
@@ -157,8 +176,11 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
       (i + Math.floor(seeded(i, 5) * posts.length)) % posts.length;
 
     placed.push({
-      left: 50 + rx * Math.cos(angle),
-      top: 47 + ry * Math.sin(angle),
+      // Rounded, because cos/sin are the other transcendentals and these two
+      // land in an inline style. Three decimals is a thousandth of a percent
+      // of the stage — far finer than a pixel, and stable across engines.
+      left: Number((50 + rx * Math.cos(angle)).toFixed(3)),
+      top: Number((47 + ry * Math.sin(angle)).toFixed(3)),
       scale: Number(scale.toFixed(3)),
       depth: Number(zBias.toFixed(3)),
       rotate: Number(((seeded(i, 3) - 0.5) * 70).toFixed(2)),
@@ -407,7 +429,7 @@ function Sheet({
           // 6. depth tint, so far sheets sit back in the room
           `linear-gradient(157deg, ${sheet.top_color} 0%, ${sheet.bottom_color} 100%)`,
         ].join(","),
-        backgroundSize: [
+        backgroundSize: layers([
           "100% 100%",
           "100% 100%",
           "100% 100%",
@@ -415,15 +437,15 @@ function Sheet({
           // Each sheet samples its own patch of the photograph.
           USE_PHOTO_STOCK ? stockCrop(sheet.seed).backgroundSize : "100% 100%",
           "100% 100%",
-        ].join(","),
-        backgroundPosition: [
+        ]),
+        backgroundPosition: layers([
           "center",
           "center",
           "center",
           "center",
           USE_PHOTO_STOCK ? stockCrop(sheet.seed).backgroundPosition : "center",
           "center",
-        ].join(","),
+        ]),
         backgroundRepeat: "no-repeat",
         backgroundBlendMode:
           "multiply, overlay, normal, screen, multiply, normal",

@@ -16,12 +16,20 @@ export const metadata: Metadata = {
  * Everything on this page is a real element: the room, the light, the figure
  * and every single sheet are drawn in CSS and SVG. There is no background
  * image. Each tilted sheet is an actual post link.
+ *
+ * PINNED DARK IN BOTH THEMES, because the page IS a dark room — the sheets
+ * are lit objects and light is only light when there is dark to spend it
+ * against. In light mode the header alone flipped while the room below it
+ * did not, which put a razor seam straight through the standfirst: half the
+ * sentence on cream, half on black. The heading also fell to grey-on-cream
+ * and the amber accent to near-invisible, because both are colours chosen to
+ * glow rather than to sit on paper.
  */
 export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <main className="relative min-h-dvh overflow-hidden bg-void pt-24">
+    <main className="scene-dark relative min-h-dvh overflow-hidden bg-void pt-24">
       <div className="relative z-[3] mx-auto max-w-3xl px-6 pb-2 text-center">
         <Reveal>
           <SectionLabel dot tone="amber" className="justify-center">

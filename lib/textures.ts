@@ -18,6 +18,32 @@ function svgDataUri(svg: string) {
  * octaves gives long soft strokes rather than fine sand — the difference
  * between a painted surface and TV static.
  */
+/**
+ * Deterministic pseudo-random in [0, 1), keyed by seed and salt.
+ *
+ * INTEGER ARITHMETIC, DELIBERATELY. The previous version hashed with
+ * `Math.sin(seed * 12.9898 + salt * 78.233) * 43758.5453`, the shader-shop
+ * one-liner. It is deterministic on any single machine, but Math.sin is a
+ * transcendental function and is NOT required to be bit-identical between
+ * implementations — Node and V8-in-Chrome disagreed in the eleventh
+ * significant digit. Invisible on screen, except that these values are
+ * interpolated straight into SVG coordinates which are baked into a data
+ * URI which is baked into an inline style: the server sent
+ * x2="81.48208398713905" and the client expected x2="81.4820839871827", so
+ * React reported a hydration mismatch and threw away the server render of
+ * every sheet in the vortex.
+ *
+ * Math.imul and the bitwise operators are exactly specified on 32-bit
+ * integers, so this cannot drift. Plain +, * and / on doubles are exact too;
+ * only the transcendentals are free to differ, which is why this avoids them.
+ */
+export function seededRandom(seed: number, salt: number) {
+  let t = (seed * 0x9e3779b1 + salt * 0x85ebca6b) >>> 0;
+  t = Math.imul(t ^ (t >>> 15), t | 1) >>> 0;
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
 export function paintedWall({
   size = 700,
   frequency = 0.006,
@@ -100,10 +126,7 @@ export function paperMottle({ size = 260, seed = 5, opacity = 0.55 } = {}) {
  * scene looks hand-made but never re-randomises between renders.
  */
 export function sketchMarks({ seed = 1, ink = "#4a3f28" } = {}) {
-  const random = (salt: number) => {
-    const value = Math.sin(seed * 12.9898 + salt * 78.233) * 43758.5453;
-    return value - Math.floor(value);
-  };
+  const random = (salt: number) => seededRandom(seed, salt);
 
   const rules: string[] = [];
   const ruleCount = 6 + Math.floor(random(1) * 5);
@@ -111,7 +134,7 @@ export function sketchMarks({ seed = 1, ink = "#4a3f28" } = {}) {
     const y = 26 + i * 7.5;
     const width = 30 + random(i + 2) * 48;
     rules.push(
-      `<line x1="12" y1="${y}" x2="${12 + width}" y2="${y}" stroke="${ink}" stroke-width="1.1" opacity="${0.3 + random(i + 9) * 0.3}"/>`,
+      `<line x1="12" y1="${y.toFixed(1)}" x2="${(12 + width).toFixed(1)}" y2="${y.toFixed(1)}" stroke="${ink}" stroke-width="1.1" opacity="${(0.3 + random(i + 9) * 0.3).toFixed(2)}"/>`,
     );
   }
 
@@ -125,11 +148,11 @@ export function sketchMarks({ seed = 1, ink = "#4a3f28" } = {}) {
     <svg xmlns="http://www.w3.org/2000/svg" width="110" height="150" viewBox="0 0 110 150">
       <g fill="none" stroke="${ink}">
         ${rules.join("")}
-        <rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" stroke-width="1.2" opacity="0.5"/>
-        <line x1="${boxX}" y1="${boxY + boxH / 2}" x2="${boxX + boxW}" y2="${boxY + boxH / 2}" stroke-width="0.9" opacity="0.35"/>
-        <line x1="${boxX + boxW / 2}" y1="${boxY}" x2="${boxX + boxW / 2}" y2="${boxY + boxH}" stroke-width="0.9" opacity="0.35"/>
-        <line x1="12" y1="${boxY + boxH + 14}" x2="${58 + random(7) * 30}" y2="${boxY + boxH + 14}" stroke-width="1.1" opacity="0.35"/>
-        <line x1="12" y1="${boxY + boxH + 22}" x2="${44 + random(8) * 34}" y2="${boxY + boxH + 22}" stroke-width="1.1" opacity="0.28"/>
+        <rect x="${boxX.toFixed(1)}" y="${boxY.toFixed(1)}" width="${boxW.toFixed(1)}" height="${boxH.toFixed(1)}" stroke-width="1.2" opacity="0.5"/>
+        <line x1="${boxX.toFixed(1)}" y1="${(boxY + boxH / 2).toFixed(1)}" x2="${(boxX + boxW).toFixed(1)}" y2="${(boxY + boxH / 2).toFixed(1)}" stroke-width="0.9" opacity="0.35"/>
+        <line x1="${(boxX + boxW / 2).toFixed(1)}" y1="${boxY.toFixed(1)}" x2="${(boxX + boxW / 2).toFixed(1)}" y2="${(boxY + boxH).toFixed(1)}" stroke-width="0.9" opacity="0.35"/>
+        <line x1="12" y1="${(boxY + boxH + 14).toFixed(1)}" x2="${(58 + random(7) * 30).toFixed(1)}" y2="${(boxY + boxH + 14).toFixed(1)}" stroke-width="1.1" opacity="0.35"/>
+        <line x1="12" y1="${(boxY + boxH + 22).toFixed(1)}" x2="${(44 + random(8) * 34).toFixed(1)}" y2="${(boxY + boxH + 22).toFixed(1)}" stroke-width="1.1" opacity="0.28"/>
       </g>
     </svg>`);
 }
@@ -147,10 +170,7 @@ export function sketchMarks({ seed = 1, ink = "#4a3f28" } = {}) {
  * the server and the client.
  */
 export function agedPaper({ seed = 1, width = 220, height = 300 } = {}) {
-  const random = (salt: number) => {
-    const value = Math.sin(seed * 12.9898 + salt * 78.233) * 43758.5453;
-    return value - Math.floor(value);
-  };
+  const random = (salt: number) => seededRandom(seed, salt);
 
   // Foxing — the small rust spots age leaves behind.
   const spots: string[] = [];

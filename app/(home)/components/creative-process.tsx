@@ -186,7 +186,7 @@ function StepCard({
       )}
       style={{ transform: rotate ? `rotate(${rotate}deg)` : undefined }}
     >
-      <span className="grid size-10 place-items-center rounded-full border border-white/20 text-bone/80">
+      <span className="grid size-10 place-items-center rounded-full border border-white/20 text-scene/80">
         <Icon className="size-[18px]" aria-hidden />
       </span>
 

@@ -52,6 +52,18 @@ function placeholderArt(id: string) {
           linear-gradient(160deg, #1a1820 0%, #0c0b0f 100%)`;
 }
 
+/*
+ * Type on a poster is type on a DARK OBJECT, not on the page. The card is a
+ * billboard with a black gradient burned into its lower half, so its labels
+ * use --color-scene, which is pinned light in both themes, rather than
+ * --ink-strong, which flips. With text-bone the light theme rendered every
+ * client name in near-black on near-black.
+ *
+ * The two .glass chips are the exception and deliberately still flip: glass
+ * is a WHITE fill, so in the light theme it lightens the poster underneath
+ * it and its label needs to go dark along with it. Which token a label wants
+ * depends on what is directly behind it, not on which component it lives in.
+ */
 export function PosterCard({
   poster,
   className,
@@ -96,7 +108,7 @@ export function PosterCard({
         */}
         {!poster.image && (
           <div className="absolute inset-0 grid place-items-center px-5 pb-12">
-            <p className="text-balance text-center text-h3 font-semibold leading-[1.1] tracking-tight text-bone/90">
+            <p className="text-balance text-center text-h3 font-semibold leading-[1.1] tracking-tight text-scene/90">
               {/* Whichever field carries the recognisable name. Case studies
                   with no written story put the client in `title`; portfolio
                   entries carry both. */}
@@ -118,12 +130,12 @@ export function PosterCard({
 
         <div className="absolute inset-x-0 bottom-0 p-4">
           {poster.client && poster.image && (
-            <p className="micro-label mb-2 !text-micro !tracking-[0.22em] text-bone/70">
+            <p className="micro-label mb-2 !text-micro !tracking-[0.22em] text-scene/70">
               {poster.client}
             </p>
           )}
           {!(!poster.image && !poster.client) && (
-            <h3 className="text-balance text-small font-semibold leading-tight text-bone">
+            <h3 className="text-balance text-small font-semibold leading-tight text-scene">
               {poster.title}
             </h3>
           )}
@@ -132,7 +144,7 @@ export function PosterCard({
               {poster.meta.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full bg-white/10 px-2 py-0.5 text-micro text-bone/80"
+                  className="rounded-full bg-white/10 px-2 py-0.5 text-micro text-scene/80"
                 >
                   {item}
                 </span>

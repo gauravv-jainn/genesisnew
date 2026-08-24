@@ -109,6 +109,14 @@
        on the PAGE ground, not on a lit object, so unlike the inks in
        animated-timeline and stat-card it has to flip: #cfe3ff measures about
        1.2:1 on cream, which is not a faint accent, it is an invisible one. */
+    /* Amber for TYPE. --color-amber stays fixed at #ff8a3d because it is also
+       a light source: glows, borders, the lit wall. But as TEXT on the light
+       theme's paper it measured 1.97-2.08:1 on every section heading accent,
+       every service caption and every numbered label on the site — against
+       floors of 3.0 and 4.5. Type gets its own token so the glow can stay
+       bright while the ink goes dark enough to read. */
+    --color-amber-ink: var(--amber-ink);
+
     --color-cool-accent: var(--cool-accent);
 
     --color-ghost: var(--ghost-ink);
@@ -218,6 +226,7 @@
     --spot-veil: 0;
 
     --cool-accent: #cfe3ff;
+    --amber-ink: #ff8a3d;
     --ghost-outline: rgb(255 255 255 / 0.07);
 
     --radius: 0.625rem;
@@ -306,21 +315,23 @@
     --ink-muted: #55525d;
     --ink-faint: #86828f;
 
-    --glass-fill: rgb(255 255 255 / 0.62);
-    --glass-fill-strong: rgb(255 255 255 / 0.82);
-    --glass-border: rgb(22 20 27 / 0.1);
+    --glass-fill: rgb(255 255 255 / 0.72);
+    --glass-fill-strong: rgb(255 255 255 / 0.9);
+    --glass-border: rgb(22 20 27 / 0.26);
     --glass-highlight: rgb(255 255 255 / 0.9);
+    --glass-inset: 0 -1px 0 0 rgb(22 20 27 / 0.05) inset;
 
     --ghost-ink: rgb(22 20 27 / 0.09);
     --spot-beam: 0.22;
     --spot-veil: 1;
     --cool-accent: #35607f;
+    --amber-ink: #a8410b;
     --ghost-outline: rgb(22 20 27 / 0.07);
 
     /* Shadows carry less alpha on a light ground or they read as smudges. */
-    --shadow-raised: 0 1px 3px -1px rgb(22 20 27 / 0.12);
-    --shadow-panel: 0 8px 24px -8px rgb(22 20 27 / 0.16);
-    --shadow-float: 0 20px 48px -16px rgb(22 20 27 / 0.22);
+    --shadow-raised: 0 1px 2px 0 rgb(22 20 27 / 0.09), 0 2px 6px -1px rgb(22 20 27 / 0.10);
+    --shadow-panel: 0 2px 4px -1px rgb(22 20 27 / 0.10), 0 12px 28px -8px rgb(22 20 27 / 0.20);
+    --shadow-float: 0 4px 8px -2px rgb(22 20 27 / 0.12), 0 28px 56px -16px rgb(22 20 27 / 0.28);
 
     --background: #f4f1ec;
     --foreground: #16141b;
@@ -355,20 +366,22 @@
         --ink-muted: #55525d;
         --ink-faint: #86828f;
 
-        --glass-fill: rgb(255 255 255 / 0.62);
-        --glass-fill-strong: rgb(255 255 255 / 0.82);
-        --glass-border: rgb(22 20 27 / 0.1);
+        --glass-fill: rgb(255 255 255 / 0.72);
+        --glass-fill-strong: rgb(255 255 255 / 0.9);
+        --glass-border: rgb(22 20 27 / 0.26);
         --glass-highlight: rgb(255 255 255 / 0.9);
+        --glass-inset: 0 -1px 0 0 rgb(22 20 27 / 0.05) inset;
 
         --ghost-ink: rgb(22 20 27 / 0.09);
         --spot-beam: 0.22;
         --spot-veil: 1;
         --cool-accent: #35607f;
+        --amber-ink: #a8410b;
         --ghost-outline: rgb(22 20 27 / 0.07);
 
-        --shadow-raised: 0 1px 3px -1px rgb(22 20 27 / 0.12);
-        --shadow-panel: 0 8px 24px -8px rgb(22 20 27 / 0.16);
-        --shadow-float: 0 20px 48px -16px rgb(22 20 27 / 0.22);
+        --shadow-raised: 0 1px 2px 0 rgb(22 20 27 / 0.09), 0 2px 6px -1px rgb(22 20 27 / 0.10);
+        --shadow-panel: 0 2px 4px -1px rgb(22 20 27 / 0.10), 0 12px 28px -8px rgb(22 20 27 / 0.20);
+        --shadow-float: 0 4px 8px -2px rgb(22 20 27 / 0.12), 0 28px 56px -16px rgb(22 20 27 / 0.28);
 
         --background: #f4f1ec;
         --foreground: #16141b;
@@ -415,6 +428,7 @@
     --spot-beam: 1;
     --spot-veil: 0;
     --cool-accent: #cfe3ff;
+    --amber-ink: #ff8a3d;
 
     --shadow-raised: 0 2px 8px -2px rgb(0 0 0 / 0.6);
     --shadow-panel: 0 12px 32px -8px rgb(0 0 0 / 0.7);
@@ -503,7 +517,7 @@ body:has(.scene-dark) header {
         -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
         border: 1px solid var(--glass-border);
         box-shadow:
-            0 1px 0 0 rgb(255 255 255 / 0.06) inset,
+            var(--glass-inset, 0 1px 0 0 rgb(255 255 255 / 0.06) inset),
             var(--shadow-panel);
     }
 
@@ -584,6 +598,21 @@ body:has(.scene-dark) header {
    a JS-driven one: a hundred concurrent Framer animations run on the main
    thread and pinned the blog scene at ~43fps, while a hundred CSS animations
    are handed to the compositor and cost effectively nothing. */
+/* The /creator page arriving from below. A CSS animation rather than a
+   framer-motion wrapper, because `motion-safe:` is a media query and resolves
+   the same on the server and in the browser — useReducedMotion() does not, and
+   gating the wrapper on it changed the SHAPE of the tree between the two. */
+@keyframes genesis-slide-up {
+    from {
+        transform: translate3d(0, 4rem, 0);
+        opacity: 0;
+    }
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
 @keyframes genesis-paper-float {
     0%,
     100% {

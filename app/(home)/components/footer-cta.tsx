@@ -28,7 +28,7 @@ export function FooterCta() {
           <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
             <h2 className="max-w-2xl text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
               {footerCta.heading}{" "}
-              <span className="font-serif font-normal italic text-amber">
+              <span className="font-serif font-normal italic text-amber-ink">
                 {footerCta.headingAccent}
               </span>
             </h2>

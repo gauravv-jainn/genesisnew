@@ -61,7 +61,7 @@ export function Services() {
             </SectionLabel>
             <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
               {services.heading}{" "}
-              <span className="font-serif font-normal italic text-amber">
+              <span className="font-serif font-normal italic text-amber-ink">
                 {services.headingAccent}
               </span>
             </h2>
@@ -132,7 +132,7 @@ function ServiceCard({
         <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
           {service.title}
         </h3>
-        <p className="mt-2 text-small leading-relaxed text-amber/75">{service.caption}</p>
+        <p className="mt-2 text-small leading-relaxed text-amber-ink/75">{service.caption}</p>
       </div>
     </PaperCard>
   );

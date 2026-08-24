@@ -114,10 +114,16 @@ export function WatchCluster({
       </p>
 
       <motion.div
-        drag={!prefersReducedMotion}
+        // Drag is DIRECT MANIPULATION, not automatic motion, so it is not
+        // gated on prefers-reduced-motion — that setting exists to stop things
+        // moving on their own, and taking the drag away removes the only way
+        // to reach the rest of the wall. What reduced motion does change is
+        // the release: momentum and the spring glide are switched off below,
+        // so the cluster stops where it is let go.
+        drag
         dragConstraints={{ left: -cell * 3, right: cell * 3, top: -cell * 2, bottom: cell * 2 }}
-        dragElastic={0.12}
-        dragMomentum
+        dragElastic={prefersReducedMotion ? 0 : 0.12}
+        dragMomentum={!prefersReducedMotion}
         style={{ x: dragX, y: dragY }}
         className="absolute inset-0 cursor-grab active:cursor-grabbing"
       >

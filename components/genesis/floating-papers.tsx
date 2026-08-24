@@ -42,7 +42,7 @@ export function FloatingPapers({
     <div className={cn("grid gap-8 sm:grid-cols-2 lg:grid-cols-3", className)}>
       {papers.map((paper, index) => (
         <motion.div
-          key={paper.href}
+          key={`${paper.href}-${paper.title}`}
           // Idle drift. Offsetting the delay stops the grid pulsing in unison.
           animate={
             prefersReducedMotion ? undefined : { y: [0, -10, 0] }

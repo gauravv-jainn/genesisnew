@@ -43,7 +43,18 @@ export function PaperCard({
   return (
     <motion.div
       {...magneticProps}
-      style={{ x, y, rotate: prefersReducedMotion ? 0 : rotate }}
+      // The tilt is NOT motion — it is the card's orientation, the thing that
+      // makes a pinned paper card read as dropped rather than aligned. It is
+      // therefore not gated on prefers-reduced-motion: that setting is about
+      // movement, and straightening every card removes the design rather than
+      // the animation. The hover, which does move, is still gated below.
+      //
+      // Gating it here also broke hydration. useReducedMotion() returns null
+      // on the server and true on the client, so the server rendered
+      // transform: rotate(-11deg) and the client expected none. React
+      // discarded the server HTML for every service card, for exactly the
+      // users who asked for less work per frame.
+      style={{ x, y, rotate }}
       whileHover={prefersReducedMotion ? undefined : { rotate: 0, y: -6, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 220, damping: 20 }}
       className={cn(

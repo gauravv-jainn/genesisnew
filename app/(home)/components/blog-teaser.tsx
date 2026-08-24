@@ -47,7 +47,7 @@ export function BlogTeaser() {
             description: post.description,
             footnote: `${formatPostDate(post.date)} · ${post.readingTime}`,
             badge: post.draft ? (
-              <span className="rounded-full border border-amber/40 px-2 py-0.5 text-micro text-amber">
+              <span className="rounded-full border border-amber-ink/40 px-2 py-0.5 text-micro text-amber-ink">
                 Draft
               </span>
             ) : undefined,

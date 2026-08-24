@@ -21,7 +21,7 @@ export default function NotFound() {
 
         <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.1] tracking-tight text-bone sm:text-h1">
           That page doesn&rsquo;t{" "}
-          <span className="font-serif font-normal italic text-amber">exist</span>
+          <span className="font-serif font-normal italic text-amber-ink">exist</span>
         </h1>
 
         <p className="mt-6 max-w-md text-small leading-relaxed text-ash">

@@ -83,7 +83,7 @@ export function BrandingDesign() {
                   key={capability}
                   className="flex items-baseline gap-6 border-b border-white/10 py-4 last:border-0"
                 >
-                  <span className="micro-label shrink-0 !text-amber/70">
+                  <span className="micro-label shrink-0 !text-amber-ink/70">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="text-h3 font-medium leading-tight tracking-tight text-bone">

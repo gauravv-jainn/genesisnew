@@ -56,7 +56,7 @@ export default function StyleGuidePage() {
       <div className="mx-auto max-w-6xl px-6 pt-24">
         <SectionLabel dot>Phase 1 · Design system</SectionLabel>
         <h1 className="mt-4 text-h2 font-semibold tracking-tight text-bone">
-          Genesis <span className="font-serif italic text-amber">style guide</span>
+          Genesis <span className="font-serif italic text-amber-ink">style guide</span>
         </h1>
         <p className="mt-3 max-w-2xl text-small leading-relaxed text-ash">
           Every shared component in isolation. Dev-only route — returns 404 in
@@ -96,7 +96,7 @@ export default function StyleGuidePage() {
         <div className="space-y-6">
           <SectionLabel dot>Micro label · letterspaced caps</SectionLabel>
           <h2 className="text-h1 font-semibold tracking-tight text-bone">
-            Built for the <span className="font-serif italic text-amber">thinkers</span>
+            Built for the <span className="font-serif italic text-amber-ink">thinkers</span>
           </h2>
           <h3 className="text-fade-down text-h2 font-semibold tracking-tight">
             Two-tone headline treatment
@@ -314,8 +314,8 @@ export default function StyleGuidePage() {
         <FloatingPapers
           papers={[
             { href: "/blog", eyebrow: "AI", title: "What AI actually replaced in our pipeline", description: "Not the ideas, and not the edit.", footnote: "5 min read" },
-            { href: "/blog", eyebrow: "Playbook", title: "Why most UGC underperforms", description: "And the three fixes that change it.", footnote: "8 min read" },
-            { href: "/blog", eyebrow: "Inside Genesis", title: "How a campaign actually gets made", description: "Including the unglamorous parts.", footnote: "4 min read" },
+            { href: "/blog?demo=2", eyebrow: "Playbook", title: "Why most UGC underperforms", description: "And the three fixes that change it.", footnote: "8 min read" },
+            { href: "/blog?demo=3", eyebrow: "Inside Genesis", title: "How a campaign actually gets made", description: "Including the unglamorous parts.", footnote: "4 min read" },
           ]}
         />
       </Section>

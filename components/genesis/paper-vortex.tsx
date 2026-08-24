@@ -503,16 +503,22 @@ function Sheet({
         the main thread; the inner element carries only the resting transform
         and the hover response.
       */}
+      {/*
+        Not gated on the `reduced` prop: `motion-safe:` IS the gate, and it is
+        a CSS media query, so it resolves identically on the server and in the
+        browser. useReducedMotion() does not — it is null during SSR and true
+        in the browser — so gating in JS as well made React discard the server
+        render of all 56 sheets for reduced-motion users. The custom properties
+        are inert when the animation is not running.
+      */}
       <div
-        className={reduced ? undefined : "motion-safe:animate-[genesis-paper-float_var(--float-duration)_ease-in-out_infinite]"}
+        className="motion-safe:animate-[genesis-paper-float_var(--float-duration)_ease-in-out_infinite]"
         style={
-          reduced
-            ? undefined
-            : ({
-                "--float-duration": `${sheet.driftDuration}s`,
-                animationDelay: `-${sheet.driftDelay}s`,
-                willChange: "transform",
-              } as React.CSSProperties)
+          {
+            "--float-duration": `${sheet.driftDuration}s`,
+            animationDelay: `-${sheet.driftDelay}s`,
+            willChange: "transform",
+          } as React.CSSProperties
         }
       >
         <motion.div

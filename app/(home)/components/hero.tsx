@@ -45,9 +45,32 @@ export function Hero() {
         across the frame and is fully clear by 70%, so the scene's right half —
         the wall, the figure, the water — is untouched.
       */}
+      {/*
+        MOBILE SCRIM. Measured, and it failed: at 375px the headline's worst
+        background was 1.93:1 against white where it needs 3.0, and the body
+        copy 1.52:1 where it needs 4.5. The desktop scrim passes because the
+        copy sits low and LEFT, inside the 94deg ramp — but that ramp is
+        clear by 72% of the width, and on a phone the lines run to 94%, so
+        the right third of every line had no scrim under it at all. The wall
+        is also at its brightest there, rgb(226 169 50).
+
+        So on small screens the scrim runs the other way: full width, ramping
+        vertically, because on a phone the copy spans the frame and there is
+        no dark flank to sit in. The scene keeps the top fifth, which is the
+        part actually visible above the copy.
+      */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1]"
+        className="pointer-events-none absolute inset-0 z-[1] sm:hidden"
+        style={{
+          background:
+            "linear-gradient(180deg, transparent 0%, rgb(28 10 2 / 0.34) 14%, rgb(26 9 2 / 0.58) 24%, rgb(25 9 2 / 0.72) 46%, rgb(22 8 2 / 0.78) 100%)",
+        }}
+      />
+
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[1] hidden sm:block"
         style={{
           // Masked so it only covers the band the copy occupies. A scrim run
           // full-height darkened the left half of the WALL as well, and since

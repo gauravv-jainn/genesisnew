@@ -285,21 +285,35 @@ function OrbitCard({
             />
             <span className="min-w-0">
               <span
+                /*
+                  line-clamp, not truncate. `truncate` forces one line, and
+                  the name bar is 73-99px wide — so "Lifestyle Creator" lost
+                  its last word to an ellipsis even on a featured card. Two
+                  short lines carry the whole name; one line carries most of
+                  it and a full stop that is not there.
+                */
                 className={cn(
-                  "block truncate font-medium leading-tight text-bone",
+                  "block line-clamp-2 font-medium leading-tight text-bone",
                   creator.feature ? "text-small" : "text-micro",
                 )}
               >
                 {creator.label}
               </span>
-              <span
-                className={cn(
-                  "block truncate leading-tight text-ash",
-                  creator.feature ? "text-micro" : "text-micro",
-                )}
-              >
-                {creator.followers}
-              </span>
+              {/*
+                The follower count only appears on the featured cards. A
+                small card's name bar is 73px wide, and at 11px "Travel
+                Creator" alone needs 121px — so both lines were truncating to
+                "Travel Crea…" and "856K Follo…", which is not a smaller
+                version of the information, it is a broken version of it.
+
+                One line fits. The full string is still in the sr-only label
+                below, so nothing is lost to a screen reader.
+              */}
+              {creator.feature && (
+                <span className="block line-clamp-1 text-micro leading-tight text-ash">
+                  {creator.followers}
+                </span>
+              )}
             </span>
           </div>
         </div>

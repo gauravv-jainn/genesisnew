@@ -914,6 +914,106 @@ capsule — not on the page ground.
 
 ---
 
+## "Almost all designs are broken" — what it actually was
+
+Reported: light mode broken on every page, very rough page breaks, designs
+broken, animations not smooth, text overlapping. All five were real. Four of
+them came from three causes.
+
+### The measuring was wrong first
+
+Every earlier pass judged this site through a browser pane running at
+**673x321**. That is not a desktop, and it is why those passes kept
+concluding things were fine. `scratchpad/cdp.mjs` now drives headless Chrome
+over CDP — emulated colour scheme AND reduced motion, real viewports,
+full-page slices, console capture, arbitrary JS. Node 26 ships a WebSocket, so
+it needs no dependencies.
+
+Two of its own results had to be thrown out before anything here was
+trustworthy. The contrast checker read Tailwind v4's `oklab()` as near-black
+and reported the site's brightest display type as 1.04:1 — colours are now
+resolved by painting them on a canvas. And the overlap checker counted
+`getBoundingClientRect` boxes, which are axis-aligned, so inside a card tilted
+13 degrees a numeral and a heading that flexbox guarantees cannot touch
+reported 80% overlap.
+
+### Reduce Motion collapsed the desktop layout
+
+The camera-pan installs its pin under `(min-width: 1024px) and
+(prefers-reduced-motion: no-preference)`, but its geometry was plain `lg:` —
+`lg:absolute lg:inset-0` on both faces inside an `lg:h-dvh lg:overflow-hidden`
+box. A desktop visitor with Reduce Motion got the geometry without the
+mechanism: two entire sections pinned on top of each other, every line of one
+printed over the other, the second unreachable. Measured at 1440px, "04" sat
+at 100% overlap on "Aditya Birla Sun Life Insurance".
+
+One flag explains three of the five complaints — broken designs, overlapping
+text, and "animations are not smooth" in the sense that there were none.
+The CSS query and the JS query now have to be the same query: `motion-safe:`.
+
+Homepage real text overlaps 20 -> 0; all eight routes measure 0.
+
+Three more SSR splits shared the root cause — `useReducedMotion()` is null
+during SSR and true in the browser, so anything gated on it renders
+differently on each side. A static tilt is orientation, not motion; drag is
+direct manipulation, not motion; and `motion-safe:` already gates what it
+gates. `SlideUp` was the worst: an early `return <>{children}</>` changed the
+tree SHAPE and discarded the server render of /creator entirely.
+
+### One colour no page could carry
+
+`--color-amber` is a fixed `#ff8a3d`, used as type in 17 places. On the light
+theme's paper: **1.97-2.08:1**, against floors of 3.0 and 4.5. Every section
+heading's accent word, every service caption, every numbered label. 31 amber
+text nodes across four routes; all 31 failed.
+
+Amber is also a light source here — glows, borders, the lit hero wall — so it
+could not just be darkened. Type takes `--amber-ink` (`#ff8a3d` dark,
+`#a8410b` light) and `.scene-dark` re-pins it, so lit scenes keep the bright
+amber with no per-call-site special casing. 31 -> 0, dark mode unchanged.
+
+### Glass had no edge on paper
+
+A translucent white fill lifts hard against black and not at all against
+cream: measured **1.082:1** card-to-ground, with the border pixel landing
+between the two. The testimonial wall rendered as names floating on paper.
+Light mode now builds glass the other way round — the fill stays near-white,
+the border goes to 0.26, and the shadows become two-layer, a tight contact
+shadow plus a soft ambient one. One soft blur alone reads as fog.
+
+### The rough page break was one section
+
+A luminance profile down the page, sampled in the gutters, found two cliffs,
+both at the only pinned-dark section: 0.676 -> 0.003 entering, 0.002 -> 0.836
+leaving, in three pixels. Both edges now ramp over 7rem, blending to the
+adjacent grounds through the surface tokens so they follow the theme. Capping
+the top band at 90% mattered: at full strength it reset to clean paper, but
+journey above ends darkened by its own curl shadow, so the band overshot and
+drew the line it was there to remove. Hard edges 5 -> 3, and the remaining
+three are dark cards reaching the viewport edge, not section breaks.
+
+### Animation smoothness is NOT confirmed
+
+168 elements on /blog carried `will-change: transform` — three nested per
+sheet, 56 sheets. Two bought nothing (a running CSS animation is promoted
+anyway; the inner node already had a 3D context). Now 56.
+
+But that is a layer count, not a frame rate. A harness driving real wheel
+events through CDP reported a 33.3ms median — until the same harness reported
+33.3ms on `about:blank`. Headless Chrome caps rAF at 30Hz here, so it cannot
+tell a smooth page from a janky one. **This one needs confirming on real
+hardware.**
+
+### Still open
+
+- Case Studies duplicates Portfolio: same clients, same rail, because every
+  case-study headline and result is still `TODO`, so the cards fall back to
+  the client name. A copy problem showing up as a design one.
+- Ten clipped creator-card labels ("Travel Creator" -> "Travel Crea…").
+- The poster rails have no edge mask, so cards cut mid-word at the viewport.
+
+---
+
 ## Repository
 
 Remote is `https://github.com/gauravv-jainn/genesisnew`, set as `origin`.

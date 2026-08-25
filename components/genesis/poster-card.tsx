@@ -173,15 +173,30 @@ export function PosterRail({
   return (
     <div
       ref={railRef}
-      // Marks this element for the Services -> Portfolio camera turn, which
-      // scrubs its scrollLeft from the same progress that drives the yaw so
-      // the work is already travelling when the camera arrives. That is the
-      // "the slides move" half of the spec's note on page 1.
+      // Retained as a hook; the camera turn that used to scrub this rail's
+      // scrollLeft has been removed.
       data-poster-rail
       className={cn(
         "no-scrollbar flex snap-x snap-mandatory items-center gap-4 overflow-x-auto px-1 pb-4",
         className,
       )}
+      /*
+        The rail ran to a hard edge, so the first and last cards were sliced
+        mid-word by the viewport — "…hindra" — which reads as a rendering
+        fault rather than as more content off-screen.
+
+        A mask fades both ends into the page instead. It also SAYS there is
+        more to the side, which a clean cut does not: a card dissolving is an
+        invitation to scroll, a card guillotined is a bug. The fade is 4% wide
+        at each end, so no card is ever more than slightly veiled and the
+        middle of the rail is untouched.
+      */
+      style={{
+        maskImage:
+          "linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%)",
+        WebkitMaskImage:
+          "linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%)",
+      }}
     >
       {posters.map((poster, index) => (
         <div key={poster.id} className="snap-center">

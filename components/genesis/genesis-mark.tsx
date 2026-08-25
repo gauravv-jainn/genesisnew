@@ -41,7 +41,7 @@ export function GenesisMark({
 
   return (
     <span
-      className={cn("relative inline-block h-6 w-[7.5rem] shrink-0", className)}
+      className={cn("relative block h-[12px] w-[7.5rem] shrink-0", className)}
     >
       <Image
         src="/brand/genesis-wordmark-light.png"

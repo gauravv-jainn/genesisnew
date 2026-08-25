@@ -1,70 +1,60 @@
-import { CornerNote, GhostType, Spotlight } from "@/components/genesis/spotlight";
-import { PaperCard } from "@/components/genesis/paper-card";
-import { Reveal } from "@/components/genesis/reveal";
+import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { services } from "@/lib/home-content";
 
 /**
- * Section 2 — Services.
+ * Section 2 — the four divisions.
  *
- * Built to img-009 and img-053: cards dropped under a single raked source, at
- * real angles, overlapping, at more than one size, with display type behind
- * them that they partly occlude.
+ * BUILT TO THE BRAND DECK, not to the old mockups. Pages 26-29 of the
+ * guidelines give each division a page of its own, and each of those pages is
+ * the same thing: a black field, the division name set once at 96pt, and
+ * nothing else. No cards, no tilt, no scatter, no ornament.
  *
- * WHAT THE PREVIOUS VERSION WAS. A `sm:grid-cols-2 lg:grid-cols-3` feature
- * grid with every card forced to equal height and rotated by 2.2-2.6 degrees —
- * small enough to read as a rendering artefact rather than a decision. Five
- * equal rectangles in three columns, none overlapping, all pinned dead centre.
- * That is a stock three-up feature grid with a tilt filter, and it is exactly
- * the template look this rebuild exists to remove.
+ * WHAT THIS REPLACED. Five pinned paper cards dropped across an arc at 8-13
+ * degrees under a raking spotlight, overlapping, at three sizes. It was
+ * carefully made and it was wrong twice over: it is not what the deck shows,
+ * and it is the exact thing the guidelines tell you to reject — "Minimal.
+ * Confident. Never Loud. Rule: if it feels like a normal agency template,
+ * reject it." Tilted pinned index cards are an agency template.
  *
- * It also did not fit. Inside the camera pan the face is clamped to 100dvh,
- * and the old composition measured ~1000px at lg — so on a 1440x900 laptop
- * two of the five disciplines the spec names sat below a fold that could not
- * be scrolled. The stage below is sized in stage-relative units and the
- * trailing corner note is gone, so the whole section fits the turn.
+ * So the divisions are a list, and the type does the work: the name at
+ * display size in Mont, the number and the caption reduced to labels around
+ * it. On a 1440 screen four names at this size fill the frame the way one
+ * name fills a deck page.
  *
- * Cards carry title and caption only. The full sentence for each discipline
- * stays in `body` for the places that have room; a paragraph on a tilted,
- * overlapping card is unreadable however good the paragraph is.
+ * THE N-SLICE. The deck names the mark's diagonal as the brand's ownable
+ * device — "the diagonal split should drive masks, wipes, transitions, image
+ * crops and section cuts" — and the site was using none of it. Each row's
+ * hover fill is cut at the mark's own angle rather than being a rectangle,
+ * so the one interactive flourish in the section is the brand's own gesture.
  */
 
 /**
- * Five positions across the stage. 23-25% wide at a 19% step overlaps by
- * roughly a fifth of a card, all leaning one way at 8-13 degrees, at three
- * height steps so the group has hierarchy rather than reading as one row.
+ * The N's diagonal, measured off the supplied symbol: dx/dy = 0.81 across a
+ * 306x500 field. Expressed here as the horizontal offset, in percent of the
+ * row's height, that the cut travels — so the slice stays parallel to the
+ * mark at any row size.
  */
-/*
- * Four cards, not five. The previous table stepped by 19-20% because there
- * were five divisions; with four it stopped at 79% and left a fifth of the
- * stage empty on the right. These step by 25% at 26% wide, so the row still
- * overlaps by roughly a third of a card and reaches the full width.
- */
-const SCATTER = [
-  { left: "0%", top: "14%", rotate: -11, width: "26%", height: "62%" },
-  { left: "25%", top: "38%", rotate: -8, width: "24%", height: "54%" },
-  { left: "49%", top: "4%", rotate: -13, width: "27%", height: "70%" },
-  { left: "74%", top: "30%", rotate: -9, width: "26%", height: "58%" },
-];
+const SLICE = "polygon(0 0, 100% 0, 100% 100%, 6% 100%)";
 
 export function Services() {
   return (
     <section
       id="services"
-      className="grain relative isolate overflow-hidden bg-void py-24 sm:py-24"
+      className="grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
     >
-      {/* One narrow source, raking in from upper right as in img-009. */}
-      <Spotlight x={72} spread={8} rake={-28} tone="warm" intensity={1.15} reach={96} />
-
-      <GhostType className="translate-y-4">OUR SERVICES</GhostType>
-
+      {/*
+        No ghost word behind the list. The deck's division pages carry the
+        name and nothing else, and at this type size a second set of letterforms
+        underneath is just noise competing with the first.
+      */}
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
-        <div className="flex flex-wrap items-start justify-between gap-8">
-          <Reveal className="max-w-lg">
+        <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
+          <Reveal className="max-w-xl">
             <SectionLabel dot tone="brand">
               {services.label}
             </SectionLabel>
-            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
+            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.02] tracking-tight text-bone sm:text-h1">
               {services.heading}{" "}
               <span className="font-serif font-normal italic text-brand-ink">
                 {services.headingAccent}
@@ -72,88 +62,58 @@ export function Services() {
             </h2>
           </Reveal>
 
-          <Reveal delay={0.1}>
-            <CornerNote index="Services">{services.body}</CornerNote>
+          <Reveal delay={0.1} className="max-w-sm">
+            <p className="text-small leading-relaxed text-ash">{services.body}</p>
           </Reveal>
         </div>
 
-        {/* Below lg: a plain readable grid. An overlapping arc at phone width
-            is illegible, not atmospheric. */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:hidden">
+        <RevealGroup className="mt-16 border-t border-[var(--glass-border)] sm:mt-20">
           {services.items.map((service, index) => (
-            <Reveal key={service.title} delay={0.05 * index} variant="card">
-              <ServiceCard service={service} index={index} />
-            </Reveal>
-          ))}
-        </div>
+            <RevealItem key={service.title}>
+              <article className="group relative isolate border-b border-[var(--glass-border)]">
+                {/*
+                  The hover fill, cut at the mark's angle. Sits behind the row
+                  and is inert to the pointer, so it can never eat a click.
+                */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 -z-10 bg-brand/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{ clipPath: SLICE }}
+                />
 
-        {/* lg and up: the scattered arc, in a stage sized so the whole section
-            fits inside the camera pan's 100dvh face. */}
-        <div className="relative mt-12 hidden lg:block lg:aspect-[1104/470]">
-          {services.items.map((service, index) => {
-            const place = SCATTER[index] ?? SCATTER[SCATTER.length - 1];
-            return (
-              <div
-                key={service.title}
-                className="absolute"
-                style={{
-                  left: place.left,
-                  top: place.top,
-                  width: place.width,
-                  height: place.height,
-                  zIndex: 10 + index,
-                }}
-              >
-                <Reveal delay={0.06 * index} variant="card" className="h-full">
-                  <ServiceCard service={service} index={index} rotate={place.rotate} />
-                </Reveal>
-              </div>
-            );
-          })}
-        </div>
+                <div className="flex flex-col gap-2 py-8 sm:flex-row sm:items-baseline sm:gap-8 sm:py-10">
+                  <span className="micro-label shrink-0 text-brand-ink sm:w-16">
+                    {`0${index + 1}`}
+                  </span>
+
+                  <h3 className="min-w-0 flex-1 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
+                    {/*
+                      The names are dotted single tokens — "Genesis.BrandDesign"
+                      has no space in it and cannot wrap. A <wbr> after the dot
+                      gives the browser somewhere to break, which is where the
+                      name wants to break anyway.
+                    */}
+                    {service.title.split(".").map((part, i, all) => (
+                      <span key={part}>
+                        {part}
+                        {i < all.length - 1 && (
+                          <>
+                            .<wbr />
+                          </>
+                        )}
+                      </span>
+                    ))}
+                  </h3>
+
+                  <p className="shrink-0 text-small leading-relaxed text-ash sm:w-64 sm:text-right">
+                    {service.caption}
+                  </p>
+                </div>
+              </article>
+            </RevealItem>
+          ))}
+        </RevealGroup>
       </div>
     </section>
-  );
-}
-
-function ServiceCard({
-  service,
-  index,
-  rotate = 0,
-}: {
-  service: { title: string; caption: string };
-  index: number;
-  rotate?: number;
-}) {
-  return (
-    <PaperCard
-      pinned
-      tone="brand"
-      rotate={rotate}
-      className="flex h-full flex-col justify-between"
-    >
-      <p className="micro-label">{`0${index + 1}`}</p>
-      <div>
-        {/*
-          The division names are dotted single tokens — "Genesis.BrandDesign"
-          has no space in it, so it cannot wrap and it overflowed its card.
-          A <wbr> after the dot gives the browser somewhere to break, and the
-          dot is exactly where the name wants to break anyway.
-        */}
-        <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
-          {service.title.split(".").map((part, i, all) => (
-            <span key={part}>
-              {part}
-              {i < all.length - 1 && (
-                <>
-                  .<wbr />
-                </>
-              )}
-            </span>
-          ))}
-        </h3>
-        <p className="mt-2 text-small leading-relaxed text-brand-ink/75">{service.caption}</p>
-      </div>
-    </PaperCard>
   );
 }

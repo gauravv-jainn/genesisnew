@@ -77,7 +77,7 @@ export function GlassNav() {
       */}
       <nav
         className={cn(
-          "glass glass-lit pointer-events-auto flex w-full max-w-5xl items-center gap-4 rounded-full",
+          "glass glass-lit pointer-events-auto flex w-full max-w-6xl items-center gap-4 rounded-full",
           // No border utility here: .glass already sets one from
           // --glass-border, and the `border-white/10` that used to sit here
           // overrode it with a white line on a near-white pill — measured
@@ -101,7 +101,7 @@ export function GlassNav() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="rounded-full px-3 py-2 text-small text-ash transition-colors duration-200 hover:bg-[var(--hover-wash)] hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                className="whitespace-nowrap rounded-full px-2.5 py-2 text-small text-ash transition-colors duration-200 hover:bg-[var(--hover-wash)] hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               >
                 {item.label}
               </Link>

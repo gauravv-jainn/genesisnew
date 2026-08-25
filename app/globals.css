@@ -66,8 +66,8 @@
     --color-brand-ink: var(--brand-ink);
 
     /* On a yellow fill, text is the brand's near-black, never white:
-       #0b0b0c on #ffc516 measures 13.0:1, white on it measures 1.6:1. */
-    --color-on-brand: #0b0b0c;
+       #111111 on #ffc516 measures 12.2:1, white on it measures 1.6:1. */
+    --color-on-brand: #111111;
 
     /* --- Type scale --------------------------------------------------------
        EIGHT STEPS. The page previously resolved 35 distinct size/weight pairs,
@@ -216,14 +216,18 @@
        with its imagery. */
     /* Brand neutrals. #242426 is the guidelines' cover ground and #0b0b0c
        its deepest black; #96969a and #6b6b70 are its grey ramp. */
-    --surface-base: #0b0b0c;
-    --surface-ink: #131315;
-    --surface-raised: #1c1c1e;
-    --surface-panel: #242426;
-    --surface-float: #2e2e31;
+    /* Straight off the guidelines' Color System page: Black #111111, White
+       #FFFFFF, Grey #8B8B8B, supporting #F5F5F5 / #D9D9D9 / #555555, and
+       Deep Space Gray #2B2B2B, which the deck names as the master logo's
+       own colour. */
+    --surface-base: #111111;
+    --surface-ink: #1a1a1a;
+    --surface-raised: #222222;
+    --surface-panel: #2b2b2b;
+    --surface-float: #333333;
     --ink-strong: #ffffff;
-    --ink-muted: #c8c8cc;
-    --ink-faint: #96969a;
+    --ink-muted: #d9d9d9;
+    --ink-faint: #8b8b8b;
 
     --glass-fill: rgb(255 255 255 / 0.075);
     --glass-fill-strong: rgb(255 255 255 / 0.12);
@@ -324,34 +328,34 @@
    OS in both directions.
    -------------------------------------------------------------------------- */
 :root[data-theme="light"] {
-    --surface-base: #f4f4f4;
-    --surface-ink: #ededed;
-    --surface-raised: #f9f9f9;
+    --surface-base: #ffffff;
+    --surface-ink: #f5f5f5;
+    --surface-raised: #ffffff;
     --surface-panel: #ffffff;
     --surface-float: #ffffff;
-    --ink-strong: #0b0b0c;
-    --ink-muted: #3d3d42;
-    --ink-faint: #6b6b70;
+    --ink-strong: #111111;
+    --ink-muted: #555555;
+    --ink-faint: #6e6e6e;
 
     --glass-fill: rgb(255 255 255 / 0.72);
     --glass-fill-strong: rgb(255 255 255 / 0.9);
-    --glass-border: rgb(11 11 12 / 0.26);
+    --glass-border: rgb(17 17 17 / 0.26);
     --glass-highlight: rgb(255 255 255 / 0.9);
-    --glass-inset: 0 -1px 0 0 rgb(11 11 12 / 0.05) inset;
+    --glass-inset: 0 -1px 0 0 rgb(17 17 17 / 0.05) inset;
 
-    --ghost-ink: rgb(11 11 12 / 0.09);
+    --ghost-ink: rgb(17 17 17 / 0.09);
     --spot-beam: 0.22;
     --spot-veil: 1;
     --cool-accent: #35607f;
     --brand-ink: #7a5c00;
-    --hover-wash: rgb(11 11 12 / 0.07);
+    --hover-wash: rgb(17 17 17 / 0.07);
     --logo-invert: 1;
-    --ghost-outline: rgb(11 11 12 / 0.07);
+    --ghost-outline: rgb(17 17 17 / 0.07);
 
     /* Shadows carry less alpha on a light ground or they read as smudges. */
-    --shadow-raised: 0 1px 2px 0 rgb(11 11 12 / 0.09), 0 2px 6px -1px rgb(11 11 12 / 0.10);
-    --shadow-panel: 0 2px 4px -1px rgb(11 11 12 / 0.10), 0 12px 28px -8px rgb(11 11 12 / 0.20);
-    --shadow-float: 0 4px 8px -2px rgb(11 11 12 / 0.12), 0 28px 56px -16px rgb(11 11 12 / 0.28);
+    --shadow-raised: 0 1px 2px 0 rgb(17 17 17 / 0.09), 0 2px 6px -1px rgb(17 17 17 / 0.10);
+    --shadow-panel: 0 2px 4px -1px rgb(17 17 17 / 0.10), 0 12px 28px -8px rgb(17 17 17 / 0.20);
+    --shadow-float: 0 4px 8px -2px rgb(17 17 17 / 0.12), 0 28px 56px -16px rgb(17 17 17 / 0.28);
 
     --background: #f4f1ec;
     --foreground: #16141b;
@@ -365,52 +369,52 @@
     --muted-foreground: #55525d;
     --accent: #efebe4;
     --accent-foreground: #16141b;
-    --border: rgb(11 11 12 / 0.12);
-    --input: rgb(11 11 12 / 0.16);
+    --border: rgb(17 17 17 / 0.12);
+    --input: rgb(17 17 17 / 0.16);
     --sidebar: #f4f1ec;
     --sidebar-foreground: #16141b;
     --sidebar-accent: #efebe4;
     --sidebar-accent-foreground: #16141b;
-    --sidebar-border: rgb(11 11 12 / 0.12);
+    --sidebar-border: rgb(17 17 17 / 0.12);
 }
 
 /* System preference, only when no explicit choice has been stamped. */
 @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]):not([data-theme="light"]) {
-        --surface-base: #f4f4f4;
-        --surface-ink: #ededed;
-        --surface-raised: #f9f9f9;
+        --surface-base: #ffffff;
+        --surface-ink: #f5f5f5;
+        --surface-raised: #ffffff;
         --surface-panel: #ffffff;
         --surface-float: #ffffff;
-        --ink-strong: #0b0b0c;
-        --ink-muted: #3d3d42;
-        --ink-faint: #6b6b70;
+        --ink-strong: #111111;
+        --ink-muted: #555555;
+        --ink-faint: #6e6e6e;
 
         --glass-fill: rgb(255 255 255 / 0.72);
         --glass-fill-strong: rgb(255 255 255 / 0.9);
-        --glass-border: rgb(11 11 12 / 0.26);
+        --glass-border: rgb(17 17 17 / 0.26);
         --glass-highlight: rgb(255 255 255 / 0.9);
-        --glass-inset: 0 -1px 0 0 rgb(11 11 12 / 0.05) inset;
+        --glass-inset: 0 -1px 0 0 rgb(17 17 17 / 0.05) inset;
 
-        --ghost-ink: rgb(11 11 12 / 0.09);
+        --ghost-ink: rgb(17 17 17 / 0.09);
         --spot-beam: 0.22;
         --spot-veil: 1;
         --cool-accent: #35607f;
         --brand-ink: #7a5c00;
-        --hover-wash: rgb(11 11 12 / 0.07);
+        --hover-wash: rgb(17 17 17 / 0.07);
         --logo-invert: 1;
-        --ghost-outline: rgb(11 11 12 / 0.07);
+        --ghost-outline: rgb(17 17 17 / 0.07);
 
-        --shadow-raised: 0 1px 2px 0 rgb(11 11 12 / 0.09), 0 2px 6px -1px rgb(11 11 12 / 0.10);
-        --shadow-panel: 0 2px 4px -1px rgb(11 11 12 / 0.10), 0 12px 28px -8px rgb(11 11 12 / 0.20);
-        --shadow-float: 0 4px 8px -2px rgb(11 11 12 / 0.12), 0 28px 56px -16px rgb(11 11 12 / 0.28);
+        --shadow-raised: 0 1px 2px 0 rgb(17 17 17 / 0.09), 0 2px 6px -1px rgb(17 17 17 / 0.10);
+        --shadow-panel: 0 2px 4px -1px rgb(17 17 17 / 0.10), 0 12px 28px -8px rgb(17 17 17 / 0.20);
+        --shadow-float: 0 4px 8px -2px rgb(17 17 17 / 0.12), 0 28px 56px -16px rgb(17 17 17 / 0.28);
 
         --background: #f4f1ec;
         --foreground: #16141b;
         --card: #ffffff;
         --card-foreground: #16141b;
-        --border: rgb(11 11 12 / 0.12);
-        --input: rgb(11 11 12 / 0.16);
+        --border: rgb(17 17 17 / 0.12);
+        --input: rgb(17 17 17 / 0.16);
         --muted-foreground: #55525d;
     }
 }
@@ -431,14 +435,18 @@
 .scene-dark {
     /* Brand neutrals. #242426 is the guidelines' cover ground and #0b0b0c
        its deepest black; #96969a and #6b6b70 are its grey ramp. */
-    --surface-base: #0b0b0c;
-    --surface-ink: #131315;
-    --surface-raised: #1c1c1e;
-    --surface-panel: #242426;
-    --surface-float: #2e2e31;
+    /* Straight off the guidelines' Color System page: Black #111111, White
+       #FFFFFF, Grey #8B8B8B, supporting #F5F5F5 / #D9D9D9 / #555555, and
+       Deep Space Gray #2B2B2B, which the deck names as the master logo's
+       own colour. */
+    --surface-base: #111111;
+    --surface-ink: #1a1a1a;
+    --surface-raised: #222222;
+    --surface-panel: #2b2b2b;
+    --surface-float: #333333;
     --ink-strong: #ffffff;
-    --ink-muted: #c8c8cc;
-    --ink-faint: #96969a;
+    --ink-muted: #d9d9d9;
+    --ink-faint: #8b8b8b;
 
     --glass-fill: rgb(255 255 255 / 0.075);
     --glass-fill-strong: rgb(255 255 255 / 0.12);

@@ -59,7 +59,7 @@ export function CaseStudies() {
             className="pointer-events-none absolute -inset-x-10 -inset-y-8"
             style={{
               background:
-                "radial-gradient(closest-side, rgb(255 197 22 / 0.3) 0%, rgb(255 197 22 / 0.12) 42%, transparent 76%)",
+                "radial-gradient(closest-side, rgb(255 212 0 / 0.3) 0%, rgb(255 212 0 / 0.12) 42%, transparent 76%)",
             }}
           />
           <PosterRail posters={posters} className="relative -mx-6 px-6" />

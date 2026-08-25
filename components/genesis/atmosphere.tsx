@@ -27,7 +27,7 @@ const ORIGIN_POSITION: Record<NonNullable<AuroraProps["origin"]>, string> = {
 };
 
 const TONE_COLOR: Record<NonNullable<AuroraProps["tone"]>, string> = {
-  brand: "255 197 22",
+  brand: "255 212 0",
   neutral: "180 180 200",
 };
 

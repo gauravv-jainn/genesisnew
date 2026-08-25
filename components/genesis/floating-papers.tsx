@@ -41,7 +41,7 @@ export function FloatingPapers({
       {papers.map((paper, index) => (
         <div key={`${paper.href}-${paper.title}`} className="h-full">
           <PaperCard
-            tone={index % 3 === 1 ? "brand" : "brand"}
+            tone="brand"
             rotate={index % 2 === 0 ? -2 : 1.8}
             className="h-full"
           >

@@ -63,35 +63,48 @@ export const heroReel = {
 // that the AI tooling be visible in the framing.
 export const services = {
   label: "What we do",
-  heading: "Five disciplines,",
-  headingAccent: "one team",
+  heading: "Four divisions,",
+  headingAccent: "one system",
   body:
-    "Strategy, production and distribution under one roof — with advanced AI tooling running through all of it.",
+    "Genesis is an AI-native culture and growth studio building the future of influence — human creativity, AI generation, creator marketing and performance thinking in one creative system.",
+  /*
+   * THE FOUR DIVISIONS, named by the brand guidelines rather than by us.
+   *
+   * The deck sets these out as Genesis.Influence, Genesis.BrandDesign,
+   * Genesis.Studios and Genesis.AILab — four pillars, each on its own page.
+   * The site had five services under different names (Content Production, AI
+   * Content, Influencer Marketing, Branding & Design, Apps & Games), which
+   * were written from the original brief before the guidelines existed.
+   *
+   * The mapping: Content Production became Studios, AI Content became AILab,
+   * Influencer Marketing became Influence, Branding & Design became
+   * BrandDesign. "Apps & Games" has no pillar of its own in the deck — the
+   * product and interactive work now sits inside Studios, where the deck's
+   * own "Technology & Integration" step puts it.
+   *
+   * The dotted names are set as one word deliberately; that is how the deck
+   * writes them, and the dot is the system's own connector.
+   */
   items: [
     {
-      title: "Content Production",
-      caption: "quality production & edits",
-      body: "Creative direction, strategy, scripting and post — the full pipeline, produced to a standard that holds up on any feed.",
+      title: "Genesis.Influence",
+      caption: "creator & celebrity marketing",
+      body: "Creator and celebrity activations across every genre, from a database of over a lakh creators — briefed, matched, run and measured.",
     },
     {
-      title: "AI Content",
-      caption: "avatars, image & video generation",
-      body: "AI avatars, image and video generation, and the tooling that compresses a content workflow from weeks into days.",
+      title: "Genesis.BrandDesign",
+      caption: "identity, guidelines & motion",
+      body: "Identity systems, brand guidelines, motion design and the rules that keep a brand recognisable everywhere it appears.",
     },
     {
-      title: "Influencer Marketing",
-      caption: "UGC & celebrity collaborations",
-      body: "Creator and celebrity activations across every genre, from a database of over a lakh creators.",
+      title: "Genesis.Studios",
+      caption: "production at scale",
+      body: "Creative direction, strategy, scripting, production and post — plus the product and interactive work — built to hold up on any feed.",
     },
     {
-      title: "Branding & Design",
-      caption: "guidelines, design & motion",
-      body: "Identity systems, brand guidelines, motion design and curated content production.",
-    },
-    {
-      title: "Apps & Games",
-      caption: "product & interactive",
-      body: "Interactive products and games — where a campaign needs to be something people use, not just something they watch.",
+      title: "Genesis.AILab",
+      caption: "AI generation & digital fashion",
+      body: "AI avatars and influencers, image and video generation, digital fashion, and the automation that compresses a content workflow from weeks into days.",
     },
   ],
 } as const;

@@ -71,11 +71,11 @@ export default function StyleGuidePage() {
             ["ink", "#0a0a0b"],
             ["elevated", "#131316"],
             ["raised", "#1c1a20"],
-            ["brand", "#ffc516"],
-            ["brand-deep", "#e0a800"],
-            ["brand", "#ffc516"],
-            ["brand-soft", "#ffdd66"],
-            ["brand", "#ffc516"],
+            ["brand", "#ffd400"],
+            ["brand-deep", "#e6bf00"],
+            ["brand", "#ffd400"],
+            ["brand-soft", "#ffe466"],
+            ["brand", "#ffd400"],
             ["bone", "#f5f5f4"],
             ["ash", "#a3a3a3"],
             ["faint", "#6b6b70"],
@@ -111,7 +111,7 @@ export default function StyleGuidePage() {
       <Section title="Glass surfaces" note="One UI 'Blur' — heavy blur, low-contrast fill, lit top edge. Not the iOS 'Clear' style.">
         <div className="relative overflow-hidden rounded-panel">
           {/* A busy ground so the blur has something to actually blur. */}
-          <div className="absolute inset-0 bg-[conic-gradient(from_180deg,#ffc516,#ffc516,#ffc516,#ffc516)] opacity-40 blur-2xl" />
+          <div className="absolute inset-0 bg-[conic-gradient(from_180deg,#ffd400,#ffd400,#ffd400,#ffd400)] opacity-40 blur-2xl" />
           <div className="relative grid gap-4 p-8 sm:grid-cols-3">
             <div className="glass rounded-card p-6 text-small text-bone">.glass</div>
             <div className="glass glass-lit rounded-card p-6 text-small text-bone">

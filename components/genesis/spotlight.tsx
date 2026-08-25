@@ -38,7 +38,7 @@ export function Spotlight({
   className?: string;
 }) {
   const TONES = {
-    warm: { core: "255 240 190", edge: "255 221 102" },
+    warm: { core: "255 240 190", edge: "255 228 102" },
     cool: { core: "226 238 255", edge: "150 180 220" },
     brand: { core: "255 220 220", edge: "255 90 100" },
   } as const;

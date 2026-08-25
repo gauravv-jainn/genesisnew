@@ -98,7 +98,7 @@ export function CreativeProcess() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(58% 62% at 22% 46%, #8c0f1c 0%, #5e0a14 30%, #37060d 56%, #1c0308 78%, #120306 100%), radial-gradient(46% 50% at 84% 28%, rgb(255 197 22 / 0.22) 0%, transparent 72%)",
+            "radial-gradient(58% 62% at 22% 46%, #8c0f1c 0%, #5e0a14 30%, #37060d 56%, #1c0308 78%, #120306 100%), radial-gradient(46% 50% at 84% 28%, rgb(255 212 0 / 0.22) 0%, transparent 72%)",
         }}
       />
 

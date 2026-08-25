@@ -81,7 +81,7 @@ export function PosterCard({
       className={cn(
         "group relative shrink-0 overflow-hidden rounded-panel border border-white/10",
         "shadow-[0_18px_50px_-18px_rgb(0_0_0/0.9)]",
-        "transition-shadow duration-500 hover:shadow-[0_26px_70px_-16px_rgb(255_197_22/0.4)]",
+        "transition-shadow duration-500 hover:shadow-[0_26px_70px_-16px_rgb(255_212_0/0.4)]",
         // Spec page 12 asks Portfolio for a "minimal Scroll section", and the
         // scroll IS the section. At the previous widths four posters plus
         // their gaps measured 1144px inside a 1104px container — the track was

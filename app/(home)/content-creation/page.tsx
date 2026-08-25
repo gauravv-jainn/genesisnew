@@ -57,7 +57,7 @@ export default function ContentCreationPage() {
               <RevealItem key={capability.title} className="h-full">
                 <PaperCard
                   pinned
-                  tone={index % 3 === 1 ? "brand" : "brand"}
+                  tone="brand"
                   rotate={index % 2 === 0 ? -2.4 : 2}
                   className="h-full"
                 >

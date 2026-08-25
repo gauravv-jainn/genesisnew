@@ -1,18 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Genesis Media">
   <!--
-    The N from the Genesis Media wordmark, traced from the supplied symbol
-    rather than approximated: the diagonal runs at dx/dy = 0.81 with a
-    constant horizontal band width of 152 units across a 306x500 field, which
-    is what the source PNG measures at every scanline.
+    The N mark alone, on nothing.
+
+    No background plate: the diagonal is a CUT, not a white stripe, so leaving
+    it transparent is what makes the letterform read — and it then sits on a
+    light or dark browser tab equally well. The guidelines are explicit about
+    the mark: FLAT ONLY, NO GRADIENTS INSIDE LOGO, PRESERVE N DIAGONAL.
+
+    Traced from the supplied symbol rather than eyeballed. Across a 306x500
+    field the slice runs at dx/dy = 0.81 with a constant horizontal width of
+    152 units, which is what the source PNG measures at every scanline. That
+    leaves two triangles: one from the top edge, one from the left edge.
   -->
-  <rect width="512" height="512" rx="96" fill="#242426"/>
-  <g transform="translate(121.5 36) scale(0.88)">
-    <clipPath id="n">
-      <rect width="306" height="500"/>
-    </clipPath>
-    <g clip-path="url(#n)">
-      <rect width="306" height="500" fill="#ffc516"/>
-      <polygon points="-121,0 30,0 435,500 284,500" fill="#242426"/>
-    </g>
+  <g transform="translate(115.25 26) scale(0.92)" fill="#ffd400">
+    <polygon points="30,0 306,0 306,340.7"/>
+    <polygon points="0,149.1 284.25,500 0,500"/>
   </g>
 </svg>

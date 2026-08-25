@@ -10,7 +10,7 @@
    Derived from docs/reference/. Two of those images (img-012 Influencer
    Campaigns, img-013 Our Content) are existing Genesis Media artwork, so the
    palette below follows them rather than the approximate values in the brief:
-   the brand accent is the guidelines' yellow #ffc516, and it is the only one
+   the brand accent is the guidelines' yellow #ffd400, and it is the only one
    "dramatic light" accent because the recurring papers-catching-light motif
    (img-001, 005, 011, 014, 043) is unmistakably warm.
 
@@ -44,29 +44,34 @@
     --color-elevated: var(--surface-panel);
 
     /* --- Brand accent ------------------------------------------------------
-       ONE accent, from the Genesis Media brand guidelines: yellow #ffc516,
-       the wedge in the wordmark's N and the colour of every callout in the
-       book. Counted across the PDF's own vector fills it appears 490 times
-       against 1962 blacks, 226 whites and 200 light greys — the whole system
-       is charcoal, white and this one yellow.
+       Genesis Yellow #FFD400, from the guidelines' Color System page, which
+       also fixes the ratio it is used at: 70% white/black, 20% grey, 10%
+       yellow, and "Yellow is an accent. Never the background."
 
-       WHAT THIS REPLACED. The site was built on brand #ffc516 and brand
-       #ffc516, sampled from mockups before the guidelines existed. Neither
+       THE DECK QUOTES THREE YELLOWS and they disagree: Color System says
+       #FFD400, the Master Logo page says #FFC90C, and the supplied logo
+       artwork measures #FFC516. The Color System page wins because that is
+       the page that defines the system; the logo files keep their own value,
+       so the wordmark's wedge is a hair warmer than the UI accent until new
+       artwork is exported at #FFD400.
+
+       WHAT THIS REPLACED. The site was built on crimson #ff2d3f and amber
+       #ff8a3d, sampled from mockups before the guidelines existed. Neither
        appears anywhere in the brand book. They are gone rather than demoted:
        a second accent is exactly what the guidelines do not have. */
-    --color-brand: #ffc516;
+    --color-brand: #ffd400;
     /* The book's second yellow, for gradients and pressed states. */
-    --color-brand-deep: #e0a800;
-    --color-brand-soft: #ffdd66;
+    --color-brand-deep: #e6bf00;
+    --color-brand-soft: #ffe466;
 
-    /* Yellow for TYPE. #ffc516 on the light theme's paper measures about
+    /* Yellow for TYPE. #ffd400 on the light theme's paper measures about
        1.4:1, so as ink it has to darken — the same split the type already
        needed when the accent was brand. Fills, dots and glows keep
        --color-brand; anything that has to be READ takes this. */
     --color-brand-ink: var(--brand-ink);
 
     /* On a yellow fill, text is the brand's near-black, never white:
-       #111111 on #ffc516 measures 12.2:1, white on it measures 1.6:1. */
+       #111111 on #ffd400 measures 12.2:1, white on it measures 1.6:1. */
     --color-on-brand: #111111;
 
     /* --- Type scale --------------------------------------------------------
@@ -123,7 +128,7 @@
        on the PAGE ground, not on a lit object, so unlike the inks in
        animated-timeline and stat-card it has to flip: #cfe3ff measures about
        1.2:1 on cream, which is not a faint accent, it is an invisible one. */
-    /* Amber for TYPE. --color-brand stays fixed at #ffc516 because it is also
+    /* Amber for TYPE. --color-brand stays fixed at #ffd400 because it is also
        a light source: glows, borders, the lit wall. But as TEXT on the light
        theme's paper it measured 1.97-2.08:1 on every section heading accent,
        every service caption and every numbered label on the site — against
@@ -246,7 +251,7 @@
     --spot-veil: 0;
 
     --cool-accent: #cfe3ff;
-    --brand-ink: #ffc516;
+    --brand-ink: #ffd400;
     --hover-wash: rgb(255 255 255 / 0.07);
     --logo-invert: 0;
     --ghost-outline: rgb(255 255 255 / 0.07);
@@ -261,7 +266,7 @@
     --card-foreground: #f5f5f4;
     --popover: #131316;
     --popover-foreground: #f5f5f4;
-    --primary: #ffc516;
+    --primary: #ffd400;
     --primary-foreground: #ffffff;
     --secondary: #1c1a20;
     --secondary-foreground: #f5f5f4;
@@ -269,18 +274,18 @@
     --muted-foreground: #a3a3a3;
     --accent: #1c1a20;
     --accent-foreground: #f5f5f4;
-    --destructive: #ffc516;
+    --destructive: #ffd400;
     --border: rgb(255 255 255 / 0.1);
     --input: rgb(255 255 255 / 0.14);
-    --ring: #ffc516;
+    --ring: #ffd400;
     --sidebar: #0a0a0b;
     --sidebar-foreground: #f5f5f4;
-    --sidebar-primary: #ffc516;
+    --sidebar-primary: #ffd400;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #1c1a20;
     --sidebar-accent-foreground: #f5f5f4;
     --sidebar-border: rgb(255 255 255 / 0.1);
-    --sidebar-ring: #ffc516;
+    --sidebar-ring: #ffd400;
 }
 
 .dark {
@@ -290,7 +295,7 @@
     --card-foreground: #f5f5f4;
     --popover: #131316;
     --popover-foreground: #f5f5f4;
-    --primary: #ffc516;
+    --primary: #ffd400;
     --primary-foreground: #ffffff;
     --secondary: #1c1a20;
     --secondary-foreground: #f5f5f4;
@@ -298,18 +303,18 @@
     --muted-foreground: #a3a3a3;
     --accent: #1c1a20;
     --accent-foreground: #f5f5f4;
-    --destructive: #ffc516;
+    --destructive: #ffd400;
     --border: rgb(255 255 255 / 0.1);
     --input: rgb(255 255 255 / 0.14);
-    --ring: #ffc516;
+    --ring: #ffd400;
     --sidebar: #0a0a0b;
     --sidebar-foreground: #f5f5f4;
-    --sidebar-primary: #ffc516;
+    --sidebar-primary: #ffd400;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #1c1a20;
     --sidebar-accent-foreground: #f5f5f4;
     --sidebar-border: rgb(255 255 255 / 0.1);
-    --sidebar-ring: #ffc516;
+    --sidebar-ring: #ffd400;
 }
 
 
@@ -347,7 +352,7 @@
     --spot-beam: 0.22;
     --spot-veil: 1;
     --cool-accent: #35607f;
-    --brand-ink: #7a5c00;
+    --brand-ink: #7a6000;
     --hover-wash: rgb(17 17 17 / 0.07);
     --logo-invert: 1;
     --ghost-outline: rgb(17 17 17 / 0.07);
@@ -400,7 +405,7 @@
         --spot-beam: 0.22;
         --spot-veil: 1;
         --cool-accent: #35607f;
-        --brand-ink: #7a5c00;
+        --brand-ink: #7a6000;
         --hover-wash: rgb(17 17 17 / 0.07);
         --logo-invert: 1;
         --ghost-outline: rgb(17 17 17 / 0.07);
@@ -460,7 +465,7 @@
     --spot-beam: 1;
     --spot-veil: 0;
     --cool-accent: #cfe3ff;
-    --brand-ink: #ffc516;
+    --brand-ink: #ffd400;
     --hover-wash: rgb(255 255 255 / 0.07);
     --logo-invert: 0;
 

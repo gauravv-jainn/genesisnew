@@ -38,7 +38,7 @@ export function InfluencerMarketing() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(46% 38% at 24% 16%, rgb(214 210 214 / 0.11) 0%, transparent 68%), radial-gradient(50% 44% at 8% 92%, rgb(255 197 22 / 0.16) 0%, transparent 70%), radial-gradient(60% 50% at 88% 40%, rgb(255 197 22 / 0.07) 0%, transparent 72%)",
+            "radial-gradient(46% 38% at 24% 16%, rgb(214 210 214 / 0.11) 0%, transparent 68%), radial-gradient(50% 44% at 8% 92%, rgb(255 212 0 / 0.16) 0%, transparent 70%), radial-gradient(60% 50% at 88% 40%, rgb(255 212 0 / 0.07) 0%, transparent 72%)",
         }}
       />
 
@@ -95,7 +95,7 @@ export function InfluencerMarketing() {
                 className="glass glass-lit mt-8 flex items-center gap-6 rounded-panel p-6 sm:p-8"
                 style={{
                   background:
-                    "linear-gradient(102deg, rgb(255 197 22 / 0.17) 0%, rgb(255 197 22 / 0.05) 42%, rgb(255 255 255 / 0.03) 100%)",
+                    "linear-gradient(102deg, rgb(255 212 0 / 0.17) 0%, rgb(255 212 0 / 0.05) 42%, rgb(255 255 255 / 0.03) 100%)",
                 }}
               >
                 <div className="grid size-16 shrink-0 place-items-center rounded-card border border-brand/35 bg-brand/10 text-brand">

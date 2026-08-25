@@ -35,10 +35,10 @@ export function PaperCard({
 
   const sheen =
     tone === "brand"
-      ? "rgb(255 197 22 / 0.18)"
+      ? "rgb(255 212 0 / 0.18)"
       : tone === "neutral"
         ? "rgb(255 255 255 / 0.14)"
-        : "rgb(255 221 102 / 0.2)";
+        : "rgb(255 228 102 / 0.2)";
 
   return (
     <motion.div
@@ -94,7 +94,7 @@ function Pushpin() {
       aria-hidden
       className="absolute -top-3 left-1/2 z-10 -translate-x-1/2"
     >
-      <span className="block size-4 rounded-full bg-[#ffc516] shadow-[0_0_14px_3px_rgb(255_197_22/0.5)]" />
+      <span className="block size-4 rounded-full bg-[#ffd400] shadow-[0_0_14px_3px_rgb(255_212_0/0.5)]" />
       <span className="mx-auto block h-3 w-px bg-[#a8121f]" />
     </span>
   );

@@ -34,12 +34,17 @@ import { services } from "@/lib/home-content";
  * roughly a fifth of a card, all leaning one way at 8-13 degrees, at three
  * height steps so the group has hierarchy rather than reading as one row.
  */
+/*
+ * Four cards, not five. The previous table stepped by 19-20% because there
+ * were five divisions; with four it stopped at 79% and left a fifth of the
+ * stage empty on the right. These step by 25% at 26% wide, so the row still
+ * overlaps by roughly a third of a card and reaches the full width.
+ */
 const SCATTER = [
-  { left: "0%", top: "14%", rotate: -11, width: "23%", height: "62%" },
-  { left: "19%", top: "38%", rotate: -8, width: "21%", height: "54%" },
-  { left: "38%", top: "4%", rotate: -13, width: "25%", height: "70%" },
-  { left: "58%", top: "34%", rotate: -9, width: "21%", height: "54%" },
-  { left: "77%", top: "12%", rotate: -12, width: "23%", height: "62%" },
+  { left: "0%", top: "14%", rotate: -11, width: "26%", height: "62%" },
+  { left: "25%", top: "38%", rotate: -8, width: "24%", height: "54%" },
+  { left: "49%", top: "4%", rotate: -13, width: "27%", height: "70%" },
+  { left: "74%", top: "30%", rotate: -9, width: "26%", height: "58%" },
 ];
 
 export function Services() {
@@ -123,14 +128,29 @@ function ServiceCard({
   return (
     <PaperCard
       pinned
-      tone={index % 3 === 1 ? "brand" : "brand"}
+      tone="brand"
       rotate={rotate}
       className="flex h-full flex-col justify-between"
     >
       <p className="micro-label">{`0${index + 1}`}</p>
       <div>
+        {/*
+          The division names are dotted single tokens — "Genesis.BrandDesign"
+          has no space in it, so it cannot wrap and it overflowed its card.
+          A <wbr> after the dot gives the browser somewhere to break, and the
+          dot is exactly where the name wants to break anyway.
+        */}
         <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
-          {service.title}
+          {service.title.split(".").map((part, i, all) => (
+            <span key={part}>
+              {part}
+              {i < all.length - 1 && (
+                <>
+                  .<wbr />
+                </>
+              )}
+            </span>
+          ))}
         </h3>
         <p className="mt-2 text-small leading-relaxed text-brand-ink/75">{service.caption}</p>
       </div>

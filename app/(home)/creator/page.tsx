@@ -54,7 +54,7 @@ export default function CreatorPage() {
               <RevealItem key={benefit.title} className="h-full">
                 <PaperCard
                   pinned
-                  tone={index % 3 === 1 ? "brand" : "brand"}
+                  tone="brand"
                   rotate={index % 2 === 0 ? -2.6 : 2.2}
                   className="h-full"
                 >

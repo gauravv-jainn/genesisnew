@@ -4,6 +4,7 @@ import { LayoutGrid, List, Play, Search, SlidersHorizontal } from "lucide-react"
 import { useMemo, useState } from "react";
 
 import { ourWork } from "@/lib/page-content";
+import { useEdgeFade } from "@/components/genesis/use-edge-fade";
 import { cn } from "@/lib/utils";
 
 /**
@@ -98,6 +99,10 @@ function placeholderArt(id: string) {
 
 export function ContentLibrary() {
   const [active, setActive] = useState("All");
+  const { ref: pillsRef, style: pillsStyle } = useEdgeFade<HTMLDivElement>({
+    ramp: 60,
+    max: 5,
+  });
   const [query, setQuery] = useState("");
   const [view, setView] = useState<ViewMode>("grid");
 
@@ -166,9 +171,13 @@ export function ContentLibrary() {
 
       {/* Category pills */}
       <div
+        ref={pillsRef}
         role="tablist"
         aria-label="Filter by format"
         className="no-scrollbar -mx-1 mt-8 flex gap-2 overflow-x-auto px-1 pb-1"
+        // Same treatment as the poster rails, so a row of filters that runs
+        // off the edge behaves like every other scroller on the site.
+        style={pillsStyle}
       >
         {ourWork.categories.map((category) => {
           const isActive = category === active;

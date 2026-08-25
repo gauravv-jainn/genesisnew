@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
-import { useRef } from "react";
+import { useEdgeFade } from "./use-edge-fade";
 
 import { cn } from "@/lib/utils";
 
@@ -168,7 +168,7 @@ export function PosterRail({
   posters: Poster[];
   className?: string;
 }) {
-  const railRef = useRef<HTMLDivElement>(null);
+  const { ref: railRef, style: railStyle } = useEdgeFade<HTMLDivElement>();
 
   return (
     <div
@@ -185,18 +185,14 @@ export function PosterRail({
         mid-word by the viewport — "…hindra" — which reads as a rendering
         fault rather than as more content off-screen.
 
-        A mask fades both ends into the page instead. It also SAYS there is
-        more to the side, which a clean cut does not: a card dissolving is an
-        invitation to scroll, a card guillotined is a bug. The fade is 4% wide
-        at each end, so no card is ever more than slightly veiled and the
-        middle of the rail is untouched.
+        A mask fades the ends into the page instead, and it SAYS there is more
+        to the side, which a clean cut does not: a card dissolving is an
+        invitation to scroll, a card guillotined is a bug. useEdgeFade sets
+        each width from the rail's actual scroll position, so an end with
+        nothing beyond it carries no fade and a rail that fits carries none
+        at all.
       */
-      style={{
-        maskImage:
-          "linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%)",
-        WebkitMaskImage:
-          "linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%)",
-      }}
+      style={railStyle}
     >
       {posters.map((poster, index) => (
         <div key={poster.id} className="snap-center">

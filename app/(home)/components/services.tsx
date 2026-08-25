@@ -29,14 +29,6 @@ import { services } from "@/lib/home-content";
  * so the one interactive flourish in the section is the brand's own gesture.
  */
 
-/**
- * The N's diagonal, measured off the supplied symbol: dx/dy = 0.81 across a
- * 306x500 field. Expressed here as the horizontal offset, in percent of the
- * row's height, that the cut travels — so the slice stays parallel to the
- * mark at any row size.
- */
-const SLICE = "polygon(0 0, 100% 0, 100% 100%, 6% 100%)";
-
 export function Services() {
   return (
     <section
@@ -72,13 +64,16 @@ export function Services() {
             <RevealItem key={service.title}>
               <article className="group relative isolate border-b border-[var(--glass-border)]">
                 {/*
-                  The hover fill, cut at the mark's angle. Sits behind the row
-                  and is inert to the pointer, so it can never eat a click.
+                  The hover fill, edged at the mark's own angle by .n-wash.
+                  On a row this wide 51deg reads as a slight slant — the edge
+                  travels 81px across 1152px — which is the angle behaving
+                  correctly on a wide box, not a diluted version of it. Sits
+                  behind the row and is inert to the pointer, so it can never
+                  eat a click.
                 */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 -z-10 bg-brand/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  style={{ clipPath: SLICE }}
+                  className="n-wash pointer-events-none absolute inset-0 -z-10 text-brand/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 />
 
                 <div className="flex flex-col gap-2 py-8 sm:flex-row sm:items-baseline sm:gap-8 sm:py-10">

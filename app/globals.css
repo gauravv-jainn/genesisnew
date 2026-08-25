@@ -74,6 +74,10 @@
        #111111 on #ffd400 measures 12.2:1, white on it measures 1.6:1. */
     --color-on-brand: #111111;
 
+    /* The mark's diagonal, as a gradient angle. Derived once here so every
+       use — masks, washes, image crops — is the same slope. See .n-cut. */
+    --n-angle: 51deg;
+
     /* --- Type scale --------------------------------------------------------
        EIGHT STEPS. The page previously resolved 35 distinct size/weight pairs,
        with every integer from 8px to 16px in use and a hole between 20px and
@@ -568,6 +572,55 @@ body:has(.scene-dark) header {
     /* --- Glass surfaces ---------------------------------------------------
        One definition, reused by every glass component. The ::before layer is
        the bright top edge that reads as a lit bevel in One UI. */
+    /* --- The N-slice ------------------------------------------------------
+       The brand's ownable device, from the guidelines: "The N becomes the
+       system. The diagonal split of the mark should drive masks, wipes,
+       transitions, image crops, prompt-to-output frames and section cuts."
+
+       ONE ANGLE, DERIVED ONCE. The supplied symbol measures dx/dy = 0.81
+       descending to the right across a 306x500 field. A CSS gradient's
+       colour-stop lines run perpendicular to its angle, and 51deg is the
+       angle whose stop line reproduces exactly that ratio — 129deg gives the
+       same slope mirrored, and 141deg (the first thing I derived) gives 1.23
+       and is simply wrong.
+
+       An ANGLE rather than a clip-path polygon, deliberately: polygon
+       percentages are relative to the box, so the same polygon reads as a
+       different slope on a 2:3 poster than on a 16:9 tile. A gradient angle
+       is aspect-independent, so the cut is the mark's on every element it
+       touches.
+
+       Note this only holds where an element is roughly card-shaped. Across a
+       1440px-wide section a true 51deg edge would need to climb 1778px, so
+       section-scale uses of the device are a suggestion of it, not the angle
+       itself. */
+    .n-cut {
+        /* How far along the gradient the cut sits. */
+        --n-cut-at: 92%;
+        -webkit-mask-image: linear-gradient(
+            var(--n-angle),
+            #000 var(--n-cut-at),
+            transparent calc(var(--n-cut-at) + 0.4%)
+        );
+        mask-image: linear-gradient(
+            var(--n-angle),
+            #000 var(--n-cut-at),
+            transparent calc(var(--n-cut-at) + 0.4%)
+        );
+    }
+
+    /* The same cut used as a fill edge rather than a crop — the wash enters
+       on the diagonal instead of arriving as a rectangle. */
+    .n-wash {
+        --n-wash-at: 62%;
+        background-image: linear-gradient(
+            var(--n-angle),
+            currentColor 0%,
+            currentColor var(--n-wash-at),
+            transparent calc(var(--n-wash-at) + 0.4%)
+        );
+    }
+
     .glass {
         position: relative;
         background-color: var(--glass-fill);

@@ -118,7 +118,9 @@ export function PosterCard({
         )}
 
         {/* Legibility scrim for the title block. */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45)_0%,transparent_28%,transparent_45%,rgb(0_0_0/0.88)_100%)]" />
+        {/* Same diagonal as the library tiles — see the note there. */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45)_0%,transparent_28%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(var(--n-angle),rgb(0_0_0/0.9)_0%,rgb(0_0_0/0.7)_32%,transparent_62%)]" />
 
         <span className="glass absolute left-3 top-3 rounded-full px-3 py-1 text-micro font-medium tracking-wide text-bone">
           {poster.category}

@@ -225,7 +225,24 @@ export function ContentLibrary() {
 
                   {hasOwnChrome(item) ? null : (
                     <>
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.4)_0%,transparent_30%,transparent_46%,rgb(0_0_0/0.9)_100%)]" />
+                      {/*
+                        The caption scrim arrives on the MARK'S DIAGONAL, not
+                        as a horizontal band. This is the guidelines' first
+                        named use of the device — "image crops cut through the
+                        diagonal" — and it is the one that can apply to every
+                        piece of artwork on the site, because unlike a corner
+                        cut it removes nothing: the tile's three corners are
+                        already spoken for by the chip, the play control and
+                        the caption.
+
+                        Two layers. The top band stays horizontal because it
+                        exists to back the chips along that edge. The lower
+                        wash runs at var(--n-angle), darkest in the
+                        bottom-left where the caption sits and lifting away to
+                        the right.
+                      */}
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.4)_0%,transparent_30%)]" />
+                      <div className="absolute inset-0 bg-[linear-gradient(var(--n-angle),rgb(0_0_0/0.92)_0%,rgb(0_0_0/0.72)_34%,transparent_64%)]" />
 
                       <span className="glass absolute left-2.5 top-2.5 rounded-full px-3 py-1 text-micro font-medium text-bone">
                         {item.badge}

@@ -492,6 +492,13 @@ function Sheet({
         zIndex: Math.round((1 - depth) * 30),
         translateX: "-50%",
         translateY: "-50%",
+        // The ONLY will-change left on a sheet, and it is on the one node that
+        // moves continuously — this wrapper tracks the cursor field. There
+        // were three, nested, on every sheet: 56 sheets x 3 = 168 elements
+        // asking for their own compositor layer on a single page. The float
+        // wrapper's CSS animation is promoted by the browser for as long as it
+        // runs, and the inner node already establishes a 3D context, so both
+        // of those hints bought a permanent layer for nothing.
         willChange: "transform",
       }}
     >
@@ -514,13 +521,11 @@ function Sheet({
           {
             "--float-duration": `${sheet.driftDuration}s`,
             animationDelay: `-${sheet.driftDelay}s`,
-            willChange: "transform",
           } as React.CSSProperties
         }
       >
         <motion.div
           style={{
-            willChange: "transform",
             // Perspective per sheet rather than on the stage: a shared
             // perspective origin would swing the outer sheets wildly, since
             // they sit far from the vanishing point.

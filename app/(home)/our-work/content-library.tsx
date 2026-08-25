@@ -154,7 +154,7 @@ export function ContentLibrary() {
                 aria-label={`${mode} view`}
                 className={cn(
                   "grid size-8 place-items-center rounded-field transition-colors",
-                  view === mode ? "bg-white/10 text-bone" : "text-faint hover:text-ash",
+                  view === mode ? "bg-[var(--hover-wash)] text-bone" : "text-faint hover:text-ash",
                 )}
               >
                 <Icon className="size-4" aria-hidden />
@@ -182,7 +182,7 @@ export function ContentLibrary() {
               className={cn(
                 "flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-small font-medium transition-colors duration-200",
                 isActive
-                  ? "bg-white/[0.11] text-bone"
+                  ? "bg-[var(--hover-wash)] text-bone"
                   : "glass text-ash hover:text-bone",
               )}
             >

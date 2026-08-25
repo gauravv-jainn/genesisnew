@@ -50,18 +50,6 @@ export const ourWork = {
 } as const;
 
 /** Sidebar navigation, exactly as listed in the mockup. */
-export const workspaceNav = [
-  { label: "Home", href: "/", icon: "home" },
-  { label: "Our Work", href: "/our-work", icon: "grid" },
-  { label: "Services", href: "/#services", icon: "layers" },
-  { label: "Case Studies", href: "/#case-studies", icon: "file" },
-  { label: "AI Studio", href: "/#ai-studio", icon: "sparkles" },
-  { label: "Influencers", href: "/influencer-campaigns", icon: "users" },
-  { label: "About Us", href: "/#about", icon: "info" },
-  { label: "Insights", href: "/blog", icon: "book" },
-  { label: "Contact", href: "/#contact", icon: "send" },
-] as const;
-
 // --- /influencer-campaigns --------------------------------------------------
 
 export const influencerPage = {

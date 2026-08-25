@@ -62,6 +62,36 @@ export function CreativeProcess() {
       className="grain relative isolate overflow-hidden py-24 sm:py-32"
       style={{ backgroundColor: "#120306" }}
     >
+      {/*
+        Transitions into and out of the dark chapter.
+
+        This is the only pinned-dark section on an otherwise light page, and in
+        the light theme it butted straight into cream on both sides: measured
+        luminance steps of 0.675 -> 0.003 at the top edge and 0.002 -> 0.836 at
+        the bottom, in the space of three pixels. That is the "rough page
+        break" — a butt joint, not a transition.
+
+        The bands blend to the ACTUAL adjacent grounds via the surface tokens,
+        so they follow the theme: in dark mode both neighbours are near-black
+        and these fade to nothing, which is why there is no theme check here.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-28"
+        style={{
+          background:
+            "linear-gradient(180deg, color-mix(in srgb, var(--surface-base) 90%, transparent) 0%, color-mix(in srgb, var(--surface-base) 50%, transparent) 42%, transparent 100%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-28"
+        style={{
+          background:
+            "linear-gradient(0deg, var(--surface-ink) 0%, color-mix(in srgb, var(--surface-ink) 55%, transparent) 42%, transparent 100%)",
+        }}
+      />
+
       {/* The red ground. The reference has no amber and no neutral in it. */}
       <div
         aria-hidden

@@ -340,7 +340,6 @@ export function PaperVortex({
             sheet={sheet}
             pointerX={pointerX}
             pointerY={pointerY}
-            reduced={Boolean(prefersReducedMotion)}
           />
         ))}
       </div>
@@ -352,12 +351,10 @@ function Sheet({
   sheet,
   pointerX,
   pointerY,
-  reduced,
 }: {
   sheet: Placed;
   pointerX: MotionValue<number>;
   pointerY: MotionValue<number>;
-  reduced: boolean;
 }) {
   const { post, depth, interactive } = sheet;
 
@@ -504,7 +501,7 @@ function Sheet({
         and the hover response.
       */}
       {/*
-        Not gated on the `reduced` prop: `motion-safe:` IS the gate, and it is
+        Not gated in JS at all: `motion-safe:` IS the gate, and it is
         a CSS media query, so it resolves identically on the server and in the
         browser. useReducedMotion() does not — it is null during SSR and true
         in the browser — so gating in JS as well made React discard the server

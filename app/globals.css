@@ -644,49 +644,6 @@ body:has(.scene-dark) header {
     }
 }
 
-@keyframes genesis-paper-float {
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0) rotate(0deg);
-    }
-
-    25% {
-        transform: translate3d(2px, -6px, 0) rotate(0.9deg);
-    }
-
-    50% {
-        transform: translate3d(0, -11px, 0) rotate(0deg);
-    }
-
-    75% {
-        transform: translate3d(-2px, -5px, 0) rotate(-0.9deg);
-    }
-}
-
-/* The travelling pulse along the tools-stack curves. */
-@keyframes genesis-flow {
-    from {
-        stroke-dashoffset: 346;
-    }
-
-    to {
-        stroke-dashoffset: 0;
-    }
-}
-
-/* Network nodes on the creator constellation. */
-@keyframes genesis-node-pulse {
-    0%, 100% {
-        opacity: 0.25;
-        r: 2.2;
-    }
-
-    50% {
-        opacity: 1;
-        r: 3.4;
-    }
-}
-
 /* Seamless marquee: the track is duplicated once, so -50% lands exactly on
    the start of the copy. Consumed by <LogoMarquee />. */
 @keyframes genesis-marquee {

@@ -90,9 +90,6 @@ type Placed = {
   /** Tilt in space. Flat-on sheets read as stickers, not paper. */
   rotateX: number;
   rotateY: number;
-  /** Idle drift, seconds, staggered per sheet. */
-  driftDuration: number;
-  driftDelay: number;
   blur: number;
   /** Paper colours, pre-darkened for depth so no filter is needed. */
   top_color: string;
@@ -188,8 +185,6 @@ function buildCloud(posts: VortexPost[], sheetCount: number): Placed[] {
       // is the single biggest thing separating a sheet from a sticker.
       rotateX: Number(((seeded(i, 11) - 0.5) * 54).toFixed(2)),
       rotateY: Number(((seeded(i, 12) - 0.5) * 58).toFixed(2)),
-      driftDuration: Number((7 + seeded(i, 6) * 6).toFixed(2)),
-      driftDelay: Number((seeded(i, 7) * 6).toFixed(2)),
       blur,
       // Every sheet is cut from slightly different stock — a few points of
       // warmth either way stops the cloud reading as one printed swatch.
@@ -508,22 +503,14 @@ function Sheet({
         and the hover response.
       */}
       {/*
-        Not gated in JS at all: `motion-safe:` IS the gate, and it is
-        a CSS media query, so it resolves identically on the server and in the
-        browser. useReducedMotion() does not — it is null during SSR and true
-        in the browser — so gating in JS as well made React discard the server
-        render of all 56 sheets for reduced-motion users. The custom properties
-        are inert when the animation is not running.
+        The idle drift is gone. 56 sheets breathing in and out forever is
+        ambient motion with nothing to say — and the brand guidelines are
+        explicit: Minimal, Confident, never Loud, "if it feels like a normal
+        agency template, reject it." The scatter is the design; it does not
+        need to wobble. This wrapper stays so the 3D node below keeps its own
+        stacking context.
       */}
-      <div
-        className="motion-safe:animate-[genesis-paper-float_var(--float-duration)_ease-in-out_infinite]"
-        style={
-          {
-            "--float-duration": `${sheet.driftDuration}s`,
-            animationDelay: `-${sheet.driftDelay}s`,
-          } as React.CSSProperties
-        }
-      >
+      <div>
         <motion.div
           style={{
             // Perspective per sheet rather than on the stage: a shared

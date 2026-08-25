@@ -1,6 +1,5 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -36,25 +35,11 @@ export function FloatingPapers({
   papers: FloatingPaper[];
   className?: string;
 }) {
-  const prefersReducedMotion = useReducedMotion();
 
   return (
     <div className={cn("grid gap-8 sm:grid-cols-2 lg:grid-cols-3", className)}>
       {papers.map((paper, index) => (
-        <motion.div
-          key={`${paper.href}-${paper.title}`}
-          // Idle drift. Offsetting the delay stops the grid pulsing in unison.
-          animate={
-            prefersReducedMotion ? undefined : { y: [0, -10, 0] }
-          }
-          transition={{
-            duration: 6 + (index % 3),
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: index * 0.5,
-          }}
-          className="h-full"
-        >
+        <div key={`${paper.href}-${paper.title}`} className="h-full">
           <PaperCard
             tone={index % 3 === 1 ? "brand" : "brand"}
             rotate={index % 2 === 0 ? -2 : 1.8}
@@ -81,7 +66,7 @@ export function FloatingPapers({
               )}
             </Link>
           </PaperCard>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

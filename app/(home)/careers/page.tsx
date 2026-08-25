@@ -97,7 +97,7 @@ export default function CareersPage() {
           return (
             <span
               key={i}
-              className="absolute rounded-full bg-white motion-safe:animate-[genesis-paper-float_var(--float-duration)_ease-in-out_infinite]"
+              className="absolute rounded-full bg-white "
               style={
                 {
                   left: `${(seeded(1) * 100).toFixed(2)}%`,

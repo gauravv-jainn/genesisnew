@@ -188,7 +188,7 @@ function Globe() {
           cy={cy}
           r="2.6"
           fill="#ffc516"
-          className="motion-safe:animate-[genesis-node-pulse_var(--pulse)_ease-in-out_infinite]"
+          className=""
           style={
             {
               "--pulse": `${(2.6 + seeded(index, 5) * 2.4).toFixed(2)}s`,

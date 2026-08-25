@@ -93,7 +93,7 @@ export function ToolsStack({
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeDasharray="26 320"
-                  className="motion-safe:animate-[genesis-flow_var(--flow-duration)_linear_infinite]"
+                  className=""
                   style={
                     {
                       "--flow-duration": `${(3.4 + index * 0.42).toFixed(2)}s`,

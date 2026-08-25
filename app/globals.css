@@ -509,6 +509,25 @@ body:has(.scene-dark) header {
 }
 
 @layer base {
+    /*
+      Mont on the titles, which is what the guidelines specify: "MONT —
+      Titles & Subheaders". It was loaded and wired to --font-heading but
+      nothing ever used it, so every heading on the site was still rendering
+      in the text face.
+
+      Mont ships here as ExtraLight 200 and Heavy 800 with nothing between.
+      The 31 headings that ask for font-semibold (600) resolve upward to 800
+      under the CSS font-matching rules, which is the weight the wordmark
+      itself is set in. The accent words keep their .font-serif utility and
+      so stay Codec Pro Italic — the contrast between the two faces is the
+      point.
+    */
+    h1,
+    h2,
+    h3 {
+        font-family: var(--font-heading);
+    }
+
     * {
         @apply border-border outline-ring/50;
     }

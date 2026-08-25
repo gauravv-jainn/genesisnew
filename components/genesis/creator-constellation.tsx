@@ -53,13 +53,13 @@ function portrait(id: string) {
  * corner. lucide-react v1 dropped brand icons, so the glyphs are drawn inline.
  */
 const PLATFORMS = [
-  { key: "instagram", fill: "linear-gradient(135deg,#f9ce34,#ee2a7b 48%,#6228d7)" },
+  { key: "instagram", fill: "linear-gradient(135deg,#ffd400,#ee2a7b 48%,#6228d7)" },
   { key: "youtube", fill: "#ff0000" },
   { key: "linkedin", fill: "#0a66c2" },
-  { key: "instagram", fill: "linear-gradient(135deg,#f9ce34,#ee2a7b 48%,#6228d7)" },
+  { key: "instagram", fill: "linear-gradient(135deg,#ffd400,#ee2a7b 48%,#6228d7)" },
   { key: "threads", fill: "#ffffff" },
   { key: "youtube", fill: "#ff0000" },
-  { key: "instagram", fill: "linear-gradient(135deg,#f9ce34,#ee2a7b 48%,#6228d7)" },
+  { key: "instagram", fill: "linear-gradient(135deg,#ffd400,#ee2a7b 48%,#6228d7)" },
 ] as const;
 
 function PlatformGlyph({ platform }: { platform: string }) {

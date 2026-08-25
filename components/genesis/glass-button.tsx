@@ -163,7 +163,7 @@ export function GlassSegment({
             {active && (
               <motion.span
                 layoutId="glass-segment-active"
-                className="absolute inset-0 rounded-full bg-[radial-gradient(120%_140%_at_50%_50%,#fff3dd_0%,#ffc98a_45%,#ff9f4d_100%)] shadow-[0_6px_28px_-4px_rgb(255_212_0/0.7)]"
+                className="absolute inset-0 rounded-full bg-[radial-gradient(120%_140%_at_50%_50%,#fff3dd_0%,#ffe466_45%,#ffd400_100%)] shadow-[0_6px_28px_-4px_rgb(255_212_0/0.7)]"
                 transition={{ type: "spring", stiffness: 380, damping: 32 }}
               />
             )}

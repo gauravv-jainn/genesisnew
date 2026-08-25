@@ -36,13 +36,13 @@ export function InsiderTeaser() {
           <div className="relative flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-xl">
               <p className="micro-label flex items-center gap-3">
-                <Lock className="size-3.5 text-brand" aria-hidden />
+                <Lock className="size-3.5 text-brand-ink" aria-hidden />
                 {insider.label}
               </p>
 
               <h2 className="mt-6 text-balance text-h2 font-semibold leading-tight tracking-tight text-bone sm:text-h2">
                 {insider.heading}{" "}
-                <span className="font-serif font-normal italic text-brand">
+                <span className="font-serif font-normal italic text-brand-ink">
                   {insider.headingAccent}
                 </span>
               </h2>

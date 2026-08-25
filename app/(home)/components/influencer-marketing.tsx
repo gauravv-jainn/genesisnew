@@ -98,7 +98,7 @@ export function InfluencerMarketing() {
                     "linear-gradient(102deg, rgb(255 212 0 / 0.17) 0%, rgb(255 212 0 / 0.05) 42%, rgb(255 255 255 / 0.03) 100%)",
                 }}
               >
-                <div className="grid size-16 shrink-0 place-items-center rounded-card border border-brand/35 bg-brand/10 text-brand">
+                <div className="grid size-16 shrink-0 place-items-center rounded-card border border-brand/35 bg-brand/10 text-brand-ink">
                   <Users className="size-7" aria-hidden />
                 </div>
 
@@ -153,7 +153,7 @@ export function InfluencerMarketing() {
                       className={cnJoin(
                         "grid size-11 shrink-0 place-items-center rounded-card border",
                         highlight
-                          ? "border-brand/35 bg-brand/10 text-brand"
+                          ? "border-brand/35 bg-brand/10 text-brand-ink"
                           : "border-white/12 bg-white/5 text-bone",
                       )}
                     >

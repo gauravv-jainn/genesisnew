@@ -74,7 +74,7 @@ export function FooterCta() {
             </p>
             <a
               href={`mailto:${footerCta.email}`}
-              className="mt-6 inline-block text-small text-bone underline-offset-4 transition-colors hover:text-brand hover:underline"
+              className="mt-6 inline-block text-small text-bone underline-offset-4 transition-colors hover:text-brand-ink hover:underline"
             >
               {footerCta.email}
             </a>

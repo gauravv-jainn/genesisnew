@@ -108,7 +108,7 @@ export function StatCard({
       )}
     >
       {icon && (
-        <div className="grid size-14 shrink-0 place-items-center rounded-card border border-brand/25 bg-brand/10 text-brand">
+        <div className="grid size-14 shrink-0 place-items-center rounded-card border border-brand/25 bg-brand/10 text-brand-ink">
           {icon}
         </div>
       )}

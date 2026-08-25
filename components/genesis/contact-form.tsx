@@ -109,7 +109,7 @@ export function ContactForm({
       </div>
 
       {state.status === "error" && state.message && (
-        <p role="alert" className="mt-6 text-small text-brand-soft">
+        <p role="alert" className="mt-6 text-small text-brand-ink">
           {state.message}
         </p>
       )}
@@ -163,7 +163,7 @@ function Field({
     <div className={className}>
       <label htmlFor={id} className="micro-label mb-2 block">
         {label}
-        {required && <span className="ml-1 text-brand">*</span>}
+        {required && <span className="ml-1 text-brand-ink">*</span>}
       </label>
 
       {multiline ? (
@@ -190,7 +190,7 @@ function Field({
       )}
 
       {error && (
-        <p id={errorId} className="mt-2 text-small text-brand-soft">
+        <p id={errorId} className="mt-2 text-small text-brand-ink">
           {error}
         </p>
       )}

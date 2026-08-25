@@ -227,6 +227,7 @@
 
     --cool-accent: #cfe3ff;
     --amber-ink: #ff8a3d;
+    --hover-wash: rgb(255 255 255 / 0.07);
     --ghost-outline: rgb(255 255 255 / 0.07);
 
     --radius: 0.625rem;
@@ -326,6 +327,7 @@
     --spot-veil: 1;
     --cool-accent: #35607f;
     --amber-ink: #a8410b;
+    --hover-wash: rgb(22 20 27 / 0.07);
     --ghost-outline: rgb(22 20 27 / 0.07);
 
     /* Shadows carry less alpha on a light ground or they read as smudges. */
@@ -377,6 +379,7 @@
         --spot-veil: 1;
         --cool-accent: #35607f;
         --amber-ink: #a8410b;
+        --hover-wash: rgb(22 20 27 / 0.07);
         --ghost-outline: rgb(22 20 27 / 0.07);
 
         --shadow-raised: 0 1px 2px 0 rgb(22 20 27 / 0.09), 0 2px 6px -1px rgb(22 20 27 / 0.10);
@@ -429,6 +432,7 @@
     --spot-veil: 0;
     --cool-accent: #cfe3ff;
     --amber-ink: #ff8a3d;
+    --hover-wash: rgb(255 255 255 / 0.07);
 
     --shadow-raised: 0 2px 8px -2px rgb(0 0 0 / 0.6);
     --shadow-panel: 0 12px 32px -8px rgb(0 0 0 / 0.7);
@@ -514,7 +518,6 @@ body:has(.scene-dark) header {
         position: relative;
         background-color: var(--glass-fill);
         backdrop-filter: blur(var(--glass-blur)) saturate(140%);
-        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
         border: 1px solid var(--glass-border);
         box-shadow:
             var(--glass-inset, 0 1px 0 0 rgb(255 255 255 / 0.06) inset),
@@ -527,7 +530,6 @@ body:has(.scene-dark) header {
     .glass-strong {
         background-color: var(--glass-fill-strong);
         backdrop-filter: blur(var(--glass-blur-heavy)) saturate(160%);
-        -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(160%);
         box-shadow:
             0 1px 0 0 rgb(255 255 255 / 0.08) inset,
             var(--shadow-float);
@@ -540,7 +542,6 @@ body:has(.scene-dark) header {
         position: relative;
         background-color: var(--glass-fill);
         backdrop-filter: blur(14px) saturate(130%);
-        -webkit-backdrop-filter: blur(14px) saturate(130%);
         box-shadow: var(--shadow-raised);
     }
 

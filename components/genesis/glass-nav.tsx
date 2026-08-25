@@ -1,9 +1,14 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { GlassButton } from "./glass-button";
 import { ThemeToggle } from "./theme-toggle";
@@ -22,13 +27,41 @@ export function GlassNav() {
   const [condensed, setCondensed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { scrollY } = useScroll();
+  const headerRef = useRef<HTMLElement>(null);
+
+  /*
+    Escape and click-outside. The sheet had neither: once open, the only way
+    to dismiss it was to hit an X, which is not what anyone expects from a
+    menu and leaves keyboard users stuck in it.
+  */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      const header = headerRef.current;
+      if (header && !header.contains(event.target as Node)) setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    // Capture phase, so a link inside the page cannot navigate before the
+    // menu closes and leave it open on the next view.
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointerDown, true);
+    };
+  }, [menuOpen]);
 
   useMotionValueEvent(scrollY, "change", (value) => {
     setCondensed(value > 40);
   });
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:pt-6">
+    <header
+      ref={headerRef}
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:pt-6"
+    >
       {/*
         DRIVEN BY THE TOKENS, not by hardcoded values. This component used to
         animate between rgba(255,255,255,0.03) and 0.07 with blur(12px)/28px of
@@ -45,7 +78,11 @@ export function GlassNav() {
       <nav
         className={cn(
           "glass glass-lit pointer-events-auto flex w-full max-w-5xl items-center gap-4 rounded-full",
-          "border border-white/10 px-4 py-3 sm:px-6",
+          // No border utility here: .glass already sets one from
+          // --glass-border, and the `border-white/10` that used to sit here
+          // overrode it with a white line on a near-white pill — measured
+          // 1.00:1 against the pill's own surface in the light theme.
+          "px-4 py-3 sm:px-6",
           "transition-[background-color,backdrop-filter] duration-500 ease-out",
           condensed && "glass-strong",
         )}
@@ -64,7 +101,7 @@ export function GlassNav() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="rounded-full px-3 py-2 text-small text-ash transition-colors duration-200 hover:bg-white/5 hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
+                className="rounded-full px-3 py-2 text-small text-ash transition-colors duration-200 hover:bg-[var(--hover-wash)] hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
               >
                 {item.label}
               </Link>
@@ -75,7 +112,7 @@ export function GlassNav() {
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle className="hidden lg:inline-flex" />
 
-                <GlassButton
+          <GlassButton
             href="/#contact"
             variant="crimson"
             size="sm"
@@ -90,7 +127,7 @@ export function GlassNav() {
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="grid size-9 place-items-center rounded-full border border-white/10 text-bone transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson lg:hidden"
+            className="grid size-9 place-items-center rounded-full border border-[var(--glass-border)] text-bone transition-colors hover:bg-[var(--hover-wash)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson lg:hidden"
           >
             {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
@@ -109,14 +146,18 @@ export function GlassNav() {
           >
             <div className="mb-3 flex items-center justify-between">
               <span className="micro-label">Menu</span>
-              <button
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                aria-label="Close menu"
-                className="grid size-8 place-items-center rounded-full border border-white/10 text-ash hover:text-bone"
-              >
-                <X className="size-4" />
-              </button>
+              {/*
+                The toggle lives here as well as in the pill. In the pill it is
+                `hidden lg:inline-flex`, and it appeared nowhere else — so on
+                every phone and tablet the theme could not be changed at all.
+              */}
+              {/*
+                No close button here. The pill's own toggle already shows an X
+                while the menu is open, at the same x and 67px above this row —
+                two identical affordances an inch apart. This row carries the
+                theme toggle instead, which had no mobile home at all.
+              */}
+              <ThemeToggle />
             </div>
             <ul className="flex flex-col">
               {navItems.map((item) => (
@@ -124,7 +165,7 @@ export function GlassNav() {
                   <Link
                     href={item.href}
                     onClick={() => setMenuOpen(false)}
-                    className="block rounded-card px-3 py-3 text-small text-ash transition-colors hover:bg-white/5 hover:text-bone"
+                    className="block rounded-card px-3 py-3 text-small text-ash transition-colors hover:bg-[var(--hover-wash)] hover:text-bone"
                   >
                     {item.label}
                   </Link>

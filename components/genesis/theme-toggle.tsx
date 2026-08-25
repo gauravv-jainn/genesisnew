@@ -88,8 +88,12 @@ export function ThemeToggle({ className }: { className?: string }) {
       onClick={toggle}
       className={cn(
         "group relative inline-flex h-9 w-16 shrink-0 items-center rounded-full",
-        "border border-white/12 bg-white/6 transition-colors duration-300",
-        "hover:border-white/24 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson",
+        // Theme-aware, because this control sits ON the glass pill and the
+        // pill is near-white in the light theme: a white track with a white
+        // border measured 1.00:1 against it, so the switch had no track and
+        // no edge — just a floating knob.
+        "border border-[var(--glass-border)] bg-[var(--hover-wash)] transition-colors duration-300",
+        "hover:border-[var(--ink-faint)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson",
         className,
       )}
     >

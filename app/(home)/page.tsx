@@ -14,6 +14,7 @@ import { InsiderTeaser } from "./components/insider-teaser";
 import { Journey } from "./components/journey";
 import { Portfolio } from "./components/portfolio";
 import { Services } from "./components/services";
+import { WhoWeAre } from "./components/who-we-are";
 import { Testimonials } from "./components/testimonials";
 
 export const metadata: Metadata = {
@@ -38,6 +39,7 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
+      <WhoWeAre />
       {/* Services and Portfolio are the two faces of one turning stage. */}
       {/*
         Services and Portfolio, one after the other.

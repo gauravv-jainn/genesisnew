@@ -142,6 +142,62 @@ export const caseStudies = {
   ],
 } as const;
 
+// --- Who we are -------------------------------------------------------------
+
+/*
+ * STRAIGHT FROM THE BRAND GUIDELINES, and none of it was on the site.
+ *
+ * The positioning page sets Genesis against the four kinds of agency the
+ * market already has; the philosophy page gives three ideas, each with its
+ * own line. Both are quoted rather than paraphrased — "AI isn't software. AI
+ * is our creative medium." is the deck's sentence and it is better than
+ * anything written to replace it.
+ *
+ * The sectors are the deck's own list, in its own order.
+ */
+export const whoWeAre = {
+  label: "Who we are",
+  heading: "An AI-native",
+  headingAccent: "creative company",
+  body:
+    "The market has traditional agencies, social media agencies, influencer agencies and AI agencies. Genesis is a culture and growth studio building the future of influence.",
+  /** The four categories the deck positions Genesis against. */
+  market: [
+    "Traditional agencies",
+    "Social media agencies",
+    "Influencer agencies",
+    "AI agencies",
+  ],
+  ideas: [
+    {
+      title: "Culture First",
+      line: "We build ideas people want to share.",
+    },
+    {
+      title: "AI First",
+      line: "AI isn't software. AI is our creative medium.",
+    },
+    {
+      title: "Execution Wins",
+      line: "Ideas matter. Shipping matters more.",
+    },
+  ],
+  sectors: [
+    "BFSI",
+    "Finance",
+    "Fashion",
+    "Beauty",
+    "Food & Beverage",
+    "Health",
+    "Lifestyle",
+    "Entertainment",
+    "Education",
+    "Travel",
+    "Tech",
+    "Real Estate",
+  ],
+} as const;
+
 // --- Journey ----------------------------------------------------------------
 
 // The spec marks this "//numbers increasing animation".

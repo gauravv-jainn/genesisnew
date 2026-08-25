@@ -46,6 +46,23 @@ import { useEffect, useRef, type ReactNode } from "react";
  * scroll. A 3D-transformed ancestor breaks `position: fixed` for descendants
  * and is expensive to composite on phones, so the effect is absent there
  * rather than approximated.
+ *
+ * WHICH MEANS EVERY LAYOUT CLASS HERE CARRIES `motion-safe:` TOO, and that is
+ * not decoration. The pin installs under
+ *
+ *     (min-width: 1024px) and (prefers-reduced-motion: no-preference)
+ *
+ * but the geometry used to be plain `lg:` — `lg:h-dvh lg:overflow-hidden` on
+ * the stage and `lg:absolute lg:inset-0` on both faces. So a desktop visitor
+ * with Reduce Motion enabled got the geometry WITHOUT the mechanism that
+ * makes it work: two full sections pinned on top of one another inside a
+ * 100dvh overflow-hidden box, every line of one printed over the other, and
+ * the second section unreachable. Measured at 1440px: the Services numerals
+ * sat at 100% overlap on the poster titles.
+ *
+ * The CSS query and the JS query have to be the same query. `motion-safe:`
+ * is that query, so the fallback is now what the paragraph above claims:
+ * ordinary document flow, one section after the other.
  */
 export function CameraPan({
   front,
@@ -132,7 +149,7 @@ export function CameraPan({
 
   return (
     <div ref={rootRef}>
-      <div className="relative lg:h-dvh lg:overflow-hidden lg:[perspective:1800px]">
+      <div className="relative motion-safe:lg:h-dvh motion-safe:lg:overflow-hidden motion-safe:lg:[perspective:1800px]">
         {/*
           The room the turn happens inside. OUTSIDE the rotating stage, so it
           does not turn with the faces and is what you see at the halfway point
@@ -140,7 +157,7 @@ export function CameraPan({
         */}
         <div
           aria-hidden
-          className="grain pointer-events-none absolute inset-0 hidden bg-void lg:block"
+          className="grain pointer-events-none absolute inset-0 hidden bg-void motion-safe:lg:block"
         >
           <div
             className="absolute inset-0"
@@ -151,7 +168,7 @@ export function CameraPan({
           />
         </div>
 
-        <div ref={stageRef} className="lg:relative lg:h-full">
+        <div ref={stageRef} className="motion-safe:lg:relative motion-safe:lg:h-full">
           <Face>{front}</Face>
           <Face ref={backFaceRef}>{back}</Face>
         </div>
@@ -179,7 +196,7 @@ function Face({
       // the face out of the smooth-scroll handler. Both faces are now composed
       // to fit 100dvh anyway, so this is the safety net rather than the plan.
       data-lenis-prevent
-      className="no-scrollbar lg:absolute lg:inset-0 lg:overflow-y-auto lg:[backface-visibility:hidden]"
+      className="no-scrollbar motion-safe:lg:absolute motion-safe:lg:inset-0 motion-safe:lg:overflow-y-auto motion-safe:lg:[backface-visibility:hidden]"
     >
       {children}
     </div>

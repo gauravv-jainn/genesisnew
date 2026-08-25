@@ -85,7 +85,7 @@ export default function ContentCreationPage() {
         origin="top-right"
         intensity={0.18}
       >
-        <RevealGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {creativeProcess.steps.map((step, index) => (
             <RevealItem key={step.title} className="h-full">
               <div className="glass glass-lit flex h-full flex-col rounded-panel p-6">
@@ -93,7 +93,7 @@ export default function ContentCreationPage() {
                 <h3 className="mt-4 text-h3 font-semibold tracking-tight text-bone">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-small leading-relaxed text-ash">{step.body}</p>
+                <p className="mt-3 text-small leading-relaxed text-ash">{step.caption}</p>
               </div>
             </RevealItem>
           ))}

@@ -216,37 +216,49 @@ export const aiContent = {
  * TODO(assets): the spec wants behind-the-scenes stills and video per step.
  */
 export const creativeProcess = {
-  label: "Behind the scenes",
-  heading: "How the work",
-  headingAccent: "actually gets made",
-  body:
-    "The process below is the one we run. It is written down because briefs go wrong in predictable places, and most of them are early.",
-  /**
-   * `caption` is what the card shows; `body` is the full sentence, kept for
-   * the places that have room for it. The reference for this section sets
-   * each stage as a title over a short parenthetical, and a paragraph on a
-   * tilted overlapping card is unreadable however good the paragraph is.
+  label: "How we work",
+  heading: "Our Art",
+  headingAccent: "of Doing",
+  body: "The process to keep your brand on everyone's eye.",
+  /*
+   * THE SIX STEPS ARE THE DECK'S, VERBATIM. The guidelines set out "Our Art
+   * of Doing" as six named stages, under the line "the process to keep your
+   * brand on everyone's eye" — both used here as written.
+   *
+   * The four steps this replaced were invented for the original build: "The
+   * brief argument", "Direction, then casting", "Production", "Publish and
+   * read the numbers". They described a production pipeline. The deck's six
+   * describe a growth engagement, which is a different and larger claim —
+   * it starts at the brand and ends at technology, with content in the
+   * middle rather than as the whole of it.
+   *
+   * `caption` is the one-line gloss the layout shows. Nothing here invents a
+   * promise the deck does not make; each is a plain reading of its step.
    */
   steps: [
     {
-      title: "The brief argument",
-      caption: "who it is for, what should change, how we will know",
-      body: "Before anything is made we argue about the brief: who it is for, what should change in their head, and how we will know.",
+      title: "Building the Brand",
+      caption: "identity, positioning and the rules that hold them",
     },
     {
-      title: "Direction, then casting",
-      caption: "direction first, creators matched to it",
-      body: "Creative direction comes first and creators are matched to it. The other order is how brands end up shaped by whoever was free.",
+      title: "Designing the Journey",
+      caption: "how someone arrives, and what they meet when they do",
     },
     {
-      title: "Production",
-      caption: "script, shoot or generate, edit",
-      body: "Scripting, shoot or generation, edit. AI carries the variants; the hero cut gets human attention start to finish.",
+      title: "Creating Attention & Culture",
+      caption: "ideas people want to share, not ads people tolerate",
     },
     {
-      title: "Publish and read the numbers",
-      caption: "measured against the metrics agreed in step one",
-      body: "The metrics were agreed in step one, so this step is arithmetic rather than argument.",
+      title: "Content at Scale",
+      caption: "production that keeps feeding every channel",
+    },
+    {
+      title: "Drive Growth",
+      caption: "performance thinking against numbers agreed up front",
+    },
+    {
+      title: "Technology & Integration",
+      caption: "AI tooling and automation wired into the work",
     },
   ],
 } as const;

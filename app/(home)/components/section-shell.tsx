@@ -21,7 +21,7 @@ export function SectionShell({
   headingAccent,
   body,
   children,
-  tone = "crimson",
+  tone = "brand",
   origin = "top-right",
   intensity,
   align = "left",
@@ -35,7 +35,7 @@ export function SectionShell({
   headingAccent?: string;
   body?: string;
   children?: ReactNode;
-  tone?: "crimson" | "amber" | "teal" | "neutral";
+  tone?: "brand" | "neutral";
   origin?: "top" | "top-right" | "top-left" | "center" | "bottom";
   intensity?: number;
   align?: "left" | "center" | "split";
@@ -69,7 +69,7 @@ export function SectionShell({
           >
             {label && (
               <Reveal className={align === "split" ? "lg:col-start-1" : undefined}>
-                <SectionLabel dot tone={tone === "neutral" ? "crimson" : tone}>
+                <SectionLabel dot tone={tone === "neutral" ? "brand" : tone}>
                   {label}
                 </SectionLabel>
               </Reveal>
@@ -87,7 +87,7 @@ export function SectionShell({
                   {headingAccent && (
                     <>
                       {" "}
-                      <span className="font-serif italic font-normal text-amber-ink">
+                      <span className="font-serif italic font-normal text-brand-ink">
                         {headingAccent}
                       </span>
                     </>

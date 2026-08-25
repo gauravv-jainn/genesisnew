@@ -132,7 +132,7 @@ export function LandingScene({ className }: { className?: string }) {
       >
         <DocumentWall
           panels={5}
-          tone="amber"
+          tone="brand"
           radius="58cqw"
           // Wider arc so the outer sheets reach toward the frame edges: in
           // p01_1 the lit sheets span x=6% to x=96% of the frame.
@@ -186,7 +186,7 @@ export function LandingScene({ className }: { className?: string }) {
       >
         <DocumentWall
           panels={5}
-          tone="amber"
+          tone="brand"
           radius="58cqw"
           step={24}
           height="120cqh"

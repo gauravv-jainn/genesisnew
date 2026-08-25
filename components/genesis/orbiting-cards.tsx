@@ -28,7 +28,7 @@ export type OrbitItem = {
   id: string;
   label: string;
   sublabel?: string;
-  accent?: "crimson" | "amber" | "teal";
+  accent?: "brand";
 };
 
 export function OrbitingCards({
@@ -132,11 +132,11 @@ function OrbitingCard({
   );
 
   const accentRing =
-    item.accent === "amber"
-      ? "ring-amber/40"
-      : item.accent === "teal"
-        ? "ring-teal/40"
-        : "ring-crimson/40";
+    item.accent === "brand"
+      ? "ring-brand/40"
+      : item.accent === "brand"
+        ? "ring-brand/40"
+        : "ring-brand/40";
 
   return (
     <>

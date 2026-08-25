@@ -48,7 +48,7 @@ function lerpRgb(from: string, to: string, t: number) {
 
 export function DocumentWall({
   panels = 7,
-  tone = "amber",
+  tone = "brand",
   /**
    * Cylinder radius as a CSS LENGTH, not a number. Larger = a flatter, wider
    * wall.
@@ -74,7 +74,7 @@ export function DocumentWall({
   className,
 }: {
   panels?: number;
-  tone?: "amber" | "crimson" | "cool";
+  tone?: "brand" | "cool";
   radius?: string;
   step?: number;
   height?: string;
@@ -87,8 +87,7 @@ export function DocumentWall({
     // Stops read straight off p01_1; `flank` is the colour the outermost
     // sheet actually is, and every stop is interpolated toward it by the
     // panel's distance from centre.
-    amber: { hot: "252 235 108", mid: "252 190 55", rim: "236 132 22", flank: "246 111 12" },
-    crimson: { hot: "255 228 230", mid: "255 88 100", rim: "196 26 46", flank: "214 34 52" },
+    brand: { hot: "252 235 108", mid: "252 190 55", rim: "236 132 22", flank: "246 111 12" },
     cool: { hot: "234 244 255", mid: "156 190 232", rim: "84 124 184", flank: "96 140 200" },
   } as const;
 

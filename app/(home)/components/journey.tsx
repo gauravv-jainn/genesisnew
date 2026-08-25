@@ -50,7 +50,7 @@ export function Journey() {
       <div className="relative z-[2] mx-auto w-full max-w-5xl px-6">
         <div className="flex flex-wrap items-start justify-between gap-8">
           <Reveal>
-            <SectionLabel dot tone="crimson">
+            <SectionLabel dot tone="brand">
               {journey.label}
             </SectionLabel>
             <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
@@ -99,10 +99,10 @@ export function Journey() {
             <div className="relative grid gap-12 lg:grid-cols-[1fr_0.62fr] lg:gap-16">
               <AnimatedTimeline
                 milestones={milestones}
-              // Crimson, not teal. This section reads cold because its PAPER is
+              // Crimson, not brand. This section reads cold because its PAPER is
               // cold — sampled straight off p15_0 — so the accent no longer has to
-              // carry that, and teal appears nowhere in the references.
-                tone="crimson"
+              // carry that, and brand appears nowhere in the references.
+                tone="brand"
                 surface="light"
                 className="relative"
               />

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Genesis Media">
+  <!--
+    The N from the Genesis Media wordmark, traced from the supplied symbol
+    rather than approximated: the diagonal runs at dx/dy = 0.81 with a
+    constant horizontal band width of 152 units across a 306x500 field, which
+    is what the source PNG measures at every scanline.
+  -->
+  <rect width="512" height="512" rx="96" fill="#242426"/>
+  <g transform="translate(121.5 36) scale(0.88)">
+    <clipPath id="n">
+      <rect width="306" height="500"/>
+    </clipPath>
+    <g clip-path="url(#n)">
+      <rect width="306" height="500" fill="#ffc516"/>
+      <polygon points="-121,0 30,0 435,500 284,500" fill="#242426"/>
+    </g>
+  </g>
+</svg>

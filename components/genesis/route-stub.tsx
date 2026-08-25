@@ -22,7 +22,7 @@ export function RouteStub({
   description: string;
 }) {
   return (
-    <Atmosphere tone="crimson" origin="top" intensity={0.2} className="min-h-dvh">
+    <Atmosphere tone="brand" origin="top" intensity={0.2} className="min-h-dvh">
       <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col justify-center px-6 py-32">
         <SectionLabel dot>{label}</SectionLabel>
 

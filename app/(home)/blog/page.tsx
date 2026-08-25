@@ -22,7 +22,7 @@ export const metadata: Metadata = {
  * against. In light mode the header alone flipped while the room below it
  * did not, which put a razor seam straight through the standfirst: half the
  * sentence on cream, half on black. The heading also fell to grey-on-cream
- * and the amber accent to near-invisible, because both are colours chosen to
+ * and the brand accent to near-invisible, because both are colours chosen to
  * glow rather than to sit on paper.
  */
 export default function BlogPage() {
@@ -32,12 +32,12 @@ export default function BlogPage() {
     <main className="scene-dark relative min-h-dvh overflow-hidden bg-void pt-24">
       <div className="relative z-[3] mx-auto max-w-3xl px-6 pb-2 text-center">
         <Reveal>
-          <SectionLabel dot tone="amber" className="justify-center">
+          <SectionLabel dot tone="brand" className="justify-center">
             Journal
           </SectionLabel>
           <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
             Thinking out{" "}
-            <span className="font-serif font-normal italic text-amber-ink">loud</span>
+            <span className="font-serif font-normal italic text-brand-ink">loud</span>
           </h1>
           <p className="mx-auto mt-6 max-w-md text-small leading-relaxed text-ash">
             Every sheet is a piece. Move your cursor through them.

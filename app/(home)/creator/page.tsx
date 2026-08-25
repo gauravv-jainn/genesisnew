@@ -33,12 +33,12 @@ export default function CreatorPage() {
         <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
           <div className="flex flex-wrap items-start justify-between gap-8">
             <Reveal className="max-w-xl">
-              <SectionLabel dot tone="amber">
+              <SectionLabel dot tone="brand">
                 {creatorPage.label}
               </SectionLabel>
               <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
                 {creatorPage.heading}{" "}
-                <span className="font-serif font-normal italic text-amber-ink">
+                <span className="font-serif font-normal italic text-brand-ink">
                   {creatorPage.headingAccent}
                 </span>
               </h1>
@@ -54,7 +54,7 @@ export default function CreatorPage() {
               <RevealItem key={benefit.title} className="h-full">
                 <PaperCard
                   pinned
-                  tone={index % 3 === 1 ? "crimson" : "amber"}
+                  tone={index % 3 === 1 ? "brand" : "brand"}
                   rotate={index % 2 === 0 ? -2.6 : 2.2}
                   className="h-full"
                 >
@@ -85,7 +85,7 @@ export default function CreatorPage() {
         heading="Tell us what"
         headingAccent="you make"
         body="Send your handles and the kind of work you do. We'll come back if there's a fit."
-        tone="crimson"
+        tone="brand"
         origin="bottom"
         intensity={0.2}
       >

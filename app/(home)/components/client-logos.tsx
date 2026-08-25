@@ -19,7 +19,7 @@ import { clients } from "@/lib/home-content";
  */
 export function ClientLogos() {
   return (
-    <Atmosphere tone="crimson" origin="center" intensity={0.14} className="py-24 sm:py-32">
+    <Atmosphere tone="brand" origin="center" intensity={0.14} className="py-24 sm:py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal>
           <SectionLabel dot>{clients.label}</SectionLabel>

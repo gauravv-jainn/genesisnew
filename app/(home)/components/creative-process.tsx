@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  * cards partly cover. Its words and marks are not copied.
  *
  * WHAT THE PREVIOUS VERSION GOT WRONG. It was a tidy four-column grid of pale
- * pinned paper cards on a warm amber spotlight, tilted by ±2°. The reference
+ * pinned paper cards on a warm brand spotlight, tilted by ±2°. The reference
  * is none of those things: the ground is red, the cards are dark glass, and
  * the tilts run to ±9°, which is the difference between "a grid that slipped"
  * and "laid out by hand". It also printed its own label twice, once as the
@@ -92,25 +92,25 @@ export function CreativeProcess() {
         }}
       />
 
-      {/* The red ground. The reference has no amber and no neutral in it. */}
+      {/* The red ground. The reference has no brand and no neutral in it. */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(58% 62% at 22% 46%, #8c0f1c 0%, #5e0a14 30%, #37060d 56%, #1c0308 78%, #120306 100%), radial-gradient(46% 50% at 84% 28%, rgb(255 45 63 / 0.22) 0%, transparent 72%)",
+            "radial-gradient(58% 62% at 22% 46%, #8c0f1c 0%, #5e0a14 30%, #37060d 56%, #1c0308 78%, #120306 100%), radial-gradient(46% 50% at 84% 28%, rgb(255 197 22 / 0.22) 0%, transparent 72%)",
         }}
       />
 
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
           <Reveal className="max-w-xl">
-            <SectionLabel dot tone="crimson">
+            <SectionLabel dot tone="brand">
               {creativeProcess.label}
             </SectionLabel>
             <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-scene sm:text-h1">
               {creativeProcess.heading}{" "}
-              <span className="font-serif font-normal italic text-crimson-soft">
+              <span className="font-serif font-normal italic text-brand-soft">
                 {creativeProcess.headingAccent}
               </span>
             </h2>
@@ -208,7 +208,7 @@ function StepCard({
         "glass glass-lit flex h-full flex-col justify-between rounded-panel p-6 transition-transform duration-500 will-change-transform",
         // DARK slabs over a bright ground, which is what p27_1 actually shows:
         // its card fills sample at rgb(3,3,3), (15,6,4) and (80,32,2) against
-        // a red peaking at (162,23,4). The previous fill added crimson at 0.14
+        // a red peaking at (162,23,4). The previous fill added brand at 0.14
         // and white at 0.04 on top of .glass's own white, which netted a
         // LIGHTENING wash — pale pink rectangles pasted on dark maroon, and
         // backdrop-filter paid for on four elements for no visual return.

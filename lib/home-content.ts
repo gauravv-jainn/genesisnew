@@ -285,7 +285,7 @@ export const influencer = {
   // Devgan"; confirm correct spellings and that each is cleared for display.
   celebrities: [
     { id: "vikrant", label: "Vikrant Massey", sublabel: "Celebrity collaboration" },
-    { id: "ajay", label: "Ajay Devgn", sublabel: "Celebrity collaboration", accent: "amber" as const },
+    { id: "ajay", label: "Ajay Devgn", sublabel: "Celebrity collaboration", accent: "brand" as const },
     { id: "akash", label: "Akash", sublabel: "Creator" },
     { id: "rashmi", label: "Rashmi", sublabel: "Creator" },
     { id: "parvi", label: "Parvi", sublabel: "Creator" },

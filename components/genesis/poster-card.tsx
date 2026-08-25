@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * Movie-poster card — the "Genesis Netflix" unit (img-025, img-026, img-013).
  *
  * Vertical 2:3 poster, category badge top-left, play affordance top-right,
- * title and meta over a bottom scrim. On hover it lifts and blooms crimson,
+ * title and meta over a bottom scrim. On hover it lifts and blooms brand,
  * matching the centre-focused treatment in the reference carousel.
  */
 
@@ -38,11 +38,11 @@ function placeholderArt(id: string) {
   for (let i = 0; i < id.length; i += 1) {
     hash = (hash * 31 + id.charCodeAt(i)) % 360;
   }
-  // Constrained to the BRAND ARC, crimson 350deg through amber 30deg, rather
+  // Constrained to the BRAND ARC, brand 350deg through brand 30deg, rather
   // than the full wheel. An unconstrained hash put three of the four live
   // portfolio ids at hue 92, 105 and 135 — lime and green billboards under the
   // names Aditya Birla Capital, HDFC and Mahindra Finance, on a site whose
-  // whole palette is crimson and amber. Saturation and lightness are pulled
+  // whole palette is brand and brand. Saturation and lightness are pulled
   // back to graphite too: this is unphotographed work, and it should read as
   // restrained rather than as the loudest colour on the page.
   const hue = (350 + (hash % 41)) % 360;
@@ -81,7 +81,7 @@ export function PosterCard({
       className={cn(
         "group relative shrink-0 overflow-hidden rounded-panel border border-white/10",
         "shadow-[0_18px_50px_-18px_rgb(0_0_0/0.9)]",
-        "transition-shadow duration-500 hover:shadow-[0_26px_70px_-16px_rgb(255_45_63/0.4)]",
+        "transition-shadow duration-500 hover:shadow-[0_26px_70px_-16px_rgb(255_197_22/0.4)]",
         // Spec page 12 asks Portfolio for a "minimal Scroll section", and the
         // scroll IS the section. At the previous widths four posters plus
         // their gaps measured 1144px inside a 1104px container — the track was

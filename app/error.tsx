@@ -29,13 +29,13 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <Atmosphere tone="crimson" origin="top" intensity={0.2} className="min-h-dvh">
+    <Atmosphere tone="brand" origin="top" intensity={0.2} className="min-h-dvh">
       <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center px-6 text-center">
         <SectionLabel dot>Something went wrong</SectionLabel>
 
         <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.1] tracking-tight text-bone sm:text-h1">
           This page didn&rsquo;t{" "}
-          <span className="font-serif font-normal italic text-amber-ink">load</span>
+          <span className="font-serif font-normal italic text-brand-ink">load</span>
         </h1>
 
         <p className="mt-6 max-w-md text-small leading-relaxed text-ash">
@@ -44,7 +44,7 @@ export default function ErrorBoundary({
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <GlassButton onClick={reset} variant="crimson" size="lg">
+          <GlassButton onClick={reset} variant="brand" size="lg">
             Try again
           </GlassButton>
           <GlassButton href="/" variant="glass" size="lg">

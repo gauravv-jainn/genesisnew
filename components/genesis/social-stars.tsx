@@ -69,7 +69,7 @@ export function SocialStars({ className }: { className?: string }) {
             {/* The star itself. */}
             <span
               aria-hidden
-              className="absolute inset-0 bg-white/[0.07] transition-colors duration-300 group-hover:bg-crimson/70"
+              className="absolute inset-0 bg-white/[0.07] transition-colors duration-300 group-hover:bg-brand/70"
               style={{ clipPath: STAR }}
             />
             {/* Bloom on approach, taking the star's silhouette. */}

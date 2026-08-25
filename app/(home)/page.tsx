@@ -4,7 +4,6 @@ import { siteConfig } from "@/lib/site-config";
 import { AiContent } from "./components/ai-content";
 import { BlogTeaser } from "./components/blog-teaser";
 import { BrandingDesign } from "./components/branding-design";
-import { CameraPan } from "./components/camera-pan";
 import { CreativeProcess } from "./components/creative-process";
 import { CaseStudies } from "./components/case-studies";
 import { ClientLogos } from "./components/client-logos";
@@ -40,7 +39,17 @@ export default function HomePage() {
     <main>
       <Hero />
       {/* Services and Portfolio are the two faces of one turning stage. */}
-      <CameraPan front={<Services />} back={<Portfolio />} />
+      {/*
+        Services and Portfolio, one after the other.
+
+        These used to be the two faces of a pinned 3D camera turn. It is gone:
+        it pinned the page for 160% of the viewport to deliver one rotation,
+        it was the single most expensive thing on the site to composite, and
+        with Reduce Motion enabled it collapsed into two sections printed on
+        top of each other. Plain document flow says the same thing.
+      */}
+      <Services />
+      <Portfolio />
       <CaseStudies />
       <Journey />
       <CreativeProcess />

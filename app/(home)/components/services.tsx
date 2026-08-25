@@ -56,12 +56,12 @@ export function Services() {
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-start justify-between gap-8">
           <Reveal className="max-w-lg">
-            <SectionLabel dot tone="amber">
+            <SectionLabel dot tone="brand">
               {services.label}
             </SectionLabel>
             <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
               {services.heading}{" "}
-              <span className="font-serif font-normal italic text-amber-ink">
+              <span className="font-serif font-normal italic text-brand-ink">
                 {services.headingAccent}
               </span>
             </h2>
@@ -123,7 +123,7 @@ function ServiceCard({
   return (
     <PaperCard
       pinned
-      tone={index % 3 === 1 ? "crimson" : "amber"}
+      tone={index % 3 === 1 ? "brand" : "brand"}
       rotate={rotate}
       className="flex h-full flex-col justify-between"
     >
@@ -132,7 +132,7 @@ function ServiceCard({
         <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
           {service.title}
         </h3>
-        <p className="mt-2 text-small leading-relaxed text-amber-ink/75">{service.caption}</p>
+        <p className="mt-2 text-small leading-relaxed text-brand-ink/75">{service.caption}</p>
       </div>
     </PaperCard>
   );

@@ -10,7 +10,7 @@
    Derived from docs/reference/. Two of those images (img-012 Influencer
    Campaigns, img-013 Our Content) are existing Genesis Media artwork, so the
    palette below follows them rather than the approximate values in the brief:
-   the brand accent is CRIMSON, not amber. Amber is retained as the secondary
+   the brand accent is the guidelines' yellow #ffc516, and it is the only one
    "dramatic light" accent because the recurring papers-catching-light motif
    (img-001, 005, 011, 014, 043) is unmistakably warm.
 
@@ -18,10 +18,12 @@
    ========================================================================== */
 
 @theme inline {
-    --font-heading: var(--font-sans);
+    /* Mont Heavy for display, matching the wordmark in the guidelines. */
+    --font-heading: var(--font-display);
+    --font-display: var(--font-display);
     --font-sans: var(--font-sans);
     /* Serif italic, reserved for a single accent word in a headline. */
-    --font-serif: var(--font-serif);
+    --font-serif: var(--font-sans);
 
     /* --- Surfaces: a real elevation ladder ----------------------------------
        There was no elevation. `raised` was used ZERO times, `elevated` and
@@ -41,19 +43,31 @@
     /* Retained: `elevated` predates the ladder and still has two callers. */
     --color-elevated: var(--surface-panel);
 
-    /* --- Brand accents ---------------------------------------------------- */
-    /* Primary. Sampled from the Genesis CTA gradient + logo mark (img-012). */
-    --color-crimson: #ff2d3f;
-    --color-crimson-deep: #c9102b;
-    --color-crimson-soft: #ff6b78;
+    /* --- Brand accent ------------------------------------------------------
+       ONE accent, from the Genesis Media brand guidelines: yellow #ffc516,
+       the wedge in the wordmark's N and the colour of every callout in the
+       book. Counted across the PDF's own vector fills it appears 490 times
+       against 1962 blacks, 226 whites and 200 light greys — the whole system
+       is charcoal, white and this one yellow.
 
-    /* Secondary. The single dramatic light source on paper/documents. */
-    --color-amber: #ff8a3d;
-    --color-amber-light: #ffd08a;
+       WHAT THIS REPLACED. The site was built on brand #ffc516 and brand
+       #ffc516, sampled from mockups before the guidelines existed. Neither
+       appears anywhere in the brand book. They are gone rather than demoted:
+       a second accent is exactly what the guidelines do not have. */
+    --color-brand: #ffc516;
+    /* The book's second yellow, for gradients and pressed states. */
+    --color-brand-deep: #e0a800;
+    --color-brand-soft: #ffdd66;
 
-    /* Tertiary. From the brief; not evidenced in the references — use only
-       for rare cool-side contrast (see PROGRESS.md). */
-    --color-teal: #2dd4bf;
+    /* Yellow for TYPE. #ffc516 on the light theme's paper measures about
+       1.4:1, so as ink it has to darken — the same split the type already
+       needed when the accent was brand. Fills, dots and glows keep
+       --color-brand; anything that has to be READ takes this. */
+    --color-brand-ink: var(--brand-ink);
+
+    /* On a yellow fill, text is the brand's near-black, never white:
+       #0b0b0c on #ffc516 measures 13.0:1, white on it measures 1.6:1. */
+    --color-on-brand: #0b0b0c;
 
     /* --- Type scale --------------------------------------------------------
        EIGHT STEPS. The page previously resolved 35 distinct size/weight pairs,
@@ -98,7 +112,7 @@
        own colours in both themes, so copy laid over them has to keep its own
        too — the same reason a caption burned into a photograph stays white
        when the page around it goes light. Flipping it produced near-black
-       type on a bright amber wall. */
+       type on a bright brand wall. */
     --color-scene: #f5f5f4;
     --color-scene-dim: #cfcbc6;
 
@@ -109,13 +123,13 @@
        on the PAGE ground, not on a lit object, so unlike the inks in
        animated-timeline and stat-card it has to flip: #cfe3ff measures about
        1.2:1 on cream, which is not a faint accent, it is an invisible one. */
-    /* Amber for TYPE. --color-amber stays fixed at #ff8a3d because it is also
+    /* Amber for TYPE. --color-brand stays fixed at #ffc516 because it is also
        a light source: glows, borders, the lit wall. But as TEXT on the light
        theme's paper it measured 1.97-2.08:1 on every section heading accent,
        every service caption and every numbered label on the site — against
        floors of 3.0 and 4.5. Type gets its own token so the glow can stay
        bright while the ink goes dark enough to read. */
-    --color-amber-ink: var(--amber-ink);
+    --color-brand-ink: var(--brand-ink);
 
     --color-cool-accent: var(--cool-accent);
 
@@ -200,14 +214,16 @@
        their own literal colours in both themes and the chrome moves around
        them, which is also what every editorial site with a theme toggle does
        with its imagery. */
-    --surface-base: #08080a;
-    --surface-ink: #0a0a0b;
-    --surface-raised: #111014;
-    --surface-panel: #17161c;
-    --surface-float: #1e1c24;
-    --ink-strong: #f5f5f4;
-    --ink-muted: #a3a3a3;
-    --ink-faint: #6b6b70;
+    /* Brand neutrals. #242426 is the guidelines' cover ground and #0b0b0c
+       its deepest black; #96969a and #6b6b70 are its grey ramp. */
+    --surface-base: #0b0b0c;
+    --surface-ink: #131315;
+    --surface-raised: #1c1c1e;
+    --surface-panel: #242426;
+    --surface-float: #2e2e31;
+    --ink-strong: #ffffff;
+    --ink-muted: #c8c8cc;
+    --ink-faint: #96969a;
 
     --glass-fill: rgb(255 255 255 / 0.075);
     --glass-fill-strong: rgb(255 255 255 / 0.12);
@@ -226,8 +242,9 @@
     --spot-veil: 0;
 
     --cool-accent: #cfe3ff;
-    --amber-ink: #ff8a3d;
+    --brand-ink: #ffc516;
     --hover-wash: rgb(255 255 255 / 0.07);
+    --logo-invert: 0;
     --ghost-outline: rgb(255 255 255 / 0.07);
 
     --radius: 0.625rem;
@@ -240,7 +257,7 @@
     --card-foreground: #f5f5f4;
     --popover: #131316;
     --popover-foreground: #f5f5f4;
-    --primary: #ff2d3f;
+    --primary: #ffc516;
     --primary-foreground: #ffffff;
     --secondary: #1c1a20;
     --secondary-foreground: #f5f5f4;
@@ -248,18 +265,18 @@
     --muted-foreground: #a3a3a3;
     --accent: #1c1a20;
     --accent-foreground: #f5f5f4;
-    --destructive: #ff2d3f;
+    --destructive: #ffc516;
     --border: rgb(255 255 255 / 0.1);
     --input: rgb(255 255 255 / 0.14);
-    --ring: #ff2d3f;
+    --ring: #ffc516;
     --sidebar: #0a0a0b;
     --sidebar-foreground: #f5f5f4;
-    --sidebar-primary: #ff2d3f;
+    --sidebar-primary: #ffc516;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #1c1a20;
     --sidebar-accent-foreground: #f5f5f4;
     --sidebar-border: rgb(255 255 255 / 0.1);
-    --sidebar-ring: #ff2d3f;
+    --sidebar-ring: #ffc516;
 }
 
 .dark {
@@ -269,7 +286,7 @@
     --card-foreground: #f5f5f4;
     --popover: #131316;
     --popover-foreground: #f5f5f4;
-    --primary: #ff2d3f;
+    --primary: #ffc516;
     --primary-foreground: #ffffff;
     --secondary: #1c1a20;
     --secondary-foreground: #f5f5f4;
@@ -277,18 +294,18 @@
     --muted-foreground: #a3a3a3;
     --accent: #1c1a20;
     --accent-foreground: #f5f5f4;
-    --destructive: #ff2d3f;
+    --destructive: #ffc516;
     --border: rgb(255 255 255 / 0.1);
     --input: rgb(255 255 255 / 0.14);
-    --ring: #ff2d3f;
+    --ring: #ffc516;
     --sidebar: #0a0a0b;
     --sidebar-foreground: #f5f5f4;
-    --sidebar-primary: #ff2d3f;
+    --sidebar-primary: #ffc516;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #1c1a20;
     --sidebar-accent-foreground: #f5f5f4;
     --sidebar-border: rgb(255 255 255 / 0.1);
-    --sidebar-ring: #ff2d3f;
+    --sidebar-ring: #ffc516;
 }
 
 
@@ -296,7 +313,7 @@
    THEME: light.
 
    Not an inversion. A warm off-white ground rather than #fff, because the
-   brand is crimson and amber and a pure-white page makes both look like
+   brand is brand and brand and a pure-white page makes both look like
    warnings. Glass flips from a white fill to a white FROST over a light
    ground — the same material reading the other way — and its border goes dark,
    since a white hairline on white is nothing.
@@ -307,33 +324,34 @@
    OS in both directions.
    -------------------------------------------------------------------------- */
 :root[data-theme="light"] {
-    --surface-base: #f4f1ec;
-    --surface-ink: #efebe4;
-    --surface-raised: #fbf9f6;
+    --surface-base: #f4f4f4;
+    --surface-ink: #ededed;
+    --surface-raised: #f9f9f9;
     --surface-panel: #ffffff;
     --surface-float: #ffffff;
-    --ink-strong: #16141b;
-    --ink-muted: #55525d;
-    --ink-faint: #86828f;
+    --ink-strong: #0b0b0c;
+    --ink-muted: #3d3d42;
+    --ink-faint: #6b6b70;
 
     --glass-fill: rgb(255 255 255 / 0.72);
     --glass-fill-strong: rgb(255 255 255 / 0.9);
-    --glass-border: rgb(22 20 27 / 0.26);
+    --glass-border: rgb(11 11 12 / 0.26);
     --glass-highlight: rgb(255 255 255 / 0.9);
-    --glass-inset: 0 -1px 0 0 rgb(22 20 27 / 0.05) inset;
+    --glass-inset: 0 -1px 0 0 rgb(11 11 12 / 0.05) inset;
 
-    --ghost-ink: rgb(22 20 27 / 0.09);
+    --ghost-ink: rgb(11 11 12 / 0.09);
     --spot-beam: 0.22;
     --spot-veil: 1;
     --cool-accent: #35607f;
-    --amber-ink: #a8410b;
-    --hover-wash: rgb(22 20 27 / 0.07);
-    --ghost-outline: rgb(22 20 27 / 0.07);
+    --brand-ink: #7a5c00;
+    --hover-wash: rgb(11 11 12 / 0.07);
+    --logo-invert: 1;
+    --ghost-outline: rgb(11 11 12 / 0.07);
 
     /* Shadows carry less alpha on a light ground or they read as smudges. */
-    --shadow-raised: 0 1px 2px 0 rgb(22 20 27 / 0.09), 0 2px 6px -1px rgb(22 20 27 / 0.10);
-    --shadow-panel: 0 2px 4px -1px rgb(22 20 27 / 0.10), 0 12px 28px -8px rgb(22 20 27 / 0.20);
-    --shadow-float: 0 4px 8px -2px rgb(22 20 27 / 0.12), 0 28px 56px -16px rgb(22 20 27 / 0.28);
+    --shadow-raised: 0 1px 2px 0 rgb(11 11 12 / 0.09), 0 2px 6px -1px rgb(11 11 12 / 0.10);
+    --shadow-panel: 0 2px 4px -1px rgb(11 11 12 / 0.10), 0 12px 28px -8px rgb(11 11 12 / 0.20);
+    --shadow-float: 0 4px 8px -2px rgb(11 11 12 / 0.12), 0 28px 56px -16px rgb(11 11 12 / 0.28);
 
     --background: #f4f1ec;
     --foreground: #16141b;
@@ -347,51 +365,52 @@
     --muted-foreground: #55525d;
     --accent: #efebe4;
     --accent-foreground: #16141b;
-    --border: rgb(22 20 27 / 0.12);
-    --input: rgb(22 20 27 / 0.16);
+    --border: rgb(11 11 12 / 0.12);
+    --input: rgb(11 11 12 / 0.16);
     --sidebar: #f4f1ec;
     --sidebar-foreground: #16141b;
     --sidebar-accent: #efebe4;
     --sidebar-accent-foreground: #16141b;
-    --sidebar-border: rgb(22 20 27 / 0.12);
+    --sidebar-border: rgb(11 11 12 / 0.12);
 }
 
 /* System preference, only when no explicit choice has been stamped. */
 @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]):not([data-theme="light"]) {
-        --surface-base: #f4f1ec;
-        --surface-ink: #efebe4;
-        --surface-raised: #fbf9f6;
+        --surface-base: #f4f4f4;
+        --surface-ink: #ededed;
+        --surface-raised: #f9f9f9;
         --surface-panel: #ffffff;
         --surface-float: #ffffff;
-        --ink-strong: #16141b;
-        --ink-muted: #55525d;
-        --ink-faint: #86828f;
+        --ink-strong: #0b0b0c;
+        --ink-muted: #3d3d42;
+        --ink-faint: #6b6b70;
 
         --glass-fill: rgb(255 255 255 / 0.72);
         --glass-fill-strong: rgb(255 255 255 / 0.9);
-        --glass-border: rgb(22 20 27 / 0.26);
+        --glass-border: rgb(11 11 12 / 0.26);
         --glass-highlight: rgb(255 255 255 / 0.9);
-        --glass-inset: 0 -1px 0 0 rgb(22 20 27 / 0.05) inset;
+        --glass-inset: 0 -1px 0 0 rgb(11 11 12 / 0.05) inset;
 
-        --ghost-ink: rgb(22 20 27 / 0.09);
+        --ghost-ink: rgb(11 11 12 / 0.09);
         --spot-beam: 0.22;
         --spot-veil: 1;
         --cool-accent: #35607f;
-        --amber-ink: #a8410b;
-        --hover-wash: rgb(22 20 27 / 0.07);
-        --ghost-outline: rgb(22 20 27 / 0.07);
+        --brand-ink: #7a5c00;
+        --hover-wash: rgb(11 11 12 / 0.07);
+        --logo-invert: 1;
+        --ghost-outline: rgb(11 11 12 / 0.07);
 
-        --shadow-raised: 0 1px 2px 0 rgb(22 20 27 / 0.09), 0 2px 6px -1px rgb(22 20 27 / 0.10);
-        --shadow-panel: 0 2px 4px -1px rgb(22 20 27 / 0.10), 0 12px 28px -8px rgb(22 20 27 / 0.20);
-        --shadow-float: 0 4px 8px -2px rgb(22 20 27 / 0.12), 0 28px 56px -16px rgb(22 20 27 / 0.28);
+        --shadow-raised: 0 1px 2px 0 rgb(11 11 12 / 0.09), 0 2px 6px -1px rgb(11 11 12 / 0.10);
+        --shadow-panel: 0 2px 4px -1px rgb(11 11 12 / 0.10), 0 12px 28px -8px rgb(11 11 12 / 0.20);
+        --shadow-float: 0 4px 8px -2px rgb(11 11 12 / 0.12), 0 28px 56px -16px rgb(11 11 12 / 0.28);
 
         --background: #f4f1ec;
         --foreground: #16141b;
         --card: #ffffff;
         --card-foreground: #16141b;
-        --border: rgb(22 20 27 / 0.12);
-        --input: rgb(22 20 27 / 0.16);
+        --border: rgb(11 11 12 / 0.12);
+        --input: rgb(11 11 12 / 0.16);
         --muted-foreground: #55525d;
     }
 }
@@ -410,14 +429,16 @@
    it always did, and the chrome outside it still follows the theme.
    -------------------------------------------------------------------------- */
 .scene-dark {
-    --surface-base: #08080a;
-    --surface-ink: #0a0a0b;
-    --surface-raised: #111014;
-    --surface-panel: #17161c;
-    --surface-float: #1e1c24;
-    --ink-strong: #f5f5f4;
-    --ink-muted: #a3a3a3;
-    --ink-faint: #6b6b70;
+    /* Brand neutrals. #242426 is the guidelines' cover ground and #0b0b0c
+       its deepest black; #96969a and #6b6b70 are its grey ramp. */
+    --surface-base: #0b0b0c;
+    --surface-ink: #131315;
+    --surface-raised: #1c1c1e;
+    --surface-panel: #242426;
+    --surface-float: #2e2e31;
+    --ink-strong: #ffffff;
+    --ink-muted: #c8c8cc;
+    --ink-faint: #96969a;
 
     --glass-fill: rgb(255 255 255 / 0.075);
     --glass-fill-strong: rgb(255 255 255 / 0.12);
@@ -431,8 +452,9 @@
     --spot-beam: 1;
     --spot-veil: 0;
     --cool-accent: #cfe3ff;
-    --amber-ink: #ff8a3d;
+    --brand-ink: #ffc516;
     --hover-wash: rgb(255 255 255 / 0.07);
+    --logo-invert: 0;
 
     --shadow-raised: 0 2px 8px -2px rgb(0 0 0 / 0.6);
     --shadow-panel: 0 12px 32px -8px rgb(0 0 0 / 0.7);

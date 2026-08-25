@@ -29,7 +29,7 @@ export function Portfolio() {
       headingAccent={portfolio.headingAccent}
       body={portfolio.body}
       align="split"
-      tone="crimson"
+      tone="brand"
       origin="top"
       intensity={0.18}
       // This face is clamped to 100dvh by the camera turn, and SectionShell's

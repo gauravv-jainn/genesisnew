@@ -34,7 +34,7 @@ export default function InfluencerCampaignsPage() {
         heading={influencerPage.heading}
         headingAccent={influencerPage.headingAccent}
         body={influencerPage.body}
-        tone="crimson"
+        tone="brand"
         origin="top-right"
         intensity={0.28}
       >
@@ -65,7 +65,7 @@ export default function InfluencerCampaignsPage() {
         heading="The names"
         headingAccent="behind the reach"
         body="Celebrity and top-tier creator partnerships, alongside a database of over a lakh creators across every genre."
-        tone="amber"
+        tone="brand"
         origin="top-left"
         intensity={0.16}
       >
@@ -128,7 +128,7 @@ export default function InfluencerCampaignsPage() {
         heading="Run a campaign"
         headingAccent="with us"
         body="Tell us the brand, the audience and the timeline. We'll come back with an approach."
-        tone="crimson"
+        tone="brand"
         origin="bottom"
         intensity={0.22}
       >

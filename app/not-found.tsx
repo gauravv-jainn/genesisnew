@@ -13,7 +13,7 @@ import { navItems } from "@/lib/site-config";
  */
 export default function NotFound() {
   return (
-    <Atmosphere tone="crimson" origin="top" intensity={0.2} className="min-h-dvh">
+    <Atmosphere tone="brand" origin="top" intensity={0.2} className="min-h-dvh">
       <GhostType outlined>404</GhostType>
 
       <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center px-6 text-center">
@@ -21,7 +21,7 @@ export default function NotFound() {
 
         <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.1] tracking-tight text-bone sm:text-h1">
           That page doesn&rsquo;t{" "}
-          <span className="font-serif font-normal italic text-amber-ink">exist</span>
+          <span className="font-serif font-normal italic text-brand-ink">exist</span>
         </h1>
 
         <p className="mt-6 max-w-md text-small leading-relaxed text-ash">
@@ -30,7 +30,7 @@ export default function NotFound() {
         </p>
 
         <div className="mt-8">
-          <GlassButton href="/" variant="crimson" size="lg" arrow>
+          <GlassButton href="/" variant="brand" size="lg" arrow>
             Back to the homepage
           </GlassButton>
         </div>

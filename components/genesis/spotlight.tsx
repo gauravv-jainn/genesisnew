@@ -31,16 +31,16 @@ export function Spotlight({
 }: {
   x?: number;
   spread?: number;
-  tone?: "warm" | "cool" | "crimson";
+  tone?: "warm" | "cool" | "brand";
   intensity?: number;
   reach?: number;
   rake?: number;
   className?: string;
 }) {
   const TONES = {
-    warm: { core: "255 236 200", edge: "255 176 92" },
+    warm: { core: "255 240 190", edge: "255 221 102" },
     cool: { core: "226 238 255", edge: "150 180 220" },
-    crimson: { core: "255 220 220", edge: "255 90 100" },
+    brand: { core: "255 220 220", edge: "255 90 100" },
   } as const;
 
   const { core, edge } = TONES[tone];

@@ -109,7 +109,7 @@ export function ContactForm({
       </div>
 
       {state.status === "error" && state.message && (
-        <p role="alert" className="mt-6 text-small text-crimson-soft">
+        <p role="alert" className="mt-6 text-small text-brand-soft">
           {state.message}
         </p>
       )}
@@ -126,7 +126,7 @@ function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
 
   return (
-    <GlassButton variant="crimson" size="lg" type="submit" disabled={pending} arrow>
+    <GlassButton variant="brand" size="lg" type="submit" disabled={pending} arrow>
       {pending ? "Sending…" : label}
     </GlassButton>
   );
@@ -155,15 +155,15 @@ function Field({
   const errorId = `${id}-error`;
   const shared = cn(
     "w-full rounded-card border bg-white/[0.04] px-4 py-3 text-small text-bone",
-    "placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-crimson",
-    error ? "border-crimson/60" : "border-white/12",
+    "placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-brand",
+    error ? "border-brand/60" : "border-white/12",
   );
 
   return (
     <div className={className}>
       <label htmlFor={id} className="micro-label mb-2 block">
         {label}
-        {required && <span className="ml-1 text-crimson">*</span>}
+        {required && <span className="ml-1 text-brand">*</span>}
       </label>
 
       {multiline ? (
@@ -190,7 +190,7 @@ function Field({
       )}
 
       {error && (
-        <p id={errorId} className="mt-2 text-small text-crimson-soft">
+        <p id={errorId} className="mt-2 text-small text-brand-soft">
           {error}
         </p>
       )}

@@ -186,7 +186,7 @@ export function ContentLibrary() {
                   : "glass text-ash hover:text-bone",
               )}
             >
-              {isActive && <span aria-hidden className="size-1.5 rounded-full bg-crimson" />}
+              {isActive && <span aria-hidden className="size-1.5 rounded-full bg-brand" />}
               {category}
             </button>
           );
@@ -209,7 +209,7 @@ export function ContentLibrary() {
             view === "grid" ? (
               <article
                 key={item.id}
-                className="group relative overflow-hidden rounded-card border border-white/10 transition-shadow duration-500 hover:shadow-[0_20px_50px_-18px_rgb(255_45_63/0.45)]"
+                className="group relative overflow-hidden rounded-card border border-white/10 transition-shadow duration-500 hover:shadow-[0_20px_50px_-18px_rgb(255_197_22/0.45)]"
               >
                 <div className="relative aspect-[87/100] overflow-hidden">
                   <TileMedia item={item} />

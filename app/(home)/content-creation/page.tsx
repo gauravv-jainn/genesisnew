@@ -36,12 +36,12 @@ export default function ContentCreationPage() {
         <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
           <div className="flex flex-wrap items-start justify-between gap-8">
             <Reveal className="max-w-xl">
-              <SectionLabel dot tone="amber">
+              <SectionLabel dot tone="brand">
                 {contentCreationPage.label}
               </SectionLabel>
               <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
                 {contentCreationPage.heading}{" "}
-                <span className="font-serif font-normal italic text-amber-ink">
+                <span className="font-serif font-normal italic text-brand-ink">
                   {contentCreationPage.headingAccent}
                 </span>
               </h1>
@@ -57,7 +57,7 @@ export default function ContentCreationPage() {
               <RevealItem key={capability.title} className="h-full">
                 <PaperCard
                   pinned
-                  tone={index % 3 === 1 ? "crimson" : "amber"}
+                  tone={index % 3 === 1 ? "brand" : "brand"}
                   rotate={index % 2 === 0 ? -2.4 : 2}
                   className="h-full"
                 >
@@ -81,7 +81,7 @@ export default function ContentCreationPage() {
         heading={creativeProcess.heading}
         headingAccent={creativeProcess.headingAccent}
         body={creativeProcess.body}
-        tone="crimson"
+        tone="brand"
         origin="top-right"
         intensity={0.18}
       >
@@ -107,7 +107,7 @@ export default function ContentCreationPage() {
           heading="What we've been"
           headingAccent="working out"
           body={contentCreationPage.videoNote}
-          tone="amber"
+          tone="brand"
           origin="top-left"
           intensity={0.16}
         >
@@ -137,13 +137,13 @@ export default function ContentCreationPage() {
         heading="Tell us what"
         headingAccent="you're making"
         body="Bring the brief, or bring the problem. We'll come back with an approach."
-        tone="crimson"
+        tone="brand"
         origin="bottom"
         intensity={0.2}
         align="center"
       >
         <Reveal className="flex justify-center">
-          <GlassButton href="/#contact" variant="crimson" size="lg" arrow magnetic>
+          <GlassButton href="/#contact" variant="brand" size="lg" arrow magnetic>
             Start a project
           </GlassButton>
         </Reveal>

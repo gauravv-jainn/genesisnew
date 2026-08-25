@@ -47,7 +47,7 @@ export default function CareersPage() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(58% 26% at 50% 72%, rgb(186 236 204 / 0.55) 0%, rgb(104 192 176 / 0.3) 34%, rgb(44 104 104 / 0.13) 58%, transparent 80%), radial-gradient(86% 40% at 50% 88%, rgb(120 200 180 / 0.22) 0%, transparent 68%), radial-gradient(56% 30% at 50% 30%, rgb(255 236 200 / 0.07) 0%, transparent 70%)",
+            "radial-gradient(58% 26% at 50% 72%, rgb(186 236 204 / 0.55) 0%, rgb(104 192 176 / 0.3) 34%, rgb(44 104 104 / 0.13) 58%, transparent 80%), radial-gradient(86% 40% at 50% 88%, rgb(120 200 180 / 0.22) 0%, transparent 68%), radial-gradient(56% 30% at 50% 30%, rgb(255 240 190 / 0.07) 0%, transparent 70%)",
         }}
       />
 
@@ -116,7 +116,7 @@ export default function CareersPage() {
 
       <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-3xl flex-col items-center justify-center px-6 py-32 text-center">
         <Reveal>
-          <SectionLabel dot tone="amber" className="justify-center">
+          <SectionLabel dot tone="brand" className="justify-center">
             {careersPage.label}
           </SectionLabel>
         </Reveal>

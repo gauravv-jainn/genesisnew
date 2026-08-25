@@ -24,12 +24,12 @@ export type Milestone = {
 
 export function AnimatedTimeline({
   milestones,
-  tone = "amber",
+  tone = "brand",
   surface = "dark",
   className,
 }: {
   milestones: Milestone[];
-  tone?: "amber" | "crimson" | "teal";
+  tone?: "brand";
   /**
    * "light" sets the timeline in dark ink for a pale ground. Journey prints
    * its history on a lit broadsheet: sampled from p15_0 the paper runs lum
@@ -63,18 +63,18 @@ export function AnimatedTimeline({
   // of the rail was invisible by construction — the fade was being applied
   // twice, once by the mask and once by the gradient.
   const railColor =
-    tone === "crimson"
-      ? "from-crimson via-crimson-soft to-crimson"
-      : tone === "teal"
-        ? "from-teal via-teal/70 to-teal/80"
-        : "from-amber via-amber-light to-amber";
+    tone === "brand"
+      ? "from-brand via-brand-soft to-brand"
+      : tone === "brand"
+        ? "from-brand via-brand/70 to-brand/80"
+        : "from-brand via-brand-soft to-brand";
 
   const glowColor =
-    tone === "crimson"
-      ? "rgb(255 45 63 / 0.5)"
-      : tone === "teal"
+    tone === "brand"
+      ? "rgb(255 197 22 / 0.5)"
+      : tone === "brand"
         ? "rgb(45 212 191 / 0.45)"
-        : "rgb(255 138 61 / 0.5)";
+        : "rgb(255 197 22 / 0.5)";
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>

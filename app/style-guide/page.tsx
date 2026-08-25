@@ -4,7 +4,7 @@ import { Globe, Sparkles, Target, Users } from "lucide-react";
 
 import { Atmosphere } from "@/components/genesis/atmosphere";
 import { AnimatedTimeline } from "@/components/genesis/animated-timeline";
-import { GenesisMark, GenesisStar } from "@/components/genesis/genesis-mark";
+import { GenesisMark, GenesisN } from "@/components/genesis/genesis-mark";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { LogoMarquee } from "@/components/genesis/logo-marquee";
 import { OrbitingCards } from "@/components/genesis/orbiting-cards";
@@ -56,7 +56,7 @@ export default function StyleGuidePage() {
       <div className="mx-auto max-w-6xl px-6 pt-24">
         <SectionLabel dot>Phase 1 · Design system</SectionLabel>
         <h1 className="mt-4 text-h2 font-semibold tracking-tight text-bone">
-          Genesis <span className="font-serif italic text-amber-ink">style guide</span>
+          Genesis <span className="font-serif italic text-brand-ink">style guide</span>
         </h1>
         <p className="mt-3 max-w-2xl text-small leading-relaxed text-ash">
           Every shared component in isolation. Dev-only route — returns 404 in
@@ -71,11 +71,11 @@ export default function StyleGuidePage() {
             ["ink", "#0a0a0b"],
             ["elevated", "#131316"],
             ["raised", "#1c1a20"],
-            ["crimson", "#ff2d3f"],
-            ["crimson-deep", "#c9102b"],
-            ["amber", "#ff8a3d"],
-            ["amber-light", "#ffd08a"],
-            ["teal", "#2dd4bf"],
+            ["brand", "#ffc516"],
+            ["brand-deep", "#e0a800"],
+            ["brand", "#ffc516"],
+            ["brand-soft", "#ffdd66"],
+            ["brand", "#ffc516"],
             ["bone", "#f5f5f4"],
             ["ash", "#a3a3a3"],
             ["faint", "#6b6b70"],
@@ -96,7 +96,7 @@ export default function StyleGuidePage() {
         <div className="space-y-6">
           <SectionLabel dot>Micro label · letterspaced caps</SectionLabel>
           <h2 className="text-h1 font-semibold tracking-tight text-bone">
-            Built for the <span className="font-serif italic text-amber-ink">thinkers</span>
+            Built for the <span className="font-serif italic text-brand-ink">thinkers</span>
           </h2>
           <h3 className="text-fade-down text-h2 font-semibold tracking-tight">
             Two-tone headline treatment
@@ -111,7 +111,7 @@ export default function StyleGuidePage() {
       <Section title="Glass surfaces" note="One UI 'Blur' — heavy blur, low-contrast fill, lit top edge. Not the iOS 'Clear' style.">
         <div className="relative overflow-hidden rounded-panel">
           {/* A busy ground so the blur has something to actually blur. */}
-          <div className="absolute inset-0 bg-[conic-gradient(from_180deg,#ff2d3f,#ff8a3d,#2dd4bf,#ff2d3f)] opacity-40 blur-2xl" />
+          <div className="absolute inset-0 bg-[conic-gradient(from_180deg,#ffc516,#ffc516,#ffc516,#ffc516)] opacity-40 blur-2xl" />
           <div className="relative grid gap-4 p-8 sm:grid-cols-3">
             <div className="glass rounded-card p-6 text-small text-bone">.glass</div>
             <div className="glass glass-lit rounded-card p-6 text-small text-bone">
@@ -126,11 +126,11 @@ export default function StyleGuidePage() {
 
       <Section title="Buttons">
         <div className="flex flex-wrap items-center gap-4">
-          <GlassButton variant="crimson" arrow>Contact us</GlassButton>
+          <GlassButton variant="brand" arrow>Contact us</GlassButton>
           <GlassButton variant="luminous">Schedule a call</GlassButton>
           <GlassButton variant="glass" arrow>Start a project</GlassButton>
           <GlassButton variant="ghost">Learn more</GlassButton>
-          <GlassButton variant="crimson" size="lg" arrow magnetic>
+          <GlassButton variant="brand" size="lg" arrow magnetic>
             Magnetic CTA
           </GlassButton>
           <GlassButton variant="glass" size="sm">Small</GlassButton>
@@ -143,7 +143,7 @@ export default function StyleGuidePage() {
       <Section title="Brand mark" note="Placeholder, reconstructed from the references. Replace when real logo files land.">
         <div className="flex flex-wrap items-center gap-12">
           <GenesisMark />
-          <GenesisStar className="size-8" />
+          <GenesisN className="size-8" />
         </div>
       </Section>
 
@@ -180,14 +180,14 @@ export default function StyleGuidePage() {
         <OrbitingCards
           items={[
             { id: "1", label: "Travel Creator", sublabel: "856K followers" },
-            { id: "2", label: "Fitness Creator", sublabel: "2.4M followers", accent: "amber" },
+            { id: "2", label: "Fitness Creator", sublabel: "2.4M followers", accent: "brand" },
             { id: "3", label: "Lifestyle Creator", sublabel: "1.2M followers" },
-            { id: "4", label: "Finance Creator", sublabel: "1.1M followers", accent: "teal" },
+            { id: "4", label: "Finance Creator", sublabel: "1.1M followers", accent: "brand" },
             { id: "5", label: "Fashion Creator", sublabel: "947K followers" },
           ]}
           center={
             <div className="glass glass-lit grid size-24 place-items-center rounded-full">
-              <GenesisStar className="size-8" />
+              <GenesisN className="size-8" />
             </div>
           }
         />
@@ -213,7 +213,7 @@ export default function StyleGuidePage() {
                 Hover to straighten and lift. Rotation resets on approach.
               </p>
             </PaperCard>
-            <PaperCard tone="crimson" rotate={2.5} className="w-64">
+            <PaperCard tone="brand" rotate={2.5} className="w-64">
               <p className="micro-label mb-2">Crimson sheen</p>
               <p className="text-small text-ash">Directional light along the top edge.</p>
             </PaperCard>
@@ -289,7 +289,7 @@ export default function StyleGuidePage() {
 
       <Section title="Document wall" note="The curved wall of lit panels from the page-1 landing reference. Pure CSS — no images.">
         <div className="relative h-72 overflow-hidden rounded-card bg-void">
-          <DocumentWall tone="amber" />
+          <DocumentWall tone="brand" />
         </div>
       </Section>
 
@@ -351,7 +351,7 @@ export default function StyleGuidePage() {
 
       <Section title="Atmosphere" note="Dark ground + one directional light + grain. Sections compose this rather than repeating it.">
         <div className="grid gap-4 sm:grid-cols-3">
-          {(["crimson", "amber", "teal"] as const).map((tone) => (
+          {(["brand", "brand", "brand"] as const).map((tone) => (
             <Atmosphere key={tone} tone={tone} origin="top-right" className="rounded-card">
               <div className="flex h-40 items-end p-6">
                 <span className="micro-label">{tone}</span>

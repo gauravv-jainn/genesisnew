@@ -103,12 +103,12 @@ export function StatCard({
     <div
       className={cn(
         "glass glass-lit group relative flex items-start gap-6 rounded-panel p-6 sm:p-8",
-        "bg-[linear-gradient(135deg,rgb(255_45_63/0.10)_0%,transparent_55%)]",
+        "bg-[linear-gradient(135deg,rgb(255_197_22/0.10)_0%,transparent_55%)]",
         className,
       )}
     >
       {icon && (
-        <div className="grid size-14 shrink-0 place-items-center rounded-card border border-crimson/25 bg-crimson/10 text-crimson">
+        <div className="grid size-14 shrink-0 place-items-center rounded-card border border-brand/25 bg-brand/10 text-brand">
           {icon}
         </div>
       )}

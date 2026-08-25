@@ -413,11 +413,11 @@ function Sheet({
           // 1. pencil work
           SKETCH_POOL[sheet.seed % SKETCH_POOL.length],
           // 2. the fold: one face turns from the light, the other catches it
-          `linear-gradient(${(sheet.rotate * 0.6 + 168).toFixed(0)}deg, rgb(255 250 232 / 0.34) 0%, rgb(255 250 232 / 0.05) 46%, rgb(46 32 12 / 0.16) 47%, rgb(46 32 12 / 0.02) 100%)`,
+          `linear-gradient(${(sheet.rotate * 0.6 + 168).toFixed(0)}deg, rgb(255 252 240 / 0.34) 0%, rgb(255 252 240 / 0.05) 46%, rgb(46 32 12 / 0.16) 47%, rgb(46 32 12 / 0.02) 100%)`,
           // 3. curl along the leading edge
-          "linear-gradient(104deg, rgb(255 250 234 / 0.42) 0%, rgb(255 255 255 / 0) 24%, rgb(0 0 0 / 0) 66%, rgb(28 19 6 / 0.3) 100%)",
+          "linear-gradient(104deg, rgb(255 252 240 / 0.42) 0%, rgb(255 255 255 / 0) 24%, rgb(0 0 0 / 0) 66%, rgb(28 19 6 / 0.3) 100%)",
           // 4. warm bleed where the shaft passes through thin stock
-          "linear-gradient(184deg, rgb(255 238 198 / 0.5) 0%, rgb(255 238 198 / 0) 22%)",
+          "linear-gradient(184deg, rgb(255 244 205 / 0.5) 0%, rgb(255 244 205 / 0) 22%)",
           // 5. the stock itself — a photographed sheet when one is supplied,
           //    otherwise the procedural imitation
           USE_PHOTO_STOCK
@@ -557,7 +557,7 @@ function Sheet({
           <Link
             href={`/blog/${post.slug}`}
             aria-label={post.title}
-            className="block rounded-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber"
+            className="block rounded-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             {paper}
           </Link>

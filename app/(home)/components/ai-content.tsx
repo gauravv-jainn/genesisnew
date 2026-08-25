@@ -44,8 +44,8 @@ export function AiContent() {
       heading={aiContent.heading}
       headingAccent={aiContent.headingAccent}
       body={aiContent.body}
-      // Teal appears NOWHERE in the references (PROGRESS.md:190). This section was painting itself mint-green inside a crimson brand.
-      tone="crimson"
+      // Teal appears NOWHERE in the references (PROGRESS.md:190). This section was painting itself mint-green inside a brand brand.
+      tone="brand"
       origin="center"
       intensity={0.14}
       align="center"
@@ -76,7 +76,7 @@ export function AiContent() {
                   className="aspect-[2/3] w-[clamp(8rem,19vw,20rem)] overflow-hidden rounded-card border border-white/10"
                   style={{
                     // TODO(assets): real avatar stills replace this placeholder.
-                    background: `linear-gradient(${150 + index * 20}deg, rgb(255 45 63 / 0.24) 0%, rgb(20 20 24 / 0.92) 55%), radial-gradient(80% 60% at 50% 20%, rgb(255 255 255 / 0.18), transparent 70%)`,
+                    background: `linear-gradient(${150 + index * 20}deg, rgb(255 197 22 / 0.24) 0%, rgb(20 20 24 / 0.92) 55%), radial-gradient(80% 60% at 50% 20%, rgb(255 255 255 / 0.18), transparent 70%)`,
                   }}
                 />
                 <figcaption className="mt-3 text-center text-small font-medium text-bone">

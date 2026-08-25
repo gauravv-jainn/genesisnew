@@ -11,15 +11,15 @@ import { cn } from "@/lib/utils";
  * The Genesis pill button.
  *
  * Three surface treatments, all drawn from the references:
- *   crimson  — filled brand gradient with a red bloom  (img-012 "Contact Us")
- *   luminous — warm amber core, dark label             (img-014 "Schedule a call")
+ *   brand  — filled brand gradient with a red bloom  (img-012 "Contact Us")
+ *   luminous — warm brand core, dark label             (img-014 "Schedule a call")
  *   glass    — One UI blur over whatever is behind it  (img-013, img-044)
  *   ghost    — hairline outline only, for tertiary actions
  */
 
 type GlassButtonProps = {
   children: ReactNode;
-  variant?: "crimson" | "luminous" | "glass" | "ghost";
+  variant?: "brand" | "luminous" | "glass" | "ghost";
   size?: "sm" | "md" | "lg";
   /** Renders an anchor instead of a button. */
   href?: string;
@@ -41,17 +41,21 @@ const SIZES = {
 } as const;
 
 const VARIANTS = {
-  crimson: [
-    "text-white border border-white/15",
-    "bg-[linear-gradient(180deg,#ff4a58_0%,#ff2d3f_45%,#c9102b_100%)]",
-    "shadow-[0_8px_30px_-6px_rgb(255_45_63/0.55),0_1px_0_0_rgb(255_255_255/0.25)_inset]",
-    "hover:shadow-[0_12px_44px_-6px_rgb(255_45_63/0.75),0_1px_0_0_rgb(255_255_255/0.3)_inset]",
+  brand: [
+    // BLACK on the yellow, not white. The brand accent is #ffc516: white on it
+    // measures 1.58:1 and the brand's own near-black measures 12.4:1. This is
+    // the one place the palette dictates the text colour rather than the
+    // theme, which is why it uses --color-on-brand and not an ink token.
+    "text-on-brand border border-brand-deep/50",
+    "bg-[linear-gradient(180deg,#ffd23f_0%,#ffc516_45%,#e0a800_100%)]",
+    "shadow-[0_8px_30px_-6px_rgb(255_197_22/0.45),0_1px_0_0_rgb(255_255_255/0.45)_inset]",
+    "hover:shadow-[0_12px_44px_-6px_rgb(255_197_22/0.65),0_1px_0_0_rgb(255_255_255/0.55)_inset]",
   ],
   luminous: [
-    "text-[#2b1a0d] border border-amber-light/40",
-    "bg-[radial-gradient(120%_140%_at_50%_50%,#fff3dd_0%,#ffc98a_45%,#ff9f4d_100%)]",
-    "shadow-[0_8px_34px_-4px_rgb(255_138_61/0.6),0_1px_0_0_rgb(255_255_255/0.5)_inset]",
-    "hover:shadow-[0_14px_50px_-4px_rgb(255_138_61/0.8),0_1px_0_0_rgb(255_255_255/0.6)_inset]",
+    "text-on-brand border border-brand-deep/40",
+    "bg-[radial-gradient(120%_140%_at_50%_50%,#fff8e0_0%,#ffdd66_45%,#ffc516_100%)]",
+    "shadow-[0_8px_34px_-4px_rgb(255_197_22/0.6),0_1px_0_0_rgb(255_255_255/0.5)_inset]",
+    "hover:shadow-[0_14px_50px_-4px_rgb(255_197_22/0.8),0_1px_0_0_rgb(255_255_255/0.6)_inset]",
   ],
   glass: ["glass glass-lit text-bone", "hover:bg-white/10"],
   ghost: [
@@ -78,7 +82,7 @@ export function GlassButton({
   const classes = cn(
     "relative inline-flex select-none items-center justify-center rounded-full font-medium",
     "transition-[background-color,border-color,box-shadow,color] duration-300",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson focus-visible:ring-offset-2 focus-visible:ring-offset-ink",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-ink",
     "disabled:pointer-events-none disabled:opacity-50",
     SIZES[size],
     VARIANTS[variant],
@@ -159,7 +163,7 @@ export function GlassSegment({
             {active && (
               <motion.span
                 layoutId="glass-segment-active"
-                className="absolute inset-0 rounded-full bg-[radial-gradient(120%_140%_at_50%_50%,#fff3dd_0%,#ffc98a_45%,#ff9f4d_100%)] shadow-[0_6px_28px_-4px_rgb(255_138_61/0.7)]"
+                className="absolute inset-0 rounded-full bg-[radial-gradient(120%_140%_at_50%_50%,#fff3dd_0%,#ffc98a_45%,#ff9f4d_100%)] shadow-[0_6px_28px_-4px_rgb(255_197_22/0.7)]"
                 transition={{ type: "spring", stiffness: 380, damping: 32 }}
               />
             )}

@@ -19,13 +19,13 @@ export function PaperCard({
   children,
   /** Resting rotation in degrees. Small values read as intentional; large as broken. */
   rotate = -2,
-  tone = "amber",
+  tone = "brand",
   pinned = false,
   className,
 }: {
   children: ReactNode;
   rotate?: number;
-  tone?: "amber" | "crimson" | "neutral";
+  tone?: "brand" | "neutral";
   /** Adds the pushpin from img-009. */
   pinned?: boolean;
   className?: string;
@@ -34,11 +34,11 @@ export function PaperCard({
   const { x, y, magneticProps } = useMagnetic(0.08);
 
   const sheen =
-    tone === "crimson"
-      ? "rgb(255 45 63 / 0.18)"
+    tone === "brand"
+      ? "rgb(255 197 22 / 0.18)"
       : tone === "neutral"
         ? "rgb(255 255 255 / 0.14)"
-        : "rgb(255 176 92 / 0.2)";
+        : "rgb(255 221 102 / 0.2)";
 
   return (
     <motion.div
@@ -82,7 +82,7 @@ export function PaperCard({
 /**
  * The pushpin from img-009.
  *
- * Its head was lime once and the head is now crimson, but the GLOW was left
+ * Its head was lime once and the head is now brand, but the GLOW was left
  * behind at rgb(197 255 46) — so every pinned card on the site wore a lime
  * halo around a red pin, a hue that appears nowhere else in the brand and
  * reads as a rendering fault rather than a choice. A pin glows its own
@@ -94,7 +94,7 @@ function Pushpin() {
       aria-hidden
       className="absolute -top-3 left-1/2 z-10 -translate-x-1/2"
     >
-      <span className="block size-4 rounded-full bg-[#ff2d3f] shadow-[0_0_14px_3px_rgb(255_45_63/0.5)]" />
+      <span className="block size-4 rounded-full bg-[#ffc516] shadow-[0_0_14px_3px_rgb(255_197_22/0.5)]" />
       <span className="mx-auto block h-3 w-px bg-[#a8121f]" />
     </span>
   );
@@ -106,11 +106,11 @@ function Pushpin() {
  */
 export function PaperStack({
   items,
-  tone = "amber",
+  tone = "brand",
   className,
 }: {
   items: { title: string; caption?: string; body?: string }[];
-  tone?: "amber" | "crimson" | "neutral";
+  tone?: "brand" | "neutral";
   className?: string;
 }) {
   return (

@@ -32,7 +32,7 @@ export default function OurWorkPage() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(60% 44% at 78% 0%, rgb(150 60 190 / 0.2) 0%, transparent 62%), radial-gradient(52% 40% at 12% 4%, rgb(255 45 63 / 0.14) 0%, transparent 60%), radial-gradient(80% 60% at 50% 100%, rgb(120 40 160 / 0.12) 0%, transparent 70%)",
+            "radial-gradient(60% 44% at 78% 0%, rgb(150 60 190 / 0.2) 0%, transparent 62%), radial-gradient(52% 40% at 12% 4%, rgb(255 197 22 / 0.14) 0%, transparent 60%), radial-gradient(80% 60% at 50% 100%, rgb(120 40 160 / 0.12) 0%, transparent 70%)",
         }}
       />
 

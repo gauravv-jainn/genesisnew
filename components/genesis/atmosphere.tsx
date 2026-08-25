@@ -12,7 +12,7 @@ type AuroraProps = {
   /** Where the light comes from. The references favour top and top-right. */
   origin?: "top" | "top-right" | "top-left" | "center" | "bottom";
   /** Which accent lights the scene. */
-  tone?: "crimson" | "amber" | "teal" | "neutral";
+  tone?: "brand" | "neutral";
   /** 0–1. The references sit low; heavy glow reads as cheap. */
   intensity?: number;
   className?: string;
@@ -27,16 +27,14 @@ const ORIGIN_POSITION: Record<NonNullable<AuroraProps["origin"]>, string> = {
 };
 
 const TONE_COLOR: Record<NonNullable<AuroraProps["tone"]>, string> = {
-  crimson: "255 45 63",
-  amber: "255 138 61",
-  teal: "45 212 191",
+  brand: "255 197 22",
   neutral: "180 180 200",
 };
 
 /** A single soft directional light source — the "aurora" wash. */
 export function Aurora({
   origin = "top",
-  tone = "crimson",
+  tone = "brand",
   intensity = 0.22,
   className,
 }: AuroraProps) {

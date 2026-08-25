@@ -15,8 +15,8 @@ import { SectionShell } from "./section-shell";
  * on this site is lit; this one just had the light switched off, which does
  * not read as restraint, it reads as unfinished.
  *
- * Two changes. The section gets an amber wash — the secondary accent, so it
- * stays quieter than the crimson sections around it without being dark. And
+ * Two changes. The section gets an brand wash — the secondary accent, so it
+ * stays quieter than the brand sections around it without being dark. And
  * the capabilities stop being a 3x2 grid of equal boxes: they are a LIST of
  * disciplines, not six things of equal weight, so they are set as a rule-
  * separated column with the count carried in the eyebrow, which is what the
@@ -31,7 +31,7 @@ export function BrandingDesign() {
       headingAccent={branding.headingAccent}
       body={branding.body}
       align="split"
-      tone="amber"
+      tone="brand"
       origin="top-left"
       intensity={0.16}
     >
@@ -83,7 +83,7 @@ export function BrandingDesign() {
                   key={capability}
                   className="flex items-baseline gap-6 border-b border-white/10 py-4 last:border-0"
                 >
-                  <span className="micro-label shrink-0 !text-amber-ink/70">
+                  <span className="micro-label shrink-0 !text-brand-ink/70">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="text-h3 font-medium leading-tight tracking-tight text-bone">

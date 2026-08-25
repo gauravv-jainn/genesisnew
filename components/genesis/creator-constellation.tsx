@@ -153,9 +153,9 @@ function Globe() {
     <svg aria-hidden viewBox="0 0 400 400" className="absolute inset-0 size-full">
       <defs>
         <radialGradient id="genesis-globe-core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#ff2d3f" stopOpacity="0.09" />
-          <stop offset="70%" stopColor="#ff2d3f" stopOpacity="0.02" />
-          <stop offset="100%" stopColor="#ff2d3f" stopOpacity="0" />
+          <stop offset="0%" stopColor="#ffc516" stopOpacity="0.09" />
+          <stop offset="70%" stopColor="#ffc516" stopOpacity="0.02" />
+          <stop offset="100%" stopColor="#ffc516" stopOpacity="0" />
         </radialGradient>
       </defs>
 
@@ -187,7 +187,7 @@ function Globe() {
           cx={cx}
           cy={cy}
           r="2.6"
-          fill="#ff2d3f"
+          fill="#ffc516"
           className="motion-safe:animate-[genesis-node-pulse_var(--pulse)_ease-in-out_infinite]"
           style={
             {

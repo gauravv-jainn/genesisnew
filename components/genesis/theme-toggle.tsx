@@ -93,7 +93,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         // border measured 1.00:1 against it, so the switch had no track and
         // no edge — just a floating knob.
         "border border-[var(--glass-border)] bg-[var(--hover-wash)] transition-colors duration-300",
-        "hover:border-[var(--ink-faint)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson",
+        "hover:border-[var(--ink-faint)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
         className,
       )}
     >

@@ -38,7 +38,7 @@ export function Testimonials() {
       headingAccent={copy.headingAccent}
       body={hasQuotes ? "Drag to move through the wall." : testimonials.awaiting.body}
       align="split"
-      tone="amber"
+      tone="brand"
       origin="top"
       intensity={0.14}
     >

@@ -63,7 +63,7 @@ export function Reel({
         ) : (
           // TODO(assets): footage pending. A labelled frame keeps the layout
           // honest rather than pretending with a stock gradient.
-          <div className="grid size-full place-items-center bg-[radial-gradient(120%_100%_at_30%_10%,rgb(255_138_61/0.14),transparent_60%)]">
+          <div className="grid size-full place-items-center bg-[radial-gradient(120%_100%_at_30%_10%,rgb(255_197_22/0.14),transparent_60%)]">
             <p className="micro-label">{label}</p>
           </div>
         )}

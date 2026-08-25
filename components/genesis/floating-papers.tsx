@@ -56,7 +56,7 @@ export function FloatingPapers({
           className="h-full"
         >
           <PaperCard
-            tone={index % 3 === 1 ? "crimson" : "amber"}
+            tone={index % 3 === 1 ? "brand" : "brand"}
             rotate={index % 2 === 0 ? -2 : 1.8}
             className="h-full"
           >
@@ -66,7 +66,7 @@ export function FloatingPapers({
                 {paper.badge}
               </div>
 
-              <h3 className="mt-6 text-balance text-h3 font-semibold leading-snug tracking-tight text-bone transition-colors group-hover:text-amber-light">
+              <h3 className="mt-6 text-balance text-h3 font-semibold leading-snug tracking-tight text-bone transition-colors group-hover:text-brand-soft">
                 {paper.title}
               </h3>
 

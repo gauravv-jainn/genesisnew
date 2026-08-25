@@ -16,13 +16,13 @@ export function GlowWord({
   className,
 }: {
   children: React.ReactNode;
-  tone?: "warm" | "cool" | "crimson";
+  tone?: "warm" | "cool" | "brand";
   className?: string;
 }) {
   const TONES = {
     warm: { core: "255 244 220", halo: "255 214 150" },
     cool: { core: "236 246 255", halo: "170 205 245" },
-    crimson: { core: "255 236 238", halo: "255 110 125" },
+    brand: { core: "255 236 238", halo: "255 110 125" },
   } as const;
 
   const { core, halo } = TONES[tone];

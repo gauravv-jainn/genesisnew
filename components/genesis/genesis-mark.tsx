@@ -1,53 +1,85 @@
+import Image from "next/image";
+
 import { cn } from "@/lib/utils";
 
 /**
- * PLACEHOLDER LOGO.
+ * The Genesis Media wordmark, from the brand guidelines.
  *
- * Reconstructed from the wordmark in docs/reference/img-012 and img-013:
- * "GENESIS" in wide caps with "MEDIA" letterspaced beneath, and a four-point
- * crimson star to the upper right. Replace wholesale when the real logo files
- * arrive — this is deliberately a single component so the swap is one file.
+ * Two files, not one recoloured file: the guidelines supply a dark lockup for
+ * light grounds and a white lockup for dark ones, and in both the N's wedge
+ * stays brand yellow. A CSS filter could not produce that from one asset
+ * without turning the yellow as well.
+ *
+ * Both are rendered and cross-faded by --logo-invert, which is defined
+ * alongside the rest of the theme tokens. That means the mark follows the
+ * theme AND follows `.scene-dark` — the pages that pin themselves dark keep
+ * the white lockup without needing to know they have a logo in them.
+ *
+ * This replaces a hand-drawn placeholder: caps "GENESIS" over letterspaced
+ * "MEDIA" with a four-point star that appears nowhere in the real identity.
  */
 export function GenesisMark({
   className,
   compact = false,
 }: {
   className?: string;
-  /** Star only — for tight spaces such as the mobile bar. */
+  /** The N symbol alone — for tight spaces such as the mobile bar. */
   compact?: boolean;
 }) {
   if (compact) {
-    return <GenesisStar className={cn("size-6", className)} />;
+    return (
+      <Image
+        src="/brand/genesis-n.png"
+        alt="Genesis Media"
+        width={306}
+        height={500}
+        priority
+        className={cn("h-6 w-auto", className)}
+      />
+    );
   }
 
   return (
-    <span className={cn("inline-flex items-start gap-2", className)}>
-      <span className="flex flex-col leading-none">
-        <span className="text-small font-semibold tracking-[0.14em] text-bone">
-          GENESIS
-        </span>
-        <span className="mt-1 text-micro font-medium tracking-[0.52em] text-ash">
-          MEDIA
-        </span>
-      </span>
-      <GenesisStar className="mt-0.5 size-3.5" />
+    <span
+      className={cn("relative inline-block h-6 w-[7.5rem] shrink-0", className)}
+    >
+      <Image
+        src="/brand/genesis-wordmark-light.png"
+        alt="Genesis Media"
+        fill
+        sizes="120px"
+        priority
+        className="object-contain object-left"
+        style={{ opacity: "calc(1 - var(--logo-invert, 0))" }}
+      />
+      <Image
+        src="/brand/genesis-wordmark-dark.png"
+        alt=""
+        aria-hidden
+        fill
+        sizes="120px"
+        priority
+        className="object-contain object-left"
+        style={{ opacity: "var(--logo-invert, 0)" }}
+      />
     </span>
   );
 }
 
-/** The four-point sparkle from the Genesis lockup. */
-export function GenesisStar({ className }: { className?: string }) {
+/**
+ * The N symbol on its own — the wedge from the wordmark, used as a small
+ * standalone mark. Replaces the four-point star, which was a placeholder
+ * invention and appears nowhere in the identity.
+ */
+export function GenesisN({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
+    <Image
+      src="/brand/genesis-n.png"
+      alt=""
       aria-hidden
-      className={cn("text-crimson", className)}
-    >
-      <path
-        d="M12 0c.6 6.3 5.1 10.8 12 12-6.9 1.2-11.4 5.7-12 12-.6-6.3-5.1-10.8-12-12C6.9 10.8 11.4 6.3 12 0Z"
-        fill="currentColor"
-      />
-    </svg>
+      width={306}
+      height={500}
+      className={cn("h-auto w-auto", className)}
+    />
   );
 }

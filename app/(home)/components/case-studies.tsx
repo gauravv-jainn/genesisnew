@@ -8,7 +8,7 @@ import { SectionShell } from "./section-shell";
  *
  * THE ARCHETYPE WAS WRONG, not the styling. Spec page 13 is Case Studies, and
  * both design images on it (p13_1 = img-025, p13_2 = img-026) are movie-poster
- * stages: tall 2:3 posters on a dark ground inside a crimson bloom, the centre
+ * stages: tall 2:3 posters on a dark ground inside a brand bloom, the centre
  * card enlarged, the flankers dimmed and cropped by the frame. This section
  * was rendering a 2x2 grid of rounded glass rectangles — identical in
  * silhouette to the services grid, the process cards and the footer stat bar,
@@ -43,13 +43,13 @@ export function CaseStudies() {
       headingAccent={caseStudies.headingAccent}
       body={caseStudies.body}
       align="split"
-      tone="crimson"
+      tone="brand"
       origin="top-right"
       intensity={0.2}
     >
       <Reveal variant="scene">
         {/*
-          The stage. img-025 sits its rail inside a broad crimson bloom rather
+          The stage. img-025 sits its rail inside a broad brand bloom rather
           than on flat black — that glow is what makes the posters read as lit
           objects on a stage instead of tiles on a page.
         */}
@@ -59,7 +59,7 @@ export function CaseStudies() {
             className="pointer-events-none absolute -inset-x-10 -inset-y-8"
             style={{
               background:
-                "radial-gradient(closest-side, rgb(255 45 63 / 0.3) 0%, rgb(255 45 63 / 0.12) 42%, transparent 76%)",
+                "radial-gradient(closest-side, rgb(255 197 22 / 0.3) 0%, rgb(255 197 22 / 0.12) 42%, transparent 76%)",
             }}
           />
           <PosterRail posters={posters} className="relative -mx-6 px-6" />

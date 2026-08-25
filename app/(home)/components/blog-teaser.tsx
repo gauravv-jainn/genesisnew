@@ -25,7 +25,7 @@ export function BlogTeaser() {
       headingAccent={journal.headingAccent}
       body={journal.body}
       align="split"
-      tone="amber"
+      tone="brand"
       origin="top-right"
       intensity={0.16}
     >
@@ -47,7 +47,7 @@ export function BlogTeaser() {
             description: post.description,
             footnote: `${formatPostDate(post.date)} · ${post.readingTime}`,
             badge: post.draft ? (
-              <span className="rounded-full border border-amber-ink/40 px-2 py-0.5 text-micro text-amber-ink">
+              <span className="rounded-full border border-brand-ink/40 px-2 py-0.5 text-micro text-brand-ink">
                 Draft
               </span>
             ) : undefined,

@@ -15,7 +15,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { GenesisMark, GenesisStar } from "@/components/genesis/genesis-mark";
+import { GenesisMark, GenesisN } from "@/components/genesis/genesis-mark";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { workspaceNav } from "@/lib/page-content";
 import { cn } from "@/lib/utils";
@@ -43,7 +43,7 @@ export function WorkspaceSidebar() {
 
   return (
     <aside className="flex w-full shrink-0 flex-col gap-6 border-white/8 p-6 lg:h-full lg:w-56 lg:border-r">
-      <Link href="/" className="rounded-field focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson">
+      <Link href="/" className="rounded-field focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">
         <GenesisMark />
       </Link>
 
@@ -69,7 +69,7 @@ export function WorkspaceSidebar() {
               {active && (
                 <span
                   aria-hidden
-                  className="ml-auto hidden size-1.5 rounded-full bg-crimson lg:block"
+                  className="ml-auto hidden size-1.5 rounded-full bg-brand lg:block"
                 />
               )}
             </Link>
@@ -86,9 +86,9 @@ export function WorkspaceSidebar() {
         <div className="glass relative overflow-hidden rounded-card p-4">
           <div
             aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgb(255_45_63/0.22),transparent_60%)]"
+            className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgb(255_197_22/0.22),transparent_60%)]"
           />
-          <GenesisStar className="absolute right-3 top-3 size-4" />
+          <GenesisN className="absolute right-3 top-3 size-4" />
           <p className="relative text-small text-ash">Let&rsquo;s create</p>
           <p className="relative mt-0.5 text-small font-medium leading-tight text-bone">
             something impactful

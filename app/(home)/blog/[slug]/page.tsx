@@ -42,10 +42,10 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
   if (!post) notFound();
 
   return (
-    <Atmosphere tone="amber" origin="top" intensity={0.2} className="min-h-dvh pt-32">
+    <Atmosphere tone="brand" origin="top" intensity={0.2} className="min-h-dvh pt-32">
       <article className="mx-auto w-full max-w-3xl px-6 pb-32">
         <header className="border-b border-white/10 pb-12">
-          <SectionLabel dot tone="amber">
+          <SectionLabel dot tone="brand">
             {post.category}
           </SectionLabel>
 
@@ -62,7 +62,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
             <span aria-hidden>·</span>
             <span>{post.readingTime}</span>
             {post.draft && (
-              <span className="rounded-full border border-amber-ink/40 px-2 py-0.5 text-amber-ink">
+              <span className="rounded-full border border-brand-ink/40 px-2 py-0.5 text-brand-ink">
                 Draft — not published
               </span>
             )}
@@ -96,8 +96,8 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
             "[&_ul]:mt-6 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mt-2",
             "[&_ol]:mt-6 [&_ol]:list-decimal [&_ol]:pl-6",
             "[&_strong]:font-semibold [&_strong]:text-bone",
-            "[&_a]:text-amber-ink [&_a]:underline [&_a]:underline-offset-4",
-            "[&_blockquote]:mt-8 [&_blockquote]:border-l-2 [&_blockquote]:border-amber-ink/50",
+            "[&_a]:text-brand-ink [&_a]:underline [&_a]:underline-offset-4",
+            "[&_blockquote]:mt-8 [&_blockquote]:border-l-2 [&_blockquote]:border-brand-ink/50",
             "[&_blockquote]:pl-6 [&_blockquote]:text-small [&_blockquote]:text-faint",
             "[&_code]:rounded [&_code]:bg-white/10 [&_code]:px-2 [&_code]:py-0.5 [&_code]:text-small",
           ].join(" ")}

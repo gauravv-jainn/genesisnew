@@ -1,21 +1,55 @@
 import type { Metadata } from "next";
-import { Geist, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
-// PLACEHOLDER TYPEFACES — stand-ins until the real Genesis brand fonts land.
-// Geist covers the bold-sans headline role; Instrument Serif italic covers the
-// single-accent-word role seen in the references (img-010 "thinkers",
-// img-047 "how we see the world", img-058 "opac").
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+/*
+ * THE BRAND TYPEFACES, from the Genesis Media brand guidelines.
+ *
+ * Codec Pro is the text face and Mont is the display face — the wordmark in
+ * the guidelines is set in Mont's heavy weight, which is why headings use it
+ * rather than a bolder cut of Codec.
+ *
+ * Self-hosted rather than fetched: the CSP allows no external font host, and
+ * next/font/local also removes the layout shift a webfont would otherwise
+ * cause.
+ *
+ * TWO THINGS TO RESOLVE BEFORE LAUNCH.
+ *
+ * 1. LICENSING. The supplied Codec Pro is the CC BY-NC release — non
+ *    commercial — and both Mont files are DEMO cuts under a trial EULA.
+ *    Neither is licensed for a commercial agency site. The retail licences
+ *    need buying; the files then drop in here unchanged.
+ *
+ * 2. MISSING WEIGHTS. Codec Pro arrived as Regular and Italic only, with no
+ *    bold, and Mont as ExtraLight and Heavy with nothing between. So there is
+ *    no semibold anywhere in the system. Headings take Mont Heavy, body takes
+ *    Codec Pro Regular, and any `font-medium`/`font-semibold` on body copy is
+ *    synthesised by the browser — which is why the type scale leans on SIZE
+ *    and colour for hierarchy rather than weight. Codec Pro Bold and Mont
+ *    Regular/Book would fix that.
+ */
+const codecPro = localFont({
+  src: [
+    { path: "./fonts/CodecPro-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/CodecPro-Italic.ttf", weight: "400", style: "italic" },
+  ],
+  variable: "--font-sans",
+  display: "swap",
+  // Measured against the file so the fallback occupies the same space.
+  fallback: ["system-ui", "sans-serif"],
+});
 
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-serif",
+const mont = localFont({
+  src: [
+    { path: "./fonts/Mont-ExtraLightDEMO.otf", weight: "200", style: "normal" },
+    { path: "./fonts/Mont-HeavyDEMO.otf", weight: "800", style: "normal" },
+  ],
+  variable: "--font-display",
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -38,7 +72,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("dark font-sans", geist.variable, instrumentSerif.variable)}
+      className={cn("dark font-sans", codecPro.variable, mont.variable)}
     >
       <head>
         {/*

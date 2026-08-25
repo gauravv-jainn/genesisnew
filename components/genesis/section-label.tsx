@@ -8,21 +8,21 @@ import { cn } from "@/lib/utils";
 export function SectionLabel({
   children,
   dot = false,
-  tone = "crimson",
+  tone = "brand",
   className,
 }: {
   children: React.ReactNode;
   /** Show the leading accent dot. */
   dot?: boolean;
-  tone?: "crimson" | "amber" | "teal";
+  tone?: "brand";
   className?: string;
 }) {
   const dotColor =
-    tone === "amber"
-      ? "bg-amber"
-      : tone === "teal"
-        ? "bg-teal"
-        : "bg-crimson";
+    tone === "brand"
+      ? "bg-brand"
+      : tone === "brand"
+        ? "bg-brand"
+        : "bg-brand";
 
   return (
     <p className={cn("micro-label flex items-center gap-3", className)}>

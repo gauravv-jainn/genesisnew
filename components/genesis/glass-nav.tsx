@@ -89,7 +89,7 @@ export function GlassNav() {
       >
         <Link
           href="/"
-          className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
+          className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           aria-label={`${"Genesis Media"} — home`}
         >
           <GenesisMark />
@@ -101,7 +101,7 @@ export function GlassNav() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="rounded-full px-3 py-2 text-small text-ash transition-colors duration-200 hover:bg-[var(--hover-wash)] hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
+                className="rounded-full px-3 py-2 text-small text-ash transition-colors duration-200 hover:bg-[var(--hover-wash)] hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               >
                 {item.label}
               </Link>
@@ -114,7 +114,7 @@ export function GlassNav() {
 
           <GlassButton
             href="/#contact"
-            variant="crimson"
+            variant="brand"
             size="sm"
             className="hidden sm:inline-flex"
             arrow
@@ -127,7 +127,7 @@ export function GlassNav() {
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="grid size-9 place-items-center rounded-full border border-[var(--glass-border)] text-bone transition-colors hover:bg-[var(--hover-wash)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson lg:hidden"
+            className="grid size-9 place-items-center rounded-full border border-[var(--glass-border)] text-bone transition-colors hover:bg-[var(--hover-wash)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand lg:hidden"
           >
             {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
@@ -174,7 +174,7 @@ export function GlassNav() {
             </ul>
             <GlassButton
               href="/#contact"
-              variant="crimson"
+              variant="brand"
               size="md"
               arrow
               className="mt-3 w-full"

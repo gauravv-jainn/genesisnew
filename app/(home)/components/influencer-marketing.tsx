@@ -38,7 +38,7 @@ export function InfluencerMarketing() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(46% 38% at 24% 16%, rgb(214 210 214 / 0.11) 0%, transparent 68%), radial-gradient(50% 44% at 8% 92%, rgb(255 45 63 / 0.16) 0%, transparent 70%), radial-gradient(60% 50% at 88% 40%, rgb(255 45 63 / 0.07) 0%, transparent 72%)",
+            "radial-gradient(46% 38% at 24% 16%, rgb(214 210 214 / 0.11) 0%, transparent 68%), radial-gradient(50% 44% at 8% 92%, rgb(255 197 22 / 0.16) 0%, transparent 70%), radial-gradient(60% 50% at 88% 40%, rgb(255 197 22 / 0.07) 0%, transparent 72%)",
         }}
       />
 
@@ -78,7 +78,7 @@ export function InfluencerMarketing() {
             {/* Eyebrow BELOW the headline, per the mockup. */}
             <Reveal delay={0.06}>
               <p className="micro-label mt-6 flex items-center gap-3">
-                <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-crimson" />
+                <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-brand" />
                 {influencer.label}
               </p>
             </Reveal>
@@ -95,10 +95,10 @@ export function InfluencerMarketing() {
                 className="glass glass-lit mt-8 flex items-center gap-6 rounded-panel p-6 sm:p-8"
                 style={{
                   background:
-                    "linear-gradient(102deg, rgb(255 45 63 / 0.17) 0%, rgb(255 45 63 / 0.05) 42%, rgb(255 255 255 / 0.03) 100%)",
+                    "linear-gradient(102deg, rgb(255 197 22 / 0.17) 0%, rgb(255 197 22 / 0.05) 42%, rgb(255 255 255 / 0.03) 100%)",
                 }}
               >
-                <div className="grid size-16 shrink-0 place-items-center rounded-card border border-crimson/35 bg-crimson/10 text-crimson">
+                <div className="grid size-16 shrink-0 place-items-center rounded-card border border-brand/35 bg-brand/10 text-brand">
                   <Users className="size-7" aria-hidden />
                 </div>
 
@@ -115,7 +115,7 @@ export function InfluencerMarketing() {
                 <a
                   href="/influencer-campaigns"
                   aria-label="See influencer campaigns"
-                  className="grid size-12 shrink-0 place-items-center rounded-full border border-white/20 text-bone transition-colors hover:border-crimson hover:bg-crimson/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
+                  className="grid size-12 shrink-0 place-items-center rounded-full border border-white/20 text-bone transition-colors hover:border-brand hover:bg-brand/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 >
                   <span aria-hidden className="text-h3 leading-none">→</span>
                 </a>
@@ -153,7 +153,7 @@ export function InfluencerMarketing() {
                       className={cnJoin(
                         "grid size-11 shrink-0 place-items-center rounded-card border",
                         highlight
-                          ? "border-crimson/35 bg-crimson/10 text-crimson"
+                          ? "border-brand/35 bg-brand/10 text-brand"
                           : "border-white/12 bg-white/5 text-bone",
                       )}
                     >
@@ -174,7 +174,7 @@ export function InfluencerMarketing() {
 
             <GlassButton
               href="/influencer-campaigns"
-              variant="crimson"
+              variant="brand"
               size="lg"
               arrow
               className="shrink-0"

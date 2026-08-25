@@ -151,7 +151,7 @@ export function LitRoom({
           height: "88%",
           transform: "translateX(-50%)",
           background:
-            "linear-gradient(180deg, rgb(255 250 232 / 0.34) 0%, rgb(250 238 206 / 0.13) 34%, transparent 74%)",
+            "linear-gradient(180deg, rgb(255 252 240 / 0.34) 0%, rgb(250 238 206 / 0.13) 34%, transparent 74%)",
           maskImage: SHAFT_CORE_MASK,
           WebkitMaskImage: SHAFT_CORE_MASK,
         }}

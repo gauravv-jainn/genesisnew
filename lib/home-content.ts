@@ -94,28 +94,33 @@ export const services = {
        * brand yellow. The yellow stays the interface accent; these are the
        * divisions' own identity and appear nowhere else.
        *
+       * LIFTED to match the board. The first pass sat these in the mid tones
+       * — 5.4 to 6.7 against the ground — and the board's names are far more
+       * luminous than that, sitting high in value so they glow off the black
+       * rather than sinking into it. Every stop is now 7.0 to 14.7.
+       *
        * They are light ramps, so they only hold on a dark ground — which is
        * why the section is pinned dark, exactly as the board is.
        */
-      ramp: "linear-gradient(100deg, #f0603c 0%, #e8557f 46%, #b98ce8 100%)",
+      ramp: "linear-gradient(100deg, #ff8a4c 0%, #f7719e 46%, #c3a2ff 100%)",
       body: "Creator and celebrity activations across every genre, from a database of over a lakh creators — briefed, matched, run and measured.",
     },
     {
       title: "Genesis.BrandDesign",
       caption: "identity, guidelines & motion",
-      ramp: "linear-gradient(100deg, #e4cbf5 0%, #ee8fc0 50%, #f5a56b 100%)",
+      ramp: "linear-gradient(100deg, #f0dcff 0%, #f5a3cd 50%, #ffbe8f 100%)",
       body: "Identity systems, brand guidelines, motion design and the rules that keep a brand recognisable everywhere it appears.",
     },
     {
       title: "Genesis.Studios",
       caption: "production at scale",
-      ramp: "linear-gradient(100deg, #f2733a 0%, #f7a03c 58%, #f9c04a 100%)",
+      ramp: "linear-gradient(100deg, #ff9147 0%, #ffb057 58%, #ffd27a 100%)",
       body: "Creative direction, strategy, scripting, production and post — plus the product and interactive work — built to hold up on any feed.",
     },
     {
       title: "Genesis.AILab",
       caption: "AI generation & digital fashion",
-      ramp: "linear-gradient(100deg, #ee6fa0 0%, #f2803f 100%)",
+      ramp: "linear-gradient(100deg, #ff8fb8 0%, #ffa25c 100%)",
       body: "AI avatars and influencers, image and video generation, digital fashion, and the automation that compresses a content workflow from weeks into days.",
     },
   ],

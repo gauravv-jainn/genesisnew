@@ -1,3 +1,4 @@
+import { Spectrum } from "@/components/genesis/atmosphere";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { whoWeAre } from "@/lib/home-content";
@@ -27,6 +28,8 @@ export function WhoWeAre() {
       id="about"
       className="grain relative isolate overflow-hidden bg-ink py-24 sm:py-32"
     >
+      <Spectrum />
+
       <div className="mx-auto w-full max-w-6xl px-6">
         <div className="grid gap-x-12 gap-y-10 lg:grid-cols-[1.1fr_0.9fr]">
           <Reveal>

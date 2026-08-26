@@ -1,3 +1,4 @@
+import { Spectrum } from "@/components/genesis/atmosphere";
 import type { CSSProperties } from "react";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
@@ -65,6 +66,8 @@ export function Services() {
         name and nothing else, and at this type size a second set of letterforms
         underneath is just noise competing with the first.
       */}
+      <Spectrum />
+
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
           <Reveal className="max-w-xl">

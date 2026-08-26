@@ -46,11 +46,7 @@ export function BlogTeaser() {
             title: post.title,
             description: post.description,
             footnote: `${formatPostDate(post.date)} · ${post.readingTime}`,
-            badge: post.draft ? (
-              <span className="rounded-full border border-brand-ink/40 px-2 py-0.5 text-micro text-brand-ink">
-                Draft
-              </span>
-            ) : undefined,
+            badge: post.draft ? "Draft" : undefined,
           }))}
         />
       </Reveal>

@@ -1,3 +1,4 @@
+import { Spectrum } from "@/components/genesis/atmosphere";
 import { StatRow } from "@/components/genesis/stat-card";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
@@ -48,6 +49,8 @@ export function Journey() {
       id="journey"
       className="grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
     >
+      <Spectrum />
+
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
           <Reveal className="max-w-xl">

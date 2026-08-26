@@ -323,7 +323,7 @@ export default function StyleGuidePage() {
       <Section title="Tools stack" note="Many inputs converging on one output. One SVG, a shared gradient, a stroke-dashoffset pulse.">
         <ToolsStack
           destination="Genesis.AILab"
-          badge="Studio"
+          badge="Lab"
           tools={[
             { label: "Image generation", detail: "stills & keyframes" },
             { label: "Video generation", detail: "motion & b-roll" },

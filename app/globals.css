@@ -78,6 +78,19 @@
        use — masks, washes, image crops — is the same slope. See .n-cut. */
     --n-angle: 51deg;
 
+    /* --- Ambient spectrum ---------------------------------------------------
+       The deck is not only yellow. Alongside the accent its pages carry a
+       violet #7a3cff, a blue #3b5bff, a purple #6f4fc4 and a light violet
+       #cac1ff, and the divisions board runs a full warm-to-cool ramp. With
+       every section washed in the one accent the page went monotone, so the
+       ambient layer draws on those secondaries instead.
+
+       This is a TINT, not a background. The guidelines are explicit — 70%
+       white/black, 20% grey, 10% yellow, and "Yellow is an accent. Never the
+       background." — so the strength is set where the hue is felt rather than
+       seen, and no wash is allowed to become a colour field. */
+    --spectrum: 1;
+
     /* --- Type scale --------------------------------------------------------
        EIGHT STEPS. The page previously resolved 35 distinct size/weight pairs,
        with every integer from 8px to 16px in use and a hole between 20px and
@@ -256,6 +269,7 @@
 
     --cool-accent: #cfe3ff;
     --brand-ink: #ffd400;
+    --spectrum: 1;
     --hover-wash: rgb(255 255 255 / 0.07);
     --logo-invert: 0;
 
@@ -369,6 +383,8 @@
     --spot-veil: 1;
     --cool-accent: #35607f;
     --brand-ink: #7a6000;
+    /* Colour on paper reads about twice as strongly as on black. */
+    --spectrum: 0.5;
     --hover-wash: rgb(17 17 17 / 0.07);
     --logo-invert: 1;
 
@@ -428,6 +444,8 @@
         --spot-veil: 1;
         --cool-accent: #35607f;
         --brand-ink: #7a6000;
+        /* Colour on paper reads about twice as strongly as on black. */
+        --spectrum: 0.5;
         --hover-wash: rgb(17 17 17 / 0.07);
         --logo-invert: 1;
 
@@ -494,6 +512,7 @@
     --spot-veil: 0;
     --cool-accent: #cfe3ff;
     --brand-ink: #ffd400;
+    --spectrum: 1;
     --hover-wash: rgb(255 255 255 / 0.07);
     --logo-invert: 0;
 

@@ -1,3 +1,4 @@
+import { Spectrum } from "@/components/genesis/atmosphere";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { creativeProcess } from "@/lib/home-content";
@@ -70,6 +71,8 @@ export function CreativeProcess() {
             "radial-gradient(58% 62% at 26% 34%, #2b2b2b 0%, #1c1c1c 42%, #141414 72%, #111111 100%)",
         }}
       />
+
+      <Spectrum />
 
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">

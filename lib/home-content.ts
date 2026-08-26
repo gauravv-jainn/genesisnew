@@ -1,4 +1,3 @@
-import type { Milestone } from "@/components/genesis/animated-timeline";
 
 /**
  * All homepage copy in one place.
@@ -219,26 +218,64 @@ export const journey = {
   label: "Our journey",
   heading: "How Genesis",
   headingAccent: "got here",
-  body: "A short history, told in the moments that changed how we work.",
-  /**
-   * The spec marks this section "//numbers increasing animation", so the
-   * history is fronted by figures that count up as they arrive.
-   * TODO(data): every figure is a placeholder except the creator database,
-   * which is confirmed elsewhere in the spec.
+  body: "From a garage in Panvel to an AI studio in Ghatkopar, told as the route it actually was.",
+  /*
+   * REAL, AT LAST. Every figure and every milestone below comes from the
+   * company's own journey board — the map that traces Panvel to Chembur to
+   * Ghatkopar. Everything here previously read "TODO"; five invented
+   * milestone titles and three placeholder figures have been replaced with
+   * what actually happened, in the board's own words.
+   *
+   * The creator-database figure was already confirmed elsewhere in the brief
+   * and is unchanged.
    */
   figures: [
     { value: "1,00,000+", label: "Creators in the network" },
-    { value: "TODO", label: "Campaigns delivered" },
-    { value: "TODO", label: "Brands partnered" },
-    { value: "TODO", label: "Years running" },
+    { value: "1,500+", label: "Successful events" },
+    { value: "30+", label: "Brands collaborated" },
+    { value: "50+", label: "Campaigns developed" },
   ],
+  /*
+   * The board is a route, so each stop carries the office it was reached
+   * from. 2020 has no office of its own — it is the pivot on the road
+   * between Panvel and Chembur, and the board draws it that way.
+   */
   milestones: [
-    { date: "TODO", title: "Genesis begins", description: "TODO(copy): real milestone required." },
-    { date: "TODO", title: "The creator network scales", description: "TODO(copy): real milestone required." },
-    { date: "TODO", title: "Production comes in-house", description: "TODO(copy): real milestone required." },
-    { date: "TODO", title: "AI studio opens", description: "TODO(copy): real milestone required." },
-    { date: "TODO", title: "Full-service", description: "TODO(copy): real milestone required." },
-  ] satisfies Milestone[],
+    {
+      period: "2016 – 2019",
+      place: "Panvel",
+      lines: ["Started up as an Events Expert in a garage"],
+    },
+    {
+      period: "2020",
+      lines: ["Pivoted to an Advertising Agency due to COVID"],
+    },
+    {
+      period: "2021",
+      place: "Chembur",
+      lines: ["Championed Influencer Marketing"],
+    },
+    {
+      period: "2022 – 24",
+      lines: [
+        "Created a Digital Wave",
+        "Launched IP GenesisDrip",
+        "Scaled Influencer Ecosystem",
+        "1,500+ Successful Events",
+        "Collaborated with 30+ Brands",
+        "Developed 50+ Campaigns",
+      ],
+    },
+    {
+      period: "2025 – 26",
+      place: "Ghatkopar",
+      lines: [
+        "Evolving with AI",
+        "Tech Automations & App Development",
+        "Genesis Estate Established",
+      ],
+    },
+  ],
 } as const;
 
 // --- AI content -------------------------------------------------------------

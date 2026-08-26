@@ -258,6 +258,18 @@
     --brand-ink: #ffd400;
     --hover-wash: rgb(255 255 255 / 0.07);
     --logo-invert: 0;
+
+    /* The journey route, graded from the garage year to the present. Sampled
+       off the company's own journey board, which is a night map — so these
+       are the board's values and they hold only on a dark ground. The light
+       theme takes a darkened ramp: on white, #f7a03c measures 2.09:1 and
+       #ffd400 measures 1.43:1, so two of the five stops would have been
+       unreadable. */
+    --route-1: #8b5cf6;
+    --route-2: #d946a6;
+    --route-3: #f0603c;
+    --route-4: #f7a03c;
+    --route-5: #ffd400;
     --ghost-outline: rgb(255 255 255 / 0.07);
 
     --radius: 0.625rem;
@@ -359,6 +371,12 @@
     --brand-ink: #7a6000;
     --hover-wash: rgb(17 17 17 / 0.07);
     --logo-invert: 1;
+
+    --route-1: #6d28d9;
+    --route-2: #a81b6f;
+    --route-3: #c03a17;
+    --route-4: #8a5a00;
+    --route-5: #6e5600;
     --ghost-outline: rgb(17 17 17 / 0.07);
 
     /* Shadows carry less alpha on a light ground or they read as smudges. */
@@ -412,6 +430,12 @@
         --brand-ink: #7a6000;
         --hover-wash: rgb(17 17 17 / 0.07);
         --logo-invert: 1;
+
+        --route-1: #6d28d9;
+        --route-2: #a81b6f;
+        --route-3: #c03a17;
+        --route-4: #8a5a00;
+        --route-5: #6e5600;
         --ghost-outline: rgb(17 17 17 / 0.07);
 
         --shadow-raised: 0 1px 2px 0 rgb(17 17 17 / 0.09), 0 2px 6px -1px rgb(17 17 17 / 0.10);
@@ -472,6 +496,18 @@
     --brand-ink: #ffd400;
     --hover-wash: rgb(255 255 255 / 0.07);
     --logo-invert: 0;
+
+    /* The journey route, graded from the garage year to the present. Sampled
+       off the company's own journey board, which is a night map — so these
+       are the board's values and they hold only on a dark ground. The light
+       theme takes a darkened ramp: on white, #f7a03c measures 2.09:1 and
+       #ffd400 measures 1.43:1, so two of the five stops would have been
+       unreadable. */
+    --route-1: #8b5cf6;
+    --route-2: #d946a6;
+    --route-3: #f0603c;
+    --route-4: #f7a03c;
+    --route-5: #ffd400;
 
     --shadow-raised: 0 2px 8px -2px rgb(0 0 0 / 0.6);
     --shadow-panel: 0 12px 32px -8px rgb(0 0 0 / 0.7);

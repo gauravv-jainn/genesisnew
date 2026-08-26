@@ -6,30 +6,43 @@ import { journey } from "@/lib/home-content";
 /**
  * "How Genesis got here" — the route, from the company's own journey board.
  *
- * The board is a map: a single illuminated line running Panvel to Chembur to
- * Ghatkopar, graded from violet at the start to gold at the present, with
- * each stop branching off into what happened there. Three things carry it,
- * and all three survive here — the unbroken line, the colour running with
- * time, and the office names as the stops.
+ * The board traces a single illuminated line across a night map of Mumbai,
+ * Panvel to Chembur to Ghatkopar, graded violet to gold, with each stop
+ * branching off into what happened there. Four things carry it and all four
+ * are here: the line MEANDERS rather than running straight, it GLOWS, the
+ * colour runs with time, and each stop is a lit node with the office name.
  *
- * WHAT IT REPLACED. A cold newspaper broadsheet standing in a spotlight,
- * carrying five invented milestones ("Genesis begins", "Production comes
- * in-house") with TODO where every date should have been. The content is now
- * real and so is the form.
+ * The map itself is not reproduced. It is the ground the route is drawn on
+ * rather than the thing being said, and a decorative city behind live text
+ * costs legibility for atmosphere. The route carries the idea without it.
  *
- * VERTICAL, WHERE THE BOARD IS HORIZONTAL, and that is a deliberate trade.
- * The stops carry wildly uneven content — one line for 2020, six for
- * 2022-24 — and a horizontal track gives every stop the same column width,
- * so either the long stop overflows or the short ones sit in a sea of space.
- * Down the page each stop takes the height it needs. It also means the route
- * runs the way the page already scrolls, so the reader follows it by doing
- * nothing.
+ * HOW THE MEANDER IS BUILT. Each stop owns its own segment of the line: an
+ * SVG in the rail column, stretched to whatever height that stop's content
+ * needs, drawing a curve from its own node down to the next one's. The
+ * segments meet because each ends at the x the next one starts from, so the
+ * line is continuous no matter how uneven the stops are — and they are very
+ * uneven, one line for 2020 against six for 2022-24.
  *
- * The rail is one continuous gradient behind all the stops rather than a
- * segment per stop, so the colour is genuinely continuous across the whole
- * history rather than stepping at each node.
+ * That is also why this runs down the page where the board runs across it. A
+ * horizontal track gives every stop the same column width, so either the long
+ * stop overflows or the short ones sit in a sea of space. Vertically each
+ * takes the height it needs, and the route runs the way the page scrolls.
  */
+
+/** Rail column width in px; the curve is described inside this box. */
+const RAIL = 72;
+
+/**
+ * Where each node sits across the rail, as a fraction of its width. The
+ * alternation is what makes the line wander instead of dropping straight —
+ * these are hand-set rather than generated so the bends fall in a rhythm
+ * rather than a zigzag.
+ */
+const NODE_X = [0.3, 0.7, 0.26, 0.72, 0.36];
+
 export function Journey() {
+  const stops = journey.milestones;
+
   return (
     <section
       id="journey"
@@ -54,69 +67,110 @@ export function Journey() {
           </Reveal>
         </div>
 
-        <div className="relative mt-16 sm:mt-20">
-          {/*
-            The route. One gradient for the whole history, so the colour moves
-            continuously from the violet of the garage year to the gold of the
-            present rather than changing in steps at each stop.
+        <RevealGroup className="mt-16 flex flex-col sm:mt-20">
+          {stops.map((stop, index) => {
+            const isLast = index === stops.length - 1;
+            const from = NODE_X[index] ?? 0.3;
+            const to = NODE_X[index + 1] ?? from;
+            const hasPlace = "place" in stop && Boolean(stop.place);
 
-            Sits behind the stops and is inert to the pointer. On the left at
-            every size: an alternating layout would put half the history on
-            the wrong side of the line on a phone.
-          */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute bottom-0 left-[7px] top-2 w-px sm:left-[11px]"
-            style={{
-              background:
-                "linear-gradient(180deg, var(--route-1) 0%, var(--route-2) 26%, var(--route-3) 52%, var(--route-4) 76%, var(--route-5) 100%)",
-            }}
-          />
-
-          <RevealGroup className="flex flex-col gap-12 sm:gap-14">
-            {journey.milestones.map((stop, index) => (
+            return (
               <RevealItem key={stop.period}>
-                <article className="relative grid grid-cols-[auto_1fr] gap-x-5 sm:gap-x-7">
-                  {/*
-                    The stop itself. A filled node for an office, a hollow one
-                    for a moment on the road between two — which is what 2020
-                    is, and how the board draws it.
-                  */}
-                  <span
+                <article className="relative grid grid-cols-[auto_1fr] gap-x-4 sm:gap-x-6">
+                  <div
+                    className="relative shrink-0"
+                    style={{ width: RAIL }}
                     aria-hidden
-                    className="relative mt-1.5 flex size-4 items-center justify-center sm:size-6"
                   >
-                    <span
-                      className="absolute inset-0 rounded-full opacity-30 blur-[6px]"
-                      style={{ background: STOP_COLOUR[index] }}
-                    />
-                    <span
-                      className={
-                        "place" in stop && stop.place
-                          ? "relative size-2.5 rounded-full sm:size-3"
-                          : "relative size-2.5 rounded-full ring-2 ring-inset sm:size-3"
-                      }
-                      style={
-                        "place" in stop && stop.place
-                          ? { background: STOP_COLOUR[index] }
-                          : {
-                              background: "var(--surface-base)",
-                              // ring-inset draws from the text colour
-                              color: STOP_COLOUR[index],
-                            }
-                      }
-                    />
-                  </span>
+                    {/*
+                      This stop's segment of the route, from its own node down
+                      to the next. preserveAspectRatio="none" lets one path
+                      description stretch to any content height — a tall stop
+                      simply draws a longer, lazier curve.
+                    */}
+                    {!isLast && (
+                      <svg
+                        className="absolute inset-0 h-full w-full overflow-visible"
+                        viewBox="0 0 100 100"
+                        preserveAspectRatio="none"
+                        focusable="false"
+                      >
+                        <defs>
+                          <linearGradient
+                            id={`route-${index}`}
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="0%"
+                              stopColor={`var(--route-${index + 1})`}
+                            />
+                            <stop
+                              offset="100%"
+                              stopColor={`var(--route-${index + 2})`}
+                            />
+                          </linearGradient>
+                        </defs>
+                        {/* The bloom, then the line itself over it. */}
+                        <path
+                          d={segment(from, to)}
+                          fill="none"
+                          stroke={`url(#route-${index})`}
+                          strokeWidth="6"
+                          strokeLinecap="round"
+                          opacity="0.28"
+                          style={{ filter: "blur(4px)" }}
+                          vectorEffect="non-scaling-stroke"
+                        />
+                        <path
+                          d={segment(from, to)}
+                          fill="none"
+                          stroke={`url(#route-${index})`}
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          vectorEffect="non-scaling-stroke"
+                        />
+                      </svg>
+                    )}
 
-                  <div className="min-w-0 pb-1">
+                    {/*
+                      The node. Filled where the stop is an office, hollow
+                      where it is a moment on the road between two — which is
+                      what 2020 is, and how the board draws it.
+                    */}
+                    <span
+                      className="absolute flex size-6 -translate-x-1/2 items-center justify-center"
+                      style={{ left: from * RAIL, top: "0.35rem" }}
+                    >
+                      <span
+                        className="absolute inset-0 rounded-full opacity-40 blur-[7px]"
+                        style={{ background: `var(--route-${index + 1})` }}
+                      />
+                      <span
+                        className="relative size-3 rounded-full"
+                        style={
+                          hasPlace
+                            ? { background: `var(--route-${index + 1})` }
+                            : {
+                                background: "var(--surface-base)",
+                                boxShadow: `inset 0 0 0 2px var(--route-${index + 1})`,
+                              }
+                        }
+                      />
+                    </span>
+                  </div>
+
+                  <div className="min-w-0 pb-12 sm:pb-14">
                     <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                       <h3
                         className="text-h3 font-normal leading-none tracking-tight sm:text-h2"
-                        style={{ color: STOP_COLOUR[index] }}
+                        style={{ color: `var(--route-${index + 1})` }}
                       >
                         {stop.period}
                       </h3>
-                      {"place" in stop && stop.place && (
+                      {hasPlace && (
                         <span className="micro-label !text-faint">
                           {stop.place}
                         </span>
@@ -136,16 +190,18 @@ export function Journey() {
                   </div>
                 </article>
               </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
+            );
+          })}
+        </RevealGroup>
 
         {/*
           The figures, three of which come straight out of the 2022-24 stop.
-          They sit under the route rather than above it because they are what
-          the route adds up to.
+          They sit under the route because they are what it adds up to.
         */}
-        <Reveal delay={0.15} className="mt-16 border-t border-[var(--glass-border)] pt-10 sm:mt-20">
+        <Reveal
+          delay={0.15}
+          className="mt-4 border-t border-[var(--glass-border)] pt-10"
+        >
           <StatRow stats={journey.figures.map((figure) => ({ ...figure }))} />
         </Reveal>
       </div>
@@ -154,16 +210,14 @@ export function Journey() {
 }
 
 /**
- * Colour per stop, taken from the same tokens the rail is drawn with, so a
- * stop's year and its node are the colour the route is passing through at
- * that moment — and so both follow the theme. The board's own values are a
- * night map and two of them are unreadable on paper; the light theme swaps
- * in a darkened ramp. See --route-1 in globals.css.
+ * One segment of the route, in the rail's 0-100 box: out of this stop's node,
+ * bending toward the next one's, arriving vertical so the joins are smooth.
+ * The control points sit at 40% and 62% rather than symmetrically, which
+ * makes the bend lean into the second half of the drop — closer to a road
+ * easing round a corner than a sine wave.
  */
-const STOP_COLOUR = [
-  "var(--route-1)",
-  "var(--route-2)",
-  "var(--route-3)",
-  "var(--route-4)",
-  "var(--route-5)",
-];
+function segment(from: number, to: number) {
+  const x1 = from * 100;
+  const x2 = to * 100;
+  return `M ${x1} 2 C ${x1} 40, ${x2} 62, ${x2} 100`;
+}

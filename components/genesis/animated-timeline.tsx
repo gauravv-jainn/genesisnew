@@ -156,7 +156,7 @@ export function AnimatedTimeline({
             <div className="pl-4">
               <h3
                 className={cn(
-                  "text-h3 font-semibold tracking-tight",
+                  "text-h3 font-normal tracking-tight",
                   light ? "text-[#16232e]" : "text-bone",
                 )}
               >

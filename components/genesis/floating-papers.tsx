@@ -51,7 +51,7 @@ export function FloatingPapers({
                 {paper.badge}
               </div>
 
-              <h3 className="mt-6 text-balance text-h3 font-semibold leading-snug tracking-tight text-bone transition-colors group-hover:text-brand-ink">
+              <h3 className="mt-6 text-balance text-h3 font-normal leading-snug tracking-tight text-bone transition-colors group-hover:text-brand-ink">
                 {paper.title}
               </h3>
 

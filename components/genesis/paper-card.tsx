@@ -128,7 +128,7 @@ export function PaperStack({
           rotate={index % 2 === 0 ? -2.5 : 2}
           className="h-full"
         >
-          <h3 className="text-h3 font-semibold tracking-tight text-bone">
+          <h3 className="text-h3 font-normal tracking-tight text-bone">
             {item.title}
           </h3>
           {item.caption && (

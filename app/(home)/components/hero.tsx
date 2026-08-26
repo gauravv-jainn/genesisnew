@@ -128,7 +128,7 @@ export function Hero() {
                 off-screen at 1440x900. Underscores become spaces in the
                 emitted media query.
               */}
-              <h1 className="mt-6 max-w-xl text-balance text-h2 font-semibold leading-[1.02] tracking-tight text-scene drop-shadow-[0_2px_24px_rgb(12_4_1/0.9)] sm:text-h1 lg:text-h1 [@media(min-width:1280px)_and_(min-height:960px)]:text-display">
+              <h1 className="mt-6 max-w-xl text-balance text-h2 font-normal leading-[1.02] tracking-tight text-scene drop-shadow-[0_2px_24px_rgb(12_4_1/0.9)] sm:text-h1 lg:text-h1 [@media(min-width:1280px)_and_(min-height:960px)]:text-display">
                 {hero.headlineLead}{" "}
                 <span className="font-serif font-normal italic text-brand-soft">
                   {hero.headlineAccent}

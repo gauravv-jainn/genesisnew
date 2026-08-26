@@ -72,7 +72,7 @@ function InsiderNotice({
   return (
     <main className="flex min-h-dvh items-center justify-center px-6">
       <div className="flex max-w-md flex-col gap-3 rounded-card border border-border bg-card p-8 text-small">
-        <h1 className="text-body font-semibold">{title}</h1>
+        <h1 className="text-body font-normal">{title}</h1>
         {children}
       </div>
     </main>

@@ -77,7 +77,7 @@ export function CreativeProcess() {
             <SectionLabel dot tone="brand">
               {creativeProcess.label}
             </SectionLabel>
-            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.02] tracking-tight text-scene sm:text-h1">
+            <h2 className="mt-6 text-balance text-h2 font-normal leading-[1.02] tracking-tight text-scene sm:text-h1">
               {creativeProcess.heading}{" "}
               <span className="font-serif font-normal italic text-brand">
                 {creativeProcess.headingAccent}
@@ -103,7 +103,7 @@ export function CreativeProcess() {
               */}
               <article className="flex h-full flex-col gap-4 bg-[#111111] p-7 sm:p-8">
                 <span className="micro-label text-brand">{`0${index + 1}`}</span>
-                <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-scene">
+                <h3 className="text-balance text-h3 font-normal leading-tight tracking-tight text-scene">
                   {step.title}
                 </h3>
                 <p className="text-small leading-relaxed text-scene-dim">

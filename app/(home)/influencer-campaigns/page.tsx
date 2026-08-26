@@ -80,7 +80,7 @@ export default function InfluencerCampaignsPage() {
             <RevealItem key={celebrity.id}>
               <article className="glass glass-lit flex h-full flex-col justify-between gap-6 rounded-card p-6">
                 <p className="micro-label">{celebrity.sublabel}</p>
-                <h3 className="text-balance text-h3 font-semibold leading-tight tracking-tight text-bone">
+                <h3 className="text-balance text-h3 font-normal leading-tight tracking-tight text-bone">
                   {celebrity.label}
                 </h3>
               </article>
@@ -112,7 +112,7 @@ export default function InfluencerCampaignsPage() {
             <RevealItem key={step.title} className="h-full">
               <div className="glass glass-lit flex h-full flex-col rounded-panel p-6">
                 <p className="micro-label">{`0${index + 1}`}</p>
-                <h3 className="mt-4 text-h3 font-semibold tracking-tight text-bone">
+                <h3 className="mt-4 text-h3 font-normal tracking-tight text-bone">
                   {step.title}
                 </h3>
                 <p className="mt-3 text-small leading-relaxed text-ash">{step.body}</p>

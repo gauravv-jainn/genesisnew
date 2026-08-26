@@ -79,7 +79,7 @@ export default async function InsiderPage() {
         <header className="flex flex-wrap items-start justify-between gap-6">
           <div>
             <GenesisMark />
-            <h1 className="mt-6 text-h2 font-semibold tracking-tight text-bone">
+            <h1 className="mt-6 text-h2 font-normal tracking-tight text-bone">
               {user.name ?? user.email}
             </h1>
             <p className="mt-2 text-small text-ash">

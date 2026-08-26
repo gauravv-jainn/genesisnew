@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { services } from "@/lib/home-content";
@@ -33,8 +34,32 @@ export function Services() {
   return (
     <section
       id="services"
-      className="grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
+      className="scene-dark grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
     >
+      {/*
+        Transitions into and out of the dark chapter — the same treatment the
+        process section uses, since this is now the second pinned-dark band on
+        an otherwise light page and a butt joint reads as a rendering fault.
+        Both blend to the ACTUAL adjacent grounds through the surface tokens,
+        so they disappear in dark mode where the neighbours are already black.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-28"
+        style={{
+          background:
+            "linear-gradient(180deg, color-mix(in srgb, var(--surface-ink) 90%, transparent) 0%, color-mix(in srgb, var(--surface-ink) 50%, transparent) 42%, transparent 100%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-28"
+        style={{
+          background:
+            "linear-gradient(0deg, var(--surface-base) 0%, color-mix(in srgb, var(--surface-base) 55%, transparent) 42%, transparent 100%)",
+        }}
+      />
+
       {/*
         No ghost word behind the list. The deck's division pages carry the
         name and nothing else, and at this type size a second set of letterforms
@@ -46,7 +71,7 @@ export function Services() {
             <SectionLabel dot tone="brand">
               {services.label}
             </SectionLabel>
-            <h2 className="mt-6 text-balance text-h2 font-semibold leading-[1.02] tracking-tight text-bone sm:text-h1">
+            <h2 className="mt-6 text-balance text-h2 font-normal leading-[1.02] tracking-tight text-bone sm:text-h1">
               {services.heading}{" "}
               <span className="font-serif font-normal italic text-brand-ink">
                 {services.headingAccent}
@@ -81,7 +106,10 @@ export function Services() {
                     {`0${index + 1}`}
                   </span>
 
-                  <h3 className="min-w-0 flex-1 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
+                  <h3
+                    className="ramp-text min-w-0 flex-1 text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1"
+                    style={{ "--ramp": service.ramp } as CSSProperties}
+                  >
                     {/*
                       The names are dotted single tokens — "Genesis.BrandDesign"
                       has no space in it and cannot wrap. A <wbr> after the dot

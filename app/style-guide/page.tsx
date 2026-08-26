@@ -55,7 +55,7 @@ export default function StyleGuidePage() {
     <div className="min-h-dvh bg-ink pb-32">
       <div className="mx-auto max-w-6xl px-6 pt-24">
         <SectionLabel dot>Phase 1 · Design system</SectionLabel>
-        <h1 className="mt-4 text-h2 font-semibold tracking-tight text-bone">
+        <h1 className="mt-4 text-h2 font-normal tracking-tight text-bone">
           Genesis <span className="font-serif italic text-brand-ink">style guide</span>
         </h1>
         <p className="mt-3 max-w-2xl text-small leading-relaxed text-ash">
@@ -95,10 +95,10 @@ export default function StyleGuidePage() {
       <Section title="Typography">
         <div className="space-y-6">
           <SectionLabel dot>Micro label · letterspaced caps</SectionLabel>
-          <h2 className="text-h1 font-semibold tracking-tight text-bone">
+          <h2 className="text-h1 font-normal tracking-tight text-bone">
             Built for the <span className="font-serif italic text-brand-ink">thinkers</span>
           </h2>
-          <h3 className="text-fade-down text-h2 font-semibold tracking-tight">
+          <h3 className="text-fade-down text-h2 font-normal tracking-tight">
             Two-tone headline treatment
           </h3>
           <p className="max-w-prose text-small leading-relaxed text-ash">
@@ -376,7 +376,7 @@ function Section({
   return (
     <section className="mx-auto mt-24 max-w-6xl px-6">
       <div className="mb-8 border-b border-white/10 pb-4">
-        <h2 className="text-h3 font-semibold tracking-tight text-bone">{title}</h2>
+        <h2 className="text-h3 font-normal tracking-tight text-bone">{title}</h2>
         {note && <p className="mt-2 max-w-2xl text-small leading-relaxed text-faint">{note}</p>}
       </div>
       {children}

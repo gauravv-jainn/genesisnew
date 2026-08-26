@@ -497,8 +497,19 @@
    that is black — so a light-theme nav bar reads as a white slab dropped on a
    dark photograph. When the page pins itself dark, the chrome above it does
    too. :has() rather than a prop, because this is a fact about the page, not
-   about the nav. */
-body:has(.scene-dark) header {
+   about the nav.
+
+   SCOPED TO `main.scene-dark`, and the distinction matters. A bare
+   `.scene-dark` also matches a mid-page SECTION that pins itself dark — the
+   divisions board does — and that flipped the whole nav white while the top
+   of the page was still light paper, which made the wordmark disappear. Only
+   a page whose main element is the scene should take the chrome with it. */
+body:has(main.scene-dark) header {
+    /* The wordmark swaps on this too. .scene-dark sets --logo-invert, but it
+       sets it on MAIN — and the logo lives in the header, outside that
+       subtree, so without repeating it here a scene page showed the dark
+       wordmark on its own dark chrome. */
+    --logo-invert: 0;
     --glass-fill: rgb(255 255 255 / 0.075);
     --glass-fill-strong: rgb(255 255 255 / 0.12);
     --glass-border: rgb(255 255 255 / 0.12);
@@ -519,12 +530,16 @@ body:has(.scene-dark) header {
       nothing ever used it, so every heading on the site was still rendering
       in the text face.
 
-      Mont ships here as ExtraLight 200 and Heavy 800 with nothing between.
-      The 31 headings that ask for font-semibold (600) resolve upward to 800
-      under the CSS font-matching rules, which is the weight the wordmark
-      itself is set in. The accent words keep their .font-serif utility and
-      so stay Codec Pro Italic — the contrast between the two faces is the
-      point.
+      SET LIGHT, NOT HEAVY. The deck's "What we do" board sets every division
+      name in Mont at a regular weight, and headings across the site now match
+      it. Mont ships here as ExtraLight 200 and Heavy 800 with nothing
+      between, and CSS weight matching resolves a request for 400 DOWNWARD to
+      200 — so `font-normal` on a heading renders ExtraLight, which is the
+      closest available to the board. Mont Regular/Book is the exact weight
+      and is worth buying with the retail licence.
+
+      The accent words keep their .font-serif utility and so stay Codec Pro
+      Italic — the contrast between the two faces is the point.
     */
     h1,
     h2,
@@ -594,6 +609,25 @@ body:has(.scene-dark) header {
        1440px-wide section a true 51deg edge would need to climb 1778px, so
        section-scale uses of the device are a suggestion of it, not the angle
        itself. */
+    /* A name set in its own gradient. background-clip:text needs a
+       transparent fill, and the fallback colour underneath matters: if the
+       clip is unsupported the text must still be visible, so currentColor is
+       set on the element rather than left to inherit. */
+    .ramp-text {
+        background-image: var(--ramp);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+        .ramp-text {
+            color: var(--ink-strong);
+            -webkit-text-fill-color: var(--ink-strong);
+        }
+    }
+
     .n-cut {
         /* How far along the gradient the cut sits. */
         --n-cut-at: 92%;

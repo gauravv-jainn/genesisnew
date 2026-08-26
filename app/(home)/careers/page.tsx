@@ -122,7 +122,7 @@ export default function CareersPage() {
         </Reveal>
 
         <Reveal delay={0.05}>
-          <h1 className="mt-8 text-balance text-h2 font-semibold leading-[1.15] tracking-tight text-bone sm:text-h1 lg:text-h1">
+          <h1 className="mt-8 text-balance text-h2 font-normal leading-[1.15] tracking-tight text-bone sm:text-h1 lg:text-h1">
             {careersPage.heading}
           </h1>
         </Reveal>

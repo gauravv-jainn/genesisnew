@@ -26,7 +26,7 @@ export function FooterCta() {
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal>
           <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <h2 className="max-w-2xl text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
+            <h2 className="max-w-2xl text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
               {footerCta.heading}{" "}
               <span className="font-serif font-normal italic text-brand-ink">
                 {footerCta.headingAccent}

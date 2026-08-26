@@ -137,7 +137,7 @@ export function PosterCard({
             </p>
           )}
           {!(!poster.image && !poster.client) && (
-            <h3 className="text-balance text-small font-semibold leading-tight text-scene">
+            <h3 className="text-balance text-small font-normal leading-tight text-scene">
               {poster.title}
             </h3>
           )}

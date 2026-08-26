@@ -79,7 +79,7 @@ export function SectionShell({
               <Reveal delay={0.05} className={align === "split" ? "lg:col-start-1" : undefined}>
                 <h2
                   className={cn(
-                    "mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone",
+                    "mt-6 text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone",
                     "sm:text-h1 lg:text-h1",
                   )}
                 >

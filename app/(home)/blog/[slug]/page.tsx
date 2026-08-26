@@ -49,7 +49,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
             {post.category}
           </SectionLabel>
 
-          <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.08] tracking-tight text-bone sm:text-h1">
+          <h1 className="mt-6 text-balance text-h2 font-normal leading-[1.08] tracking-tight text-bone sm:text-h1">
             {post.title}
           </h1>
 

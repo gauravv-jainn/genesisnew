@@ -26,7 +26,7 @@ export function RouteStub({
       <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col justify-center px-6 py-32">
         <SectionLabel dot>{label}</SectionLabel>
 
-        <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
+        <h1 className="mt-6 text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1">
           {title}
         </h1>
 

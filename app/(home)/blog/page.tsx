@@ -35,7 +35,7 @@ export default function BlogPage() {
           <SectionLabel dot tone="brand" className="justify-center">
             Journal
           </SectionLabel>
-          <h1 className="mt-6 text-balance text-h2 font-semibold leading-[1.05] tracking-tight text-bone sm:text-h1">
+          <h1 className="mt-6 text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1">
             Thinking out{" "}
             <span className="font-serif font-normal italic text-brand-ink">loud</span>
           </h1>

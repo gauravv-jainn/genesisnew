@@ -136,7 +136,15 @@ export function ToolsStack({
               top: `${((40 + index * (320 / Math.max(1, tools.length - 1))) / 400) * 100}%`,
               transform: "translateY(-50%)",
             }}
-            className="glass flex items-center justify-end gap-2 rounded-field px-3 py-2 text-right"
+            /*
+              Left-aligned, not right. The pills share one width, so
+              right-aligning put a ragged left edge on six stacked rows whose
+              two lines are different lengths — "Image generation" over
+              "stills & keyframes" ends up stepped. The curve leaves the
+              pill's right edge either way, so nothing is lost by letting the
+              text start from a common margin.
+            */
+            className="glass flex items-center gap-2 rounded-field px-3 py-2"
           >
             <span className="min-w-0">
               <span className="block truncate text-micro font-medium text-bone">
@@ -153,24 +161,43 @@ export function ToolsStack({
       </ul>
 
       {/* The destination mark. */}
-      <div className="absolute right-0 top-1/2 flex w-[42%] -translate-y-1/2 flex-col items-start gap-2 pl-6">
-        <div className="flex items-center gap-2">
-          <span className="text-h3 font-semibold tracking-tight text-bone sm:text-h3">
-            {destination}
-          </span>
-          {badge && (
-            <span className="glass rounded-full px-2 py-0.5 text-micro text-ash">
-              {badge}
+      {/*
+        The destination sits to the RIGHT of where the curves converge.
+
+        It used to be w-[42%], which starts the block at 58% of the width —
+        but the curves converge at FOCUS_X 445 of 720, which is 61.8%. The
+        focus dot was therefore drawn roughly four percent INSIDE the
+        wordmark, so the thing everything points at overlapped the thing it
+        was pointing at. At 34% the block starts at 66%, clear of the dot
+        with air between them.
+      */}
+      <div className="absolute right-0 top-1/2 flex w-[34%] -translate-y-1/2 flex-col items-start gap-2 pl-4">
+        {/*
+          Name and rule share a column set to items-stretch, so the rule takes
+          the width of the name row above it. It was `w-full max-w-[14rem]`,
+          which measures against the whole destination block rather than the
+          text — leaving the rule running roughly 40px past the end of the
+          wordmark it was supposed to be underlining.
+        */}
+        <div className="flex flex-col items-stretch gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-h3 font-normal tracking-tight text-bone">
+              {destination}
             </span>
-          )}
+            {badge && (
+              <span className="glass rounded-full px-2 py-0.5 text-micro text-ash">
+                {badge}
+              </span>
+            )}
+          </div>
+          <span
+            className="h-[3px] rounded-full"
+            style={{
+              background:
+                "linear-gradient(90deg, #6b6b70 0%, #ffd400 46%, #ffd400 100%)",
+            }}
+          />
         </div>
-        <span
-          className="h-[3px] w-full max-w-[14rem] rounded-full"
-          style={{
-            background:
-              "linear-gradient(90deg, #6b6b70 0%, #ffd400 46%, #ffd400 100%)",
-          }}
-        />
       </div>
     </div>
   );

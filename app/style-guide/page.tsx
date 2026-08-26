@@ -199,7 +199,7 @@ export default function StyleGuidePage() {
             { date: "Mar 2024", title: "Genesis founded", description: "Sample copy — a one-line milestone, long enough to show how the description wraps beneath its title." },
             { date: "Aug 2024", title: "First brand film", description: "Sample copy — a shorter entry, to show the rail with uneven row heights." },
             { date: "Feb 2025", title: "Creator network at 50K", description: "Sample copy — used here only to demonstrate the timeline component." },
-            { date: "Nov 2025", title: "AI studio launched", description: "Sample copy — the final entry, where the rail fades out." },
+            { date: "Nov 2025", title: "AI Lab launched", description: "Sample copy — the final entry, where the rail fades out." },
           ]}
         />
       </Section>
@@ -322,7 +322,7 @@ export default function StyleGuidePage() {
 
       <Section title="Tools stack" note="Many inputs converging on one output. One SVG, a shared gradient, a stroke-dashoffset pulse.">
         <ToolsStack
-          destination="Genesis AI Studio"
+          destination="Genesis.AILab"
           badge="Studio"
           tools={[
             { label: "Image generation", detail: "stills & keyframes" },

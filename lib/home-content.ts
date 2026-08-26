@@ -218,7 +218,7 @@ export const journey = {
   label: "Our journey",
   heading: "How Genesis",
   headingAccent: "got here",
-  body: "From a garage in Panvel to an AI studio in Ghatkopar, told as the route it actually was.",
+  body: "From a garage in Panvel to an AI lab in Ghatkopar, told as the route it actually was.",
   /*
    * REAL, AT LAST. Every figure and every milestone below comes from the
    * company's own journey board — the map that traces Panvel to Chembur to
@@ -283,7 +283,7 @@ export const journey = {
 // Spec: "AI tools, Image Generations, AI Avatars, Video Generations, AI videos
 // and AI content to speed up your content workflows and engagement."
 export const aiContent = {
-  label: "AI studio",
+  label: "AI Lab",
   heading: "Speed up the workflow,",
   headingAccent: "not the standard",
   body:
@@ -298,7 +298,7 @@ export const aiContent = {
   ],
   capabilities: ["AI tools", "Image generation", "AI avatars", "Video generation"],
   /**
-   * The stack feeding the studio. Spec says "TOOLS WE USE" but does not name
+   * The stack feeding the lab. Spec says "TOOLS WE USE" but does not name
    * them, so these are the categories rather than vendors.
    * TODO(content): replace with the actual tools Genesis runs on.
    */
@@ -310,7 +310,7 @@ export const aiContent = {
     { label: "Edit & post", detail: "assembly" },
     { label: "Scripting", detail: "concept to board" },
   ],
-  destination: "Genesis AI Studio",
+  destination: "Genesis.AILab",
 } as const;
 
 // --- Creative process (BTS) -------------------------------------------------

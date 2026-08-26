@@ -39,7 +39,7 @@ const ARC = [
 export function AiContent() {
   return (
     <SectionShell
-      id="ai-studio"
+      id="ai-lab"
       label={aiContent.label}
       heading={aiContent.heading}
       headingAccent={aiContent.headingAccent}
@@ -94,7 +94,7 @@ export function AiContent() {
         <ToolsStack
           tools={[...aiContent.tools]}
           destination={aiContent.destination}
-          badge="Studio"
+          badge="Lab"
         />
       </Reveal>
 
@@ -110,8 +110,8 @@ export function AiContent() {
 
       <Reveal delay={0.1} className="mt-12 flex justify-center">
         <GlassButton variant="glass" icon={<Sparkles className="size-4" />} arrow>
-          {/* TODO(link): points at the AI studio page once it exists. */}
-          Explore the AI studio
+          {/* TODO(link): points at the AI Lab page once it exists. */}
+          Explore the AI Lab
         </GlassButton>
       </Reveal>
     </SectionShell>

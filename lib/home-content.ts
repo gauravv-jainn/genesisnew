@@ -87,6 +87,13 @@ export const services = {
   items: [
     {
       title: "Genesis.Influence",
+      /*
+       * THE SHORT NAME, used where the Genesis wordmark is already in the
+       * picture. The divisions board sets the four around the mark and drops
+       * the prefix off each one, because the centre is saying it — printing
+       * "Genesis." four more times around a Genesis logo is a stutter.
+       */
+      short: "Influence",
       caption: "creator & celebrity marketing",
       /*
        * ONE GRADIENT PER DIVISION, from the deck's "What we do" board, where
@@ -107,18 +114,21 @@ export const services = {
     },
     {
       title: "Genesis.BrandDesign",
+      short: "Brand & Design",
       caption: "identity, guidelines & motion",
       ramp: "linear-gradient(100deg, #f0dcff 0%, #f5a3cd 50%, #ffbe8f 100%)",
       body: "Identity systems, brand guidelines, motion design and the rules that keep a brand recognisable everywhere it appears.",
     },
     {
       title: "Genesis.Studios",
+      short: "Studios",
       caption: "production at scale",
       ramp: "linear-gradient(100deg, #ff9147 0%, #ffb057 58%, #ffd27a 100%)",
       body: "Creative direction, strategy, scripting, production and post — plus the product and interactive work — built to hold up on any feed.",
     },
     {
       title: "Genesis.AILab",
+      short: "AI Lab",
       caption: "AI generation & digital fashion",
       ramp: "linear-gradient(100deg, #ff8fb8 0%, #ffa25c 100%)",
       body: "AI avatars and influencers, image and video generation, digital fashion, and the automation that compresses a content workflow from weeks into days.",
@@ -293,15 +303,39 @@ export const aiContent = {
   headingAccent: "not the standard",
   body:
     "AI tools, image generation, video generation and a roster of AI avatars — used to compress content workflows and lift engagement, with direction and final approval staying human.",
-  // Named in the spec. TODO(assets): avatar stills/reels required.
+  /*
+   * THE AVATAR BOARD, from the AI Lab page of the deck.
+   *
+   * That board is a fanned hand of cards with one held upright in the middle,
+   * each carrying the avatar's name and — this is the part the site was
+   * missing entirely — WHO THEY ARE. An avatar with a brief behind it ("Adi,
+   * Aditya Birla Health Insurance") is a case study; a name floating under a
+   * frame is a mood board. The roles below are read off that board.
+   *
+   * Two of the five names the spec gave us do not appear on it, so they carry
+   * no role rather than an invented one. The component omits the line.
+   *
+   * ORDER IS THE FAN'S ORDER, left to right, and it is deliberate: the centre
+   * card is the one held upright and lit, so the roster is arranged to put
+   * the brand-work avatar there rather than whoever happened to be listed
+   * first.
+   */
+  avatarsHeading: "AI Avatars &",
+  avatarsAccent: "Realism",
+  avatarsBody: "AI content that works like magic.",
+  // TODO(assets): real avatar stills owed — one portrait per name, 3:4.
   avatars: [
-    { id: "adi", name: "Adi" },
-    { id: "diya", name: "Diya" },
-    { id: "ivaanat", name: "Ivaanat" },
-    { id: "shivam", name: "Shivam" },
-    { id: "tanvi", name: "Tanvi" },
+    { id: "ivaanat", name: "Ivaanat", role: undefined as string | undefined },
+    { id: "tanvi", name: "Tanvi", role: undefined as string | undefined },
+    { id: "jesko", name: "Jesko", role: "DJ | Techno artist" },
+    { id: "adi", name: "Adi", role: "Aditya Birla Health Insurance" },
+    { id: "diya", name: "Diya", role: "Aditya Birla Health Insurance" },
+    { id: "bharat", name: "Bharat", role: "Advocate" },
+    { id: "shivam", name: "Shivam", role: "Founder & CEO | Genesis" },
   ],
-  capabilities: ["AI tools", "Image generation", "AI avatars", "Video generation"],
+  // The deck's own subtitle for the division, verbatim, in place of four
+  // categories written before the guidelines existed.
+  capabilities: ["Avatars", "Multilingual content", "Games & apps"],
   /**
    * The stack feeding the lab. Spec says "TOOLS WE USE" but does not name
    * them, so these are the categories rather than vendors.
@@ -458,11 +492,41 @@ export const branding = {
 // confirmed subset. TODO(assets): full logo dump still owed by Tanvi.
 export const clients = {
   label: "Clients we've worked with",
+  /*
+   * THE CLIENT BOARD, in its own order.
+   *
+   * Genesis's logo dump runs eighteen brands; seventeen are here. The
+   * eighteenth is set in script inside a yellow ticket and I could not read
+   * it off the board with enough confidence to print a client's name on a
+   * public page — a misspelled client is worse than a missing one, so it
+   * waits for the file.
+   *
+   * The last four are from the original brief rather than the board. They are
+   * real relationships and dropping them is the client's call, not ours, so
+   * the two lists are unioned rather than replaced.
+   *
+   * TODO(assets): real logo files, one per entry, into /public/clients. The
+   * component swaps <span> for <Image> in a single place when they land.
+   */
   logos: [
     "ADITYA BIRLA CAPITAL",
-    "HDFC",
-    "ADITYA BIRLA SUN LIFE INSURANCE",
+    "HDFC BANK",
     "MAHINDRA FINANCE",
+    "IDBI BANK",
+    "HT BRUNCH",
+    "SOCIAL SAMOSA",
+    "LIZOL",
+    "THE WORLDGRAD",
+    "BUMBLE",
+    "DOVE",
+    "THE LALIT MUMBAI",
+    "HOUSE OF HIRANANDANI",
+    "BACARDI",
+    "BUDWEISER",
+    "VIVO",
+    "LN CONSTRUCTION",
+    "KAMDHENU REALITIES",
+    "ADITYA BIRLA SUN LIFE INSURANCE",
     "MAHINDRA",
     "INDUSIND NIPPON LIFE INSURANCE",
     "TRIPGATE",

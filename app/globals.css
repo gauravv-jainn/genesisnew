@@ -284,6 +284,14 @@
     --route-3: #f0603c;
     --route-4: #f7a03c;
     --route-5: #ffd400;
+    /* The AI Lab board's title ramp, violet through pink into orange, and a
+       held-back version for the line under it. Theme-aware for the same
+       reason --route-* is: this one is sampled off a board printed on black,
+       and the section carrying it is NOT pinned dark, so on paper the light
+       stops measured under 2:1 and the title was barely there. The light
+       ramp reuses the route palette, which is already checked against white. */
+    --ramp-avatars: linear-gradient(100deg, #cbb6ff 0%, #f286b4 40%, #ff9a5c 74%, #ffc46b 100%);
+    --ramp-avatars-soft: linear-gradient(100deg, #b6abdc 0%, #d99cb4 52%, #e0a469 100%);
     --ghost-outline: rgb(255 255 255 / 0.07);
 
     --radius: 0.625rem;
@@ -393,6 +401,8 @@
     --route-3: #c03a17;
     --route-4: #8a5a00;
     --route-5: #6e5600;
+    --ramp-avatars: linear-gradient(100deg, #6d28d9 0%, #a81b6f 42%, #c03a17 74%, #8a5a00 100%);
+    --ramp-avatars-soft: linear-gradient(100deg, #5f3a9e 0%, #94476b 52%, #7d5320 100%);
     --ghost-outline: rgb(17 17 17 / 0.07);
 
     /* Shadows carry less alpha on a light ground or they read as smudges. */
@@ -454,6 +464,8 @@
         --route-3: #c03a17;
         --route-4: #8a5a00;
         --route-5: #6e5600;
+        --ramp-avatars: linear-gradient(100deg, #6d28d9 0%, #a81b6f 42%, #c03a17 74%, #8a5a00 100%);
+        --ramp-avatars-soft: linear-gradient(100deg, #5f3a9e 0%, #94476b 52%, #7d5320 100%);
         --ghost-outline: rgb(17 17 17 / 0.07);
 
         --shadow-raised: 0 1px 2px 0 rgb(17 17 17 / 0.09), 0 2px 6px -1px rgb(17 17 17 / 0.10);
@@ -527,6 +539,14 @@
     --route-3: #f0603c;
     --route-4: #f7a03c;
     --route-5: #ffd400;
+    /* The AI Lab board's title ramp, violet through pink into orange, and a
+       held-back version for the line under it. Theme-aware for the same
+       reason --route-* is: this one is sampled off a board printed on black,
+       and the section carrying it is NOT pinned dark, so on paper the light
+       stops measured under 2:1 and the title was barely there. The light
+       ramp reuses the route palette, which is already checked against white. */
+    --ramp-avatars: linear-gradient(100deg, #cbb6ff 0%, #f286b4 40%, #ff9a5c 74%, #ffc46b 100%);
+    --ramp-avatars-soft: linear-gradient(100deg, #b6abdc 0%, #d99cb4 52%, #e0a469 100%);
 
     --shadow-raised: 0 2px 8px -2px rgb(0 0 0 / 0.6);
     --shadow-panel: 0 12px 32px -8px rgb(0 0 0 / 0.7);

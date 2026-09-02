@@ -1,35 +1,57 @@
-import { Spectrum } from "@/components/genesis/atmosphere";
 import type { CSSProperties } from "react";
+
+import { Spectrum } from "@/components/genesis/atmosphere";
+import { GenesisMark } from "@/components/genesis/genesis-mark";
+import { NeuralOrb } from "@/components/genesis/neural-orb";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { services } from "@/lib/home-content";
 
 /**
- * Section 2 — the four divisions.
+ * Section 2 — the four divisions, set around the orb.
  *
- * BUILT TO THE BRAND DECK, not to the old mockups. Pages 26-29 of the
- * guidelines give each division a page of its own, and each of those pages is
- * the same thing: a black field, the division name set once at 96pt, and
- * nothing else. No cards, no tilt, no scatter, no ornament.
+ * THE COMPOSITION IS GENESIS'S OWN. The company's films put a single dotted
+ * sphere in the middle of the frame with the wordmark across its core and the
+ * four division names at the four corners around it, each in its own
+ * warm-to-cool ramp. That picture is an argument: the heading says "four
+ * divisions, one system", and a diagram of one body with four things in orbit
+ * says it better than a list can.
  *
- * WHAT THIS REPLACED. Five pinned paper cards dropped across an arc at 8-13
- * degrees under a raking spotlight, overlapping, at three sizes. It was
- * carefully made and it was wrong twice over: it is not what the deck shows,
- * and it is the exact thing the guidelines tell you to reject — "Minimal.
- * Confident. Never Loud. Rule: if it feels like a normal agency template,
- * reject it." Tilted pinned index cards are an agency template.
+ * WHAT THIS REPLACED, TWICE OVER. First, five pinned paper cards dropped
+ * across an arc under a raking spotlight — the exact "normal agency template"
+ * the guidelines tell you to reject. Then a plain four-row list, built to the
+ * deck's division pages, which was right about the typography and silent
+ * about the relationship between the four.
  *
- * So the divisions are a list, and the type does the work: the name at
- * display size in Mont, the number and the caption reduced to labels around
- * it. On a 1440 screen four names at this size fill the frame the way one
- * name fills a deck page.
+ * WHY THE NAMES LOSE THE PREFIX. On the deck's division pages each name is
+ * set in full — Genesis.Influence — because it is alone on a black page and
+ * nothing else identifies it. Here the wordmark is at the centre of the
+ * picture, so the prefix is already said; repeating it four times around a
+ * Genesis logo is a stutter. The short names are in the content file beside
+ * the full ones rather than sliced off the end of a string.
  *
- * THE N-SLICE. The deck names the mark's diagonal as the brand's ownable
- * device — "the diagonal split should drive masks, wipes, transitions, image
- * crops and section cuts" — and the site was using none of it. Each row's
- * hover fill is cut at the mark's own angle rather than being a rectangle,
- * so the one interactive flourish in the section is the brand's own gesture.
+ * WHY THE COLUMNS RAG INWARD. The left pair is right-aligned and the right
+ * pair left-aligned, so all four names run toward the sphere instead of
+ * toward the page edges. It is the only thing holding the corners to the
+ * middle once the type is this large.
+ *
+ * NO HOVER STATE. The previous list lit each row with a fill cut at the
+ * mark's own diagonal. These are not links — no division has a page yet — and
+ * a hover flourish on text that cannot be clicked promises something that
+ * does not happen. The device comes back when the destinations do.
  */
+
+/**
+ * Where each division sits, in order. Written as whole class strings because
+ * Tailwind reads the source for literals; `lg:col-start-${n}` compiles to
+ * nothing at all.
+ */
+const PLACEMENT = [
+  "lg:col-start-1 lg:row-start-1 lg:items-end lg:text-right",
+  "lg:col-start-1 lg:row-start-2 lg:items-end lg:text-right",
+  "lg:col-start-3 lg:row-start-2 lg:items-start lg:text-left",
+  "lg:col-start-3 lg:row-start-1 lg:items-start lg:text-left",
+];
 
 export function Services() {
   return (
@@ -61,11 +83,6 @@ export function Services() {
         }}
       />
 
-      {/*
-        No ghost word behind the list. The deck's division pages carry the
-        name and nothing else, and at this type size a second set of letterforms
-        underneath is just noise competing with the first.
-      */}
       <Spectrum />
 
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
@@ -87,55 +104,53 @@ export function Services() {
           </Reveal>
         </div>
 
-        <RevealGroup className="mt-16 border-t border-[var(--glass-border)] sm:mt-20">
+        {/*
+          Three columns on desktop: names, orb, names. The orb is a real grid
+          item spanning both rows rather than an absolutely-placed backdrop,
+          which is what guarantees the type can never land on top of it at any
+          width. Below lg the whole thing folds to one column with the orb
+          first, because on a phone a sphere behind live text is a legibility
+          problem dressed as atmosphere.
+        */}
+        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-20 lg:grid-cols-[1fr_minmax(0,24rem)_1fr] lg:grid-rows-2 lg:gap-x-10 lg:gap-y-20">
+          <RevealItem className="order-first lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            {/*
+              The orb overruns its own column by 8% each side, into the grid
+              gap. It buys the sphere back the presence it has on the board —
+              roughly a third of the frame — without taking width off the
+              names, which is what widening the track would have done.
+            */}
+            <div className="relative mx-auto w-[min(76vw,20rem)] lg:-mx-[8%] lg:w-[116%]">
+              <NeuralOrb />
+
+              {/*
+                The wordmark at the core. aria-hidden because the header
+                already carries the real one — a second "Genesis Media" in the
+                accessibility tree is noise, and this one is a picture.
+              */}
+              <div
+                aria-hidden
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <GenesisMark className="h-[14px] w-[8.75rem] lg:h-[18px] lg:w-[11.25rem]" />
+              </div>
+            </div>
+          </RevealItem>
+
           {services.items.map((service, index) => (
-            <RevealItem key={service.title}>
-              <article className="group relative isolate border-b border-[var(--glass-border)]">
-                {/*
-                  The hover fill, edged at the mark's own angle by .n-wash.
-                  On a row this wide 51deg reads as a slight slant — the edge
-                  travels 81px across 1152px — which is the angle behaving
-                  correctly on a wide box, not a diluted version of it. Sits
-                  behind the row and is inert to the pointer, so it can never
-                  eat a click.
-                */}
-                <div
-                  aria-hidden
-                  className="n-wash pointer-events-none absolute inset-0 -z-10 text-brand/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                />
-
-                <div className="flex flex-col gap-2 py-8 sm:flex-row sm:items-baseline sm:gap-8 sm:py-10">
-                  <span className="micro-label shrink-0 text-brand-ink sm:w-16">
-                    {`0${index + 1}`}
-                  </span>
-
-                  <h3
-                    className="ramp-text min-w-0 flex-1 text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1"
-                    style={{ "--ramp": service.ramp } as CSSProperties}
-                  >
-                    {/*
-                      The names are dotted single tokens — "Genesis.BrandDesign"
-                      has no space in it and cannot wrap. A <wbr> after the dot
-                      gives the browser somewhere to break, which is where the
-                      name wants to break anyway.
-                    */}
-                    {service.title.split(".").map((part, i, all) => (
-                      <span key={part}>
-                        {part}
-                        {i < all.length - 1 && (
-                          <>
-                            .<wbr />
-                          </>
-                        )}
-                      </span>
-                    ))}
-                  </h3>
-
-                  <p className="shrink-0 text-small leading-relaxed text-ash sm:w-64 sm:text-right">
-                    {service.caption}
-                  </p>
-                </div>
-              </article>
+            <RevealItem
+              key={service.title}
+              className={`flex flex-col gap-2 ${PLACEMENT[index] ?? ""}`}
+            >
+              <h3
+                className="ramp-text text-balance text-h3 font-normal leading-[1.05] tracking-tight sm:text-h2 lg:text-h1"
+                style={{ "--ramp": service.ramp } as CSSProperties}
+              >
+                {service.short}
+              </h3>
+              <p className="max-w-[18rem] text-small leading-relaxed text-ash">
+                {service.caption}
+              </p>
             </RevealItem>
           ))}
         </RevealGroup>

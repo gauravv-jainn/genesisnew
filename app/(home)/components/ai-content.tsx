@@ -1,5 +1,8 @@
+import type { CSSProperties } from "react";
+
 import { Sparkles } from "lucide-react";
 
+import { AvatarFan } from "@/components/genesis/avatar-fan";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { ToolsStack } from "@/components/genesis/tools-stack";
 import { RevealGroup, RevealItem, Reveal } from "@/components/genesis/reveal";
@@ -12,29 +15,9 @@ import { SectionShell } from "./section-shell";
  * Spec: "AI tools, Image Generations, AI Avatars, Video Generations… Some AI
  * content can be showcased. Ai Avatars: Adi, Diya, Ivaanat, Shivam, Tanvi."
  *
- * The avatars are presented as a perspective arc of frames (img-033). Real
- * avatar stills replace the placeholder frames when the assets land.
+ * The avatars are dealt as a fanned hand of cards, from the deck's own AI Lab
+ * board. Real avatar stills replace the placeholder grounds when they land.
  */
-
-/**
- * Rotation and depth per frame, mirrored around the centre.
- *
- * NO OPACITY RAMP. img-033 is a continuous curved WALL of panels running edge
- * to edge and bleeding off both sides of the frame, every one at full
- * brightness — the outermost right panel is the most vivid thing in the
- * picture. Fading the flanks to 0.45 and 0.7 produced the generic 3D-carousel
- * look instead: five small fanned playing cards at descending scale AND
- * descending opacity in the middle of a wide empty section, where the
- * reference is a wall you feel you are standing inside. Rotation and depth
- * carry the curve; brightness does not have to.
- */
-const ARC = [
-  { rotateY: 42, translateZ: -150 },
-  { rotateY: 24, translateZ: -68 },
-  { rotateY: 0, translateZ: 0 },
-  { rotateY: -24, translateZ: -68 },
-  { rotateY: -42, translateZ: -150 },
-];
 
 export function AiContent() {
   return (
@@ -51,41 +34,31 @@ export function AiContent() {
       align="center"
     >
       {/*
-        FULL-BLEED. The arc used to sit inside SectionShell's max-w-6xl, so
-        five 160x256 frames totalling 880px floated in a 1104px column with
-        ~110px of dead space each side, capped and never scaled up. The
-        reference runs edge to edge and clips at both sides, which is what
-        makes it read as a wall rather than as a widget.
+        FULL-BLEED. The fan runs edge to edge and clips at both sides, the
+        way the board does — a hand of cards floating with air either side of
+        it reads as a widget dropped into the section instead of a roster
+        being dealt to you.
       */}
-      <Reveal variant="scene" className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden">
-        <div
-          className="flex items-end justify-center gap-1 sm:gap-2"
-          style={{ perspective: "1200px" }}
-        >
-          {aiContent.avatars.map((avatar, index) => {
-            const frame = ARC[index] ?? ARC[2];
-            return (
-              <figure
-                key={avatar.id}
-                className="shrink-0"
-                style={{
-                  transform: `perspective(1200px) rotateY(${frame.rotateY}deg) translateZ(${frame.translateZ}px)`,
-                }}
-              >
-                <div
-                  className="aspect-[2/3] w-[clamp(8rem,19vw,20rem)] overflow-hidden rounded-card border border-white/10"
-                  style={{
-                    // TODO(assets): real avatar stills replace this placeholder.
-                    background: `linear-gradient(${150 + index * 20}deg, rgb(255 212 0 / 0.24) 0%, rgb(20 20 24 / 0.92) 55%), radial-gradient(80% 60% at 50% 20%, rgb(255 255 255 / 0.18), transparent 70%)`,
-                  }}
-                />
-                <figcaption className="mt-3 text-center text-small font-medium text-bone">
-                  {avatar.name}
-                </figcaption>
-              </figure>
-            );
-          })}
+      <Reveal
+        variant="scene"
+        className="relative left-1/2 mt-20 w-screen -translate-x-1/2 overflow-hidden"
+      >
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <h3
+            className="ramp-text text-balance text-h2 font-normal leading-[1.05] tracking-tight sm:text-h1"
+            style={{ "--ramp": "var(--ramp-avatars)" } as CSSProperties}
+          >
+            {aiContent.avatarsHeading} {aiContent.avatarsAccent}
+          </h3>
+          <p
+            className="ramp-text mt-4 text-lead leading-relaxed"
+            style={{ "--ramp": "var(--ramp-avatars-soft)" } as CSSProperties}
+          >
+            {aiContent.avatarsBody}
+          </p>
         </div>
+
+        <AvatarFan avatars={aiContent.avatars} className="mt-14 sm:mt-16" />
       </Reveal>
 
       {/* The stack feeding the studio — many inputs converging on one output. */}

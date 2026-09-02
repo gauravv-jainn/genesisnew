@@ -112,15 +112,15 @@ export function Services() {
           first, because on a phone a sphere behind live text is a legibility
           problem dressed as atmosphere.
         */}
-        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-20 lg:grid-cols-[1fr_minmax(0,24rem)_1fr] lg:grid-rows-2 lg:gap-x-10 lg:gap-y-20">
+        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-20 lg:grid-cols-[1fr_minmax(0,26rem)_1fr] lg:grid-rows-2 lg:gap-x-12 lg:gap-y-20">
           <RevealItem className="order-first lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1">
             {/*
-              The orb overruns its own column by 8% each side, into the grid
-              gap. It buys the sphere back the presence it has on the board —
-              roughly a third of the frame — without taking width off the
-              names, which is what widening the track would have done.
+              The orb overruns its own column by 10% each side, into the grid
+              gap — which is why that gap is 12 rather than 10. It buys the
+              sphere the presence it has on the board, roughly a third of the
+              frame, without taking width off the names.
             */}
-            <div className="relative mx-auto w-[min(76vw,20rem)] lg:-mx-[8%] lg:w-[116%]">
+            <div className="relative mx-auto w-[min(86vw,23rem)] lg:-mx-[10%] lg:w-[120%]">
               <NeuralOrb />
 
               {/*

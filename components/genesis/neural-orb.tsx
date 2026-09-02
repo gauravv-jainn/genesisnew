@@ -156,7 +156,7 @@ const RIPPLE_MAX = 3;
  * until the run was more than half over.
  */
 const FORM_MS = 1500;
-const FORM_SCATTER = 0.9;
+const FORM_SCATTER = 0.7;
 const FORM_STAGGER = 0.38;
 /** How visible a point is before it has arrived. Not zero — the incoming
  *  cloud is the good part, and fading it to nothing hides it. */
@@ -423,7 +423,23 @@ export function NeuralOrb({ className }: { className?: string }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const span = Math.min(width, height);
-      radius = span * 0.46;
+      /*
+        WHY 0.42 AND NOT A HALF.
+        A perspective projection does not put a sphere's widest point on its
+        silhouette. Maximising sqrt(1-d^2)/(CAMERA-d) puts it at d = 1/CAMERA
+        — a third of the way toward the viewer — where the projected radius is
+        1.053 times the sphere's own. On top of that the breathing adds 1.3%
+        and the pointer's lift another 7.5%, and each dot is drawn about two
+        dot-widths across.
+
+        At 0.46 all of that added up to 98% of the canvas: the sphere sat hard
+        against its own bounds, the outermost ring was shaved on every side,
+        and moving the cursor to an edge pushed dots off it entirely. 0.42
+        leaves the margin the arithmetic actually asks for. The section gives
+        the width back by widening the column, so the sphere is larger on the
+        page than it was before, not smaller.
+      */
+      radius = span * 0.42;
       dot = Math.max(0.8, span / 300);
 
       // Density follows area, so a small orb is not a solid white ball and a

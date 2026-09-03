@@ -1,96 +1,191 @@
 /**
  * Turn a Google Drive folder of master videos into web-ready hover previews.
  *
- *   node scripts/ingest-drive-clips.mjs <driveFolderId>
+ *   node scripts/ingest-drive-clips.mjs <folderId>
  *
  * WHY THIS EXISTS. Genesis's work lands as full-resolution masters — the first
- * folder averaged 51MB a file, 2GB in total, with single clips 200x the weight
- * of the entire homepage. None of it can be served. This produces, per file, a
- * four-second silent loop at 720px on the long edge plus a poster frame:
- * measured at 11.5MB -> 82KB, a ~140x reduction.
+ * folder averaged 51MB a file, 2GB in total, single clips 200x the weight of
+ * the whole homepage. None of it is servable. This produces, per file, a
+ * four-second silent loop at 720px on the long edge plus a poster frame.
+ * Measured: 11.5MB -> 82KB, about 140x.
  *
- * IT NEVER DOWNLOADS THE MASTERS. ffmpeg reads the Drive URL over HTTP and
- * range-requests only the leading seconds it needs, so a 2GB folder costs a
- * few hundred MB of transfer and about six seconds a file. Pulling all of it
- * first would take an hour and 2GB of disk to throw away.
+ * IT USES THE DRIVE API, not the public folder view. That matters for three
+ * reasons beyond being the supported path:
  *
- * `drive.usercontent.google.com` rather than `drive.google.com/uc`, because
- * the latter serves an HTML interstitial instead of the file once a file is
- * large enough to warrant a virus-scan warning — which shows up as a
- * zero-byte download rather than an error.
+ *   1. It reads PRIVATE folders. The scrape it replaced only ever worked on
+ *      folders set to "anyone with the link", which is not where finished
+ *      client work should have to live.
+ *   2. It returns METADATA — real filenames, sizes, mime types, descriptions,
+ *      and the folder each file sits in. Files arriving as 1.mp4..32.mp4 carry
+ *      no client anywhere in them, and the folder tree is the one place that
+ *      information plausibly exists. The script walks subfolders and records
+ *      the path, then writes a manifest.
+ *   3. It is stable. The previous version parsed `embeddedfolderview` HTML,
+ *      an undocumented endpoint that changes without notice.
  *
- * The folder must be link-viewable. Requires ffmpeg on PATH.
+ * IT STILL DOES NOT DOWNLOAD THE MASTERS. ffmpeg is handed the API's media
+ * URL plus a bearer token, and range-requests only the leading seconds it
+ * needs — six seconds a file rather than a 2GB pull that is then discarded.
+ *
+ * SETUP: set GOOGLE_SERVICE_ACCOUNT_JSON (raw or base64) in .env.local, and
+ * share the folder with that account's client_email — a service account with
+ * no share sees an empty Drive and reports zero files rather than an error.
+ * Requires ffmpeg on PATH.
  */
 import { execFile } from "node:child_process";
-import { mkdirSync, statSync } from "node:fs";
+import { mkdirSync, statSync, writeFileSync } from "node:fs";
 import { promisify } from "node:util";
+
+import "dotenv/config";
+import { google } from "googleapis";
 
 const run = promisify(execFile);
 const folderId = process.argv[2];
 if (!folderId) {
-  console.error("usage: node scripts/ingest-drive-clips.mjs <driveFolderId>");
+  console.error("usage: node scripts/ingest-drive-clips.mjs <folderId>");
   process.exit(1);
 }
 
 const OUT = new URL("../public/work", import.meta.url).pathname;
-const src = (id) =>
-  `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`;
 /** One filter for both orientations: reels are portrait, films landscape. */
-const SCALE =
-  "scale='if(gt(iw,ih),720,-2)':'if(gt(iw,ih),-2,720)':flags=lanczos";
+const SCALE = "scale='if(gt(iw,ih),720,-2)':'if(gt(iw,ih),-2,720)':flags=lanczos";
 
-/** Drive's embedded folder view is plain HTML, so no API key is needed. */
-async function listFolder(id) {
-  const html = await fetch(
-    `https://drive.google.com/embeddedfolderview?id=${id}#list`,
-  ).then((r) => r.text());
-  const ids = [...html.matchAll(/id="entry-([^"]+)"/g)].map((m) => m[1]);
-  const names = [...html.matchAll(/flip-entry-title">([^<]*)<\/div>/g)].map(
-    (m) => m[1],
-  );
-  return ids.map((id, i) => ({ id, name: names[i] ?? `${i}` }));
+/**
+ * Mirrors lib/google-drive.ts. Not imported from it because that module is
+ * marked `server-only` for the app's benefit, and this is a plain Node script.
+ */
+function credentials() {
+  const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON?.trim();
+  if (!raw || raw.startsWith("your") || raw.length < 40) {
+    console.error(
+      "GOOGLE_SERVICE_ACCOUNT_JSON is not set.\n" +
+        "Add the service account JSON (raw or base64) to .env.local, then share\n" +
+        "the Drive folder with that account's client_email.",
+    );
+    process.exit(1);
+  }
+  const json = raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8");
+  const parsed = JSON.parse(json);
+  return {
+    client_email: parsed.client_email,
+    // Vercel stores the key with literal \n sequences; PEM needs real ones.
+    private_key: String(parsed.private_key).replace(/\\n/g, "\n"),
+  };
 }
 
-const files = (await listFolder(folderId)).filter((f) => /\.(mp4|mov|m4v)$/i.test(f.name));
+const auth = new google.auth.GoogleAuth({
+  credentials: credentials(),
+  scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+});
+const drive = google.drive({ version: "v3", auth });
+
+/** Every video under `id`, depth-first, carrying the folder path it was found in. */
+async function walk(id, trail = []) {
+  const found = [];
+  let pageToken;
+  do {
+    const { data } = await drive.files.list({
+      q: `'${id}' in parents and trashed = false`,
+      fields: "nextPageToken, files(id, name, mimeType, size, description)",
+      pageSize: 200,
+      pageToken,
+      // Shared drives are a different corpus; without these the listing comes
+      // back empty for anything that is not in "My Drive".
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+    });
+    for (const file of data.files ?? []) {
+      if (file.mimeType === "application/vnd.google-apps.folder") {
+        found.push(...(await walk(file.id, [...trail, file.name])));
+      } else if (file.mimeType?.startsWith("video/")) {
+        found.push({ ...file, trail });
+      }
+    }
+    pageToken = data.nextPageToken ?? undefined;
+  } while (pageToken);
+  return found;
+}
+
+const files = await walk(folderId);
 if (files.length === 0) {
-  console.error("No video files found — is the folder link-viewable?");
+  console.error(
+    "No videos found. If the folder is not empty, it is probably not shared\n" +
+      `with the service account (${credentials().client_email}).`,
+  );
   process.exit(1);
 }
+console.log(`${files.length} videos found\n`);
+
 mkdirSync(`${OUT}/clips`, { recursive: true });
 mkdirSync(`${OUT}/posters`, { recursive: true });
 
-async function convert(file) {
-  const stem = file.name.replace(/\.[^.]+$/, "");
+const slug = (file) =>
+  [...file.trail, file.name.replace(/\.[^.]+$/, "")]
+    .join("-")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+async function convert(file, token) {
+  const stem = slug(file);
+  const url = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&supportsAllDrives=true`;
+  // ffmpeg range-requests this URL, so only the opening seconds are fetched.
+  const headers = `Authorization: Bearer ${token}\r\n`;
   const clip = `${OUT}/clips/${stem}.mp4`;
   const poster = `${OUT}/posters/${stem}.jpg`;
   const opts = { maxBuffer: 1 << 26 };
-  await run("ffmpeg", ["-v","error","-y","-i",src(file.id),"-t","4","-an",
+
+  await run("ffmpeg", ["-v","error","-y","-headers",headers,"-i",url,"-t","4","-an",
     "-vf",`${SCALE},fps=24`,"-c:v","libx264","-profile:v","high","-crf","30",
     "-preset","slow","-pix_fmt","yuv420p","-movflags","+faststart",clip], opts);
-  await run("ffmpeg", ["-v","error","-y","-i",src(file.id),"-frames:v","1",
+  await run("ffmpeg", ["-v","error","-y","-headers",headers,"-i",url,"-frames:v","1",
     "-vf",SCALE,"-q:v","4",poster], opts);
+
   return { stem, clip: statSync(clip).size, poster: statSync(poster).size };
 }
 
-// Four at a time: encoding is CPU-bound and fetching is network-bound, so a
-// small pool keeps both busy without thrashing either.
+const token = await auth.getAccessToken();
 const queue = [...files];
 const done = [];
+const manifest = [];
+
+// Four at a time: encoding is CPU-bound and fetching network-bound, so a small
+// pool keeps both busy without thrashing either.
 await Promise.all(
   Array.from({ length: 4 }, async () => {
     while (queue.length) {
       const file = queue.shift();
       try {
-        const r = await convert(file);
+        const r = await convert(file, token);
         done.push(r);
+        manifest.push({
+          slug: r.stem,
+          driveId: file.id,
+          name: file.name,
+          folder: file.trail.join(" / ") || null,
+          description: file.description ?? null,
+          masterBytes: Number(file.size ?? 0),
+          clip: `/work/clips/${r.stem}.mp4`,
+          poster: `/work/posters/${r.stem}.jpg`,
+        });
         console.log(`${r.stem}: ${(r.clip / 1024) | 0}KB clip, ${(r.poster / 1024) | 0}KB poster`);
       } catch (error) {
-        console.log(`${file.name}: FAILED — ${String(error.message).slice(0, 120)}`);
+        console.log(`${file.name}: FAILED — ${String(error.message).slice(0, 140)}`);
       }
     }
   }),
 );
 
+/*
+  The manifest is the useful half. It is the only record of which Drive file
+  each preview came from, what it was called, and which folder it lived in —
+  which is what makes attributing a clip to a client possible later without
+  re-listing the whole Drive.
+*/
+manifest.sort((a, b) => a.slug.localeCompare(b.slug, undefined, { numeric: true }));
+writeFileSync(`${OUT}/clips/manifest.json`, JSON.stringify(manifest, null, 2));
+
 const mb = (n) => (n / 1048576).toFixed(1);
 console.log(`\n${done.length}/${files.length} converted`);
 console.log(`clips ${mb(done.reduce((s, r) => s + r.clip, 0))}MB, posters ${mb(done.reduce((s, r) => s + r.poster, 0))}MB`);
+console.log(`manifest: public/work/clips/manifest.json`);

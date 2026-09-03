@@ -200,7 +200,7 @@ export function GlassNav() {
                 >
                   <ul className="flex flex-col">
                     {capabilities.map((item) => (
-                      <li key={item.href}>
+                      <li key={item.label}>
                         <Link
                           href={item.href}
                           onClick={() => setCapsOpen(false)}
@@ -222,7 +222,7 @@ export function GlassNav() {
           </li>
 
           {navItems.slice(1).map((item) => (
-            <li key={item.href}>
+            <li key={item.label}>
               <Link href={item.href} className={NAV_LINK}>
                 {item.label}
               </Link>
@@ -282,7 +282,7 @@ export function GlassNav() {
             </div>
             <ul className="flex flex-col">
               {navItems.map((item) => (
-                <li key={item.href}>
+                <li key={item.label}>
                   <Link
                     href={item.href}
                     onClick={() => setMenuOpen(false)}
@@ -302,7 +302,7 @@ export function GlassNav() {
             <p className="micro-label mt-3 px-3">Capabilities</p>
             <ul className="mt-1 flex flex-col">
               {capabilities.map((item) => (
-                <li key={item.href}>
+                <li key={item.label}>
                   <Link
                     href={item.href}
                     onClick={() => setMenuOpen(false)}

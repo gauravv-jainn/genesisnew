@@ -39,7 +39,7 @@ export default function NotFound() {
           <p className="micro-label">Or try</p>
           <ul className="mt-6 flex flex-wrap justify-center gap-3">
             {navItems.map((item) => (
-              <li key={item.href}>
+              <li key={item.label}>
                 <Link
                   href={item.href}
                   className="glass rounded-full px-4 py-2 text-small text-ash transition-colors hover:text-bone"

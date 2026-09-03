@@ -83,7 +83,13 @@ export function FooterCta() {
               <p className="micro-label">{group.heading}</p>
               <ul className="mt-6 flex flex-col gap-3">
                 {group.items.map((item) => (
-                  <li key={item.href}>
+                  /*
+                    Keyed on the LABEL, not the href. Two entries in a nav
+                    group can legitimately point at the same place — "Contact"
+                    and "Start a Project" both go to /#contact — and keying on
+                    the destination made React see them as the same child.
+                  */
+                  <li key={item.label}>
                     <Link
                       href={item.href}
                       className="text-small text-ash transition-colors hover:text-bone"

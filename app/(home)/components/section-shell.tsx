@@ -18,6 +18,7 @@ export function SectionShell({
   id,
   label,
   heading,
+  headingAs = "h2",
   headingAccent,
   body,
   children,
@@ -31,6 +32,15 @@ export function SectionShell({
   id?: string;
   label?: string;
   heading?: string;
+  /**
+   * Which heading level the section title renders as.
+   *
+   * Sections are h2 by default, which is right for a section — but a page
+   * built entirely from SectionShells then has no h1 at all, which is what
+   * happened to the homepage once the Brain replaced the hero, and to
+   * /influencer-campaigns. The LEAD section on a page passes "h1".
+   */
+  headingAs?: "h1" | "h2";
   /** Rendered in serif italic — the single accent word per headline. */
   headingAccent?: string;
   body?: string;
@@ -42,6 +52,7 @@ export function SectionShell({
   className?: string;
   contentClassName?: string;
 }) {
+  const Heading = headingAs;
   return (
     <Atmosphere
       tone={tone}
@@ -77,7 +88,7 @@ export function SectionShell({
 
             {heading && (
               <Reveal delay={0.05} className={align === "split" ? "lg:col-start-1" : undefined}>
-                <h2
+                <Heading
                   className={cn(
                     "mt-6 text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone",
                     "sm:text-h1 lg:text-h1",
@@ -92,7 +103,7 @@ export function SectionShell({
                       </span>
                     </>
                   )}
-                </h2>
+                </Heading>
               </Reveal>
             )}
 

@@ -112,12 +112,17 @@ export function Services() {
             <SectionLabel dot tone="brand">
               {services.label}
             </SectionLabel>
-            <h2 className="mt-6 text-balance text-h2 font-normal leading-[1.02] tracking-tight text-bone sm:text-h1">
+            {/*
+              h1, not h2. This section became the homepage hero when the lit
+              room was removed, and nothing replaced the h1 it took with it —
+              the homepage had no top-level heading at all.
+            */}
+            <h1 className="mt-6 text-balance text-h2 font-normal leading-[1.02] tracking-tight text-bone sm:text-h1">
               {services.heading}{" "}
               <span className="font-serif font-normal italic text-brand-ink">
                 {services.headingAccent}
               </span>
-            </h2>
+            </h1>
           </Reveal>
 
           <Reveal delay={0.1} className="max-w-sm">

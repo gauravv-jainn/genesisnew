@@ -185,10 +185,17 @@ export function StatRow({
     );
   }
 
-  // Columns follow the number of figures that survived the filter.
+  /*
+    Columns follow the number of figures that survived the filter.
+
+    FOUR FIGURES START AT ONE COLUMN, not two. At 390px a two-column grid
+    gives each figure about 150px, and "1,00,000+" set at text-h3 is wider
+    than that — it overflowed its cell and collided with the figure beside it,
+    labels and all. Measured on /influencer-campaigns at 390.
+  */
   const columns =
     shown.length >= 4
-      ? "grid-cols-2 lg:grid-cols-4"
+      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
       : shown.length === 3
         ? "grid-cols-1 sm:grid-cols-3"
         : shown.length === 2
@@ -198,7 +205,9 @@ export function StatRow({
   return (
     <div
       className={cn(
-        "glass glass-lit grid gap-y-8 rounded-panel px-6 py-8 sm:px-8",
+        // gap-x as well as gap-y: the columns had no horizontal gutter at
+        // all, so anything that did fit still sat flush against its neighbour.
+        "glass glass-lit grid gap-x-6 gap-y-8 rounded-panel px-6 py-8 sm:px-8",
         columns,
         className,
       )}

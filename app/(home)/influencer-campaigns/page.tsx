@@ -30,6 +30,8 @@ export default function InfluencerCampaignsPage() {
   return (
     <main className="pt-24">
       <SectionShell
+        // Lead section on the page, so it carries the h1.
+        headingAs="h1"
         label={influencerPage.label}
         heading={influencerPage.heading}
         headingAccent={influencerPage.headingAccent}

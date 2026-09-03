@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { recordAuditLog } from "@/lib/audit";
 import { getPrisma, isDatabaseConfigured } from "@/lib/db";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import { SubmissionType } from "@/lib/generated/prisma/enums";
 
 /**
@@ -74,9 +74,10 @@ export async function submitContactForm(
   }
 
   const headerList = await headers();
-  const forwarded = headerList.get("x-forwarded-for");
-  const ipAddress =
-    forwarded?.split(",")[0]?.trim() || headerList.get("x-real-ip") || "unknown";
+  // Platform-set headers only — see clientIp(). This action had its own copy
+  // of the lookup that trusted x-forwarded-for, so the rate limit below could
+  // be reset at will by anyone willing to send a header.
+  const ipAddress = clientIp(headerList);
   const userAgent = headerList.get("user-agent") ?? undefined;
 
   const limit = await checkRateLimit(`contact:${ipAddress}`);

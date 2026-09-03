@@ -97,12 +97,33 @@ export async function checkRateLimit(
   }
 }
 
+/**
+ * The caller's IP, taken only from headers the PLATFORM sets.
+ *
+ * WHY NOT `x-forwarded-for` FIRST. That header is a client-appendable list and
+ * the leftmost entry is whatever the caller typed. Keying the limiter on it
+ * meant a bot could send a different `X-Forwarded-For` on every request and
+ * get a fresh five-per-minute bucket each time — which is not a weaker limit,
+ * it is no limit at all, on the only protection the public contact form has.
+ * It also wrote an attacker-chosen string into `contact_submissions.ipAddress`
+ * and into the audit log, so the record of who submitted what was forgeable.
+ *
+ * `x-vercel-forwarded-for` and `x-real-ip` are overwritten by Vercel's edge on
+ * every request, so a client cannot forge them. The `x-forwarded-for` fallback
+ * is kept last for non-Vercel hosts, where it is the only thing available —
+ * behind a proxy that overwrites it, it is trustworthy; in front of nothing,
+ * neither is anything else.
+ */
+export function clientIp(headerSource: Headers): string {
+  const platform =
+    headerSource.get("x-vercel-forwarded-for") ?? headerSource.get("x-real-ip");
+  if (platform) return platform.split(",")[0]!.trim();
+
+  const forwarded = headerSource.get("x-forwarded-for");
+  return forwarded?.split(",")[0]?.trim() || "unknown";
+}
+
 /** Builds a stable rate-limit key from the request's client IP and a scope. */
 export function rateLimitKey(request: Request, scope: string): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  const ip =
-    forwarded?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
-  return `${scope}:${ip}`;
+  return `${scope}:${clientIp(request.headers)}`;
 }

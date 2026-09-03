@@ -39,7 +39,16 @@ function contentSecurityPolicy(): string {
     ],
     // Tailwind and Framer Motion both write inline style attributes.
     "style-src": ["'self'", "'unsafe-inline'"],
-    "img-src": ["'self'", "data:", "blob:", "https:"],
+    /*
+       NOT `https:`. A wildcard image source is an exfiltration channel: with
+       'unsafe-inline' unavoidably present in script-src (see above), any
+       injected script could push stolen data off-site simply by setting an
+       image URL. The only remote images this app loads are YouTube still
+       frames, and `next.config.ts` already restricts optimisation to that one
+       host — so the two policies now agree instead of one being ten thousand
+       times wider than the other.
+    */
+    "img-src": ["'self'", "data:", "blob:", "https://i.ytimg.com"],
     // YouTube embeds for the journal's video-linked articles. Restricted to
     // the nocookie host, and the frame only mounts on an explicit click.
     "frame-src": ["'self'", "https://www.youtube-nocookie.com"],

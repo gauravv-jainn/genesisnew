@@ -33,8 +33,8 @@ import "./globals.css";
  */
 const codecPro = localFont({
   src: [
-    { path: "./fonts/CodecPro-Regular.ttf", weight: "400", style: "normal" },
-    { path: "./fonts/CodecPro-Italic.ttf", weight: "400", style: "italic" },
+    { path: "./fonts/CodecPro-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/CodecPro-Italic.woff2", weight: "400", style: "italic" },
   ],
   variable: "--font-sans",
   display: "swap",
@@ -44,8 +44,8 @@ const codecPro = localFont({
 
 const mont = localFont({
   src: [
-    { path: "./fonts/Mont-ExtraLightDEMO.otf", weight: "200", style: "normal" },
-    { path: "./fonts/Mont-HeavyDEMO.otf", weight: "800", style: "normal" },
+    { path: "./fonts/Mont-ExtraLightDEMO.woff2", weight: "200", style: "normal" },
+    { path: "./fonts/Mont-HeavyDEMO.woff2", weight: "800", style: "normal" },
   ],
   variable: "--font-display",
   display: "swap",

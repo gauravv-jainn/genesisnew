@@ -568,6 +568,28 @@
     color-scheme: dark;
 }
 
+/* Chrome that FLOATS over a dark scene without being one.
+   .scene-dark paints itself — background-color and color — which is right for
+   a section and wrong for the nav pill: applied there it turned the glass
+   into an opaque black lozenge and, because .scene-dark also resets
+   --logo-invert to 0, put the dark wordmark on it. This re-pins only the
+   tokens the floating chrome reads, so the pill keeps its translucency and
+   its blur while its inks, borders and logo follow the dark ground beneath. */
+.on-dark {
+    --ink-strong: #ffffff;
+    --ink-muted: #d9d9d9;
+    --ink-faint: #8b8b8b;
+
+    --glass-fill: rgb(255 255 255 / 0.075);
+    --glass-fill-strong: rgb(255 255 255 / 0.12);
+    --glass-border: rgb(255 255 255 / 0.12);
+    --glass-highlight: rgb(255 255 255 / 0.3);
+
+    --hover-wash: rgb(255 255 255 / 0.08);
+    --logo-invert: 1;
+}
+
+
 /* The floating nav sits OVER whatever the page is, and on a scene-pinned page
    that is black — so a light-theme nav bar reads as a white slab dropped on a
    dark photograph. When the page pins itself dark, the chrome above it does

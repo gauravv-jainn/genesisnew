@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
 
+import Link from "next/link";
+
 import { Spectrum } from "@/components/genesis/atmosphere";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
 import { NeuralOrb } from "@/components/genesis/neural-orb";
@@ -53,11 +55,30 @@ const PLACEMENT = [
   "lg:col-start-3 lg:row-start-1 lg:items-start lg:text-left",
 ];
 
+/**
+ * Which edge the hover rule grows from — toward the sphere, matching the way
+ * each column rags. Kept beside PLACEMENT because it is the same decision,
+ * and written as whole class strings for the same reason: Tailwind reads the
+ * source for literals and compiles nothing it cannot see.
+ */
+const RULE_ORIGIN = [
+  "origin-left lg:origin-right",
+  "origin-left lg:origin-right",
+  "origin-left",
+  "origin-left",
+];
+
 export function Services() {
   return (
     <section
       id="services"
-      className="scene-dark grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
+      /*
+        THE FIRST THING ON THE PAGE, so it carries hero spacing: enough top
+        padding to clear the fixed nav pill, and a min-height that gives the
+        orb a full screen to sit in rather than the 24 units of section
+        padding it had when it was section two.
+      */
+      className="scene-dark grain relative isolate flex min-h-dvh flex-col justify-center overflow-hidden bg-void pb-24 pt-32 sm:pb-32 sm:pt-36"
     >
       {/*
         Transitions into and out of the dark chapter — the same treatment the
@@ -140,17 +161,42 @@ export function Services() {
           {services.items.map((service, index) => (
             <RevealItem
               key={service.title}
-              className={`flex flex-col gap-2 ${PLACEMENT[index] ?? ""}`}
+              className={`flex flex-col ${PLACEMENT[index] ?? ""}`}
             >
-              <h3
-                className="ramp-text text-balance text-h3 font-normal leading-[1.05] tracking-tight sm:text-h2 lg:text-h1"
-                style={{ "--ramp": service.ramp } as CSSProperties}
+              {/*
+                THE WHOLE VERTICAL IS THE TARGET, name and caption together —
+                a two-line block where only the first line is clickable is a
+                small target and an arbitrary one. `group` drives the hover
+                from the wrapper so pointing anywhere in the block lights all
+                of it.
+              */}
+              <Link
+                href={service.href}
+                className="group flex flex-col gap-2 rounded-sm outline-none transition-transform duration-300 ease-out focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-transparent motion-safe:hover:-translate-y-0.5"
               >
-                {service.short}
-              </h3>
-              <p className="max-w-[18rem] text-small leading-relaxed text-ash">
-                {service.caption}
-              </p>
+                <h3
+                  className="ramp-text text-balance text-h3 font-normal leading-[1.05] tracking-tight sm:text-h2 lg:text-h1"
+                  style={{ "--ramp": service.ramp } as CSSProperties}
+                >
+                  {service.short}
+                </h3>
+
+                <p className="max-w-[18rem] text-small leading-relaxed text-ash transition-colors duration-300 group-hover:text-bone">
+                  {service.caption}
+                </p>
+
+                {/*
+                  The rule is the hover state, drawn in the division's own
+                  ramp rather than in the interface yellow — each vertical
+                  lights up as itself. It grows from whichever edge the column
+                  rags toward, so it runs into the sphere.
+                */}
+                <span
+                  aria-hidden
+                  className={`mt-1 h-px w-0 transition-[width] duration-500 ease-out group-hover:w-16 ${RULE_ORIGIN[index] ?? "origin-left"}`}
+                  style={{ backgroundImage: service.ramp }}
+                />
+              </Link>
             </RevealItem>
           ))}
         </RevealGroup>

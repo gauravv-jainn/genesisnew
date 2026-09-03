@@ -6,6 +6,8 @@
 export type NavItem = {
   label: string;
   href: string;
+  /** One-line description, used by the Capabilities menu. */
+  blurb?: string;
   /** Marks routes that do not exist until Phase 4. */
   planned?: boolean;
 };
@@ -18,43 +20,101 @@ export const siteConfig = {
   description:
     "Genesis is a Gen Z-led full-service agency where strategy, content and technology come together to build iconic brands.",
   url: "https://genesismedia.co",
+  /**
+   * WhatsApp, in international format without symbols — e.g. "919876543210".
+   *
+   * DELIBERATELY EMPTY. The floating button renders only when this holds a
+   * real number, because a WhatsApp button that opens a chat with nobody is
+   * worse than no button: it is a dead end presented as the fastest way to
+   * reach Genesis. One line to fill in.
+   * TODO(content): supply the business WhatsApp number.
+   */
+  whatsapp: "",
+  whatsappMessage:
+    "Hi Genesis, I'd like to discuss a project with your team.",
 } as const;
 
-/** Primary navigation. Homepage sections are anchors; the rest are routes. */
+/**
+ * Primary navigation.
+ *
+ * FIVE ITEMS, NOT NINE. The brief lists nine destinations and then, further
+ * down, says not to put nine in the header because it crowds. Both cannot be
+ * true, so this follows the later note: Work, a Capabilities menu holding the
+ * four verticals, Case Studies, Contact, and the one CTA that stands out.
+ *
+ * WORK vs PORTFOLIO, settled the way the brief settles it: "Work" is the
+ * homepage section showing the strongest projects, so it is an anchor.
+ * "Portfolio" is the complete library and lives at /our-work, reached from
+ * "View All Work" inside that section rather than from the header.
+ */
 export const navItems: NavItem[] = [
-  { label: "Work", href: "/our-work" },
-  { label: "Services", href: "/#services" },
-  { label: "Content", href: "/content-creation" },
+  { label: "Work", href: "/#work" },
   { label: "Case Studies", href: "/#case-studies" },
-  { label: "Influencers", href: "/influencer-campaigns" },
-  { label: "Journal", href: "/blog" },
-  { label: "Creators", href: "/creator" },
+  { label: "Contact", href: "/#contact" },
 ];
 
-/** Footer groupings. */
-export const footerNav: { heading: string; items: NavItem[] }[] = [
+/**
+ * The four verticals, which are the backbone of the whole site.
+ *
+ * Two of them already have a page of their own and link to it; the other two
+ * anchor to their homepage section until their page exists. Pointing all four
+ * at routes that are not built yet would give three-quarters of the menu a
+ * 404, which is worse than a menu that is honest about what is finished.
+ */
+export const capabilities: NavItem[] = [
   {
-    heading: "Agency",
-    items: [
-      { label: "Our Work", href: "/our-work" },
-      { label: "Content Creation", href: "/content-creation" },
-      { label: "Case Studies", href: "/#case-studies" },
-      { label: "Services", href: "/#services" },
-    ],
+    label: "Genesis Influence",
+    href: "/influencer-campaigns",
+    blurb: "Creator-led growth",
   },
   {
-    heading: "Network",
+    label: "Genesis Studios",
+    href: "/content-creation",
+    blurb: "Production & content",
+  },
+  { label: "Genesis AI Labs", href: "/#ai-lab", blurb: "Creative technology" },
+  {
+    label: "Genesis Brand & Design",
+    href: "/#brand-design",
+    blurb: "Identity & communication",
+  },
+];
+
+/** The one navigation item that is meant to look like an action. */
+export const primaryCta = { label: "Start a Project", href: "/#contact" } as const;
+
+/**
+ * Footer groupings, rebuilt around the four verticals rather than around the
+ * old service list.
+ *
+ * Client Login is here and nowhere else. Genesis Insider is an internal
+ * operating system, and it was interrupting the agency story with a section
+ * on the homepage — a visitor deciding whether to hire Genesis has no use for
+ * a staff login, and a prospect who sees one wonders whether they are in the
+ * right place.
+ */
+export const footerNav: { heading: string; items: NavItem[] }[] = [
+  {
+    heading: "Genesis",
     items: [
-      { label: "Influencer Campaigns", href: "/influencer-campaigns" },
-      { label: "For Creators", href: "/creator" },
+      { label: "About", href: "/#about" },
+      { label: "Work", href: "/#work" },
+      { label: "Portfolio", href: "/our-work" },
+      { label: "Case Studies", href: "/#case-studies" },
       { label: "Careers", href: "/careers" },
     ],
   },
   {
-    heading: "More",
+    heading: "Capabilities",
+    items: capabilities.map(({ label, href }) => ({ label, href })),
+  },
+  {
+    heading: "Connect",
     items: [
-      { label: "Journal", href: "/blog" },
-      { label: "Insider", href: "/insider" },
+      { label: "Contact", href: "/#contact" },
+      { label: "For Creators", href: "/creator" },
+      { label: "Start a Project", href: "/#contact" },
+      { label: "Client Login", href: "/insider" },
     ],
   },
 ];

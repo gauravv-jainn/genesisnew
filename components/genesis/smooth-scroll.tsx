@@ -27,6 +27,92 @@ import { useEffect } from "react";
  * where hijacking native momentum reliably feels worse. ScrollTrigger still
  * works in that mode via native scroll events.
  */
+/**
+ * How far below the viewport top a jumped-to section should land.
+ *
+ * The nav is fixed and roughly 64px tall sitting 16-24px off the top edge, so
+ * a section scrolled to y=0 arrives with its label underneath the nav pill.
+ */
+const NAV_OFFSET = 96;
+
+/**
+ * Sends an in-page link through whichever scroller is actually running.
+ *
+ * This has to exist. Lenis takes over the scroll position, and a native anchor
+ * jump sets scrollTop directly underneath it — the page lands in the right
+ * place and then Lenis, which still believes it is somewhere else, eases back
+ * toward its own idea of the position. The result is a jump followed by a
+ * drift, on every anchor in the site, and the brief's central interaction is
+ * clicking a vertical on the Brain to travel to its section.
+ */
+function installAnchorScrolling(lenis: Lenis | null): () => void {
+  const resolve = (hash: string) => {
+    if (!hash || hash === "#") return null;
+    try {
+      return document.querySelector(hash);
+    } catch {
+      return null; // a hash that is not a valid selector
+    }
+  };
+
+  const go = (target: Element, smooth: boolean) => {
+    if (lenis) {
+      lenis.scrollTo(target as HTMLElement, {
+        offset: -NAV_OFFSET,
+        duration: smooth ? 1.2 : 0,
+      });
+      return;
+    }
+    const top =
+      target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+    window.scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
+  };
+
+  const onClick = (event: MouseEvent) => {
+    // Let the browser handle anything that is not a plain left click.
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const anchor = (event.target as Element | null)?.closest?.("a");
+    if (!anchor) return;
+
+    const href = anchor.getAttribute("href");
+    if (!href) return;
+
+    // Same-document hashes only: "#work" and "/#work" when already on "/".
+    let hash = "";
+    if (href.startsWith("#")) hash = href;
+    else if (href.startsWith("/#") && window.location.pathname === "/")
+      hash = href.slice(1);
+    else return;
+
+    const target = resolve(hash);
+    if (!target) return;
+
+    event.preventDefault();
+    go(target, true);
+    // Keep the URL shareable without letting the browser do its own jump.
+    window.history.pushState(null, "", hash);
+  };
+
+  document.addEventListener("click", onClick);
+
+  // Arriving with a hash already in the URL — from another page, or a shared
+  // link. Deferred a frame so layout has settled before measuring.
+  let raf = 0;
+  if (window.location.hash) {
+    raf = requestAnimationFrame(() => {
+      const target = resolve(window.location.hash);
+      if (target) go(target, false);
+    });
+  }
+
+  return () => {
+    document.removeEventListener("click", onClick);
+    if (raf) cancelAnimationFrame(raf);
+  };
+}
+
 export function SmoothScroll() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -40,7 +126,13 @@ export function SmoothScroll() {
       // Positions still need recomputing once fonts and images settle.
       const refresh = () => ScrollTrigger.refresh();
       window.addEventListener("load", refresh);
-      return () => window.removeEventListener("load", refresh);
+      // Anchors still need the nav offset even with no smooth scroller, or
+      // every jumped-to heading lands underneath the nav pill.
+      const teardown = installAnchorScrolling(null);
+      return () => {
+        window.removeEventListener("load", refresh);
+        teardown();
+      };
     }
 
     const lenis = new Lenis({
@@ -64,7 +156,10 @@ export function SmoothScroll() {
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener("load", refresh);
 
+    const teardownAnchors = installAnchorScrolling(lenis);
+
     return () => {
+      teardownAnchors();
       window.removeEventListener("load", refresh);
       lenis.off("scroll", ScrollTrigger.update);
       gsap.ticker.remove(tick);

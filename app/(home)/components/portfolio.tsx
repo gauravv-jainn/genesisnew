@@ -23,7 +23,7 @@ export function Portfolio() {
 
   return (
     <SectionShell
-      id="portfolio"
+      id="work"
       label={portfolio.label}
       heading={portfolio.heading}
       headingAccent={portfolio.headingAccent}

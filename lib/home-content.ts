@@ -94,6 +94,9 @@ export const services = {
        * "Genesis." four more times around a Genesis logo is a stutter.
        */
       short: "Influence",
+      /* Where the Brain sends you. Two verticals have a page of their own;
+         the other two anchor to their homepage section until they do. */
+      href: "/#influence",
       caption: "creator & celebrity marketing",
       /*
        * ONE GRADIENT PER DIVISION, from the deck's "What we do" board, where
@@ -115,6 +118,7 @@ export const services = {
     {
       title: "Genesis.BrandDesign",
       short: "Brand & Design",
+      href: "/#brand-design",
       caption: "identity, guidelines & motion",
       ramp: "linear-gradient(100deg, #f0dcff 0%, #f5a3cd 50%, #ffbe8f 100%)",
       body: "Identity systems, brand guidelines, motion design and the rules that keep a brand recognisable everywhere it appears.",
@@ -122,6 +126,7 @@ export const services = {
     {
       title: "Genesis.Studios",
       short: "Studios",
+      href: "/content-creation",
       caption: "production at scale",
       ramp: "linear-gradient(100deg, #ff9147 0%, #ffb057 58%, #ffd27a 100%)",
       body: "Creative direction, strategy, scripting, production and post — plus the product and interactive work — built to hold up on any feed.",
@@ -129,6 +134,7 @@ export const services = {
     {
       title: "Genesis.AILab",
       short: "AI Lab",
+      href: "/#ai-lab",
       caption: "AI generation & digital fashion",
       ramp: "linear-gradient(100deg, #ff8fb8 0%, #ffa25c 100%)",
       body: "AI avatars and influencers, image and video generation, digital fashion, and the automation that compresses a content workflow from weeks into days.",

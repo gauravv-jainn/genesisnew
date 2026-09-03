@@ -25,7 +25,7 @@ import { SectionShell } from "./section-shell";
 export function BrandingDesign() {
   return (
     <SectionShell
-      id="branding"
+      id="brand-design"
       label={branding.label}
       heading={branding.heading}
       headingAccent={branding.headingAccent}

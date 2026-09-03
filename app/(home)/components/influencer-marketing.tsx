@@ -29,7 +29,7 @@ export function InfluencerMarketing() {
 
   return (
     <section
-      id="influencer"
+      id="influence"
       className="grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
     >
       {/* Soft key light behind the headline, red spill low-left, as in the mockup. */}

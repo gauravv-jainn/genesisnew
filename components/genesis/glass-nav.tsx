@@ -6,14 +6,14 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { GlassButton } from "./glass-button";
 import { ThemeToggle } from "./theme-toggle";
 import { GenesisMark } from "./genesis-mark";
-import { navItems } from "@/lib/site-config";
+import { capabilities, navItems, primaryCta } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,9 +23,27 @@ import { cn } from "@/lib/utils";
  * near-transparent over the hero and condenses into a heavier blur once the
  * page scrolls, so it never competes with the hero headline.
  */
+/** One definition for every top-level nav control, link or button. */
+const NAV_LINK =
+  "whitespace-nowrap rounded-full px-2.5 py-2 text-small text-ash transition-colors duration-200 hover:bg-[var(--hover-wash)] hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand";
+
 export function GlassNav() {
   const [condensed, setCondensed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [capsOpen, setCapsOpen] = useState(false);
+  /*
+    Whether the pill is currently floating over a section that pins itself
+    dark. The Brain is now the first thing on the page and it is ALWAYS dark,
+    in either theme — so in light mode the nav was a pale pill sitting on a
+    black hero, with a dark wordmark on it that all but vanished.
+
+    `body:has(main.scene-dark) header` already handles a page whose whole main
+    element is a dark scene. This is the other case: one dark section at the
+    top of an otherwise light page, which that rule deliberately does not
+    match (a mid-page dark section must not flip the chrome).
+  */
+  const [overDark, setOverDark] = useState(false);
+  const darkUntil = useRef(0);
   const { scrollY } = useScroll();
   const headerRef = useRef<HTMLElement>(null);
 
@@ -35,13 +53,19 @@ export function GlassNav() {
     menu and leaves keyboard users stuck in it.
   */
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menuOpen && !capsOpen) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        setCapsOpen(false);
+      }
     };
     const onPointerDown = (event: PointerEvent) => {
       const header = headerRef.current;
-      if (header && !header.contains(event.target as Node)) setMenuOpen(false);
+      if (header && !header.contains(event.target as Node)) {
+        setMenuOpen(false);
+        setCapsOpen(false);
+      }
     };
     document.addEventListener("keydown", onKey);
     // Capture phase, so a link inside the page cannot navigate before the
@@ -51,10 +75,35 @@ export function GlassNav() {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onPointerDown, true);
     };
-  }, [menuOpen]);
+  }, [menuOpen, capsOpen]);
+
+  /*
+    Measure how far the leading dark section runs, once and on resize, rather
+    than reading layout on every scroll frame.
+  */
+  useEffect(() => {
+    const measure = () => {
+      const first = document.querySelector("main > *");
+      const isDark =
+        first instanceof HTMLElement && first.classList.contains("scene-dark");
+      darkUntil.current = isDark
+        ? first.getBoundingClientRect().height + window.scrollY
+        : 0;
+      setOverDark(isDark && window.scrollY + 96 < darkUntil.current);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    // Fonts and images settle after load and change the section's height.
+    window.addEventListener("load", measure);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("load", measure);
+    };
+  }, []);
 
   useMotionValueEvent(scrollY, "change", (value) => {
     setCondensed(value > 40);
+    setOverDark(darkUntil.current > 0 && value + 96 < darkUntil.current);
   });
 
   return (
@@ -85,6 +134,10 @@ export function GlassNav() {
           "px-4 py-3 sm:px-6",
           "transition-[background-color,backdrop-filter] duration-500 ease-out",
           condensed && "glass-strong",
+          // Takes the dark scene's tokens — inks, glass fill, border and the
+          // white wordmark — for as long as it is over one, WITHOUT taking
+          // its opaque background. See .on-dark.
+          overDark && "on-dark",
         )}
       >
         <Link
@@ -95,14 +148,82 @@ export function GlassNav() {
           <GenesisMark />
         </Link>
 
-        {/* Desktop links */}
+        {/*
+          Desktop links. Five items, not nine — the four verticals live inside
+          Capabilities rather than each taking a slot, which is what keeps the
+          pill from wrapping and keeps "Start a Project" looking like the one
+          thing on the bar that is an action.
+        */}
         <ul className="ml-2 hidden flex-1 items-center gap-1 lg:flex">
-          {navItems.map((item) => (
+          <li>
+            <Link href={navItems[0].href} className={NAV_LINK}>
+              {navItems[0].label}
+            </Link>
+          </li>
+
+          {/*
+            Opens on hover for the pointer and on click for everything else.
+            Hover alone strands keyboard and touch users; click alone makes a
+            desktop menu feel stuck. The wrapper owns the hover so crossing
+            the gap between the button and the panel does not close it.
+          */}
+          <li
+            className="relative"
+            onMouseEnter={() => setCapsOpen(true)}
+            onMouseLeave={() => setCapsOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setCapsOpen((open) => !open)}
+              aria-expanded={capsOpen}
+              aria-haspopup="true"
+              className={cn(NAV_LINK, "inline-flex items-center gap-1")}
+            >
+              Capabilities
+              <ChevronDown
+                aria-hidden
+                className={cn(
+                  "size-3.5 transition-transform duration-200",
+                  capsOpen && "rotate-180",
+                )}
+              />
+            </button>
+
+            <AnimatePresence>
+              {capsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="glass glass-strong absolute left-0 top-full mt-3 w-72 rounded-panel p-2"
+                >
+                  <ul className="flex flex-col">
+                    {capabilities.map((item) => (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          onClick={() => setCapsOpen(false)}
+                          className="block rounded-card px-3 py-2.5 transition-colors hover:bg-[var(--hover-wash)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                        >
+                          <span className="block text-small text-bone">
+                            {item.label}
+                          </span>
+                          <span className="block text-micro text-faint">
+                            {item.blurb}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </li>
+
+          {navItems.slice(1).map((item) => (
             <li key={item.href}>
-              <Link
-                href={item.href}
-                className="whitespace-nowrap rounded-full px-2.5 py-2 text-small text-ash transition-colors duration-200 hover:bg-[var(--hover-wash)] hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-              >
+              <Link href={item.href} className={NAV_LINK}>
                 {item.label}
               </Link>
             </li>
@@ -113,13 +234,13 @@ export function GlassNav() {
           <ThemeToggle className="hidden lg:inline-flex" />
 
           <GlassButton
-            href="/#contact"
+            href={primaryCta.href}
             variant="brand"
             size="sm"
             className="hidden sm:inline-flex"
             arrow
           >
-            Start a project
+            {primaryCta.label}
           </GlassButton>
 
           <button
@@ -172,14 +293,34 @@ export function GlassNav() {
                 </li>
               ))}
             </ul>
+
+            {/*
+              No disclosure on the phone. A dropdown inside an already-open
+              sheet is a second thing to tap for four links that fit; they are
+              simply listed under a heading.
+            */}
+            <p className="micro-label mt-3 px-3">Capabilities</p>
+            <ul className="mt-1 flex flex-col">
+              {capabilities.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="block rounded-card px-3 py-2.5 text-small text-ash transition-colors hover:bg-[var(--hover-wash)] hover:text-bone"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
             <GlassButton
-              href="/#contact"
+              href={primaryCta.href}
               variant="brand"
               size="md"
               arrow
               className="mt-3 w-full"
             >
-              Start a project
+              {primaryCta.label}
             </GlassButton>
           </motion.div>
         )}

@@ -3,6 +3,7 @@ import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/site-config";
 import { work } from "@/lib/work";
+import { caseStudyList, isPublished } from "@/lib/case-studies";
 
 /**
  * Sitemap.
@@ -23,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/creator`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/careers`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/case-studies`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
   ];
 
   /*
@@ -36,6 +38,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
+    });
+  }
+
+  // Only published studies. Advertising a URL that 404s is worse than not
+  // advertising it, and an unwritten study renders nothing worth indexing.
+  for (const study of caseStudyList.filter(isPublished)) {
+    routes.push({
+      url: `${base}/case-studies/${study.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.8,
     });
   }
 

@@ -27,6 +27,8 @@
  * Omission is the safe direction: a missing figure is invisible, an invented
  * one is a lie that has to be retracted.
  */
+import { proof } from "./proof";
+
 export function isPending(value: string | null | undefined): boolean {
   return !value || value.trimStart().startsWith("TODO");
 }
@@ -250,11 +252,12 @@ export const journey = {
    * The creator-database figure was already confirmed elsewhere in the brief
    * and is unchanged.
    */
+  // One source of truth — see lib/proof.ts for which of these are contested.
   figures: [
-    { value: "1,00,000+", label: "Creators in the network" },
-    { value: "1,500+", label: "Successful events" },
-    { value: "30+", label: "Brands collaborated" },
-    { value: "50+", label: "Campaigns developed" },
+    proof.creatorDatabase,
+    proof.events,
+    proof.brands,
+    proof.campaigns,
   ],
   /*
    * The board is a route, so each stop carries the office it was reached
@@ -470,7 +473,7 @@ export const influencer = {
   body:
     "From discovery to delivery, we connect brands with the right voices — creators across every genre, and celebrity collaborations at the top end.",
   databaseStat: {
-    value: "1,00,000+",
+    ...proof.creatorDatabase,
     label: "Influencer database",
     description: "A curated network of creators across every niche and platform.",
   },
@@ -480,12 +483,14 @@ export const influencer = {
    * ones. They still want confirming against current reporting before launch,
    * because a design comp can lag the business.
    */
-  stats: [
-    { value: "500+", label: "Campaigns Executed" },
-    { value: "200+", label: "Brands Partnered" },
-    { value: "50M+", label: "Content Reach" },
-    { value: "20+", label: "Platforms Covered" },
-  ],
+  /*
+    These were the mockup's numbers and they disagreed with the journey
+    board's by an order of magnitude — 500+ campaigns here against 50+ there,
+    200+ brands against 30+. Both were on the same page. They now come from
+    lib/proof.ts, which records the conflict rather than picking a side
+    silently.
+  */
+  stats: [proof.campaigns, proof.brands, proof.reach, proof.platforms],
   /**
    * The constellation cards. The mockup labels these by NICHE and follower
    * count — "Travel Creator · 856K Followers" — not by celebrity name, so the

@@ -1,6 +1,7 @@
 import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { Reveal } from "@/components/genesis/reveal";
-import { caseStudies, isPending } from "@/lib/home-content";
+import { GlassButton } from "@/components/genesis/glass-button";
+import { caseStudiesPage, caseStudyList, isPublished } from "@/lib/case-studies";
 import { SectionShell } from "./section-shell";
 
 /**
@@ -21,27 +22,33 @@ import { SectionShell } from "./section-shell";
  * and the story takes over the moment it is written. Nothing is invented.
  */
 export function CaseStudies() {
-  const posters: Poster[] = caseStudies.items.map((study) => {
-    const hasStory = !isPending(study.title);
+  /*
+    Reads the case-study catalogue rather than its own copy of the list. The
+    homepage rail and /case-studies were describing the same four clients from
+    two places, which is how a site ends up with a study that exists in one
+    and not the other.
+  */
+  const posters: Poster[] = caseStudyList.map((study) => {
+    const published = isPublished(study);
 
     return {
-      id: study.id,
+      id: study.slug,
       category: study.discipline,
-      // With no written story the client IS the title; with one, it steps back
-      // up to the eyebrow above it.
-      client: hasStory ? study.client : undefined,
-      title: hasStory ? study.title : study.client,
-      meta: isPending(study.result) ? undefined : [study.result],
+      // With no written study the client IS the title; with one, it steps
+      // back up to the eyebrow above it.
+      client: published ? study.client : undefined,
+      title: published ? (study.headline ?? study.client) : study.client,
+      meta: published && study.results?.[0] ? [study.results[0].value] : undefined,
     };
   });
 
   return (
     <SectionShell
       id="case-studies"
-      label={caseStudies.label}
-      heading={caseStudies.heading}
-      headingAccent={caseStudies.headingAccent}
-      body={caseStudies.body}
+      label={caseStudiesPage.label}
+      heading={caseStudiesPage.heading}
+      headingAccent={caseStudiesPage.headingAccent}
+      body={caseStudiesPage.body}
       align="split"
       tone="brand"
       origin="top-right"
@@ -64,6 +71,15 @@ export function CaseStudies() {
           />
           <PosterRail posters={posters} className="relative -mx-6 px-6" />
         </div>
+      </Reveal>
+      {/*
+        The section is a trailer; the page is the thing. Without this the rail
+        was a dead end — four posters and no way to read any of them.
+      */}
+      <Reveal delay={0.1} className="mt-10">
+        <GlassButton href="/case-studies" variant="glass" arrow>
+          Read the case studies
+        </GlassButton>
       </Reveal>
     </SectionShell>
   );

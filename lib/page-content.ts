@@ -1,3 +1,5 @@
+import { proof } from "./proof";
+
 /**
  * Copy for the standalone pages.
  *
@@ -25,13 +27,9 @@ export const influencerPage = {
   headingAccent: "campaigns",
   body:
     "From discovery to delivery, we connect brands with the right voices to create content that drives results.",
-  // TODO(data): only the database figure is confirmed by the spec.
-  stats: [
-    { value: "1,00,000+", label: "Creator database" },
-    { value: "TODO", label: "Campaigns executed" },
-    { value: "TODO", label: "Brands partnered" },
-    { value: "TODO", label: "Content reach" },
-  ],
+  // From lib/proof.ts. The three TODOs that used to sit here were rendering
+  // as literal "TODO" wherever a component did not think to guard them.
+  stats: [proof.creatorDatabase, proof.campaigns, proof.brands, proof.reach],
   genres: [
     "Fashion", "Fitness", "Finance", "Travel", "Food",
     "Tech", "Lifestyle", "Beauty", "Gaming", "Parenting",

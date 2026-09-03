@@ -81,10 +81,23 @@ export function AiContent() {
         ))}
       </RevealGroup>
 
-      <Reveal delay={0.1} className="mt-12 flex justify-center">
-        <GlassButton variant="glass" icon={<Sparkles className="size-4" />} arrow>
-          {/* TODO(link): points at the AI Lab page once it exists. */}
-          Explore the AI Lab
+      {/*
+        This button previously had no href at all — it rendered as a control
+        that looked live and did nothing when clicked, at the bottom of the
+        division most likely to be the reason someone came.
+      */}
+      <Reveal delay={0.1} className="mt-12 flex flex-wrap justify-center gap-3">
+        <GlassButton
+          href="/#contact"
+          quickContact="ai-labs:build-with-ai"
+          variant="brand"
+          icon={<Sparkles className="size-4" />}
+          arrow
+        >
+          Build with AI
+        </GlassButton>
+        <GlassButton href="/our-work" variant="glass" arrow>
+          View AI work
         </GlassButton>
       </Reveal>
     </SectionShell>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Atmosphere } from "@/components/genesis/atmosphere";
-import { ContactForm } from "@/components/genesis/contact-form";
+import { GenesisForm } from "@/components/genesis/genesis-form";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
 import { SocialStars } from "@/components/genesis/social-stars";
 import { GlassButton } from "@/components/genesis/glass-button";
@@ -52,12 +52,7 @@ export function FooterCta() {
 
         {/* The spec asks for the form to sit last, after the pitch. */}
         <Reveal delay={0.1} className="mt-16 max-w-2xl" id="contact">
-          <ContactForm
-            type="CONTACT"
-            source="/"
-            submitLabel="Send"
-            messageLabel="What are you launching?"
-          />
+          <GenesisForm kind="brand" source="/#contact" />
         </Reveal>
 
         {/*

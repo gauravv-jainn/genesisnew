@@ -172,16 +172,30 @@ export function InfluencerMarketing() {
               })}
             </div>
 
-            <GlassButton
-              href="/influencer-campaigns"
-              variant="brand"
-              size="lg"
-              arrow
-              className="shrink-0"
-            >
-              Contact Us
-            </GlassButton>
           </div>
+        </Reveal>
+
+        {/*
+          TWO ACTIONS, both specific, and BELOW the figures rather than inside
+          them. "Contact Us" was the only one here, which is the least useful
+          thing a section about influencer campaigns can say — it asks the
+          reader to translate their own intent into a generic enquiry. Sitting
+          them in the stats panel packed four numbers and two buttons into one
+          row; they get their own line.
+        */}
+        <Reveal delay={0.15} className="mt-8 flex flex-wrap gap-3">
+          <GlassButton
+            href="/#contact"
+            quickContact="influence:plan-a-campaign"
+            variant="brand"
+            size="lg"
+            arrow
+          >
+            Plan an influencer campaign
+          </GlassButton>
+          <GlassButton href="/influencer-campaigns" variant="glass" size="lg" arrow>
+            Explore Genesis Influence
+          </GlassButton>
         </Reveal>
       </div>
     </section>

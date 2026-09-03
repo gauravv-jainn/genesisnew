@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ContactForm } from "@/components/genesis/contact-form";
+import { GenesisForm } from "@/components/genesis/genesis-form";
 import { SlideUp } from "@/components/genesis/slide-up";
 import { PaperCard } from "@/components/genesis/paper-card";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
@@ -90,13 +90,7 @@ export default function CreatorPage() {
         intensity={0.2}
       >
         <Reveal className="mx-auto max-w-2xl">
-          <ContactForm
-            type="CREATOR"
-            source="/creator"
-            submitLabel="Apply to the roster"
-            showCompany={false}
-            messageLabel="Handles, platforms and the content you make"
-          />
+          <GenesisForm kind="creator" source="/creator" />
         </Reveal>
       </SectionShell>
     </main>

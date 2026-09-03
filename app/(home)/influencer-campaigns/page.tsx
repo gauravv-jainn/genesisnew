@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Users } from "lucide-react";
 
-import { ContactForm } from "@/components/genesis/contact-form";
+import { GenesisForm } from "@/components/genesis/genesis-form";
 import { CreatorConstellation } from "@/components/genesis/creator-constellation";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { StatRow } from "@/components/genesis/stat-card";
@@ -133,12 +133,7 @@ export default function InfluencerCampaignsPage() {
         intensity={0.22}
       >
         <Reveal className="mx-auto max-w-2xl">
-          <ContactForm
-            type="CONTACT"
-            source="/influencer-campaigns"
-            submitLabel="Send enquiry"
-            messageLabel="Brand, audience and timeline"
-          />
+          <GenesisForm kind="brand" source="/influencer-campaigns" />
         </Reveal>
       </SectionShell>
     </main>

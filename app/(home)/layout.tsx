@@ -1,5 +1,6 @@
 import { GlassNav } from "@/components/genesis/glass-nav";
 import { SmoothScroll } from "@/components/genesis/smooth-scroll";
+import { QuickContact } from "@/components/genesis/quick-contact";
 import { WhatsappButton } from "@/components/genesis/whatsapp-button";
 
 /**
@@ -21,6 +22,7 @@ export default function HomeLayout({
       <GlassNav />
       {children}
       {modal}
+      <QuickContact />
       <WhatsappButton />
     </>
   );

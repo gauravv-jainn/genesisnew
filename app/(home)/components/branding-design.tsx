@@ -1,3 +1,4 @@
+import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
 import { branding } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
@@ -93,6 +94,24 @@ export function BrandingDesign() {
               ))}
             </ul>
           </div>
+        </Reveal>
+
+        {/*
+          This division had no call to action at all — a reader could finish
+          the section that describes identity work with nowhere to go.
+        */}
+        <Reveal delay={0.15} className="mt-12 flex flex-wrap gap-3">
+          <GlassButton
+            href="/#contact"
+            quickContact="brand-design:build-a-brand"
+            variant="brand"
+            arrow
+          >
+            Build a brand
+          </GlassButton>
+          <GlassButton href="/our-work" variant="glass" arrow>
+            View branding work
+          </GlassButton>
         </Reveal>
       </div>
     </SectionShell>

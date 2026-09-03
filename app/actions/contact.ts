@@ -6,6 +6,12 @@ import { z } from "zod";
 import { recordAuditLog } from "@/lib/audit";
 import { getPrisma, isDatabaseConfigured } from "@/lib/db";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import {
+  COLUMN_FIELDS,
+  FORMS,
+  schemaFor,
+  type FormKind,
+} from "@/lib/forms";
 import { SubmissionType } from "@/lib/generated/prisma/enums";
 
 /**
@@ -135,4 +141,127 @@ export async function submitContactForm(
       message: "Something went wrong saving that. Please try again.",
     };
   }
+}
+
+/**
+ * The three lead forms — creator, brand, and the quick popup.
+ *
+ * One action for all of them, driven by the spec in lib/forms.ts: the `kind`
+ * arrives in the payload, picks the spec, and the validator is derived from
+ * that spec's own field list. A field cannot exist in the UI and be missing
+ * from validation, because there is only one list.
+ *
+ * The order is the same as the original contact action and for the same
+ * reasons: validate, reject bots, rate limit, persist, audit. Nothing touches
+ * the database before validation passes.
+ */
+export async function submitGenesisForm(
+  _previous: SubmissionState,
+  formData: FormData,
+): Promise<SubmissionState> {
+  const kind = String(formData.get("kind") ?? "");
+  if (!isFormKind(kind)) {
+    return { status: "error", message: "Unknown form." };
+  }
+
+  const spec = FORMS[kind];
+  const raw: Record<string, unknown> = {};
+  for (const field of spec.fields) raw[field.name] = formData.get(field.name) ?? "";
+  raw.hp = formData.get("hp") ?? "";
+  raw.source = formData.get("source") ?? "";
+
+  const parsed = schemaFor(spec).safeParse(raw);
+
+  if (!parsed.success) {
+    const fieldErrors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      const key = issue.path[0];
+      if (typeof key === "string" && !fieldErrors[key]) {
+        fieldErrors[key] = issue.message;
+      }
+    }
+    return {
+      status: "error",
+      message: "Please check the highlighted fields.",
+      fieldErrors,
+    };
+  }
+
+  const data = parsed.data as Record<string, string | undefined>;
+
+  // Silently accept honeypot hits: telling a bot it failed only helps it.
+  if (data.hp) {
+    return { status: "success", message: spec.successMessage };
+  }
+
+  const headerList = await headers();
+  const ipAddress = clientIp(headerList);
+  const userAgent = headerList.get("user-agent") ?? undefined;
+
+  const limit = await checkRateLimit(`form:${kind}:${ipAddress}`);
+  if (!limit.success) {
+    return {
+      status: "error",
+      message: "Too many submissions from this connection. Try again shortly.",
+    };
+  }
+
+  if (!isDatabaseConfigured()) {
+    return {
+      status: "error",
+      message:
+        "The form is not connected to a database yet. Please email hello@genesismedia.co in the meantime.",
+    };
+  }
+
+  /*
+    Split the answers: four of them are columns, the rest ride in the JSON
+    `metadata` column that already exists on this model. Empty strings are
+    dropped rather than stored, so a creator who skipped YouTube has no
+    youtube key at all instead of an empty one.
+  */
+  const metadata: Record<string, string> = { kind };
+  for (const field of spec.fields) {
+    if (COLUMN_FIELDS.has(field.name)) continue;
+    const value = data[field.name];
+    if (value) metadata[field.name] = value;
+  }
+
+  try {
+    const record = await getPrisma().contactSubmission.create({
+      data: {
+        type: spec.submissionType as SubmissionType,
+        name: data.name!,
+        email: data.email!,
+        company: data.company || null,
+        message: data.message || null,
+        source: data.source || null,
+        metadata,
+        ipAddress,
+        userAgent: userAgent ?? null,
+      },
+      select: { id: true },
+    });
+
+    await recordAuditLog({
+      action: "contact.submitted",
+      entity: "contact_submission",
+      entityId: record.id,
+      metadata: { kind, source: data.source },
+      ipAddress,
+      userAgent,
+    });
+
+    return { status: "success", message: spec.successMessage };
+  } catch {
+    // Never surface database internals to a public form.
+    return {
+      status: "error",
+      message: "Something went wrong saving that. Please try again.",
+    };
+  }
+}
+
+function isFormKind(value: string): value is FormKind {
+  return value === "creator" || value === "brand" || value === "quick";
 }

@@ -76,6 +76,16 @@ function installAnchorScrolling(lenis: Lenis | null): () => void {
     const anchor = (event.target as Element | null)?.closest?.("a");
     if (!anchor) return;
 
+    /*
+      A link that has opted into the quick-contact popup is not ours. Both
+      handlers sit on document, this one is installed first, and it was
+      calling preventDefault on the CTA's /#contact href — after which the
+      popup's own listener saw defaultPrevented and stood down. The result
+      was every contextual CTA scrolling to the contact form instead of
+      opening the dialog it was built for.
+    */
+    if (anchor.hasAttribute("data-quick-contact")) return;
+
     const href = anchor.getAttribute("href");
     if (!href) return;
 

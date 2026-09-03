@@ -18,6 +18,12 @@ import { cn } from "@/lib/utils";
  */
 
 type GlassButtonProps = {
+  /**
+   * Opens the quick lead popup instead of navigating, and names itself as the
+   * submission's source. A string rather than a boolean so it is possible to
+   * tell later which CTA actually produces business.
+   */
+  quickContact?: string;
   children: ReactNode;
   variant?: "brand" | "luminous" | "glass" | "ghost";
   size?: "sm" | "md" | "lg";
@@ -76,6 +82,7 @@ export function GlassButton({
   onClick,
   type = "button",
   disabled,
+  quickContact,
 }: GlassButtonProps) {
   const { x, y, magneticProps } = useMagnetic(0.18);
 
@@ -107,7 +114,12 @@ export function GlassButton({
 
   if (href) {
     return (
-      <motion.a href={href} className={classes} {...motionProps}>
+      <motion.a
+        href={href}
+        data-quick-contact={quickContact}
+        className={classes}
+        {...motionProps}
+      >
         {content}
       </motion.a>
     );

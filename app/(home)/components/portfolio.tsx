@@ -1,26 +1,27 @@
 import { GlassButton } from "@/components/genesis/glass-button";
-import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { Reveal } from "@/components/genesis/reveal";
+import { WorkGrid } from "@/components/genesis/work-grid";
 import { portfolio } from "@/lib/home-content";
+import { featuredWork } from "@/lib/work";
 import { SectionShell } from "./section-shell";
 
 /**
- * Section 3 — Portfolio.
+ * Section 02 — Selected Work.
  *
- * Spec: "[Add minimal Scroll section]" listing Aditya Birla Capital, HDFC,
- * Aditya Birla Sun Life Insurance and Mahindra Finance.
+ * The second thing on the page and, per the brief, one of the strongest: a
+ * visitor deciding whether to hire a creative company is looking for the
+ * work, and everything else on the page is a caption on it.
  *
- * This is the receiving end of the Services→Portfolio camera turn (Phase 3),
- * so the rail is deliberately the first thing the camera lands on.
+ * WHAT THIS REPLACED. A rail of four poster cards carrying nothing but a
+ * client name, a title and a category — no artwork, no link, no way in. The
+ * site had ten real client stills sitting in /public and a separate library
+ * page that used them, and the homepage showed none of it.
+ *
+ * FEATURED, NOT EVERYTHING. This is the selected slice; /our-work is the full
+ * library. Same catalogue, same tiles, same project URLs — the difference is
+ * only how much of it you are looking at.
  */
 export function Portfolio() {
-  const posters: Poster[] = portfolio.clients.map((entry) => ({
-    id: entry.id,
-    client: entry.client,
-    title: entry.title,
-    category: entry.category,
-  }));
-
   return (
     <SectionShell
       id="work"
@@ -32,25 +33,14 @@ export function Portfolio() {
       tone="brand"
       origin="top"
       intensity={0.18}
-      // This face is clamped to 100dvh by the camera turn, and SectionShell's
-      // default lg:py-40 spends 320px of that on padding alone. Tightened so
-      // the whole section — rail, CTA and all — lands inside the turn.
-      //
-      // These two sit BELOW the section rhythm step on purpose. A face inside
-      // the camera turn is clamped to 100dvh, and that constraint outranks the
-      // spacing scale: at the rhythm step this face overflowed by 33px, which
-      // put the "Browse the full library" CTA under a fold that only exists
-      // because the section is pinned.
-      className="py-8 sm:py-8 lg:py-8"
-      contentClassName="-mr-6 sm:-mr-10"
     >
-      <Reveal variant="scene">
-        <PosterRail posters={posters} />
+      <Reveal variant="scene" className="mt-4">
+        <WorkGrid items={featuredWork} />
       </Reveal>
 
-      <Reveal delay={0.1} className="mr-6 mt-6 sm:mr-12">
+      <Reveal delay={0.1} className="mt-10">
         <GlassButton href="/our-work" variant="glass" arrow>
-          Browse the full library
+          View all work
         </GlassButton>
       </Reveal>
     </SectionShell>

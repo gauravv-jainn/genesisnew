@@ -7,12 +7,20 @@ import { WhatsappButton } from "@/components/genesis/whatsapp-button";
  * than in the root layout so it never appears over /insider, which has its
  * own authenticated chrome.
  */
-export default function HomeLayout({ children }: LayoutProps<"/">) {
+export default function HomeLayout({
+  children,
+  modal,
+}: {
+  children: React.ReactNode;
+  /** Parallel slot holding an intercepted project route, or nothing. */
+  modal: React.ReactNode;
+}) {
   return (
     <>
       <SmoothScroll />
       <GlassNav />
       {children}
+      {modal}
       <WhatsappButton />
     </>
   );

@@ -9,44 +9,11 @@
 // --- /our-work — Content Library -------------------------------------------
 
 export const ourWork = {
-  heading: "Our Content",
-  body: "Explore content crafted with creativity, strategy and results.",
-  // Verbatim from the Genesis mockup on page 7 of the spec.
-  categories: [
-    "All",
-    "Reels",
-    "Films",
-    "Ads",
-    "Brand Stories",
-    "Influencer Campaigns",
-    "AI Content",
-    "Event Coverage",
-  ],
-  /**
-   * The exact ten pieces in the mockup, in order. These are the Content
-   * Library's clients — a different set from the Portfolio section's
-   * (Aditya Birla, HDFC, ABSLI, Mahindra Finance). Both are real; they belong
-   * to different sections, and conflating them was an earlier mistake.
-   *
-   * TODO(assets): the spec notes "videos playing on their own like a GIF", so
-   * each item needs a short muted loop. `poster` is the still shown until it
-   * loads; `clip` is the loop. Both are pending real media.
-   */
-  items: [
-    // `clip` is a short muted loop (the spec's "videos playing on their own
-    // like a GIF"); `poster` is the still shown until it can play. Both are
-    // optional — a tile without them falls back to generated artwork.
-    { id: "kayali", art: "/work/kayali.webp", client: "KAYALI", title: "Product Reel", category: "Reels", badge: "Reel" },
-    { id: "tata-motors", art: "/work/tata-motors.webp", client: "TATA MOTORS", title: "Brand Film", category: "Films", badge: "Film" },
-    { id: "icici", art: "/work/icici-bank.webp", client: "ICICI BANK", title: "Brand Story", category: "Brand Stories", badge: "Brand Story" },
-    { id: "miraggio", art: "/work/miraggio.webp", client: "MIRAGGIO", title: "Lifestyle Reel", category: "Reels", badge: "Reel" },
-    { id: "yonex", art: "/work/yonex.webp", client: "YONEX", title: "Ad Film", category: "Ads", badge: "Ad Film" },
-    { id: "third-wave", art: "/work/third-wave-coffee.webp", client: "THIRD WAVE COFFEE", title: "Product Reel", category: "Reels", badge: "Reel" },
-    { id: "mauritius", art: "/work/mauritius-tourism.webp", client: "MAURITIUS TOURISM", title: "Travel Film", category: "Films", badge: "Travel Film" },
-    { id: "kreo-tech", art: "/work/kreo-tech.webp", client: "KREO TECH", title: "Product Film", category: "Films", badge: "Product Film" },
-    { id: "dot-key", art: "/work/dot-and-key.webp", client: "DOT & KEY", title: "Skincare Reel", category: "Reels", badge: "Reel" },
-    { id: "genesis-drip", art: "/work/genesis-drip.webp", client: "GENESIS DRIP", title: "Event Coverage", category: "Event Coverage", badge: "Event" },
-  ],
+  label: "Portfolio",
+  heading: "Everything",
+  headingAccent: "we've made",
+  body:
+    "The complete library — reels, films, campaigns and brand work. Filter by division or by format; every piece opens on its own page.",
 } as const;
 
 /** Sidebar navigation, exactly as listed in the mockup. */

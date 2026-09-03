@@ -113,6 +113,19 @@ function installAnchorScrolling(lenis: Lenis | null): () => void {
   };
 }
 
+/**
+ * The live Lenis instance, so other client code can suspend it.
+ *
+ * A modal that only sets `overflow: hidden` does not stop Lenis — it drives
+ * scroll from wheel and touch events rather than from the scrollbar, so the
+ * page carries on moving behind the dialog. Anything that opens over the page
+ * calls stop() and start() around itself.
+ */
+let instance: Lenis | null = null;
+export function getLenis(): Lenis | null {
+  return instance;
+}
+
 export function SmoothScroll() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -141,6 +154,7 @@ export function SmoothScroll() {
       smoothWheel: true,
     });
 
+    instance = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
     const tick = (time: number) => {
@@ -165,6 +179,7 @@ export function SmoothScroll() {
       gsap.ticker.remove(tick);
       gsap.ticker.lagSmoothing(500, 33);
       lenis.destroy();
+      instance = null;
     };
   }, []);
 

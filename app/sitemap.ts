@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/site-config";
+import { work } from "@/lib/work";
 
 /**
  * Sitemap.
@@ -23,6 +24,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/careers`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
   ];
+
+  /*
+    Every project. A shareable project URL that no crawler is told about is
+    only half the feature — these are the pages a brand manager finds when
+    they search the client's name next to Genesis.
+  */
+  for (const item of work) {
+    routes.push({
+      url: `${base}/work/${item.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    });
+  }
 
   for (const post of getAllPosts()) {
     routes.push({

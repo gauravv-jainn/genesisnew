@@ -1,37 +1,57 @@
 import type { Metadata } from "next";
 
+import { Reveal } from "@/components/genesis/reveal";
+import { SectionLabel } from "@/components/genesis/section-label";
+import { WorkGrid } from "@/components/genesis/work-grid";
 import { ourWork } from "@/lib/page-content";
-import { ContentLibrary } from "./content-library";
+import { work } from "@/lib/work";
 
 export const metadata: Metadata = {
-  title: "Our Work",
+  title: "Portfolio",
   description: ourWork.body,
 };
 
 /**
- * /our-work — the content library the spec calls "Genesis' NETFLIX".
+ * /our-work — the Portfolio: the complete library.
  *
- * THIS USED TO BE A DIFFERENT WEBSITE. It lived in its own route group with
- * its own layout, which deliberately withheld the site's navigation and
- * replaced it with a left rail carrying a SECOND copy of the nav — nine more
- * links, different labels, its own icons. On top of that the whole thing sat
- * inside a pinned-dark window that ignored the theme. One site, two
- * navigations, two visual languages, and this page on the wrong side of both.
+ * WORK vs PORTFOLIO, which the brief is explicit about and the site was not:
+ * Work is the selected section on the homepage, Portfolio is everything.
+ * They now read the one catalogue in lib/work.ts, so a piece cannot appear in
+ * one and be missing from the other, and every tile in both leads to the same
+ * /work/<slug>.
  *
- * The guidelines open on exactly this: "Every creator, designer, editor,
- * salesperson, AI prompt and presentation should feel like it came from the
- * same Genesis engine." A bespoke shell for one route is the opposite.
+ * WHAT THIS REPLACED: a second, parallel implementation — its own grid, its
+ * own list view, its own search, its own copy of the ten stills, and tiles
+ * that opened nothing. It was the better-built of the two galleries and it
+ * was the wrong shape: a library whose items have no URL cannot be shared,
+ * indexed, or sent to a client, which is the whole reason this page exists.
  *
- * So it is now an ordinary page in the marketing shell: the same floating
- * nav, the same grounds, the same type, following the theme like everything
- * else. The catalogue itself — the grid, the filters, the search, the tiles
- * that play on hover — is unchanged, because that part was never the problem.
+ * Search went with it. It filtered fourteen items behind a text box; the
+ * filter row does that job at this size. It earns its place back when the
+ * catalogue is long enough that scanning it is work.
  */
 export default function OurWorkPage() {
   return (
     <main className="relative min-h-dvh bg-void pb-32 pt-32 sm:pt-40">
       <div className="mx-auto w-full max-w-6xl px-6">
-        <ContentLibrary />
+        <Reveal>
+          <SectionLabel dot tone="brand">
+            {ourWork.label}
+          </SectionLabel>
+          <h1 className="mt-6 max-w-2xl text-balance text-h2 font-normal leading-[1.02] tracking-tight text-bone sm:text-h1">
+            {ourWork.heading}{" "}
+            <span className="font-serif font-normal italic text-brand-ink">
+              {ourWork.headingAccent}
+            </span>
+          </h1>
+          <p className="mt-6 max-w-xl text-body leading-relaxed text-ash">
+            {ourWork.body}
+          </p>
+        </Reveal>
+
+        <Reveal variant="scene" className="mt-14 sm:mt-16">
+          <WorkGrid items={work} />
+        </Reveal>
       </div>
     </main>
   );

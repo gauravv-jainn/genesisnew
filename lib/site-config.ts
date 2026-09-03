@@ -69,7 +69,9 @@ export const capabilities: NavItem[] = [
   },
   {
     label: "Genesis Studios",
-    href: "/content-creation",
+    // Anchors to its homepage section now that it has one; the fuller page
+    // is reached from inside it.
+    href: "/#studios",
     blurb: "Production & content",
   },
   { label: "Genesis AI Labs", href: "/#ai-lab", blurb: "Creative technology" },

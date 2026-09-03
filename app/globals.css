@@ -919,3 +919,11 @@ body:has(main.scene-dark) header {
         display: none;
     }
 }
+
+/* The Studios reel wall. Transform only, so it composites without touching
+   layout; the row is doubled in the markup so -50% lands the second copy
+   exactly where the first began. */
+@keyframes reel-drift {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+}

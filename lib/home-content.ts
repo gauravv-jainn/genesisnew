@@ -126,7 +126,7 @@ export const services = {
     {
       title: "Genesis.Studios",
       short: "Studios",
-      href: "/content-creation",
+      href: "/#studios",
       caption: "production at scale",
       ramp: "linear-gradient(100deg, #ff9147 0%, #ffb057 58%, #ffd27a 100%)",
       body: "Creative direction, strategy, scripting, production and post — plus the product and interactive work — built to hold up on any feed.",
@@ -356,6 +356,53 @@ export const aiContent = {
     { label: "Scripting", detail: "concept to board" },
   ],
   destination: "Genesis.AILab",
+} as const;
+
+// --- Genesis Studios --------------------------------------------------------
+
+/**
+ * The production vertical, and the one the brief says to SHOW rather than
+ * describe: "Show the actual production capability rather than simply
+ * describing it."
+ *
+ * So the section leads with footage. The clips are Genesis's own work,
+ * transcoded from the masters — the capability list underneath is the
+ * caption, not the argument.
+ *
+ * THE CLIPS CARRY NO CLIENT NAMES, deliberately. They arrived as 1.mp4 to
+ * 32.mp4 with no attribution anywhere in them, and a wall of real footage
+ * labelled with guessed brands would be worse than a wall of unlabelled
+ * footage. They stay anonymous until Genesis maps them; the work grid is
+ * where named work lives.
+ */
+export const studios = {
+  label: "Genesis Studios",
+  heading: "Production at",
+  headingAccent: "the standard",
+  body:
+    "Creative direction, scripting, shoot and post — the whole pipeline in-house, so a campaign never loses its thread between the idea and the published cut.",
+  /** The brief's list, in its own words. */
+  capabilities: [
+    "Reels",
+    "DVCs",
+    "Brand films",
+    "Product films",
+    "Corporate films",
+    "Social content",
+    "Podcasts",
+    "Photography",
+    "Shoots",
+    "Motion graphics",
+    "Editing",
+    "Event content",
+    "UGC production",
+  ],
+  /**
+   * Which transcoded previews the wall plays. Sixteen of the thirty-two, in
+   * two rows — enough to read as a body of work without putting every poster
+   * frame on the homepage at once.
+   */
+  reel: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 26, 28, 30, 32],
 } as const;
 
 // --- Creative process (BTS) -------------------------------------------------

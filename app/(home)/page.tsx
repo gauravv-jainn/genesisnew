@@ -10,6 +10,7 @@ import { InfluencerMarketing } from "./components/influencer-marketing";
 import { Journey } from "./components/journey";
 import { Portfolio } from "./components/portfolio";
 import { Services } from "./components/services";
+import { Studios } from "./components/studios";
 import { Testimonials } from "./components/testimonials";
 import { WhoWeAre } from "./components/who-we-are";
 
@@ -51,10 +52,11 @@ export const metadata: Metadata = {
  *     makes it part of Studios rather than a section of its own; it moves
  *     into the Studios block when that block is built.
  *
- * STILL MISSING: a Genesis Studios section. Influence, AI Labs and Brand &
- * Design each have one; Studios does not, and there is no honest way to build
- * it out of copy alone — it is the vertical whose whole argument is showing
- * the footage. It sits at /content-creation until the reels land.
+ * ALL FOUR VERTICALS NOW HAVE A SECTION. Studios was the gap for as long as
+ * there was no footage to put in it — it is the division whose whole argument
+ * is showing the work, and thirteen service names in a grid is the least
+ * convincing thing a page about making films could say. The masters have
+ * since been transcoded, so it leads with the reel wall.
  */
 export default function HomePage() {
   return (
@@ -68,8 +70,9 @@ export default function HomePage() {
       {/* 03 — proof: who Genesis has done it for. */}
       <ClientLogos />
 
-      {/* 04-07 — the four verticals. Studios is the gap; see above. */}
+      {/* 04-07 — the four verticals, in the brief's order. */}
       <InfluencerMarketing />
+      <Studios />
       <AiContent />
       <BrandingDesign />
 

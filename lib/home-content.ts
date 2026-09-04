@@ -531,19 +531,30 @@ export const influencer = {
    * replacing generic placeholders. The CATEGORIES are real; the follower
    * counts are illustrative and must be signed off or removed before launch.
    */
+  /*
+   * EIGHT, NOT TWELVE. Twelve cards overlapping in one orbit read as a pile
+   * rather than as a network — the labels collided and half the photographs
+   * were behind another card.
+   *
+   * `name` IS THE LABEL, not the category. Genesis asked for the creator's
+   * name on the card; the niche is what the section is already about, so
+   * printing it eight times was saying the same thing eight times. The chip
+   * renders only when a name exists, so until they arrive the cards are
+   * simply photographs — which is also the decluttering.
+   *
+   * TODO(content): real creator names and reach. The `label` values below
+   * are the niches and stay as the accessible description; `name` is empty
+   * and must not be invented — these sit next to real photographs.
+   */
   creators: [
-    { id: "lifestyle", label: "Lifestyle", followers: "1.2M Followers", image: "/creators/lifestyle.webp", feature: true },
-    { id: "travel", label: "Travel", followers: "856K Followers", image: "/creators/travel.webp" },
-    { id: "fitness", label: "Fitness", followers: "2.4M Followers", image: "/creators/fitness.webp" },
-    { id: "fashion", label: "Fashion", followers: "947K Followers", image: "/creators/fashion.webp" },
-    { id: "finance", label: "Finance", followers: "1.1M Followers", image: "/creators/finance.webp" },
-    { id: "food", label: "Food & beverage", followers: "780K Followers" },
-    { id: "beauty", label: "Beauty & skincare", followers: "1.6M Followers" },
-    { id: "tech", label: "Tech & gadgets", followers: "610K Followers" },
-    { id: "comedy", label: "Comedy & entertainment", followers: "3.1M Followers" },
-    { id: "gaming", label: "Gaming", followers: "540K Followers" },
-    { id: "parenting", label: "Parenting", followers: "430K Followers" },
-    { id: "auto", label: "Auto & mobility", followers: "690K Followers" },
+    { id: "lifestyle", label: "Lifestyle", name: "", followers: "1.2M Followers", image: "/creators/lifestyle.webp", feature: true },
+    { id: "travel", label: "Travel", name: "", followers: "856K Followers", image: "/creators/travel.webp" },
+    { id: "fitness", label: "Fitness", name: "", followers: "2.4M Followers", image: "/creators/fitness.webp" },
+    { id: "fashion", label: "Fashion", name: "", followers: "947K Followers", image: "/creators/fashion.webp" },
+    { id: "finance", label: "Finance", name: "", followers: "1.1M Followers", image: "/creators/finance.webp" },
+    { id: "beauty", label: "Beauty & skincare", name: "", followers: "1.6M Followers" },
+    { id: "comedy", label: "Comedy & entertainment", name: "", followers: "3.1M Followers" },
+    { id: "tech", label: "Tech & gadgets", name: "", followers: "610K Followers" },
   ],
   // Celebrity collaborations named in the spec.
   // TODO(spelling/legal): the document writes "Vikhrant Messay" and "Ajay

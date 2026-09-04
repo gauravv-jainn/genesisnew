@@ -29,7 +29,10 @@ import { cn } from "@/lib/utils";
 
 export type Creator = {
   id: string;
+  /** The niche. Stays as the accessible description of the card. */
   label: string;
+  /** The creator's own name, once Genesis supplies it. Empty until then. */
+  name?: string;
   followers: string;
   /** Portrait cropped from the mockup; a warm gradient stands in without one. */
   image?: string;
@@ -272,14 +275,25 @@ function OrbitCard({
             <Play className={creator.feature ? "size-4 fill-current" : "size-2.5 fill-current"} aria-hidden />
           </span>
 
-          {/* The name bar, as in the mockup: avatar, name, follower count. */}
+          {/*
+            THE NAME BAR CARRIES THE CREATOR'S NAME, not their niche.
+            Genesis asked for the name here; the niche is what the whole
+            section is about, so printing it on every card said the same
+            thing eight times and was most of the clutter.
+
+            It renders only when a name exists. Until Genesis supplies them
+            the cards are simply photographs — which is the decluttering, and
+            is honest: these are real faces and a made-up name under one is a
+            claim about a person. The niche and reach stay in the sr-only
+            description below, so nothing is lost to a screen reader.
+          */}
+          {creator.name && (
           <div
             className={cn(
               "glass glass-strong absolute inset-x-2 bottom-2 flex items-center rounded-card",
               creator.feature ? "gap-3 px-3 py-3" : "gap-2 px-2 py-2",
             )}
           >
-            { }
             <Image
               src={avatar}
               alt=""
@@ -305,7 +319,7 @@ function OrbitCard({
                   creator.feature ? "text-small" : "text-micro",
                 )}
               >
-                {creator.label}
+                {creator.name}
               </span>
               {/*
                 The follower count only appears on the featured cards. A
@@ -324,6 +338,7 @@ function OrbitCard({
               )}
             </span>
           </div>
+          )}
         </div>
       </div>
       <span className="sr-only">{`${creator.label}, ${creator.followers}`}</span>

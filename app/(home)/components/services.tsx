@@ -5,8 +5,7 @@ import Link from "next/link";
 import { Spectrum } from "@/components/genesis/atmosphere";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
 import { NeuralOrb } from "@/components/genesis/neural-orb";
-import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
-import { SectionLabel } from "@/components/genesis/section-label";
+import { RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { services } from "@/lib/home-content";
 
 /**
@@ -107,29 +106,20 @@ export function Services() {
       <Spectrum />
 
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
-        <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
-          <Reveal className="max-w-xl">
-            <SectionLabel dot tone="brand">
-              {services.label}
-            </SectionLabel>
-            {/*
-              THE HEADING IS GONE at Genesis's request — the hero is the orb
-              and the four names, as the reference film is.
+        {/*
+          NO HEADER AT ALL. The label, the heading and the standfirst have all
+          gone at Genesis's request: the hero is the orb and the four names,
+          exactly as the reference film is. Removing the heading on its own
+          left a label and a floating paragraph either side of empty space,
+          which read as something that had failed to load.
 
-              An h1 stays, screen-reader only. A page still needs exactly one
-              top-level heading; removing the visible one and leaving nothing
-              would put the homepage back to having no h1 at all, which is
-              the bug that was fixed two commits ago.
-            */}
-            <h1 className="sr-only">
-              Genesis Media — four divisions, one creative system
-            </h1>
-          </Reveal>
-
-          <Reveal delay={0.1} className="max-w-sm">
-            <p className="text-small leading-relaxed text-ash">{services.body}</p>
-          </Reveal>
-        </div>
+          The h1 stays, screen-reader only. A page needs exactly one top-level
+          heading, and deleting the visible one and leaving nothing would put
+          the homepage back to having none — the bug fixed three commits ago.
+        */}
+        <h1 className="sr-only">
+          Genesis Media — four divisions, one creative system
+        </h1>
 
         {/*
           Three columns on desktop: names, orb, names. The orb is a real grid

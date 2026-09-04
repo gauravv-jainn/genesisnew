@@ -59,8 +59,8 @@ function aspectFor(item: WorkItem): string {
     lose.
   */
   if (artHasBakedChrome(item)) return "aspect-[173/200]";
-  if (item.format === "Reels") return "aspect-[9/13]";
-  if (item.format === "Films" || item.format === "Ads") return "aspect-[4/3]";
+  if (item.format === "Reels" || item.format === "UGC") return "aspect-[9/13]";
+  if (item.format === "Shoots" || item.format === "Campaigns") return "aspect-[4/3]";
   return "aspect-[4/5]";
 }
 

@@ -4,6 +4,7 @@ import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/site-config";
 import { work } from "@/lib/work";
 import { caseStudyList, isPublished } from "@/lib/case-studies";
+import { avatars } from "@/lib/avatars";
 
 /**
  * Sitemap.
@@ -25,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/careers`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/case-studies`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${base}/team`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
   ];
 
   /*
@@ -49,6 +51,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
+    });
+  }
+
+  for (const avatar of avatars) {
+    routes.push({
+      url: `${base}/avatars/${avatar.id}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
     });
   }
 

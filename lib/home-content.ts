@@ -338,15 +338,27 @@ export const aiContent = {
   avatarsHeading: "AI Avatars &",
   avatarsAccent: "Realism",
   avatarsBody: "AI content that works like magic.",
-  // TODO(assets): real avatar stills owed — one portrait per name, 3:4.
+  /*
+    TODO(assets): real avatar stills owed — one portrait per name, 3:4.
+    TODO(content): `bio`, `languages` and `useCases` are Genesis's to write.
+    Each avatar has a page of its own at /avatars/<slug>; the detail view
+    omits whatever is still pending rather than printing a placeholder.
+  */
   avatars: [
-    { id: "ivaanat", name: "Ivaanat", role: undefined as string | undefined },
-    { id: "tanvi", name: "Tanvi", role: undefined as string | undefined },
-    { id: "jesko", name: "Jesko", role: "DJ | Techno artist" },
-    { id: "adi", name: "Adi", role: "Aditya Birla Health Insurance" },
-    { id: "diya", name: "Diya", role: "Aditya Birla Health Insurance" },
-    { id: "bharat", name: "Bharat", role: "Advocate" },
-    { id: "shivam", name: "Shivam", role: "Founder & CEO | Genesis" },
+    { id: "ivaanat", name: "Ivaanat", role: undefined as string | undefined,
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+    { id: "tanvi", name: "Tanvi", role: undefined as string | undefined,
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+    { id: "jesko", name: "Jesko", role: "DJ | Techno artist",
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+    { id: "adi", name: "Adi", role: "Aditya Birla Health Insurance",
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+    { id: "diya", name: "Diya", role: "Aditya Birla Health Insurance",
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+    { id: "bharat", name: "Bharat", role: "Advocate",
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+    { id: "shivam", name: "Shivam", role: "Founder & CEO | Genesis",
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
   ],
   // The deck's own subtitle for the division, verbatim, in place of four
   // categories written before the guidelines existed.
@@ -507,12 +519,31 @@ export const influencer = {
    * INTERIM: they are stills lifted from a design comp, at comp resolution.
    * Replace with real shot photography before launch.
    */
+  /*
+   * THE CONSTELLATION IS A MAP OF CATEGORIES, not a cast list. Genesis briefs
+   * creators across every genre, and five dots read as five creators rather
+   * than as a network — so the roster covers the niches the database actually
+   * spans. Only the five with artwork carry an `image`; the rest fall through
+   * to the cycling avatars, which is what the component already does for
+   * anything orbiting.
+   *
+   * TODO(content): real creators and real reach, per the brief's note about
+   * replacing generic placeholders. The CATEGORIES are real; the follower
+   * counts are illustrative and must be signed off or removed before launch.
+   */
   creators: [
-    { id: "lifestyle", label: "Lifestyle Creator", followers: "1.2M Followers", image: "/creators/lifestyle.webp", feature: true },
-    { id: "travel", label: "Travel Creator", followers: "856K Followers", image: "/creators/travel.webp" },
-    { id: "fitness", label: "Fitness Creator", followers: "2.4M Followers", image: "/creators/fitness.webp" },
-    { id: "fashion", label: "Fashion Creator", followers: "947K Followers", image: "/creators/fashion.webp" },
-    { id: "finance", label: "Finance Creator", followers: "1.1M Followers", image: "/creators/finance.webp" },
+    { id: "lifestyle", label: "Lifestyle", followers: "1.2M Followers", image: "/creators/lifestyle.webp", feature: true },
+    { id: "travel", label: "Travel", followers: "856K Followers", image: "/creators/travel.webp" },
+    { id: "fitness", label: "Fitness", followers: "2.4M Followers", image: "/creators/fitness.webp" },
+    { id: "fashion", label: "Fashion", followers: "947K Followers", image: "/creators/fashion.webp" },
+    { id: "finance", label: "Finance", followers: "1.1M Followers", image: "/creators/finance.webp" },
+    { id: "food", label: "Food & beverage", followers: "780K Followers" },
+    { id: "beauty", label: "Beauty & skincare", followers: "1.6M Followers" },
+    { id: "tech", label: "Tech & gadgets", followers: "610K Followers" },
+    { id: "comedy", label: "Comedy & entertainment", followers: "3.1M Followers" },
+    { id: "gaming", label: "Gaming", followers: "540K Followers" },
+    { id: "parenting", label: "Parenting", followers: "430K Followers" },
+    { id: "auto", label: "Auto & mobility", followers: "690K Followers" },
   ],
   // Celebrity collaborations named in the spec.
   // TODO(spelling/legal): the document writes "Vikhrant Messay" and "Ajay

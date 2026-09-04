@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { cn } from "@/lib/utils";
 
 /**
@@ -122,6 +124,18 @@ export function AvatarFan({
               transform: `rotate(${(offset * STEP).toFixed(2)}deg)`,
             }}
           >
+            {/*
+              THE WHOLE CARD IS A LINK to /avatars/<slug>. Every avatar has a
+              page of its own, so a brand can be sent one directly; browsing
+              the fan opens it as a dialog over the roster instead.
+            */}
+            <Link
+              href={`/avatars/${avatar.id}`}
+              aria-label={`${avatar.name}${avatar.role ? `, ${avatar.role}` : ""}`}
+              className={cn(
+                "block rounded-[1.25rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+              )}
+            >
             <figure
               className={cn(
                 "relative aspect-[3/4] w-[clamp(7.5rem,14vw,13rem)] overflow-hidden rounded-[1.25rem] border",
@@ -161,6 +175,7 @@ export function AvatarFan({
                 )}
               </figcaption>
             </figure>
+            </Link>
           </div>
         );
       })}

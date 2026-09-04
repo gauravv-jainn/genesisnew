@@ -1,3 +1,5 @@
+import { DivisionIntro } from "@/components/genesis/division-intro";
+import { services } from "@/lib/home-content";
 import type { Metadata } from "next";
 
 import { FloatingPapers } from "@/components/genesis/floating-papers";
@@ -29,7 +31,13 @@ export default function ContentCreationPage() {
 
   return (
     <main>
-      <section className="grain relative isolate overflow-hidden bg-void pt-32 pb-24 sm:pt-40">
+            <DivisionIntro
+        division="Studios"
+        tagline={services.items[2].caption}
+        ramp={services.items[2].ramp}
+      />
+
+<section className="grain relative isolate overflow-hidden bg-void pt-32 pb-24 sm:pt-40">
         <Spotlight x={44} spread={17} tone="warm" intensity={0.95} reach={96} />
         <GhostType>CONTENT</GhostType>
 

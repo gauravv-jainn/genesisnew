@@ -26,6 +26,28 @@ import { isPending } from "./home-content";
  * about Mahindra.
  */
 
+/**
+ * THE FILTER VOCABULARY, fixed by Genesis.
+ *
+ * Every piece's `format` comes from this list, so the filter row cannot drift
+ * into whatever words happened to be typed on the day. The row still only
+ * offers the tags that have work behind them — printing all eight when four
+ * match nothing gives a visitor four ways to empty the grid — so the unused
+ * ones appear the moment something is tagged with them.
+ */
+export const CATEGORIES = [
+  "Influencer marketing",
+  "Shoots",
+  "Fashion",
+  "Campaigns",
+  "Creators",
+  "Design & creatives",
+  "Reels",
+  "UGC",
+] as const;
+
+export type Category = (typeof CATEGORIES)[number];
+
 /** The four verticals, used for filtering and for the modal's byline. */
 export type Vertical = "Influence" | "Studios" | "AI Labs" | "Brand & Design";
 
@@ -37,8 +59,8 @@ export type WorkItem = {
   client: string;
   title: string;
   vertical: Vertical;
-  /** Format tag, used by the filter row alongside the verticals. */
-  format: string;
+  /** Filter tag, from CATEGORIES. */
+  format: Category;
   /** Still. Every piece has one; the clip is the upgrade. */
   art?: string;
   /** Muted loop played on hover. TODO(assets): the real reels. */
@@ -84,7 +106,7 @@ export const work: WorkItem[] = [
     client: "Tata Motors",
     title: "Brand Film",
     vertical: "Studios",
-    format: "Films",
+    format: "Shoots",
     art: "/work/tata-motors.webp",
     featured: true,
   },
@@ -93,7 +115,7 @@ export const work: WorkItem[] = [
     client: "ICICI Bank",
     title: "Brand Story",
     vertical: "Studios",
-    format: "Films",
+    format: "Shoots",
     art: "/work/icici-bank.webp",
     featured: true,
   },
@@ -111,7 +133,7 @@ export const work: WorkItem[] = [
     client: "Yonex",
     title: "Ad Film",
     vertical: "Studios",
-    format: "Ads",
+    format: "Campaigns",
     art: "/work/yonex.webp",
     featured: true,
   },
@@ -129,7 +151,7 @@ export const work: WorkItem[] = [
     client: "Mauritius Tourism",
     title: "Travel Film",
     vertical: "Studios",
-    format: "Films",
+    format: "Shoots",
     art: "/work/mauritius-tourism.webp",
   },
   {
@@ -137,7 +159,7 @@ export const work: WorkItem[] = [
     client: "Kreo Tech",
     title: "Product Film",
     vertical: "Studios",
-    format: "Films",
+    format: "Shoots",
     art: "/work/kreo-tech.webp",
   },
   {
@@ -153,7 +175,7 @@ export const work: WorkItem[] = [
     client: "Genesis Drip",
     title: "Event Coverage",
     vertical: "Studios",
-    format: "Events",
+    format: "Shoots",
     art: "/work/genesis-drip.webp",
   },
 
@@ -191,7 +213,7 @@ export const work: WorkItem[] = [
     client: "HDFC",
     title: "Content Production",
     vertical: "Studios",
-    format: "Social",
+    format: "UGC",
     featured: true,
   },
 ];

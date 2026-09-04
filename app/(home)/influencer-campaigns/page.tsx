@@ -7,6 +7,8 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { StatRow } from "@/components/genesis/stat-card";
 import { influencer, isPending } from "@/lib/home-content";
 import { influencerPage } from "@/lib/page-content";
+import { DivisionIntro } from "@/components/genesis/division-intro";
+import { services } from "@/lib/home-content";
 import { SectionShell } from "../components/section-shell";
 
 export const metadata: Metadata = {
@@ -29,9 +31,14 @@ export const metadata: Metadata = {
 export default function InfluencerCampaignsPage() {
   return (
     <main className="pt-24">
-      <SectionShell
-        // Lead section on the page, so it carries the h1.
-        headingAs="h1"
+            {/* The division's own lockup, so the page announces which one it is. */}
+      <DivisionIntro
+        division="Influence"
+        tagline={services.items[0].caption}
+        ramp={services.items[0].ramp}
+      />
+
+<SectionShell
         label={influencerPage.label}
         heading={influencerPage.heading}
         headingAccent={influencerPage.headingAccent}

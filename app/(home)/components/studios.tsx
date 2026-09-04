@@ -45,7 +45,7 @@ export function Studios() {
   return (
     <section
       id="studios"
-      className="scene-dark grain relative isolate overflow-hidden bg-void py-20 sm:py-24"
+      className="scene-dark grain relative isolate overflow-hidden bg-void py-16 sm:py-20"
     >
       <Spectrum />
 

@@ -104,28 +104,19 @@ const RIPPLE_WIDTH = 0.17;
 const RIPPLE_MAX = 3;
 
 /**
- * The assembly: how long the sphere takes to gather itself, how far the
- * points start from their places, and how much of the run is spent staggering
- * rather than moving.
+ * How long the sphere holds still before the wave starts, and how long the
+ * wave takes to reach full amplitude.
  *
- * SCATTER IS BOUNDED BY THE CANVAS, not by taste. The canvas half-width is
- * about 2.17 sphere radii, so a point thrown further than that is not
- * dramatic, it is simply gone — clipped, and its return is a dot appearing
- * from nowhere at the frame edge. The first pass threw them out to nearly
- * five radii, which is why the opening second read as an empty box with a few
- * specks in the corner rather than as a cloud gathering. At 0.9 the furthest
- * point starts just inside the frame and the whole cloud is visible for the
- * whole animation.
+ * IT IS A CIRCLE FIRST. The reference opens on a clean, undeformed sphere and
+ * the wave arrives afterwards; displacing from the first frame meant a
+ * visitor never saw the shape the whole effect is a deformation OF.
  *
- * The stagger came down with it: at 0.55 the last ring did not begin moving
- * until the run was more than half over.
+ * This also replaces the old entrance, which scattered every point across the
+ * frame and flew them in. That read as the sphere being cut together rather
+ * than settling, and it is gone.
  */
-const FORM_MS = 1500;
-const FORM_SCATTER = 0.7;
-const FORM_STAGGER = 0.38;
-/** How visible a point is before it has arrived. Not zero — the incoming
- *  cloud is the good part, and fading it to nothing hides it. */
-const FORM_DIM = 0.32;
+const SETTLE_HOLD = 900;
+const SETTLE_RAMP = 2600;
 
 /**
  * How far a crest rises off the sphere, as a fraction of its radius, and how
@@ -303,11 +294,6 @@ function rampColour(t: number): [number, number, number] {
 type Sphere = {
   /** Unit positions, xyz interleaved. */
   pos: Float32Array;
-  /** Where each point waits before the sphere gathers itself, as an offset
-   *  from its final position. */
-  scatter: Float32Array;
-  /** 0-1 down the sphere, so the assembly can sweep rather than land flat. */
-  stagger: Float32Array;
   count: number;
 };
 
@@ -321,8 +307,6 @@ type Sphere = {
  */
 function buildSphere(count: number): Sphere {
   const pos = new Float32Array(count * 3);
-  const scatter = new Float32Array(count * 3);
-  const stagger = new Float32Array(count);
 
   for (let i = 0; i < count; i += 1) {
     // Half-step in at both ends, so neither pole gets a single lonely point.
@@ -336,23 +320,9 @@ function buildSphere(count: number): Sphere {
     pos[i * 3 + 1] = y;
     pos[i * 3 + 2] = pz;
 
-    /*
-      The scatter is the point's own direction pushed outward and swung
-      sideways, rather than a random vector. Random offsets make the assembly
-      a cloud collapsing inward from nowhere; pushing along the normal with a
-      tangential kick makes it a shell unwinding into place, which is the same
-      gesture the finished sphere is already making.
-    */
-    const kick = 0.6 + ((i % 31) / 31) * 1.5;
-    scatter[i * 3] = (px * 1.15 - pz * 0.9) * FORM_SCATTER * kick;
-    scatter[i * 3 + 1] = y * 0.5 * FORM_SCATTER * kick;
-    scatter[i * 3 + 2] = (pz * 1.15 + px * 0.9) * FORM_SCATTER * kick;
-
-    // Top-down sweep for the assembly.
-    stagger[i] = (1 - y) / 2;
   }
 
-  return { pos, scatter, stagger, count };
+  return { pos, count };
 }
 
 /**
@@ -461,7 +431,8 @@ export function NeuralOrb({ className }: { className?: string }) {
     let frame = 0;
     let visible = false;
     /** When the assembly began, or 0 if it has not been triggered yet. */
-    let formedAt = 0;
+    /** When the sphere first came into view; the settle runs from it. */
+    let wokeAt = 0;
 
     /*
       Pointer state, in the SAME space the projected points land in: CSS
@@ -552,16 +523,16 @@ export function NeuralOrb({ className }: { className?: string }) {
       const frozen = still.matches;
 
       /*
-        The assembly. `form` runs 0 to 1 over FORM_MS and is then done for
-        good — the sphere gathers itself once, the first time the reader
-        reaches it, and never replays. A gesture that repeats on every scroll
-        past stops being an entrance and becomes a tic.
+        THE SETTLE. Zero until the sphere has been on screen for a beat, then
+        eased to full over a couple of seconds — so what a visitor meets is a
+        clean circle and the wave arrives afterwards. It runs once.
       */
-      const form =
-        formedAt === 0
+      const settle =
+        wokeAt === 0
           ? 0
-          : Math.min(1, (now - formedAt) / FORM_MS);
-      const forming = form < 1;
+          : EASE_OUT(
+              Math.min(1, Math.max(0, (now - wokeAt - SETTLE_HOLD) / SETTLE_RAMP)),
+            );
 
       // A spring, not a lerp: it carries a little weight into the turn.
       leanYawVel = (leanYawVel + (targetYaw - leanYaw) * LEAN_STIFFNESS) * LEAN_DAMPING;
@@ -603,14 +574,15 @@ export function NeuralOrb({ className }: { className?: string }) {
       const w0t = seconds * WAVES[0].w * Math.PI;
       const w1t = seconds * WAVES[1].w * Math.PI;
       const w2t = seconds * WAVES[2].w * Math.PI;
-      const ampFactor = frozen ? 0 : 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(now * 0.00026));
+      const ampFactor =
+        frozen ? 0 : settle * (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(now * 0.00026)));
       const amplitude = CREST * ampFactor;
       const reach = radius * REACH;
 
       ctx.clearRect(0, 0, width, height);
       ctx.globalCompositeOperation = "lighter";
 
-      const { pos, scatter, stagger, count } = sphere;
+      const { pos, count } = sphere;
 
       for (let i = 0; i < count; i += 1) {
         /*
@@ -621,7 +593,7 @@ export function NeuralOrb({ className }: { className?: string }) {
           invisible; two passes over 2000 points is not free.
         */
         let target = 0;
-        if (near[i] > 0.45 && !forming) {
+        if (near[i] > 0.45) {
           if (hasPointer) {
             const dx = screen[i * 2] - pointerX;
             const dy = screen[i * 2 + 1] - pointerY;
@@ -648,26 +620,6 @@ export function NeuralOrb({ className }: { className?: string }) {
         excite[i] = e + (target - e) * (target > e ? EXCITE_RISE : EXCITE_FALL);
         const lift = excite[i];
 
-        let x = pos[i * 3];
-        let y = pos[i * 3 + 1];
-        let z = pos[i * 3 + 2];
-        let entering = 1;
-
-        if (forming) {
-          // Each ring sets off a little after the one above it, so the shell
-          // unwinds pole to pole instead of landing all at once.
-          const local = Math.min(
-            1,
-            Math.max(0, (form - stagger[i] * FORM_STAGGER) / (1 - FORM_STAGGER)),
-          );
-          const eased = EASE_OUT(local);
-          const away = 1 - eased;
-          x += scatter[i * 3] * away;
-          y += scatter[i * 3 + 1] * away;
-          z += scatter[i * 3 + 2] * away;
-          entering = FORM_DIM + eased * (1 - FORM_DIM);
-        }
-
         /*
           THE WAVE. Gradient noise sampled at the point's own position, with
           time moving through the third argument, so a crest travels over the
@@ -682,6 +634,9 @@ export function NeuralOrb({ className }: { className?: string }) {
         const ox = pos[i * 3];
         const oy = pos[i * 3 + 1];
         const oz = pos[i * 3 + 2];
+        let x = ox;
+        let y = oy;
+        let z = oz;
         const field = frozen
           ? 0
           : w0a * Math.sin((ox * w0x + oy * w0y + oz * w0z) * WAVES[0].k - w0t) +
@@ -725,7 +680,7 @@ export function NeuralOrb({ className }: { className?: string }) {
         // dot spreads the same energy over more pixels, so past about half a
         // dot's width it dims the very thing it is meant to be lighting.
         ctx.globalAlpha =
-          Math.min(1, 0.24 + front * 0.46 + rim * rim * 0.13 + lift * 0.7) * entering;
+          Math.min(1, 0.24 + front * 0.46 + rim * rim * 0.13 + lift * 0.7);
         const size = (0.62 + front * 0.95 + lift * 0.62) * dot;
 
         /*
@@ -775,7 +730,7 @@ export function NeuralOrb({ className }: { className?: string }) {
       flare *= 0.94;
       const corePulse = frozen ? 0.5 : 0.5 + 0.5 * Math.sin(now * 0.00042);
       const coreSize = radius * (0.6 + corePulse * 0.06 + flare * 0.22);
-      ctx.globalAlpha = Math.min(0.7, (0.15 + corePulse * 0.05 + flare * 0.42) * form);
+      ctx.globalAlpha = Math.min(0.7, (0.15 + corePulse * 0.05 + flare * 0.42) * settle);
       ctx.drawImage(coreSprite, cx - coreSize, cy - coreSize, coreSize * 2, coreSize * 2);
 
       for (let r = ripples.length - 1; r >= 0; r -= 1) {
@@ -815,7 +770,7 @@ export function NeuralOrb({ className }: { className?: string }) {
     };
 
     // Reduce Motion skips the assembly outright and starts fully formed.
-    if (still.matches) formedAt = -FORM_MS;
+    // Reduce Motion: the sphere is simply there, undeformed.
     if (resize()) render(still.matches ? 0 : performance.now());
 
     const onResize = () => {
@@ -916,7 +871,7 @@ export function NeuralOrb({ className }: { className?: string }) {
           // The assembly starts the first time it is actually seen, not at
           // mount — otherwise it plays to nobody while the reader is still
           // in the hero.
-          if (formedAt === 0) formedAt = performance.now();
+          if (wokeAt === 0) wokeAt = performance.now();
           start();
         } else {
           stop();
@@ -932,7 +887,6 @@ export function NeuralOrb({ className }: { className?: string }) {
     const onPreference = () => {
       stop();
       if (still.matches) {
-        formedAt = -FORM_MS;
         render(0);
       } else {
         start();

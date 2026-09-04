@@ -58,7 +58,14 @@ export function SectionShell({
       tone={tone}
       origin={origin}
       intensity={intensity}
-      className={cn("py-24 sm:py-32 lg:py-40", className)}
+      /*
+        ONE SECTION, ONE SCREEN. At py-24/32/40 the padding alone was 320px
+        top and bottom on a large display — nearly three quarters of a
+        900px viewport spent on air before any content. Every section on the
+        homepage was over a screen tall because of it. This is the single
+        change that fixes most of them.
+      */
+      className={cn("py-16 sm:py-20 lg:py-24", className)}
     >
       <section id={id} className="mx-auto w-full max-w-6xl px-6">
         {/*
@@ -124,7 +131,7 @@ export function SectionShell({
         )}
 
         {children && (
-          <div className={cn("mt-16 sm:mt-16", contentClassName)}>{children}</div>
+          <div className={cn("mt-10 sm:mt-10", contentClassName)}>{children}</div>
         )}
       </section>
     </Atmosphere>

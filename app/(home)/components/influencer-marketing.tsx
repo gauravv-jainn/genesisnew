@@ -134,7 +134,7 @@ export function InfluencerMarketing() {
         </div>
 
         {/* The figures bar — the CTA lives inside it, as in the mockup. */}
-        <Reveal delay={0.24} className="mt-16">
+        <Reveal delay={0.24} className="mt-10">
           <div className="glass glass-lit flex flex-col gap-8 rounded-panel px-6 py-8 sm:px-8 lg:flex-row lg:items-center">
             <div className="grid flex-1 grid-cols-2 gap-y-8 lg:grid-cols-4">
               {stats.map((stat, index) => {

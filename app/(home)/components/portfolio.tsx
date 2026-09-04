@@ -1,6 +1,6 @@
 import { GlassButton } from "@/components/genesis/glass-button";
+import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { Reveal } from "@/components/genesis/reveal";
-import { WorkGrid } from "@/components/genesis/work-grid";
 import { portfolio } from "@/lib/home-content";
 import { featuredWork } from "@/lib/work";
 import { SectionShell } from "./section-shell";
@@ -8,20 +8,28 @@ import { SectionShell } from "./section-shell";
 /**
  * Section 02 — Selected Work.
  *
- * The second thing on the page and, per the brief, one of the strongest: a
- * visitor deciding whether to hire a creative company is looking for the
- * work, and everything else on the page is a caption on it.
+ * BACK TO THE RAIL, at Genesis's request. This was a poster rail, became a
+ * filtered masonry grid, and is a rail again — the grid belonged on the
+ * portfolio, where browsing everything is the job. On the homepage the job is
+ * a trailer: a handful of the strongest pieces, one horizontal move, and a
+ * way through to the rest.
  *
- * WHAT THIS REPLACED. A rail of four poster cards carrying nothing but a
- * client name, a title and a category — no artwork, no link, no way in. The
- * site had ten real client stills sitting in /public and a separate library
- * page that used them, and the homepage showed none of it.
- *
- * FEATURED, NOT EVERYTHING. This is the selected slice; /our-work is the full
- * library. Same catalogue, same tiles, same project URLs — the difference is
- * only how much of it you are looking at.
+ * WHAT IT KEEPS FROM THE GRID, because those parts were not the problem: the
+ * posters read the one work catalogue, so the homepage and the portfolio can
+ * no longer show different work; they carry the real client stills instead of
+ * generated gradients; and every poster is a link to /work/<slug> rather than
+ * a picture of a project you cannot open.
  */
 export function Portfolio() {
+  const posters: Poster[] = featuredWork.map((item) => ({
+    id: item.slug,
+    client: item.client,
+    title: item.title,
+    category: item.format,
+    image: item.art,
+    href: `/work/${item.slug}`,
+  }));
+
   return (
     <SectionShell
       id="work"
@@ -33,12 +41,13 @@ export function Portfolio() {
       tone="brand"
       origin="top"
       intensity={0.18}
+      contentClassName="-mr-6 sm:-mr-10"
     >
-      <Reveal variant="scene" className="mt-4">
-        <WorkGrid items={featuredWork} />
+      <Reveal variant="scene">
+        <PosterRail posters={posters} />
       </Reveal>
 
-      <Reveal delay={0.1} className="mt-10">
+      <Reveal delay={0.1} className="mr-6 mt-8 sm:mr-12">
         <GlassButton href="/our-work" variant="glass" arrow>
           View all work
         </GlassButton>

@@ -26,7 +26,7 @@ export function WhoWeAre() {
   return (
     <section
       id="about"
-      className="grain relative isolate overflow-hidden bg-ink py-24 sm:py-32"
+      className="grain relative isolate overflow-hidden bg-ink py-16 sm:py-20"
     >
       <Spectrum />
 
@@ -62,7 +62,7 @@ export function WhoWeAre() {
           </Reveal>
         </div>
 
-        <RevealGroup className="mt-16 grid gap-px bg-[var(--glass-border)] sm:mt-20 sm:grid-cols-3">
+        <RevealGroup className="mt-10 grid gap-px bg-[var(--glass-border)] sm:mt-12 sm:grid-cols-3">
           {whoWeAre.ideas.map((idea) => (
             <RevealItem key={idea.title}>
               <article className="flex h-full flex-col gap-4 bg-ink p-7 sm:p-8">

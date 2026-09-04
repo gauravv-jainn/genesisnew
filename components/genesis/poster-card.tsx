@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 import { useEdgeFade } from "./use-edge-fade";
 
+import Link from "next/link";
+
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,6 +25,9 @@ export type Poster = {
   meta?: string[];
   /** Optional real artwork. Falls back to a generated gradient. */
   image?: string;
+  /** Where the poster leads. A poster that opens nothing is a picture of
+   *  work rather than a way into it. */
+  href?: string;
 };
 
 /**
@@ -74,7 +79,7 @@ export function PosterCard({
   /** Renders larger, as the focused card in a rail. */
   priority?: boolean;
 }) {
-  return (
+  const card = (
     <motion.article
       whileHover={{ y: -10 }}
       transition={{ type: "spring", stiffness: 300, damping: 24 }}
@@ -157,13 +162,23 @@ export function PosterCard({
       </div>
     </motion.article>
   );
-}
 
-/**
- * Horizontal poster rail with drag-to-pan and native scroll-snap.
- * The scroll-driven centre-focus effect lands in the Phase 3 motion pass.
- */
-export function PosterRail({
+  /*
+    A LINK WRAPS THE CARD rather than sitting inside it. The whole poster is
+    the target, and because it is an anchor rather than a click handler,
+    cmd-click and middle-click open the project in a tab.
+  */
+  if (!poster.href) return card;
+  return (
+    <Link
+      href={poster.href}
+      aria-label={`${poster.client ?? poster.title} — ${poster.title}`}
+      className="shrink-0 rounded-panel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+    >
+      {card}
+    </Link>
+  );
+}export function PosterRail({
   posters,
   className,
 }: {

@@ -77,7 +77,7 @@ export function Services() {
         orb a full screen to sit in rather than the 24 units of section
         padding it had when it was section two.
       */
-      className="scene-dark grain relative isolate flex min-h-dvh flex-col justify-center overflow-hidden bg-void pb-24 pt-32 sm:pb-32 sm:pt-36"
+      className="scene-dark grain relative isolate flex min-h-dvh flex-col justify-center overflow-hidden bg-void pb-16 pt-28 sm:pb-20 sm:pt-32"
     >
       {/*
         Transitions into and out of the dark chapter — the same treatment the
@@ -129,7 +129,7 @@ export function Services() {
           first, because on a phone a sphere behind live text is a legibility
           problem dressed as atmosphere.
         */}
-        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-20 lg:grid-cols-[1fr_minmax(0,28rem)_1fr] lg:grid-rows-2 lg:gap-x-14 lg:gap-y-20">
+        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-12 lg:grid-cols-[1fr_minmax(0,28rem)_1fr] lg:grid-rows-2 lg:gap-x-14 lg:gap-y-12">
           <RevealItem className="order-first lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1">
             {/*
               The orb overruns its own column by 11% each side, into the grid

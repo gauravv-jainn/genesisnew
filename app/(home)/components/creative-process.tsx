@@ -95,7 +95,7 @@ export function CreativeProcess() {
           </Reveal>
         </div>
 
-        <RevealGroup className="mt-16 grid gap-px bg-white/10 sm:mt-20 sm:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup className="mt-10 grid gap-px bg-white/10 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
           {creativeProcess.steps.map((step, index) => (
             <RevealItem key={step.title}>
               {/*

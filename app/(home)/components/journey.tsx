@@ -138,7 +138,7 @@ export function Journey() {
   return (
     <section
       id="journey"
-      className="grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
+      className="grain relative isolate overflow-hidden bg-void py-16 sm:py-20"
     >
       <Spectrum />
 
@@ -161,7 +161,7 @@ export function Journey() {
           </Reveal>
         </div>
 
-        <div ref={railRef} className="relative mt-16 flex flex-col sm:mt-20">
+        <div ref={railRef} className="relative mt-10 flex flex-col sm:mt-12">
           {/*
             One continuous route over the whole column, sized in real pixels
             so the measured node centres map to it one-to-one. No viewBox
@@ -267,7 +267,7 @@ export function Journey() {
                   scrub stays on the compositor.
                 */}
                 <div
-                  className="min-w-0 pb-12 transition-[opacity,transform] duration-700 ease-out sm:pb-14"
+                  className="min-w-0 pb-8 transition-[opacity,transform] duration-700 ease-out sm:pb-9"
                   style={{
                     opacity: reached ? 1 : 0,
                     transform: reached ? "none" : "translateY(14px)",

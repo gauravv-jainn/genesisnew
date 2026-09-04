@@ -4,8 +4,7 @@ import { Sparkles } from "lucide-react";
 
 import { AvatarFan } from "@/components/genesis/avatar-fan";
 import { GlassButton } from "@/components/genesis/glass-button";
-import { ToolsStack } from "@/components/genesis/tools-stack";
-import { RevealGroup, RevealItem, Reveal } from "@/components/genesis/reveal";
+import { Reveal } from "@/components/genesis/reveal";
 import { aiContent } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
 
@@ -41,7 +40,7 @@ export function AiContent() {
       */}
       <Reveal
         variant="scene"
-        className="relative left-1/2 mt-20 w-screen -translate-x-1/2 overflow-hidden"
+        className="relative left-1/2 mt-12 w-screen -translate-x-1/2 overflow-hidden"
       >
         <div className="mx-auto max-w-3xl px-6 text-center">
           <h3
@@ -58,33 +57,15 @@ export function AiContent() {
           </p>
         </div>
 
-        <AvatarFan avatars={aiContent.avatars} className="mt-14 sm:mt-16" />
+        <AvatarFan avatars={aiContent.avatars} className="mt-10 sm:mt-12" />
       </Reveal>
-
-      {/* The stack feeding the studio — many inputs converging on one output. */}
-      <Reveal delay={0.12} className="mx-auto mt-24 max-w-4xl">
-        <p className="micro-label mb-8 text-center">Tools we use</p>
-        <ToolsStack
-          tools={[...aiContent.tools]}
-          destination={aiContent.destination}
-          badge="Lab"
-        />
-      </Reveal>
-
-      <RevealGroup className="mx-auto mt-16 flex max-w-2xl flex-wrap justify-center gap-3">
-        {aiContent.capabilities.map((capability) => (
-          <RevealItem key={capability}>
-            <span className="glass inline-flex rounded-full px-4 py-2 text-small text-bone">
-              {capability}
-            </span>
-          </RevealItem>
-        ))}
-      </RevealGroup>
 
       {/*
-        This button previously had no href at all — it rendered as a control
-        that looked live and did nothing when clicked, at the bottom of the
-        division most likely to be the reason someone came.
+        THE TOOL STACK AND THE CAPABILITY CHIPS ARE GONE from the homepage.
+        With the roster, the stack, a chip row and a button this section ran
+        to 2.28 screens — the worst offender on the page by some way, in a
+        brief that asks for one section to a screen. The avatars are the
+        argument; the tooling is a detail for the division's own page.
       */}
       <Reveal delay={0.1} className="mt-12 flex flex-wrap justify-center gap-3">
         <GlassButton

@@ -162,6 +162,135 @@ const FORM_STAGGER = 0.38;
  *  cloud is the good part, and fading it to nothing hides it. */
 const FORM_DIM = 0.32;
 
+/**
+ * How far a crest rises off the sphere, as a fraction of its radius, and how
+ * fast the field moves through it.
+ *
+ * THE CEILING IS GEOMETRY, NOT TASTE. The projection already puts the widest
+ * point at 1.053x the radius and the pointer lift adds another 7.5%; a crest
+ * of 0.13 on top of that brings the total to 1.28x, which is what the radius
+ * below is sized against. Push the amplitude up without shrinking the radius
+ * and the crests are simply cut off by the edge of the canvas.
+ */
+const CREST = 0.17;
+const FIELD_SCALE = 1.35;
+const FIELD_SPEED = 0.14;
+
+/**
+ * Classic 3D gradient noise (Perlin), inline.
+ *
+ * WHY NOT A LIBRARY. This is thirty lines and runs two thousand times a
+ * frame; a dependency for it would be larger than the rest of the component
+ * and would sit in the client bundle of the homepage's first section.
+ *
+ * WHY GRADIENT NOISE AND NOT A SUM OF SINES. Sines on a sphere beat against
+ * each other and produce a regular quilt — the reference is liquid, with
+ * crests that wander and do not repeat. Gradient noise gives that, and
+ * because it is evaluated in the point's OWN 3D position the wave travels
+ * over the surface continuously with no seam where the sphere closes.
+ */
+const PERM = new Uint8Array(512);
+{
+  // Fixed permutation: the field must be identical on every load, and
+  // Math.random() here would make the orb different for every visitor and
+  // impossible to reason about.
+  let seed = 1337;
+  const p = new Uint8Array(256);
+  for (let i = 0; i < 256; i += 1) p[i] = i;
+  for (let i = 255; i > 0; i -= 1) {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    const j = seed % (i + 1);
+    const t = p[i];
+    p[i] = p[j];
+    p[j] = t;
+  }
+  for (let i = 0; i < 512; i += 1) PERM[i] = p[i & 255];
+}
+
+const fade = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
+
+function grad(hash: number, x: number, y: number, z: number): number {
+  const h = hash & 15;
+  const u = h < 8 ? x : y;
+  const v = h < 4 ? y : h === 12 || h === 14 ? x : z;
+  return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
+}
+
+/** Returns roughly -1..1. */
+function noise3(x: number, y: number, z: number): number {
+  const X = Math.floor(x) & 255;
+  const Y = Math.floor(y) & 255;
+  const Z = Math.floor(z) & 255;
+  x -= Math.floor(x);
+  y -= Math.floor(y);
+  z -= Math.floor(z);
+  const u = fade(x);
+  const v = fade(y);
+  const w = fade(z);
+
+  const A = PERM[X] + Y;
+  const AA = PERM[A] + Z;
+  const AB = PERM[A + 1] + Z;
+  const B = PERM[X + 1] + Y;
+  const BA = PERM[B] + Z;
+  const BB = PERM[B + 1] + Z;
+
+  const lerp = (t: number, a: number, b: number) => a + t * (b - a);
+
+  return lerp(
+    w,
+    lerp(
+      v,
+      lerp(u, grad(PERM[AA], x, y, z), grad(PERM[BA], x - 1, y, z)),
+      lerp(u, grad(PERM[AB], x, y - 1, z), grad(PERM[BB], x - 1, y - 1, z)),
+    ),
+    lerp(
+      v,
+      lerp(u, grad(PERM[AA + 1], x, y, z - 1), grad(PERM[BA + 1], x - 1, y, z - 1)),
+      lerp(u, grad(PERM[AB + 1], x, y - 1, z - 1), grad(PERM[BB + 1], x - 1, y - 1, z - 1)),
+    ),
+  );
+}
+
+/**
+ * The palette, indexed by how far a point has been pushed out.
+ *
+ * COLOUR COMES FROM THE DISPLACEMENT, which is the whole look of the
+ * reference: crests run gold, troughs fall away into violet, and the resting
+ * surface is bone. It replaces the old fixed per-point tones — a warm crown
+ * and a scattering of violet — which could not respond to a wave because
+ * they were decided when the sphere was built.
+ *
+ * Stops are the deck's own: #3b5bff and #7a3cff below, #ffd400 above.
+ */
+const RAMP: [number, number, number][] = [
+  [70, 92, 200],
+  [122, 96, 235],
+  [168, 156, 245],
+  [214, 214, 240],
+  [235, 238, 245],
+  [248, 236, 205],
+  [255, 208, 120],
+  [255, 196, 40],
+  [255, 236, 170],
+];
+
+/** Sixteen steps is past the point where a step is visible on a 2px dot. */
+const PALETTE_STEPS = 16;
+
+function rampColour(t: number): [number, number, number] {
+  const x = Math.max(0, Math.min(1, t)) * (RAMP.length - 1);
+  const i = Math.min(RAMP.length - 2, Math.floor(x));
+  const f = x - i;
+  const a = RAMP[i];
+  const b = RAMP[i + 1];
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * f),
+    Math.round(a[1] + (b[1] - a[1]) * f),
+    Math.round(a[2] + (b[2] - a[2]) * f),
+  ];
+}
+
 type Sphere = {
   /** Unit positions, xyz interleaved. */
   pos: Float32Array;
@@ -170,11 +299,6 @@ type Sphere = {
   scatter: Float32Array;
   /** 0-1 down the sphere, so the assembly can sweep rather than land flat. */
   stagger: Float32Array;
-  /** Phase offset for the breathing displacement, so the surface shimmers
-   *  rather than pulsing as one rigid shell. */
-  phase: Float32Array;
-  /** Which sprite paints each point. */
-  tone: Uint8Array;
   /** Where each ring starts in the arrays, and how many dots it holds. */
   ringStart: Int32Array;
   ringLen: Int32Array;
@@ -220,8 +344,6 @@ function buildSphere(target: number): Sphere {
   const pos = new Float32Array(count * 3);
   const scatter = new Float32Array(count * 3);
   const stagger = new Float32Array(count);
-  const phase = new Float32Array(count);
-  const tone = new Uint8Array(count);
 
   for (let ring = 0; ring < RINGS; ring += 1) {
     // Half-step in, so no ring sits exactly on a pole with one lonely dot.
@@ -254,19 +376,10 @@ function buildSphere(target: number): Sphere {
       scatter[i * 3 + 2] = (pz * 1.15 + px * 0.9) * FORM_SCATTER * kick;
 
       stagger[i] = ring / (RINGS - 1);
-      phase[i] = ((ring * 7 + slot) % 97) * 0.0647;
-      /*
-        A warm crown at the top pole, and the deck's violet and pink dusted
-        through the body on coprime strides so the two accents never land on
-        the same dot and never clump. Random assignment on 2000 points
-        reliably produces visible clusters; strides cannot.
-      */
-      tone[i] =
-        y > 0.9 ? 1 : (ring * 13 + slot) % 13 === 0 ? 2 : (ring * 7 + slot) % 29 === 0 ? 3 : 0;
     }
   }
 
-  return { pos, scatter, stagger, phase, tone, ringStart, ringLen, count };
+  return { pos, scatter, stagger, ringStart, ringLen, count };
 }
 
 /**
@@ -342,18 +455,22 @@ export function NeuralOrb({ className }: { className?: string }) {
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    /* Crisp for the near face, soft for the far one — index + 4 is the same
-       colour out of focus. */
-    const sprites = [
-      makeSprite(235, 238, 245, 0.55), // bone
-      makeSprite(255, 212, 0, 0.55), // the brand yellow, at the crown
-      makeSprite(202, 193, 255, 0.55), // the deck's light violet
-      makeSprite(247, 150, 190, 0.55), // and its pink
-      makeSprite(235, 238, 245, 0.18),
-      makeSprite(255, 212, 0, 0.18),
-      makeSprite(202, 193, 255, 0.18),
-      makeSprite(247, 150, 190, 0.18),
-    ] as const;
+    /*
+      One sprite per palette step, crisp for the near face and soft for the
+      far one. Sixteen steps rather than a fillStyle per point: setting a
+      colour two thousand times a frame is two thousand state changes, while
+      stamping a pre-rendered sprite is a blit.
+    */
+    const sprites: HTMLCanvasElement[] = [];
+    for (let i = 0; i < PALETTE_STEPS; i += 1) {
+      const [r, g, b] = rampColour(i / (PALETTE_STEPS - 1));
+      sprites.push(makeSprite(r, g, b, 0.55));
+    }
+    for (let i = 0; i < PALETTE_STEPS; i += 1) {
+      const [r, g, b] = rampColour(i / (PALETTE_STEPS - 1));
+      sprites.push(makeSprite(r, g, b, 0.18));
+    }
+
     const coreSprite = makeCore();
 
     /** Pulse colours, alternating. Yellow is the interface accent and violet
@@ -367,7 +484,7 @@ export function NeuralOrb({ className }: { className?: string }) {
     let height = 0;
     let radius = 0;
     let dot = 1;
-    let sphere = buildSphere(2100);
+    let sphere = buildSphere(2800);
     // Last frame's screen position per point, the depth it was at, and the
     // excitation it carries.
     let screen = new Float32Array(sphere.count * 2);
@@ -434,17 +551,20 @@ export function NeuralOrb({ className }: { className?: string }) {
 
         At 0.46 all of that added up to 98% of the canvas: the sphere sat hard
         against its own bounds, the outermost ring was shaved on every side,
-        and moving the cursor to an edge pushed dots off it entirely. 0.42
-        leaves the margin the arithmetic actually asks for. The section gives
-        the width back by widening the column, so the sphere is larger on the
-        page than it was before, not smaller.
+        and moving the cursor to an edge pushed dots off it entirely.
+
+        0.375 rather than 0.42 because the surface now displaces: a crest
+        rides CREST (0.13) above the radius, so the worst case is
+        1.13 x 1.053 x 1.075, and a sphere sized for a smooth surface would
+        have its peaks clipped off exactly when the wave is most visible. The
+        section gives the width back by widening the column.
       */
-      radius = span * 0.42;
-      dot = Math.max(0.8, span / 300);
+      radius = span * 0.375;
+      dot = Math.max(0.75, span / 330);
 
       // Density follows area, so a small orb is not a solid white ball and a
       // large one is not a sparse dusting.
-      const wanted = span < 300 ? 1000 : span < 460 ? 1550 : 2100;
+      const wanted = span < 300 ? 1200 : span < 460 ? 1900 : 2800;
       if (Math.abs(wanted - sphere.count) > 120) {
         sphere = buildSphere(wanted);
         screen = new Float32Array(sphere.count * 2);
@@ -501,13 +621,24 @@ export function NeuralOrb({ className }: { className?: string }) {
       const tilt = TILT + leanPitch;
       const cosT = Math.cos(tilt);
       const sinT = Math.sin(tilt);
-      const breath = frozen ? 0 : now * 0.0011;
+      /*
+        The field drifts, and its amplitude breathes on a slower cycle — the
+        reference goes from an almost still sphere to heavy folds and back,
+        and a constant amplitude reads as texture rather than as motion.
+
+        The cycle is about twenty-four seconds. At the ninety it started on, a
+        visitor who scrolled past in fifteen would only ever see one phase of
+        it and would never know the sphere did anything but sit there.
+      */
+      const flow = frozen ? 0 : now * 0.001 * FIELD_SPEED;
+      const ampFactor = frozen ? 0 : 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(now * 0.00026));
+      const amplitude = CREST * ampFactor;
       const reach = radius * REACH;
 
       ctx.clearRect(0, 0, width, height);
       ctx.globalCompositeOperation = "lighter";
 
-      const { pos, scatter, stagger, phase, tone, count } = sphere;
+      const { pos, scatter, stagger, count } = sphere;
       let wokenCount = 0;
 
       for (let i = 0; i < count; i += 1) {
@@ -566,11 +697,26 @@ export function NeuralOrb({ className }: { className?: string }) {
           entering = FORM_DIM + eased * (1 - FORM_DIM);
         }
 
-        // Breathing, plus however far the pointer has lifted this point off
-        // the surface. The lift is along the normal, so the sphere dimples
-        // outward under the cursor instead of smearing sideways.
-        const swell =
-          1 + (frozen ? 0 : 0.013 * Math.sin(breath + phase[i])) + lift * 0.075;
+        /*
+          THE WAVE. Gradient noise sampled at the point's own position, with
+          time moving through the third argument, so a crest travels over the
+          surface rather than the whole shell pulsing in and out. Evaluated on
+          the ORIGINAL unit position — feeding the displaced position back in
+          would make the field chase itself and boil.
+
+          The pointer's lift is added to the same displacement, so touching
+          the sphere raises a crest exactly like the field does, and it takes
+          the crest's colour with it.
+        */
+        const field = frozen
+          ? 0
+          : noise3(
+              pos[i * 3] * FIELD_SCALE,
+              pos[i * 3 + 1] * FIELD_SCALE,
+              pos[i * 3 + 2] * FIELD_SCALE + flow,
+            );
+        const crest = field * amplitude + lift * 0.075;
+        const swell = 1 + crest;
         x *= swell;
         y *= swell;
         z *= swell;
@@ -607,9 +753,32 @@ export function NeuralOrb({ className }: { className?: string }) {
         ctx.globalAlpha =
           Math.min(1, 0.24 + front * 0.46 + rim * rim * 0.13 + lift * 0.7) * entering;
         const size = (0.62 + front * 0.95 + lift * 0.62) * dot;
+
+        /*
+          Colour follows the displacement, not the point. A crest runs gold, a
+          trough falls to violet, and a surface at rest is bone — which is why
+          the palette is indexed by `crest` rather than by anything decided
+          when the sphere was built.
+        */
+        /*
+          Normalised against the FIELD, not against the peak amplitude.
+          Dividing by CREST meant that whenever the wave was calm — which is
+          most of the cycle — the index only ever reached the middle third of
+          the ramp, so the sphere sat in bone and the gold and violet the
+          reference is built on never appeared. The colour now spans the ramp
+          at any amplitude, and the amplitude only widens it further.
+        */
+        const tint = field * (0.55 + 0.45 * ampFactor) + lift * 0.8;
+        const step = Math.max(
+          0,
+          Math.min(
+            PALETTE_STEPS - 1,
+            Math.round((tint * 0.5 + 0.5) * (PALETTE_STEPS - 1)),
+          ),
+        );
         // Out of focus round the back, in focus on the near face.
         ctx.drawImage(
-          sprites[front < 0.32 ? tone[i] + 4 : tone[i]],
+          sprites[front < 0.32 ? step + PALETTE_STEPS : step],
           px - size,
           py - size,
           size * 2,

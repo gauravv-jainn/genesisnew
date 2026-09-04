@@ -138,15 +138,20 @@ export function Services() {
           first, because on a phone a sphere behind live text is a legibility
           problem dressed as atmosphere.
         */}
-        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-20 lg:grid-cols-[1fr_minmax(0,26rem)_1fr] lg:grid-rows-2 lg:gap-x-12 lg:gap-y-20">
+        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-20 lg:grid-cols-[1fr_minmax(0,28rem)_1fr] lg:grid-rows-2 lg:gap-x-14 lg:gap-y-20">
           <RevealItem className="order-first lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1">
             {/*
-              The orb overruns its own column by 10% each side, into the grid
-              gap — which is why that gap is 12 rather than 10. It buys the
-              sphere the presence it has on the board, roughly a third of the
-              frame, without taking width off the names.
+              The orb overruns its own column by 11% each side, into the grid
+              gap — which is why that gap is 14. It buys the sphere the
+              presence it has on the board, roughly a third of the frame,
+              without taking width off the names.
+
+              The track and the overrun both grew when the surface started
+              displacing: the radius had to come down from 0.42 of the box to
+              0.375 to leave room for a crest, so the box grew to keep the
+              sphere the same size on the page.
             */}
-            <div className="relative mx-auto w-[min(86vw,23rem)] lg:-mx-[10%] lg:w-[120%]">
+            <div className="relative mx-auto w-[min(88vw,24rem)] lg:-mx-[11%] lg:w-[122%]">
               <NeuralOrb />
 
               {/*

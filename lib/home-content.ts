@@ -71,6 +71,12 @@ export const services = {
   /*
    * THE FOUR DIVISIONS, named by the brand guidelines rather than by us.
    *
+   * The captions are the subtitles from Genesis's own division lockups, word
+   * for word, replacing four descriptions written before those lockups
+   * existed. "creator & celebrity marketing" was ours; "Influencer marketing
+   * | Celeb | UGC activations" is theirs, and it is the one that will match
+   * whatever else the division is printed on.
+   *
    * The deck sets these out as Genesis.Influence, Genesis.BrandDesign,
    * Genesis.Studios and Genesis.AILab — four pillars, each on its own page.
    * The site had five services under different names (Content Production, AI
@@ -99,7 +105,7 @@ export const services = {
       /* Where the Brain sends you. Two verticals have a page of their own;
          the other two anchor to their homepage section until they do. */
       href: "/#influence",
-      caption: "creator & celebrity marketing",
+      caption: "Influencer marketing | Celeb | UGC activations",
       /*
        * ONE GRADIENT PER DIVISION, from the deck's "What we do" board, where
        * each name is set in its own warm-to-cool ramp rather than in the
@@ -121,7 +127,7 @@ export const services = {
       title: "Genesis.BrandDesign",
       short: "Brand & Design",
       href: "/#brand-design",
-      caption: "identity, guidelines & motion",
+      caption: "Branding | Design | Positioning | Collaterals",
       ramp: "linear-gradient(100deg, #f0dcff 0%, #f5a3cd 50%, #ffbe8f 100%)",
       body: "Identity systems, brand guidelines, motion design and the rules that keep a brand recognisable everywhere it appears.",
     },
@@ -129,7 +135,7 @@ export const services = {
       title: "Genesis.Studios",
       short: "Studios",
       href: "/#studios",
-      caption: "production at scale",
+      caption: "Strategy, scripting & content production",
       ramp: "linear-gradient(100deg, #ff9147 0%, #ffb057 58%, #ffd27a 100%)",
       body: "Creative direction, strategy, scripting, production and post — plus the product and interactive work — built to hold up on any feed.",
     },
@@ -137,7 +143,7 @@ export const services = {
       title: "Genesis.AILab",
       short: "AI Lab",
       href: "/#ai-lab",
-      caption: "AI generation & digital fashion",
+      caption: "Avatars | Multilingual content | Games & apps",
       ramp: "linear-gradient(100deg, #ff8fb8 0%, #ffa25c 100%)",
       body: "AI avatars and influencers, image and video generation, digital fashion, and the automation that compresses a content workflow from weeks into days.",
     },

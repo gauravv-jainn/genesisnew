@@ -43,22 +43,21 @@ import { cn } from "@/lib/utils";
  */
 
 /**
- * Latitude bands.
+ * The golden angle — what spreads a spiral lattice evenly over a sphere.
  *
- * THIS NUMBER IS THE WHOLE EFFECT, and it is a ratio rather than a taste.
- * The eye groups whichever neighbours are closest, so if the gap BETWEEN
- * rings is smaller than the gap between dots ALONG a ring, a sphere of rings
- * reads as a sphere of meridians — vertical lines, which is not what the
- * board shows and is what forty-four rings produced. At thirty-four the
- * spacing along a ring (~16px at the equator) is comfortably tighter than the
- * spacing between rings (~21px), so the contour lines resolve the right way
- * round.
+ * THE RINGS WERE THE LINES. An earlier version laid the points out in
+ * thirty-four latitude bands, on the theory that contour lines would read as
+ * structure. They read as stripes: horizontal bands across the face of the
+ * sphere that no amount of colour work could disguise, because they were the
+ * geometry rather than the shading.
+ *
+ * The reference is a Fibonacci lattice — every point offset from the last by
+ * the golden angle, which is the most irrational turn there is and therefore
+ * the one that never lines its points up into a row. Zoomed in it is an even
+ * stipple with a faint spiral in it; zoomed out it is a surface, with no
+ * banding anywhere.
  */
-const RINGS = 34;
-
-/** Irrational turn per ring, so the rings do not line their dots up into a
- *  vertical seam running down the face of the sphere. */
-const RING_TWIST = Math.PI * (3 - Math.sqrt(5));
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 
 /** Camera distance in sphere radii. Low enough to read as a ball, high
  *  enough that the near face does not balloon. */
@@ -163,11 +162,17 @@ const CREST = 0.17;
  * `k` is how many fronts fit pole to pole, `w` their speed and sign their
  * direction, `amp` their share of the displacement — the three sum to less
  * than one so the total stays bounded and the crest ceiling above holds.
+ *
+ * THE FREQUENCIES ARE LOW ON PURPOSE. At k around six the fronts were tight
+ * enough to ripple the outline itself, and the sphere read as a walnut. Broad
+ * swells deform the surface and leave the silhouette a circle, which is what
+ * the reference does: the drama is in the shading across the face, not in the
+ * edge.
  */
 const WAVES = [
-  { k: 6.4, w: 0.75, amp: 0.44, tilt: 0.0 },
-  { k: 4.1, w: -0.52, amp: 0.31, tilt: 2.1 },
-  { k: 9.6, w: 1.15, amp: 0.19, tilt: 4.0 },
+  { k: 2.3, w: 0.55, amp: 0.46, tilt: 0.0 },
+  { k: 1.6, w: -0.38, amp: 0.33, tilt: 2.1 },
+  { k: 3.5, w: 0.82, amp: 0.21, tilt: 4.0 },
 ] as const;
 
 /**
@@ -175,8 +180,8 @@ const WAVES = [
  * small deliberately: this is the term that bends the outline, and it is the
  * reason the first version lost its shape.
  */
-const NOISE_WEIGHT = 0.13;
-const FIELD_SCALE = 1.6;
+const NOISE_WEIGHT = 0.1;
+const FIELD_SCALE = 0.95;
 const FIELD_SPEED = 0.1;
 
 /**
@@ -278,8 +283,9 @@ const RAMP: [number, number, number][] = [
   [255, 236, 170],
 ];
 
-/** Sixteen steps is past the point where a step is visible on a 2px dot. */
-const PALETTE_STEPS = 16;
+/** Twenty-eight steps: enough that the ramp reads as a continuous gradient
+ *  rather than as bands of colour, which is what sixteen produced. */
+const PALETTE_STEPS = 28;
 
 function rampColour(t: number): [number, number, number] {
   const x = Math.max(0, Math.min(1, t)) * (RAMP.length - 1);
@@ -302,87 +308,51 @@ type Sphere = {
   scatter: Float32Array;
   /** 0-1 down the sphere, so the assembly can sweep rather than land flat. */
   stagger: Float32Array;
-  /** Where each ring starts in the arrays, and how many dots it holds. */
-  ringStart: Int32Array;
-  ringLen: Int32Array;
   count: number;
 };
 
 /**
- * Points on a unit sphere, laid out as latitude rings.
+ * Points on a unit sphere, spread by the golden angle.
  *
- * WHY RINGS AND NOT A FIBONACCI LATTICE. The lattice is the textbook answer —
- * it spaces points more evenly than anything else — and it was wrong here.
- * Perfectly even spacing has no structure in it, so projected to a screen it
- * reads as a cloud of dust rather than as a surface. Genesis's own sphere is
- * built from rings, and the rings are the whole effect: they catch the eye as
- * contour lines, they crowd toward the poles, and where two rings cross near
- * the silhouette they pile up into the bright rim that makes the thing read
- * as solid. This is a case where the more regular arrangement looks better
- * BECAUSE it is more regular.
- *
- * The rings are also what the pulses run along, which is the second reason to
- * keep them addressable rather than flattening everything into one list.
- *
- * Dots per ring follow the ring's circumference, so density stays even over
- * the surface instead of jamming up at the poles.
+ * `y` walks evenly from pole to pole and the ring radius follows from it, so
+ * the points land on equal-area bands; the golden-angle turn between them is
+ * what stops those bands ever showing as bands. It is a handful of lines and
+ * it is the whole reason the surface reads as a surface.
  */
-function buildSphere(target: number): Sphere {
-  // Summing cos(lat) over evenly spaced rings tends to 2/pi of their count,
-  // so this lands the total on the caller's target in one step rather than
-  // fitting for it. `density` is literally the dot count at the equator.
-  const density = target / (RINGS * 0.6366);
-
-  const ringStart = new Int32Array(RINGS);
-  const ringLen = new Int32Array(RINGS);
-  let count = 0;
-  for (let ring = 0; ring < RINGS; ring += 1) {
-    const lat = -Math.PI / 2 + ((ring + 0.5) / RINGS) * Math.PI;
-    const n = Math.max(1, Math.round(density * Math.cos(lat)));
-    ringStart[ring] = count;
-    ringLen[ring] = n;
-    count += n;
-  }
-
+function buildSphere(count: number): Sphere {
   const pos = new Float32Array(count * 3);
   const scatter = new Float32Array(count * 3);
   const stagger = new Float32Array(count);
 
-  for (let ring = 0; ring < RINGS; ring += 1) {
-    // Half-step in, so no ring sits exactly on a pole with one lonely dot.
-    const lat = -Math.PI / 2 + ((ring + 0.5) / RINGS) * Math.PI;
-    const y = Math.sin(lat);
-    const radius = Math.cos(lat);
-    const twist = ring * RING_TWIST;
-    const start = ringStart[ring];
-    const n = ringLen[ring];
+  for (let i = 0; i < count; i += 1) {
+    // Half-step in at both ends, so neither pole gets a single lonely point.
+    const y = 1 - ((i + 0.5) / count) * 2;
+    const radius = Math.sqrt(Math.max(0, 1 - y * y));
+    const theta = i * GOLDEN_ANGLE;
+    const px = Math.cos(theta) * radius;
+    const pz = Math.sin(theta) * radius;
 
-    for (let slot = 0; slot < n; slot += 1) {
-      const i = start + slot;
-      const theta = twist + (slot / n) * Math.PI * 2;
-      const px = Math.cos(theta) * radius;
-      const pz = Math.sin(theta) * radius;
-      pos[i * 3] = px;
-      pos[i * 3 + 1] = y;
-      pos[i * 3 + 2] = pz;
+    pos[i * 3] = px;
+    pos[i * 3 + 1] = y;
+    pos[i * 3 + 2] = pz;
 
-      /*
-        The scatter is the point's own direction pushed outward and swung
-        sideways, rather than a random vector. Random offsets make the
-        assembly a cloud collapsing inward from nowhere; pushing along the
-        normal with a tangential kick makes it a shell unwinding into place,
-        which is the same gesture the finished sphere is already making.
-      */
-      const kick = 0.6 + ((i % 31) / 31) * 1.5;
-      scatter[i * 3] = (px * 1.15 - pz * 0.9) * FORM_SCATTER * kick;
-      scatter[i * 3 + 1] = y * 0.5 * FORM_SCATTER * kick;
-      scatter[i * 3 + 2] = (pz * 1.15 + px * 0.9) * FORM_SCATTER * kick;
+    /*
+      The scatter is the point's own direction pushed outward and swung
+      sideways, rather than a random vector. Random offsets make the assembly
+      a cloud collapsing inward from nowhere; pushing along the normal with a
+      tangential kick makes it a shell unwinding into place, which is the same
+      gesture the finished sphere is already making.
+    */
+    const kick = 0.6 + ((i % 31) / 31) * 1.5;
+    scatter[i * 3] = (px * 1.15 - pz * 0.9) * FORM_SCATTER * kick;
+    scatter[i * 3 + 1] = y * 0.5 * FORM_SCATTER * kick;
+    scatter[i * 3 + 2] = (pz * 1.15 + px * 0.9) * FORM_SCATTER * kick;
 
-      stagger[i] = ring / (RINGS - 1);
-    }
+    // Top-down sweep for the assembly.
+    stagger[i] = (1 - y) / 2;
   }
 
-  return { pos, scatter, stagger, ringStart, ringLen, count };
+  return { pos, scatter, stagger, count };
 }
 
 /**
@@ -481,7 +451,7 @@ export function NeuralOrb({ className }: { className?: string }) {
     let height = 0;
     let radius = 0;
     let dot = 1;
-    let sphere = buildSphere(2800);
+    let sphere = buildSphere(5200);
     // Last frame's screen position per point, the depth it was at, and the
     // excitation it carries.
     let screen = new Float32Array(sphere.count * 2);
@@ -552,11 +522,21 @@ export function NeuralOrb({ className }: { className?: string }) {
         section gives the width back by widening the column.
       */
       radius = span * 0.375;
-      dot = Math.max(0.75, span / 330);
+      dot = Math.max(0.7, span / 420);
 
-      // Density follows area, so a small orb is not a solid white ball and a
-      // large one is not a sparse dusting.
-      const wanted = span < 300 ? 1200 : span < 460 ? 1900 : 2800;
+      /*
+        Density follows area, so a small orb is not a solid white ball and a
+        large one is not a sparse dusting.
+
+        THE CEILING IS MEASURED, and measuring it correctly took two goes.
+        Frame timing here reported 33.3ms — exactly 1/30 — which looks like
+        the renderer missing 60Hz, and on that reading the count was cut. It
+        was the headless cap, not the site: benchmarking the actual per-point
+        work puts a frame at 1.8ms for 3,400 points and 2.7ms for 5,200,
+        against a 16.7ms budget. Density is set from that, not from a number
+        that turned out to be the harness talking.
+      */
+      const wanted = span < 300 ? 2200 : span < 460 ? 3600 : 5200;
       if (Math.abs(wanted - sphere.count) > 120) {
         sphere = buildSphere(wanted);
         screen = new Float32Array(sphere.count * 2);

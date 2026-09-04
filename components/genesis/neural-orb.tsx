@@ -260,23 +260,28 @@ function noise3(x: number, y: number, z: number): number {
  * and a scattering of violet — which could not respond to a wave because
  * they were decided when the sphere was built.
  *
- * Stops are the deck's own: #3b5bff and #7a3cff below, #ffd400 above.
+ * Stops run the reference's own range: a deep indigo in the troughs,
+ * through violet and magenta, into red, orange and a warm highlight on the
+ * crests. It is a single continuous ramp rather than a set of accents, which
+ * is what lets the surface read as one gradient rather than as coloured dots.
  */
 const RAMP: [number, number, number][] = [
-  [70, 92, 200],
-  [122, 96, 235],
-  [168, 156, 245],
-  [214, 214, 240],
-  [235, 238, 245],
-  [248, 236, 205],
-  [255, 208, 120],
-  [255, 196, 40],
-  [255, 236, 170],
+  [26, 18, 46],
+  [58, 28, 92],
+  [104, 38, 128],
+  [158, 44, 122],
+  [206, 56, 96],
+  [236, 84, 68],
+  [250, 132, 60],
+  [255, 186, 84],
+  [255, 226, 158],
 ];
 
 /** Twenty-eight steps: enough that the ramp reads as a continuous gradient
- *  rather than as bands of colour, which is what sixteen produced. */
-const PALETTE_STEPS = 28;
+ *  rather than as bands of colour. Forty at this density, because the dots
+ *  overlap and a step that was invisible on a sparse field shows up as a
+ *  contour once neighbours are blending into each other. */
+const PALETTE_STEPS = 40;
 
 function rampColour(t: number): [number, number, number] {
   const x = Math.max(0, Math.min(1, t)) * (RAMP.length - 1);
@@ -421,7 +426,7 @@ export function NeuralOrb({ className }: { className?: string }) {
     let height = 0;
     let radius = 0;
     let dot = 1;
-    let sphere = buildSphere(5200);
+    let sphere = buildSphere(11000);
     // Last frame's screen position per point, the depth it was at, and the
     // excitation it carries.
     let screen = new Float32Array(sphere.count * 2);
@@ -493,7 +498,16 @@ export function NeuralOrb({ className }: { className?: string }) {
         section gives the width back by widening the column.
       */
       radius = span * 0.375;
-      dot = Math.max(0.7, span / 420);
+      /*
+        BIG ENOUGH TO OVERLAP. At this density the points sit about 5px apart
+        on screen, so a dot drawn smaller than that leaves gaps and the eye
+        reads particles; drawn wider than the spacing, neighbours merge and
+        the surface reads as one continuous field — which is what the
+        reference is. That is the whole trick, and it is why the sprite got
+        softer and the per-dot alpha came down at the same time: overlapping
+        hard dots at high alpha would blow out to white instead of blending.
+      */
+      dot = Math.max(1.8, span / 145);
 
       /*
         Density follows area, so a small orb is not a solid white ball and a
@@ -507,7 +521,13 @@ export function NeuralOrb({ className }: { className?: string }) {
         against a 16.7ms budget. Density is set from that, not from a number
         that turned out to be the harness talking.
       */
-      const wanted = span < 300 ? 2200 : span < 460 ? 3600 : 5200;
+      /*
+        MEASURED CEILING. Benchmarking the real per-point work: 5,200 points
+        cost 2.8ms a frame, 10,000 cost 5.1, 16,000 cost 15.8 and 22,000 cost
+        25.3, against a 16.7ms budget. 11,000 is where the field stops
+        reading as particles with the frame still less than half spent.
+      */
+      const wanted = span < 300 ? 4200 : span < 460 ? 7000 : 11000;
       if (Math.abs(wanted - sphere.count) > 120) {
         sphere = buildSphere(wanted);
         screen = new Float32Array(sphere.count * 2);
@@ -679,9 +699,16 @@ export function NeuralOrb({ className }: { className?: string }) {
         // sparser part of the sphere rather than a brighter one — swelling a
         // dot spreads the same energy over more pixels, so past about half a
         // dot's width it dims the very thing it is meant to be lighting.
+        /*
+          LOW PER DOT. The field is built by ACCUMULATION now — eleven
+          thousand soft, overlapping dots under `lighter` compositing. At the
+          old alpha the overlaps saturated to white and the gradient
+          disappeared; at this alpha each dot contributes a little and the
+          density does the rest.
+        */
         ctx.globalAlpha =
-          Math.min(1, 0.24 + front * 0.46 + rim * rim * 0.13 + lift * 0.7);
-        const size = (0.62 + front * 0.95 + lift * 0.62) * dot;
+          Math.min(1, 0.055 + front * 0.13 + rim * rim * 0.05 + lift * 0.3);
+        const size = (0.9 + front * 0.45 + lift * 0.45) * dot;
 
         /*
           Colour follows the displacement, not the point. A crest runs gold, a

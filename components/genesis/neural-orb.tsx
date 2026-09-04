@@ -96,40 +96,6 @@ const REACH = 0.6;
 const EXCITE_RISE = 0.26;
 const EXCITE_FALL = 0.055;
 
-/**
- * The synapses: links drawn between excited neighbours.
- *
- * This is the part that makes it read as a brain rather than as a globe. A
- * node cloud with no edges is a starfield; the edges are the idea. They exist
- * only under the pointer, so the constellation forms where you touch it and
- * dissolves behind you.
- *
- * POOL is the ceiling on how many excited points are considered, because
- * linking is the one pairwise step here — a hundred points is five thousand
- * distance tests, which is nothing, and two thousand would be two million,
- * which is a dropped frame. DIST is the link length as a fraction of the
- * sphere's radius; much longer and the mesh stops following the surface and
- * starts drawing chords through it.
- */
-const LINK_POOL = 150;
-const LINK_DIST = 0.16;
-const LINK_MAX = 320;
-/** Excitation a point needs before it joins the mesh. This is the real
- *  selector: it picks the points nearest the cursor without sorting anything,
- *  because excitation already falls off with distance. Taking the first N in
- *  index order instead builds the mesh out of whichever rings happen to come
- *  first in the array, and it comes out lopsided. */
-const LINK_FLOOR = 0.2;
-
-/** Travelling pulses: how many at once, how often one starts, how long it
- *  lives, how fast it runs along its ring (dots per second) and how many dots
- *  it spans. */
-const PULSE_MAX = 5;
-const PULSE_EVERY = 780;
-const PULSE_LIFE = 1700;
-const PULSE_SPEED = 20;
-const PULSE_SPAN = 5;
-
 /** Click ripple: sphere radii per second, the width of the wave front as a
  *  fraction of the radius, and how many can be in flight. The cap matters —
  *  every live ripple adds a distance test per point per frame, so a reader
@@ -173,8 +139,45 @@ const FORM_DIM = 0.32;
  * and the crests are simply cut off by the edge of the canvas.
  */
 const CREST = 0.17;
-const FIELD_SCALE = 1.35;
-const FIELD_SPEED = 0.14;
+
+/**
+ * THE SURFACE IS SOUND, not noise.
+ *
+ * The first pass displaced the sphere with 3D gradient noise alone, and it
+ * was the wrong instrument: noise has no direction, so it raises lumps rather
+ * than fronts, and at any amplitude worth seeing those lumps distort the
+ * outline until the sphere stops reading as a sphere. That is the shape
+ * problem — it was not the amount of displacement, it was the kind.
+ *
+ * These are travelling waves. Each source is an axis; `dot(point, axis)` is
+ * the cosine of the angle from it, so a surface of constant dot is a circle
+ * around that pole — which means `sin(dot * k - wt)` is a set of concentric
+ * rings propagating out from it. Three sources at different frequencies and
+ * speeds, running in different directions, interfere into the folds the
+ * reference has, while every one of them is a smooth band that leaves the
+ * silhouette round.
+ *
+ * It is also cheaper than the noise it replaces: three dot products and three
+ * sines per point, against a full Perlin lookup.
+ *
+ * `k` is how many fronts fit pole to pole, `w` their speed and sign their
+ * direction, `amp` their share of the displacement — the three sum to less
+ * than one so the total stays bounded and the crest ceiling above holds.
+ */
+const WAVES = [
+  { k: 6.4, w: 0.75, amp: 0.44, tilt: 0.0 },
+  { k: 4.1, w: -0.52, amp: 0.31, tilt: 2.1 },
+  { k: 9.6, w: 1.15, amp: 0.19, tilt: 4.0 },
+] as const;
+
+/**
+ * A little noise on top, so the interference is not perfectly regular. Kept
+ * small deliberately: this is the term that bends the outline, and it is the
+ * reason the first version lost its shape.
+ */
+const NOISE_WEIGHT = 0.13;
+const FIELD_SCALE = 1.6;
+const FIELD_SPEED = 0.1;
 
 /**
  * Classic 3D gradient noise (Perlin), inline.
@@ -440,7 +443,6 @@ function makeCore(): HTMLCanvasElement {
 
 const EASE_OUT = (t: number) => 1 - Math.pow(1 - t, 3);
 
-type Pulse = { ring: number; head: number; born: number; tone: number };
 type Ripple = { x: number; y: number; born: number };
 
 export function NeuralOrb({ className }: { className?: string }) {
@@ -473,11 +475,6 @@ export function NeuralOrb({ className }: { className?: string }) {
 
     const coreSprite = makeCore();
 
-    /** Pulse colours, alternating. Yellow is the interface accent and violet
-     *  is the deck's, so a signal running the sphere is in the brand either
-     *  way round. */
-    const PULSE_RGB = ["255, 212, 0", "186, 168, 255"] as const;
-
     const still = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     let width = 0;
@@ -490,8 +487,6 @@ export function NeuralOrb({ className }: { className?: string }) {
     let screen = new Float32Array(sphere.count * 2);
     let near = new Float32Array(sphere.count);
     let excite = new Float32Array(sphere.count);
-    // Scratch list of points the pointer has woken, refilled every frame.
-    let woken = new Int32Array(LINK_POOL);
 
     let frame = 0;
     let visible = false;
@@ -519,10 +514,7 @@ export function NeuralOrb({ className }: { className?: string }) {
     let targetYaw = 0;
     let targetPitch = 0;
 
-    const pulses: Pulse[] = [];
     const ripples: Ripple[] = [];
-    let lastPulse = 0;
-    let pulseTone = 0;
     /** Extra brightness in the core, kicked by a click and decaying. */
     let flare = 0;
 
@@ -570,26 +562,8 @@ export function NeuralOrb({ className }: { className?: string }) {
         screen = new Float32Array(sphere.count * 2);
         near = new Float32Array(sphere.count);
         excite = new Float32Array(sphere.count);
-        woken = new Int32Array(LINK_POOL);
-        pulses.length = 0;
       }
       return true;
-    };
-
-    /** Starts a signal on a ring that is currently facing the viewer, so a
-     *  pulse is never spent entirely round the back. */
-    const spawnPulse = (now: number) => {
-      for (let attempt = 0; attempt < 6; attempt += 1) {
-        // Away from the poles, where a ring is a handful of dots and a pulse
-        // just blinks.
-        const ring = 6 + Math.floor(Math.random() * (RINGS - 12));
-        const head = Math.floor(Math.random() * sphere.ringLen[ring]);
-        if (near[sphere.ringStart[ring] + head] > 0.72) {
-          pulses.push({ ring, head, born: now, tone: pulseTone });
-          pulseTone = 1 - pulseTone;
-          return;
-        }
-      }
     };
 
     const render = (now: number) => {
@@ -631,6 +605,24 @@ export function NeuralOrb({ className }: { className?: string }) {
         it and would never know the sphere did anything but sit there.
       */
       const flow = frozen ? 0 : now * 0.001 * FIELD_SPEED;
+
+      /*
+        The three wave axes, resolved once a frame rather than per point. They
+        drift slowly around the vertical so the fronts do not always arrive
+        from the same place — a fixed set of poles reads as a pattern printed
+        on the sphere rather than as something moving through it.
+      */
+      const drift = frozen ? 0 : now * 0.00004;
+      const a0 = WAVES[0].tilt + drift;
+      const a1 = WAVES[1].tilt - drift * 1.4;
+      const a2 = WAVES[2].tilt + drift * 0.7;
+      const w0x = Math.cos(a0), w0y = 0.42, w0z = Math.sin(a0), w0a = WAVES[0].amp;
+      const w1x = Math.cos(a1) * 0.6, w1y = -0.78, w1z = Math.sin(a1) * 0.6, w1a = WAVES[1].amp;
+      const w2x = Math.cos(a2) * 0.9, w2y = 0.15, w2z = Math.sin(a2) * 0.9, w2a = WAVES[2].amp;
+      const seconds = frozen ? 0 : now * 0.001;
+      const w0t = seconds * WAVES[0].w * Math.PI;
+      const w1t = seconds * WAVES[1].w * Math.PI;
+      const w2t = seconds * WAVES[2].w * Math.PI;
       const ampFactor = frozen ? 0 : 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(now * 0.00026));
       const amplitude = CREST * ampFactor;
       const reach = radius * REACH;
@@ -639,7 +631,6 @@ export function NeuralOrb({ className }: { className?: string }) {
       ctx.globalCompositeOperation = "lighter";
 
       const { pos, scatter, stagger, count } = sphere;
-      let wokenCount = 0;
 
       for (let i = 0; i < count; i += 1) {
         /*
@@ -708,13 +699,16 @@ export function NeuralOrb({ className }: { className?: string }) {
           the sphere raises a crest exactly like the field does, and it takes
           the crest's colour with it.
         */
+        const ox = pos[i * 3];
+        const oy = pos[i * 3 + 1];
+        const oz = pos[i * 3 + 2];
         const field = frozen
           ? 0
-          : noise3(
-              pos[i * 3] * FIELD_SCALE,
-              pos[i * 3 + 1] * FIELD_SCALE,
-              pos[i * 3 + 2] * FIELD_SCALE + flow,
-            );
+          : w0a * Math.sin((ox * w0x + oy * w0y + oz * w0z) * WAVES[0].k - w0t) +
+            w1a * Math.sin((ox * w1x + oy * w1y + oz * w1z) * WAVES[1].k - w1t) +
+            w2a * Math.sin((ox * w2x + oy * w2y + oz * w2z) * WAVES[2].k - w2t) +
+            NOISE_WEIGHT *
+              noise3(ox * FIELD_SCALE, oy * FIELD_SCALE, oz * FIELD_SCALE + flow);
         const crest = field * amplitude + lift * 0.075;
         const swell = 1 + crest;
         x *= swell;
@@ -785,118 +779,6 @@ export function NeuralOrb({ className }: { className?: string }) {
           size * 2,
         );
 
-        if (lift > LINK_FLOOR && front > 0.5 && wokenCount < LINK_POOL) {
-          woken[wokenCount] = i;
-          wokenCount += 1;
-        }
-      }
-
-      /*
-        THE SYNAPSES. Every pair among the points the pointer has woken, close
-        enough to be neighbours, gets a line. This is what turns a node cloud
-        into a brain — a starfield has no edges, and the edges are the whole
-        idea.
-
-        Drawn in three alpha buckets rather than one stroke per line: a
-        hundred and seventy separate stroke() calls is a hundred and seventy
-        state changes, while three paths carry the same falloff closely enough
-        that nobody can see the difference.
-      */
-      if (wokenCount > 1 && !forming) {
-        const maxDist = radius * LINK_DIST;
-        const maxSq = maxDist * maxDist;
-        const buckets: number[][] = [[], [], []];
-        let drawn = 0;
-
-        for (let a = 0; a < wokenCount && drawn < LINK_MAX; a += 1) {
-          const ia = woken[a];
-          const ax = screen[ia * 2];
-          const ay = screen[ia * 2 + 1];
-          for (let b = a + 1; b < wokenCount && drawn < LINK_MAX; b += 1) {
-            const ib = woken[b];
-            const dx = screen[ib * 2] - ax;
-            const dy = screen[ib * 2 + 1] - ay;
-            const d2 = dx * dx + dy * dy;
-            if (d2 > maxSq) continue;
-            const strength =
-              (1 - Math.sqrt(d2) / maxDist) *
-              Math.min(excite[ia], excite[ib]);
-            if (strength < 0.06) continue;
-            const bucket = strength > 0.42 ? 2 : strength > 0.2 ? 1 : 0;
-            buckets[bucket].push(ax, ay, screen[ib * 2], screen[ib * 2 + 1]);
-            drawn += 1;
-          }
-        }
-
-        const ALPHAS = [0.12, 0.26, 0.5];
-        ctx.lineCap = "round";
-        for (let bucket = 0; bucket < 3; bucket += 1) {
-          const lines = buckets[bucket];
-          if (lines.length === 0) continue;
-          ctx.beginPath();
-          for (let k = 0; k < lines.length; k += 4) {
-            ctx.moveTo(lines[k], lines[k + 1]);
-            ctx.lineTo(lines[k + 2], lines[k + 3]);
-          }
-          ctx.strokeStyle = `rgba(206, 200, 255, ${ALPHAS[bucket]})`;
-          ctx.lineWidth = dot * (0.55 + bucket * 0.35);
-          ctx.stroke();
-        }
-      }
-
-      /*
-        The signals. A pulse is drawn through the projected positions of a run
-        of consecutive dots on one ring, so it traces the sphere's own contour
-        rather than cutting a chord across it. Any run that crosses the
-        silhouette is skipped — its two ends are on opposite sides of the ball
-        and a line between them would be a wire through the middle.
-      */
-      if (!frozen && !forming) {
-        for (let p = pulses.length - 1; p >= 0; p -= 1) {
-          const pulse = pulses[p];
-          const age = now - pulse.born;
-          if (age > PULSE_LIFE) {
-            pulses.splice(p, 1);
-            continue;
-          }
-          // In over 180ms, out over the last 500ms.
-          const fade = Math.min(1, age / 180, (PULSE_LIFE - age) / 500);
-          const start = sphere.ringStart[pulse.ring];
-          const len = sphere.ringLen[pulse.ring];
-          const head = pulse.head + (age / 1000) * PULSE_SPEED;
-
-          let visibleRun = true;
-          ctx.beginPath();
-          for (let s = 0; s < PULSE_SPAN; s += 1) {
-            const idx = start + (((Math.floor(head - s) % len) + len) % len);
-            if (near[idx] < 0.55) {
-              visibleRun = false;
-              break;
-            }
-            const lx = screen[idx * 2];
-            const ly = screen[idx * 2 + 1];
-            if (s === 0) ctx.moveTo(lx, ly);
-            else ctx.lineTo(lx, ly);
-          }
-          if (!visibleRun) continue;
-
-          const rgb = PULSE_RGB[pulse.tone];
-          ctx.lineCap = "round";
-          ctx.strokeStyle = `rgba(${rgb}, ${(fade * 0.2).toFixed(3)})`;
-          ctx.lineWidth = dot * 6;
-          ctx.stroke();
-          ctx.strokeStyle = `rgba(${rgb}, ${(fade * 0.85).toFixed(3)})`;
-          ctx.lineWidth = dot * 1.4;
-          ctx.stroke();
-        }
-
-        // Signals quicken while someone is in the section. It is the
-        // cheapest way to make the thing read as awake rather than looping.
-        const cadence = hasPointer ? PULSE_EVERY * 0.55 : PULSE_EVERY;
-        if (pulses.length < PULSE_MAX && now - lastPulse > cadence) {
-          lastPulse = now;
-          spawnPulse(now);
-        }
       }
 
       /*

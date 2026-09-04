@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import type { ReactNode } from "react";
 
 import { Atmosphere } from "@/components/genesis/atmosphere";
@@ -19,6 +21,7 @@ export function SectionShell({
   label,
   heading,
   headingAs = "h2",
+  division,
   headingAccent,
   body,
   children,
@@ -41,6 +44,16 @@ export function SectionShell({
    * /influencer-campaigns. The LEAD section on a page passes "h1".
    */
   headingAs?: "h1" | "h2";
+  /**
+   * Renders the division's own lockup in place of the label and heading.
+   *
+   * A vertical announced by a 10px eyebrow reads as a subsection of the page;
+   * announced by GENESIS.AI Lab over its own tagline it reads as a division
+   * with a page of its own — which is what these are. Set as live text in the
+   * division's ramp rather than the supplied PNG, so it can be selected,
+   * searched, translated and read aloud, and stays sharp on any display.
+   */
+  division?: { name: string; tagline: string; ramp: string };
   /** Rendered in serif italic — the single accent word per headline. */
   headingAccent?: string;
   body?: string;
@@ -76,7 +89,7 @@ export function SectionShell({
           which is a sign the shell was missing the mode rather than that the
           sections were being wilful.
         */}
-        {(label || heading || body) && (
+        {(division || label || heading || body) && (
           <header
             className={cn(
               align === "split"
@@ -85,6 +98,24 @@ export function SectionShell({
               align === "center" && "items-center text-center",
             )}
           >
+            {division ? (
+              <Reveal className={align === "split" ? "lg:col-start-1" : undefined}>
+                <Heading className="flex flex-wrap items-baseline gap-x-1 text-h2 font-normal leading-[1.05] tracking-tight sm:text-h1">
+                  <span className="text-bone">GENESIS</span>
+                  <span className="text-brand-ink">.</span>
+                  <span
+                    className="ramp-text"
+                    style={{ "--ramp": division.ramp } as CSSProperties}
+                  >
+                    {division.name}
+                  </span>
+                </Heading>
+                <p className="mt-3 text-lead leading-relaxed text-ash">
+                  {division.tagline}
+                </p>
+              </Reveal>
+            ) : (
+              <>
             {label && (
               <Reveal className={align === "split" ? "lg:col-start-1" : undefined}>
                 <SectionLabel dot tone={tone === "neutral" ? "brand" : tone}>
@@ -112,6 +143,9 @@ export function SectionShell({
                   )}
                 </Heading>
               </Reveal>
+            )}
+
+              </>
             )}
 
             {body && (

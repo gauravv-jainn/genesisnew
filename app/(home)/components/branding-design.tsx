@@ -1,6 +1,6 @@
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
-import { branding } from "@/lib/home-content";
+import { branding, services } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
 
 /**
@@ -27,9 +27,11 @@ export function BrandingDesign() {
   return (
     <SectionShell
       id="brand-design"
-      label={branding.label}
-      heading={branding.heading}
-      headingAccent={branding.headingAccent}
+      division={{
+        name: "Brand & Design",
+        tagline: services.items[1].caption,
+        ramp: services.items[1].ramp,
+      }}
       body={branding.body}
       align="split"
       tone="brand"

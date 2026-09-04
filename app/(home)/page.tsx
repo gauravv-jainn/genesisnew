@@ -11,6 +11,7 @@ import { Journey } from "./components/journey";
 import { Portfolio } from "./components/portfolio";
 import { Services } from "./components/services";
 import { Studios } from "./components/studios";
+import { WorkLibrary } from "./components/work-library";
 import { Testimonials } from "./components/testimonials";
 import { WhoWeAre } from "./components/who-we-are";
 
@@ -73,6 +74,12 @@ export default function HomePage() {
       {/* 04-07 — the four verticals, in the brief's order. */}
       <InfluencerMarketing />
       <Studios />
+      {/*
+        The full library sits here rather than beside the rail at the top: a
+        visitor who has just watched the production wall is exactly the one who
+        wants to see everything else, and the rail up top is a trailer for it.
+      */}
+      <WorkLibrary />
       <AiContent />
       <BrandingDesign />
 

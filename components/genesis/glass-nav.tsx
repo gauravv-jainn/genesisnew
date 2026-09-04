@@ -6,14 +6,14 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "framer-motion";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { GlassButton } from "./glass-button";
 import { ThemeToggle } from "./theme-toggle";
 import { GenesisMark } from "./genesis-mark";
-import { capabilities, navItems, primaryCta } from "@/lib/site-config";
+import { navItems, primaryCta } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 
 /**
@@ -30,7 +30,6 @@ const NAV_LINK =
 export function GlassNav() {
   const [condensed, setCondensed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [capsOpen, setCapsOpen] = useState(false);
   /*
     Whether the pill is currently floating over a section that pins itself
     dark. The Brain is now the first thing on the page and it is ALWAYS dark,
@@ -53,19 +52,13 @@ export function GlassNav() {
     menu and leaves keyboard users stuck in it.
   */
   useEffect(() => {
-    if (!menuOpen && !capsOpen) return;
+    if (!menuOpen) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMenuOpen(false);
-        setCapsOpen(false);
-      }
+      if (event.key === "Escape") setMenuOpen(false);
     };
     const onPointerDown = (event: PointerEvent) => {
       const header = headerRef.current;
-      if (header && !header.contains(event.target as Node)) {
-        setMenuOpen(false);
-        setCapsOpen(false);
-      }
+      if (header && !header.contains(event.target as Node)) setMenuOpen(false);
     };
     document.addEventListener("keydown", onKey);
     // Capture phase, so a link inside the page cannot navigate before the
@@ -75,7 +68,7 @@ export function GlassNav() {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onPointerDown, true);
     };
-  }, [menuOpen, capsOpen]);
+  }, [menuOpen]);
 
   /*
     Measure how far the leading dark section runs, once and on resize, rather
@@ -149,79 +142,13 @@ export function GlassNav() {
         </Link>
 
         {/*
-          Desktop links. Five items, not nine — the four verticals live inside
-          Capabilities rather than each taking a slot, which is what keeps the
-          pill from wrapping and keeps "Start a Project" looking like the one
-          thing on the bar that is an action.
+          Flat: the four verticals, then work, case studies and contact. The
+          Capabilities disclosure is gone — a division someone came for should
+          not be one hover away from being found, and the names are short
+          enough that seven fit the pill.
         */}
-        <ul className="ml-2 hidden flex-1 items-center gap-1 lg:flex">
-          <li>
-            <Link href={navItems[0].href} className={NAV_LINK}>
-              {navItems[0].label}
-            </Link>
-          </li>
-
-          {/*
-            Opens on hover for the pointer and on click for everything else.
-            Hover alone strands keyboard and touch users; click alone makes a
-            desktop menu feel stuck. The wrapper owns the hover so crossing
-            the gap between the button and the panel does not close it.
-          */}
-          <li
-            className="relative"
-            onMouseEnter={() => setCapsOpen(true)}
-            onMouseLeave={() => setCapsOpen(false)}
-          >
-            <button
-              type="button"
-              onClick={() => setCapsOpen((open) => !open)}
-              aria-expanded={capsOpen}
-              aria-haspopup="true"
-              className={cn(NAV_LINK, "inline-flex items-center gap-1")}
-            >
-              Capabilities
-              <ChevronDown
-                aria-hidden
-                className={cn(
-                  "size-3.5 transition-transform duration-200",
-                  capsOpen && "rotate-180",
-                )}
-              />
-            </button>
-
-            <AnimatePresence>
-              {capsOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="glass glass-strong absolute left-0 top-full mt-3 w-72 rounded-panel p-2"
-                >
-                  <ul className="flex flex-col">
-                    {capabilities.map((item) => (
-                      <li key={item.label}>
-                        <Link
-                          href={item.href}
-                          onClick={() => setCapsOpen(false)}
-                          className="block rounded-card px-3 py-2.5 transition-colors hover:bg-[var(--hover-wash)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-                        >
-                          <span className="block text-small text-bone">
-                            {item.label}
-                          </span>
-                          <span className="block text-micro text-faint">
-                            {item.blurb}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </li>
-
-          {navItems.slice(1).map((item) => (
+        <ul className="ml-2 hidden flex-1 items-center gap-0.5 lg:flex">
+          {navItems.map((item) => (
             <li key={item.label}>
               <Link href={item.href} className={NAV_LINK}>
                 {item.label}
@@ -294,25 +221,7 @@ export function GlassNav() {
               ))}
             </ul>
 
-            {/*
-              No disclosure on the phone. A dropdown inside an already-open
-              sheet is a second thing to tap for four links that fit; they are
-              simply listed under a heading.
-            */}
-            <p className="micro-label mt-3 px-3">Capabilities</p>
-            <ul className="mt-1 flex flex-col">
-              {capabilities.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="block rounded-card px-3 py-2.5 text-small text-ash transition-colors hover:bg-[var(--hover-wash)] hover:text-bone"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+
             <GlassButton
               href={primaryCta.href}
               variant="brand"

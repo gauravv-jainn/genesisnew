@@ -5,7 +5,7 @@ import { Sparkles } from "lucide-react";
 import { AvatarFan } from "@/components/genesis/avatar-fan";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
-import { aiContent } from "@/lib/home-content";
+import { aiContent, services } from "@/lib/home-content";
 import { SectionShell } from "./section-shell";
 
 /**
@@ -22,9 +22,11 @@ export function AiContent() {
   return (
     <SectionShell
       id="ai-lab"
-      label={aiContent.label}
-      heading={aiContent.heading}
-      headingAccent={aiContent.headingAccent}
+      division={{
+        name: "AI Lab",
+        tagline: services.items[3].caption,
+        ramp: services.items[3].ramp,
+      }}
       body={aiContent.body}
       // Teal appears NOWHERE in the references (PROGRESS.md:190). This section was painting itself mint-green inside a brand brand.
       tone="brand"

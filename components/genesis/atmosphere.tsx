@@ -122,7 +122,15 @@ export function Atmosphere({
   className,
 }: AuroraProps & { children: React.ReactNode }) {
   return (
-    <div className={cn("relative isolate overflow-hidden bg-ink", className)}>
+    /*
+      ONE GROUND FOR EVERY THEME-FOLLOWING SECTION. Atmosphere used bg-ink
+      while the standalone sections used bg-void, and in the light theme those
+      are #f5f5f5 and #ffffff — so every boundary between an Atmosphere
+      section and a plain one drew a hard horizontal line across the page.
+      That is the "cut". The variation between sections comes from the
+      Spectrum wash, which is a gradient and cannot draw an edge.
+    */
+    <div className={cn("relative isolate overflow-hidden bg-void", className)}>
       {/*
         Spectrum first, then the directional source over it, then grain over
         both — so the noise sits on the gradient rather than under it, which

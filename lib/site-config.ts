@@ -35,51 +35,40 @@ export const siteConfig = {
 } as const;
 
 /**
- * Primary navigation.
+ * Primary navigation — the four verticals first, then the rest.
  *
- * FIVE ITEMS, NOT NINE. The brief lists nine destinations and then, further
- * down, says not to put nine in the header because it crowds. Both cannot be
- * true, so this follows the later note: Work, a Capabilities menu holding the
- * four verticals, Case Studies, Contact, and the one CTA that stands out.
+ * NO "WORK" ITEM. The work now appears twice on the homepage — a short rail
+ * near the top and the full library after Studios — so a nav entry pointing
+ * at one of them is ambiguous, and the verticals are the way in.
  *
- * WORK vs PORTFOLIO, settled the way the brief settles it: "Work" is the
- * homepage section showing the strongest projects, so it is an anchor.
- * "Portfolio" is the complete library and lives at /our-work, reached from
- * "View All Work" inside that section rather than from the header.
+ * FLAT, NOT A DROPDOWN. The verticals lived behind a Capabilities menu, on
+ * the reasoning that nine items crowd a pill. Genesis wants them on the bar
+ * itself, and they are right that a division a visitor came for should not be
+ * one hover away from being found. Seven items fit because the names are
+ * short.
+ *
+ * THE PREFIX IS DROPPED. "Genesis Influence" four times in a row, under a
+ * Genesis wordmark, is the same word five times across one bar. The prefix
+ * belongs on the division's own page, where it is the lockup.
  */
 export const navItems: NavItem[] = [
-  { label: "Work", href: "/#work" },
+  { label: "Influence", href: "/#influence" },
+  { label: "Studios", href: "/#studios" },
+  { label: "AI Labs", href: "/#ai-lab" },
+  { label: "Brand & Design", href: "/#brand-design" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "Contact", href: "/#contact" },
 ];
 
 /**
- * The four verticals, which are the backbone of the whole site.
- *
- * Two of them already have a page of their own and link to it; the other two
- * anchor to their homepage section until their page exists. Pointing all four
- * at routes that are not built yet would give three-quarters of the menu a
- * 404, which is worse than a menu that is honest about what is finished.
+ * The same four, with their full names and blurbs, for the footer — where
+ * there is room and no wordmark beside them.
  */
 export const capabilities: NavItem[] = [
-  {
-    label: "Genesis Influence",
-    href: "/influencer-campaigns",
-    blurb: "Creator-led growth",
-  },
-  {
-    label: "Genesis Studios",
-    // Anchors to its homepage section now that it has one; the fuller page
-    // is reached from inside it.
-    href: "/#studios",
-    blurb: "Production & content",
-  },
+  { label: "Genesis Influence", href: "/#influence", blurb: "Creator-led growth" },
+  { label: "Genesis Studios", href: "/#studios", blurb: "Production & content" },
   { label: "Genesis AI Labs", href: "/#ai-lab", blurb: "Creative technology" },
-  {
-    label: "Genesis Brand & Design",
-    href: "/#brand-design",
-    blurb: "Identity & communication",
-  },
+  { label: "Genesis Brand & Design", href: "/#brand-design", blurb: "Identity & communication" },
 ];
 
 /** The one navigation item that is meant to look like an action. */
@@ -100,8 +89,7 @@ export const footerNav: { heading: string; items: NavItem[] }[] = [
     heading: "Genesis",
     items: [
       { label: "About", href: "/#about" },
-      { label: "Work", href: "/#work" },
-      { label: "Portfolio", href: "/our-work" },
+          { label: "Portfolio", href: "/our-work" },
       { label: "Case Studies", href: "/case-studies" },
       { label: "Team", href: "/team" },
       { label: "Careers", href: "/careers" },

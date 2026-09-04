@@ -47,6 +47,31 @@ export function Studios() {
       id="studios"
       className="scene-dark grain relative isolate overflow-hidden bg-void py-16 sm:py-20"
     >
+      {/*
+        Blends into the sections above and below. This is one of only two
+        pinned-dark chapters on an otherwise light page, and without these it
+        butts straight into the neighbouring ground — the hard horizontal line
+        Genesis flagged. Both bands blend to the ACTUAL adjacent ground
+        through --surface-base, so in dark mode, where the neighbours are
+        already near-black, they fade to nothing.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-32"
+        style={{
+          background:
+            "linear-gradient(180deg, var(--surface-base) 0%, color-mix(in srgb, var(--surface-base) 55%, transparent) 40%, transparent 100%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-32"
+        style={{
+          background:
+            "linear-gradient(0deg, var(--surface-base) 0%, color-mix(in srgb, var(--surface-base) 55%, transparent) 40%, transparent 100%)",
+        }}
+      />
+
       <Spectrum />
 
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
@@ -97,20 +122,12 @@ export function Studios() {
       </Reveal>
 
       <div className="relative z-[2] mx-auto mt-10 w-full max-w-6xl px-6 sm:mt-12">
-        <Reveal>
-          <ul className="flex flex-wrap gap-x-3 gap-y-2">
-            {studios.capabilities.map((capability, index) => (
-              <li key={capability} className="flex items-center gap-3">
-                <span className="text-small text-ash">{capability}</span>
-                {index < studios.capabilities.length - 1 && (
-                  <span aria-hidden className="text-brand-ink/50">
-                    ·
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </Reveal>
+        {/*
+          THE CAPABILITY LIST IS GONE from this section at Genesis's request.
+          Thirteen service names set as a run-on line under a wall of footage
+          was the section explaining what the footage already showed, and it
+          was the last thing standing between Studios and one screen.
+        */}
 
         <Reveal delay={0.1} className="mt-8 flex flex-wrap gap-3">
           <GlassButton

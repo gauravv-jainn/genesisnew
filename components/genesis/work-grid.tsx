@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 
@@ -110,13 +111,13 @@ function Tile({ item }: { item: WorkItem }) {
             className="absolute inset-0 size-full object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.03]"
           />
         ) : item.art ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={item.art}
             alt={`${item.client} — ${item.title}`}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 size-full object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.03]"
+            fill
+            // Three columns on desktop, two on tablet, one on a phone.
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.03]"
           />
         ) : (
           /*

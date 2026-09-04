@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
@@ -47,13 +48,13 @@ export default function TeamPage() {
               <figure className="flex flex-col gap-4">
                 <div className="relative aspect-[4/5] w-full overflow-hidden rounded-card border border-[var(--glass-border)]">
                   {member.photo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={member.photo}
                       alt={`${member.name}, ${member.role}`}
-                      loading="lazy"
-                      decoding="async"
-                      className="absolute inset-0 size-full object-cover"
+                      fill
+                      // Four across on desktop, two on a phone.
+                      sizes="(min-width: 1024px) 25vw, 50vw"
+                      className="object-cover"
                     />
                   ) : (
                     <div

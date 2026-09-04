@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Media } from "@/components/genesis/media";
+
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { GlassButton } from "@/components/genesis/glass-button";
@@ -79,13 +81,14 @@ export default function CaseStudiesPage() {
                 )}
 
                 {hero?.art && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Media
                     src={hero.art}
+                    // Decorative: the client and discipline are already set
+                    // in text directly above it.
                     alt=""
-                    loading="lazy"
-                    decoding="async"
-                    className="mt-auto aspect-[16/9] w-full rounded-card object-cover"
+                    aspect="landscape"
+                    sizes="(min-width: 640px) 50vw, 100vw"
+                    className="mt-auto"
                   />
                 )}
 

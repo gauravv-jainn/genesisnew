@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
 import { Play } from "lucide-react";
 import { useState } from "react";
@@ -251,13 +253,13 @@ function OrbitCard({
           style={{ backgroundImage: creator.image ? undefined : portrait(creator.id) }}
         >
           {creator.image && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={creator.image}
               alt=""
-              className="size-full object-cover"
-              loading="lazy"
-              decoding="async"
+              fill
+              // Cards sit at roughly a fifth of the frame on desktop.
+              sizes="(min-width: 1024px) 22vw, 45vw"
+              className="object-cover"
             />
           )}
 
@@ -277,16 +279,17 @@ function OrbitCard({
               creator.feature ? "gap-3 px-3 py-3" : "gap-2 px-2 py-2",
             )}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            { }
+            <Image
               src={avatar}
               alt=""
+              // Fixed 36px and 20px on screen; 72 is the 2x source.
+              width={72}
+              height={72}
               className={cn(
                 "shrink-0 rounded-full object-cover",
                 creator.feature ? "size-9" : "size-5",
               )}
-              loading="lazy"
-              decoding="async"
             />
             <span className="min-w-0">
               <span
@@ -354,13 +357,13 @@ function PlatformBadge({
       style={{ left, top, opacity }}
       className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      { }
+      <Image
         src={avatar}
         alt=""
+        width={72}
+        height={72}
         className="block size-9 rounded-full object-cover ring-1 ring-white/15"
-        loading="lazy"
-        decoding="async"
       />
       {/* The platform chip clipped to the badge's corner, as in the mockup. */}
       <span

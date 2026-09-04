@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { GlassButton } from "@/components/genesis/glass-button";
@@ -39,11 +40,14 @@ export function WorkDetail({ item }: { item: WorkItem }) {
               className="absolute inset-0 size-full object-cover"
             />
           ) : item.art ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={item.art}
               alt={`${item.client} — ${item.title}`}
-              className="absolute inset-0 size-full object-cover"
+              fill
+              // Sits in a max-w-4xl column, full width below that.
+              sizes="(min-width: 896px) 896px, 100vw"
+              priority
+              className="object-cover"
             />
           ) : (
             <div className="absolute inset-0 grid place-items-center bg-[linear-gradient(150deg,rgb(255_255_255/0.06),transparent_60%)] p-8">

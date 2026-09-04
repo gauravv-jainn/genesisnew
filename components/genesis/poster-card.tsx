@@ -28,6 +28,11 @@ export type Poster = {
   /** Where the poster leads. A poster that opens nothing is a picture of
    *  work rather than a way into it. */
   href?: string;
+  /**
+   * The artwork already carries its own caption, pill and play control.
+   * Set for the interim mockup stills — see hasBakedChrome in lib/work.
+   */
+  hasOwnChrome?: boolean;
 };
 
 /**
@@ -98,8 +103,19 @@ export function PosterCard({
       )}
     >
       <div
-        // Arbitrary-value syntax: Tailwind v4 has no bare-fraction `aspect-2/3`.
-        className="relative aspect-[2/3] w-full"
+        /*
+          The mockup stills are 173x200 with their caption printed along the
+          bottom edge, so forcing them into 2:3 and cropping to cover sliced
+          that caption in half — which is the hard horizontal edge Genesis
+          flagged on these cards. Artwork with baked chrome keeps its own
+          shape; everything else takes the poster ratio.
+
+          Arbitrary-value syntax: Tailwind v4 has no bare-fraction aspect-2/3.
+        */
+        className={cn(
+          "relative w-full",
+          poster.hasOwnChrome ? "aspect-[173/200]" : "aspect-[2/3]",
+        )}
         style={
           poster.image
             ? { backgroundImage: `url(${poster.image})`, backgroundSize: "cover" }
@@ -122,6 +138,11 @@ export function PosterCard({
           </div>
         )}
 
+        {/* Everything below is the card's OWN chrome, and it is skipped
+            entirely when the artwork already carries a pill, a play control
+            and a caption — otherwise every one of them appears twice. */}
+        {!poster.hasOwnChrome && (
+          <>
         {/* Legibility scrim for the title block. */}
         {/* Same diagonal as the library tiles — see the note there. */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45)_0%,transparent_28%)]" />
@@ -159,6 +180,8 @@ export function PosterCard({
             </div>
           )}
         </div>
+          </>
+        )}
       </div>
     </motion.article>
   );

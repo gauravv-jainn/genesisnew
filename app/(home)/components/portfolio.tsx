@@ -2,7 +2,7 @@ import { GlassButton } from "@/components/genesis/glass-button";
 import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { Reveal } from "@/components/genesis/reveal";
 import { portfolio } from "@/lib/home-content";
-import { featuredWork } from "@/lib/work";
+import { featuredWork, hasBakedChrome } from "@/lib/work";
 import { SectionShell } from "./section-shell";
 
 /**
@@ -27,6 +27,7 @@ export function Portfolio() {
     title: item.title,
     category: item.format,
     image: item.art,
+    hasOwnChrome: hasBakedChrome(item),
     href: `/work/${item.slug}`,
   }));
 

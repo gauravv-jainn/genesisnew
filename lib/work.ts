@@ -218,6 +218,31 @@ export const work: WorkItem[] = [
   },
 ];
 
+/**
+ * True while a piece is showing interim mockup artwork that already carries
+ * its own chrome.
+ *
+ * The ten client stills are cards lifted from Genesis's own content-library
+ * mockup, with the category pill, play control and client name PAINTED INTO
+ * the image. Any component that draws its own caption over them prints
+ * everything twice — the grid learned this once and the poster rail had to
+ * learn it separately, which is why the rule lives here now rather than in
+ * either of them.
+ *
+ * Inferred rather than flagged per item, so it stops applying by itself the
+ * moment real footage lands.
+ */
+export function hasBakedChrome(item: {
+  art?: string;
+  clip?: string;
+  poster?: string;
+}): boolean {
+  return Boolean(item.art) && !item.clip && !item.poster;
+}
+
+/** The aspect those mockup cards were exported at. */
+export const BAKED_ASPECT = "aspect-[173/200]";
+
 /** Fast lookup for the project route. */
 export function findWork(slug: string): WorkItem | undefined {
   return work.find((item) => item.slug === slug);

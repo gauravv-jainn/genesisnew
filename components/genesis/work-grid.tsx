@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 
 import {
+  BAKED_ASPECT,
+  hasBakedChrome,
   matchesFilter,
   workFilters,
   type WorkItem,
@@ -28,38 +30,16 @@ import { cn } from "@/lib/utils";
  */
 
 /**
- * True while a tile is showing interim mockup artwork that already carries
- * its own chrome.
- *
- * The ten client stills in /public/work are cards lifted from Genesis's own
- * content-library mockup, and the category pill, the play control and the
- * client name are PAINTED INTO the image. Drawing the component's own caption
- * and chip over them prints everything twice — which is exactly what this
- * grid did on its first pass.
- *
- * The rule is deliberately inferred rather than flagged per item: the moment
- * a real clip or poster lands for a piece, the branch stops matching and the
- * data-driven overlays come back on their own.
- */
-function artHasBakedChrome(item: WorkItem): boolean {
-  return Boolean(item.art) && !item.clip && !item.poster;
-}
-
-/**
  * Tile shape follows the FORMAT, which is the one honest source of variety
  * here: a reel is shot portrait and a film is not, so the grid is uneven
  * because the work is, rather than because a masonry algorithm decided so.
+ *
+ * Artwork that carries its own chrome keeps its own shape — the interim
+ * stills are 173x200 cards with the client name printed along the bottom, so
+ * cropping them to a format aspect slices the first letter off every one.
  */
 function aspectFor(item: WorkItem): string {
-  /*
-    Artwork that carries its own chrome keeps its own shape. The ten interim
-    stills are all 173x200 cards with the client name printed along their
-    bottom edge, so cropping them to a format aspect — which is what the first
-    pass did — sliced the first letter off every one of them: KAYALI rendered
-    as AYALI. Format aspects apply to real footage, which has no text in it to
-    lose.
-  */
-  if (artHasBakedChrome(item)) return "aspect-[173/200]";
+  if (hasBakedChrome(item)) return BAKED_ASPECT;
   if (item.format === "Reels" || item.format === "UGC") return "aspect-[9/13]";
   if (item.format === "Shoots" || item.format === "Campaigns") return "aspect-[4/3]";
   return "aspect-[4/5]";
@@ -67,7 +47,7 @@ function aspectFor(item: WorkItem): string {
 
 function Tile({ item }: { item: WorkItem }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const baked = artHasBakedChrome(item);
+  const baked = hasBakedChrome(item);
 
   /*
     Hover playback, started and stopped by hand rather than with `autoPlay`.

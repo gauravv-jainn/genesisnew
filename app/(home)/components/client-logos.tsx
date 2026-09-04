@@ -26,21 +26,23 @@ export function ClientLogos() {
         </Reveal>
         <Reveal delay={0.05}>
           <p className="mt-6 max-w-md text-small text-ash">
-            Drag the cluster to move through it.
+            Move your pointer through the wall.
           </p>
         </Reveal>
       </div>
 
       <Reveal delay={0.1} variant="scene" className="mt-8">
         <WatchCluster
-          height={560}
-          cell={196}
+          // Sized so all of them sit inside the frame at rest — the lean
+          // is a flourish, not the only way to reach half the wall.
+          height={400}
+          cell={132}
           items={clients.logos.map((logo) => ({
             id: logo,
             content: (
-              <div className="glass glass-lit grid size-32 place-items-center rounded-panel p-4 text-center sm:size-40">
+              <div className="glass glass-lit grid size-24 place-items-center rounded-panel p-3 text-center sm:size-28">
                 {/* TODO(assets): real client logo files owed (spec: "Ask tanvi"). */}
-                <span className="text-small font-semibold leading-tight tracking-[0.08em] text-bone/80">
+                <span className="text-micro font-semibold leading-tight tracking-[0.06em] text-bone/80">
                   {logo}
                 </span>
               </div>

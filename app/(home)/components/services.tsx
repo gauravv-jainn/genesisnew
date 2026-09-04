@@ -113,15 +113,16 @@ export function Services() {
               {services.label}
             </SectionLabel>
             {/*
-              h1, not h2. This section became the homepage hero when the lit
-              room was removed, and nothing replaced the h1 it took with it —
-              the homepage had no top-level heading at all.
+              THE HEADING IS GONE at Genesis's request — the hero is the orb
+              and the four names, as the reference film is.
+
+              An h1 stays, screen-reader only. A page still needs exactly one
+              top-level heading; removing the visible one and leaving nothing
+              would put the homepage back to having no h1 at all, which is
+              the bug that was fixed two commits ago.
             */}
-            <h1 className="mt-6 text-balance text-h2 font-normal leading-[1.02] tracking-tight text-bone sm:text-h1">
-              {services.heading}{" "}
-              <span className="font-serif font-normal italic text-brand-ink">
-                {services.headingAccent}
-              </span>
+            <h1 className="sr-only">
+              Genesis Media — four divisions, one creative system
             </h1>
           </Reveal>
 

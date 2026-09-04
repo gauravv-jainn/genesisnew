@@ -586,7 +586,19 @@
     --glass-highlight: rgb(255 255 255 / 0.3);
 
     --hover-wash: rgb(255 255 255 / 0.08);
-    --logo-invert: 1;
+    /*
+      ZERO, NOT ONE, AND THE NAMING IS WHY. The two wordmark files are named
+      for the THEME they serve, not for their own ink: genesis-wordmark-light
+      holds the WHITE lockup (mean ink luminance 248) because that is what a
+      light theme's dark chrome needs, and genesis-wordmark-dark holds the
+      DARK one (52). --logo-invert 1 selects the second.
+
+      Setting it to 1 here, meaning "go white", therefore did the opposite: it
+      put the dark lockup on the dark hero pill, where it read as an empty
+      space with a yellow wedge in it. The theme's own rules were always
+      right; this override was the only thing reading the names literally.
+    */
+    --logo-invert: 0;
 }
 
 

@@ -34,15 +34,18 @@ import { studios } from "@/lib/home-content";
  * ordinary horizontal scrollers.
  */
 export function Studios() {
-  const rows = [
-    studios.reel.slice(0, studios.reel.length / 2),
-    studios.reel.slice(studios.reel.length / 2),
-  ];
+  /*
+    ONE ROW, NOT TWO. Two rows of tall tiles plus a header, a capability list
+    and three buttons made this the longest section on the page — a scroll and
+    a half for a division whose point is made in the first two seconds of
+    looking at it. One row says the same thing in half the height.
+  */
+  const row = studios.reel;
 
   return (
     <section
       id="studios"
-      className="scene-dark grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
+      className="scene-dark grain relative isolate overflow-hidden bg-void py-20 sm:py-24"
     >
       <Spectrum />
 
@@ -71,12 +74,8 @@ export function Studios() {
         side of it reads as a widget dropped into the section; running off
         both edges is what makes it read as more work than fits.
       */}
-      <Reveal variant="scene" className="relative mt-14 sm:mt-16">
-        <div className="flex flex-col gap-4">
-          {rows.map((row, index) => (
-            <ReelRow key={index} clips={row} reverse={index % 2 === 1} />
-          ))}
-        </div>
+      <Reveal variant="scene" className="relative mt-10 sm:mt-12">
+        <ReelRow clips={row} />
 
         {/* The wall fades out rather than being cut off by the viewport. */}
         <div
@@ -97,7 +96,7 @@ export function Studios() {
         />
       </Reveal>
 
-      <div className="relative z-[2] mx-auto mt-14 w-full max-w-6xl px-6 sm:mt-16">
+      <div className="relative z-[2] mx-auto mt-10 w-full max-w-6xl px-6 sm:mt-12">
         <Reveal>
           <ul className="flex flex-wrap gap-x-3 gap-y-2">
             {studios.capabilities.map((capability, index) => (
@@ -113,7 +112,7 @@ export function Studios() {
           </ul>
         </Reveal>
 
-        <Reveal delay={0.1} className="mt-10 flex flex-wrap gap-3">
+        <Reveal delay={0.1} className="mt-8 flex flex-wrap gap-3">
           <GlassButton
             href="/#contact"
             quickContact="studios:plan-a-shoot"
@@ -135,13 +134,7 @@ export function Studios() {
   );
 }
 
-function ReelRow({
-  clips,
-  reverse,
-}: {
-  clips: readonly number[];
-  reverse: boolean;
-}) {
+function ReelRow({ clips }: { clips: readonly number[] }) {
   // Doubled so the translate can loop seamlessly: at -50% the second copy
   // sits exactly where the first started.
   const doubled = [...clips, ...clips];
@@ -159,10 +152,7 @@ function ReelRow({
           "flex shrink-0 gap-4 pl-4",
           "motion-safe:animate-[reel-drift_60s_linear_infinite]",
           "motion-safe:group-hover/row:[animation-play-state:paused]",
-          reverse && "motion-safe:[animation-direction:reverse]",
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        ].join(" ")}
       >
         {doubled.map((n, index) => (
           <ReelTile key={`${n}-${index}`} n={n} duplicate={index >= clips.length} />
@@ -189,7 +179,7 @@ function ReelTile({ n, duplicate }: { n: number; duplicate: boolean }) {
       // The second copy exists only to make the loop seamless; announcing
       // every clip twice is noise.
       aria-hidden={duplicate || undefined}
-      className="relative w-[clamp(9rem,17vw,14rem)] shrink-0 overflow-hidden rounded-card border border-[var(--glass-border)] bg-ink"
+      className="relative w-[clamp(8rem,13vw,11rem)] shrink-0 overflow-hidden rounded-card border border-[var(--glass-border)] bg-ink"
     >
       <video
         ref={ref}

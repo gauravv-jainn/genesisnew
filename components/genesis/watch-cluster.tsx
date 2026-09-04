@@ -13,7 +13,7 @@ import { useId, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Apple Watch style draggable cluster.
+ * Apple Watch style logo cluster.
  *
  * Straight from the spec, which asks for this twice: client logos
  * "//movable like Apple Watch Apps", and testimonials "//this will like move
@@ -88,7 +88,8 @@ export function WatchCluster({
   const dragX = useMotionValue(0);
   const dragY = useMotionValue(0);
 
-  // Spring-smooth the drag so releasing glides instead of stopping dead.
+  // Spring-smoothed, so the wall eases after the pointer rather than
+  // tracking it rigidly.
   const x = useSpring(dragX, { stiffness: 220, damping: 30, mass: 0.7 });
   const y = useSpring(dragY, { stiffness: 220, damping: 30, mass: 0.7 });
 
@@ -108,24 +109,41 @@ export function WatchCluster({
       )}
       style={{ height }}
       aria-describedby={clipId}
+      onPointerMove={(event) => {
+        if (prefersReducedMotion) return;
+        const box = event.currentTarget.getBoundingClientRect();
+        // Inverted: pointing right pulls the wall left, so what was off the
+        // right edge comes into view.
+        const nx = (event.clientX - box.left) / box.width - 0.5;
+        const ny = (event.clientY - box.top) / box.height - 0.5;
+        dragX.set(-nx * cell * 1.6);
+        dragY.set(-ny * cell * 1.1);
+      }}
+      onPointerLeave={() => {
+        dragX.set(0);
+        dragY.set(0);
+      }}
     >
       <p id={clipId} className="sr-only">
-        Draggable cluster. All items are also listed in the document order below.
+        A cluster of client logos. It drifts toward the pointer; every logo is
+        in the document order below.
       </p>
 
       <motion.div
-        // Drag is DIRECT MANIPULATION, not automatic motion, so it is not
-        // gated on prefers-reduced-motion — that setting exists to stop things
-        // moving on their own, and taking the drag away removes the only way
-        // to reach the rest of the wall. What reduced motion does change is
-        // the release: momentum and the spring glide are switched off below,
-        // so the cluster stops where it is let go.
-        drag
-        dragConstraints={{ left: -cell * 3, right: cell * 3, top: -cell * 2, bottom: cell * 2 }}
-        dragElastic={prefersReducedMotion ? 0 : 0.12}
-        dragMomentum={!prefersReducedMotion}
-        style={{ x: dragX, y: dragY }}
-        className="absolute inset-0 cursor-grab active:cursor-grabbing"
+        /*
+          IT FOLLOWS THE POINTER; IT IS NOT DRAGGED. Dragging asked the reader
+          to discover that the wall could be moved at all, and then to do the
+          work — on a section whose only job is to say "these are the brands".
+          The cluster now leans toward wherever the pointer is, which reveals
+          the same off-centre logos for no effort and nothing to learn.
+
+          This IS automatic motion, unlike a drag, so it is gated on
+          prefers-reduced-motion. Nothing is lost when it is off: the cluster
+          is sized so every logo is inside the frame at rest, and the lean
+          only changes which of them sit under the brightest part of the mask.
+        */
+        style={{ x, y }}
+        className="absolute inset-0"
       >
         {items.map((item, index) => (
           <ClusterCell

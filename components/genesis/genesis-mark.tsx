@@ -10,6 +10,12 @@ import { cn } from "@/lib/utils";
  * stays brand yellow. A CSS filter could not produce that from one asset
  * without turning the yellow as well.
  *
+ * MIND THE FILENAMES. They are named for the THEME each belongs to, not for
+ * its own ink: `-light` is the lockup the LIGHT theme uses on its dark chrome
+ * and is therefore WHITE; `-dark` is the dark-inked one. Read literally they
+ * are backwards, and any override that sets --logo-invert by reasoning about
+ * the colour rather than the theme will invert the mark.
+ *
  * Both are rendered and cross-faded by --logo-invert, which is defined
  * alongside the rest of the theme tokens. That means the mark follows the
  * theme AND follows `.scene-dark` — the pages that pin themselves dark keep

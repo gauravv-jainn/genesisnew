@@ -1,9 +1,10 @@
 import { BarChart3, Globe, Sparkles, Target, Users } from "lucide-react";
 
 import { CreatorConstellation } from "@/components/genesis/creator-constellation";
+import { DivisionLockup } from "@/components/genesis/division-lockup";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
-import { influencer, isPending } from "@/lib/home-content";
+import { influencer, isPending, services } from "@/lib/home-content";
 
 /**
  * Influencer marketing — built to the Genesis mockup on page 7.
@@ -43,7 +44,7 @@ export function InfluencerMarketing() {
       />
 
       <div className="relative z-[2] mx-auto w-full max-w-7xl px-6">
-        <div className="grid items-center gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+        <div className="grid items-center gap-8 lg:grid-cols-[0.82fr_1.18fr]">
           {/*
             min-w-0 is load-bearing. A grid item defaults to `min-width: auto`,
             which refuses to shrink below its content's longest unbreakable
@@ -53,26 +54,19 @@ export function InfluencerMarketing() {
             With min-w-0 the column can shrink and the line wraps instead.
           */}
           <div className="min-w-0">
+            {/*
+              THE DIVISION'S OWN LOCKUP, replacing a bespoke headline set at
+              up to 80px across three lines. Two things were wrong with it:
+              this section announced itself differently from every other
+              vertical, and the headline alone was most of the reason the
+              section ran to 1.29 screens.
+            */}
             <Reveal>
-              {/*
-                Light weight and a receding second line — the mockup's
-                treatment, not the site's usual bold two-tone.
-              */}
-              <h2 className="text-[clamp(2.75rem,7vw,5rem)] font-light leading-[0.95] tracking-[-0.03em] text-bone">
-                {influencer.heading}
-                <span
-                  className="block font-light"
-                  style={{
-                    background:
-                      "linear-gradient(96deg, #d8d4d2 0%, #a5a09e 46%, #6f6a69 100%)",
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    color: "transparent",
-                  }}
-                >
-                  {influencer.headingAccent}
-                </span>
-              </h2>
+              <DivisionLockup
+                name="Influence"
+                tagline={services.items[0].caption}
+                ramp={services.items[0].ramp}
+              />
             </Reveal>
 
             {/* Eyebrow BELOW the headline, per the mockup. */}
@@ -183,7 +177,7 @@ export function InfluencerMarketing() {
           them in the stats panel packed four numbers and two buttons into one
           row; they get their own line.
         */}
-        <Reveal delay={0.15} className="mt-8 flex flex-wrap gap-3">
+        <Reveal delay={0.15} className="mt-6 flex flex-wrap gap-3">
           <GlassButton
             href="/#contact"
             quickContact="influence:plan-a-campaign"

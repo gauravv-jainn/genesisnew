@@ -1,5 +1,4 @@
-import type { CSSProperties } from "react";
-
+import { DivisionLockup } from "@/components/genesis/division-lockup";
 import { Reveal } from "@/components/genesis/reveal";
 
 /**
@@ -32,17 +31,7 @@ export function DivisionIntro({
   return (
     <header className="mx-auto w-full max-w-6xl px-6">
       <Reveal>
-        <h1 className="flex flex-wrap items-baseline gap-x-1 text-h2 font-normal leading-[1.05] tracking-tight sm:text-h1">
-          <span className="text-bone">GENESIS</span>
-          <span className="text-brand-ink">.</span>
-          <span
-            className="ramp-text"
-            style={{ "--ramp": ramp } as CSSProperties}
-          >
-            {division}
-          </span>
-        </h1>
-        <p className="mt-4 text-lead leading-relaxed text-ash">{tagline}</p>
+        <DivisionLockup name={division} tagline={tagline} ramp={ramp} as="h1" />
       </Reveal>
 
       {children && (

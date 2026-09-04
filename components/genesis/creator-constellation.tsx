@@ -114,7 +114,12 @@ export function CreatorConstellation({
 
   return (
     <div
-      className={cn("relative isolate mx-auto aspect-[850/720] w-full", className)}
+      /*
+        Wider than it is tall now, 850/620 rather than 850/720. It sits beside
+        the copy in a two-column grid, so its height sets the whole section's
+        — and that height was most of why Influence ran over a screen.
+      */
+      className={cn("relative isolate mx-auto aspect-[850/620] w-full", className)}
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
     >

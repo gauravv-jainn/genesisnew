@@ -1,9 +1,8 @@
-import type { CSSProperties } from "react";
-
 import type { ReactNode } from "react";
 
 import { Atmosphere } from "@/components/genesis/atmosphere";
 import { Reveal } from "@/components/genesis/reveal";
+import { DivisionLockup } from "@/components/genesis/division-lockup";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { cn } from "@/lib/utils";
 
@@ -100,19 +99,12 @@ export function SectionShell({
           >
             {division ? (
               <Reveal className={align === "split" ? "lg:col-start-1" : undefined}>
-                <Heading className="flex flex-wrap items-baseline gap-x-1 text-h2 font-normal leading-[1.05] tracking-tight sm:text-h1">
-                  <span className="text-bone">GENESIS</span>
-                  <span className="text-brand-ink">.</span>
-                  <span
-                    className="ramp-text"
-                    style={{ "--ramp": division.ramp } as CSSProperties}
-                  >
-                    {division.name}
-                  </span>
-                </Heading>
-                <p className="mt-3 text-lead leading-relaxed text-ash">
-                  {division.tagline}
-                </p>
+                <DivisionLockup
+                  name={division.name}
+                  tagline={division.tagline}
+                  ramp={division.ramp}
+                  as={headingAs}
+                />
               </Reveal>
             ) : (
               <>

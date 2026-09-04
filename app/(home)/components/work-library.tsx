@@ -5,6 +5,17 @@ import { WorkGrid } from "@/components/genesis/work-grid";
 import { work } from "@/lib/work";
 
 /**
+ * How many pieces the homepage browse shows.
+ *
+ * The full catalogue ran to 2.76 screens here, against a brief that asks for
+ * one section to a screen. Six is enough to read as "there is a lot of
+ * this" while the grid still ends where the reader can see it ending; the
+ * rest is one click away at /our-work, which is the page built for browsing
+ * all of it.
+ */
+const ON_HOMEPAGE = 6;
+
+/**
  * The full work library, on the homepage, after Studios.
  *
  * TWO PLACES, TWO JOBS. The rail near the top is a trailer — six pieces, one
@@ -45,7 +56,7 @@ export function WorkLibrary() {
         </div>
 
         <Reveal variant="scene" className="mt-10">
-          <WorkGrid items={work} />
+          <WorkGrid items={work.slice(0, ON_HOMEPAGE)} />
         </Reveal>
       </div>
     </section>

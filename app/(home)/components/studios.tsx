@@ -4,9 +4,9 @@ import { useRef } from "react";
 
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
-import { SectionLabel } from "@/components/genesis/section-label";
 import { Spectrum } from "@/components/genesis/atmosphere";
-import { studios } from "@/lib/home-content";
+import { DivisionLockup } from "@/components/genesis/division-lockup";
+import { services, studios } from "@/lib/home-content";
 
 /**
  * Genesis Studios — the production vertical.
@@ -77,15 +77,11 @@ export function Studios() {
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
           <Reveal className="max-w-xl">
-            <SectionLabel dot tone="brand">
-              {studios.label}
-            </SectionLabel>
-            <h2 className="mt-6 text-balance text-h2 font-normal leading-[1.02] tracking-tight text-bone sm:text-h1">
-              {studios.heading}{" "}
-              <span className="font-serif font-normal italic text-brand-ink">
-                {studios.headingAccent}
-              </span>
-            </h2>
+            <DivisionLockup
+              name="Studios"
+              tagline={services.items[2].caption}
+              ramp={services.items[2].ramp}
+            />
           </Reveal>
 
           <Reveal delay={0.1} className="max-w-sm">

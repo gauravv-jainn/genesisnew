@@ -56,7 +56,7 @@ export default async function CaseStudyPage({
     .slice(0, 3);
 
   return (
-    <main className="relative min-h-dvh bg-void pb-32 pt-32 sm:pt-40">
+    <main className="relative min-h-dvh pb-32 pt-32 sm:pt-40">
       <article className="mx-auto w-full max-w-3xl px-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="micro-label text-brand-ink">{study.vertical}</span>

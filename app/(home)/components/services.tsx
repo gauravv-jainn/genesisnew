@@ -77,29 +77,31 @@ export function Services() {
         orb a full screen to sit in rather than the 24 units of section
         padding it had when it was section two.
       */
-      className="scene-dark grain relative isolate flex min-h-dvh flex-col justify-center overflow-hidden bg-void pb-16 pt-28 sm:pb-20 sm:pt-32"
+      className="scene-dark scene-open grain relative isolate flex min-h-dvh flex-col justify-center overflow-hidden pb-16 pt-28 sm:pb-20 sm:pt-32"
     >
       {/*
-        Transitions into and out of the dark chapter — the same treatment the
-        process section uses, since this is now the second pinned-dark band on
-        an otherwise light page and a butt joint reads as a rendering fault.
-        Both blend to the ACTUAL adjacent grounds through the surface tokens,
-        so they disappear in dark mode where the neighbours are already black.
+        Transitions into and out of the dark chapter, for the LIGHT theme
+        only. --chapter-blend is the PAGE's ground — white on light, nothing
+        on dark — so on dark these evaluate to transparent and paint nothing,
+        which is right: there is no join to hide, and a band of flat colour
+        over the page's own light field would be the very cut this pass
+        removed. 64px, which is the section's own minimum padding, so the
+        fade never reaches anything that has to stay readable.
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-28"
+        className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-16"
         style={{
           background:
-            "linear-gradient(180deg, color-mix(in srgb, var(--surface-ink) 90%, transparent) 0%, color-mix(in srgb, var(--surface-ink) 50%, transparent) 42%, transparent 100%)",
+            "linear-gradient(180deg, var(--chapter-blend) 0%, color-mix(in srgb, var(--chapter-blend) 40%, transparent) 55%, transparent 100%)",
         }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-28"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-16"
         style={{
           background:
-            "linear-gradient(0deg, var(--surface-base) 0%, color-mix(in srgb, var(--surface-base) 55%, transparent) 42%, transparent 100%)",
+            "linear-gradient(0deg, var(--chapter-blend) 0%, color-mix(in srgb, var(--chapter-blend) 40%, transparent) 55%, transparent 100%)",
         }}
       />
 

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
  */
 export default function TeamPage() {
   return (
-    <main className="relative min-h-dvh bg-void pb-32 pt-32 sm:pt-40">
+    <main className="relative min-h-dvh pb-32 pt-32 sm:pt-40">
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal>
           <SectionLabel dot tone="brand">

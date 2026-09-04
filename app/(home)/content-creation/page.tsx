@@ -37,7 +37,7 @@ export default function ContentCreationPage() {
         ramp={services.items[2].ramp}
       />
 
-<section className="grain relative isolate overflow-hidden bg-void pt-32 pb-24 sm:pt-40">
+<section className="relative isolate overflow-hidden pt-32 pb-24 sm:pt-40">
         <Spotlight x={44} spread={17} tone="warm" intensity={0.95} reach={96} />
         <GhostType>CONTENT</GhostType>
 

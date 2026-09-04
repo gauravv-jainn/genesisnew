@@ -1,4 +1,5 @@
 import { GlassNav } from "@/components/genesis/glass-nav";
+import { PageAtmosphere } from "@/components/genesis/page-atmosphere";
 import { SmoothScroll } from "@/components/genesis/smooth-scroll";
 import { QuickContact } from "@/components/genesis/quick-contact";
 import { WhatsappButton } from "@/components/genesis/whatsapp-button";
@@ -20,8 +21,15 @@ export default function HomeLayout({
     <>
       <SmoothScroll />
       <GlassNav />
-      {children}
-      {modal}
+      {/*
+        The page's light lives here, above every route, because a wash that
+        belongs to a section gets clipped at that section's edge and draws a
+        line across the page. See page-atmosphere.tsx.
+      */}
+      <PageAtmosphere>
+        {children}
+        {modal}
+      </PageAtmosphere>
       <QuickContact />
       <WhatsappButton />
     </>

@@ -248,6 +248,34 @@
     --surface-panel: #2b2b2b;
     --surface-float: #333333;
     --ink-strong: #ffffff;
+
+    /*
+      WHAT A PINNED-DARK CHAPTER PAINTS FOR ITS GROUND.
+
+      Two sections pin themselves dark whatever the theme — the Brain and
+      Studios. On a LIGHT page that is a real island and needs a real ground.
+      On a DARK page the ground is already this colour, so painting it does
+      nothing except hide the page-wide light field behind an opaque slab,
+      which reads as a flat untinted band with a line at each end. Empty here
+      and coloured in the light blocks, so the chapters are islands only where
+      there is something to be an island in. See .scene-open. */
+    --chapter-ground: transparent;
+
+    /*
+      WHAT A PINNED-DARK CHAPTER FADES ITS OWN EDGES INTO — the PAGE's ground,
+      not its own.
+
+      The bands at the top and bottom of those chapters used to paint
+      `var(--surface-base)`, and `.scene-dark` redefines that token to #111111
+      inside itself, in both themes. So the band painted the chapter's own
+      colour over the chapter: a no-op that looked deliberate and did nothing,
+      which is why the light theme still had a black-to-white butt joint at
+      both ends. This one is declared at :root and never shadowed, so it
+      resolves to the page underneath: white on light, and nothing on dark,
+      where a band of #111 over the page's own light field would itself be a
+      cut.
+    */
+    --chapter-blend: transparent;
     --ink-muted: #d9d9d9;
     --ink-faint: #8b8b8b;
 
@@ -372,6 +400,8 @@
    -------------------------------------------------------------------------- */
 :root[data-theme="light"] {
     --surface-base: #ffffff;
+    --chapter-ground: #111111;
+    --chapter-blend: #ffffff;
     --surface-ink: #f5f5f5;
     --surface-raised: #ffffff;
     --surface-panel: #ffffff;
@@ -435,6 +465,8 @@
 @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]):not([data-theme="light"]) {
         --surface-base: #ffffff;
+        --chapter-ground: #111111;
+        --chapter-blend: #ffffff;
         --surface-ink: #f5f5f5;
         --surface-raised: #ffffff;
         --surface-panel: #ffffff;
@@ -919,6 +951,41 @@ body:has(main.scene-dark) header {
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
+    }
+
+    /*
+       A FULL-BLEED WASH THAT CANNOT DRAW A LINE AT ITS OWN EDGE.
+
+       Sections are `overflow: hidden` boxes, so an absolutely-placed gradient
+       inside one is sliced at the boundary. If the gradient is still bright
+       where it is sliced, the join with the next section becomes a hard
+       horizontal step — the "cut". Masking the layer to zero at the top and
+       bottom means the section's light ramps in and out, and two neighbours
+       sum to something continuous no matter what either of them is doing.
+
+       Most of the page's light now comes from PageAtmosphere, which spans the
+       whole document and so has no internal edge to cut. This is for what is
+       left: the chapters that pin themselves dark and therefore paint over
+       that field, and the one section with a hand-built key light.
+    */
+    .seamless {
+        -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+        mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+    }
+
+    /*
+       A DARK CHAPTER THAT DOES NOT PAINT ITSELF WHEN THE PAGE IS ALREADY DARK.
+
+       `.scene-dark` pins the dark tokens AND paints `background-color`. The
+       paint is what a light page needs and what a dark page must not have:
+       an opaque slab over the document-wide field leaves a flat band with a
+       hard edge top and bottom, which is the cut this whole pass is about.
+       This keeps every token, the colour-scheme and the white wordmark, and
+       makes only the paint conditional. Two classes so it beats `.scene-dark`
+       on specificity rather than on source order.
+    */
+    .scene-dark.scene-open {
+        background-color: var(--chapter-ground);
     }
 
     /* Hides scrollbars on horizontal rails (poster carousel, filter pills). */

@@ -78,7 +78,13 @@ export function Aurora({
   return (
     <div
       aria-hidden
-      className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
+      /*
+        `.seamless` is not decoration. An Aurora with origin="top" puts its
+        brightest point ON the section's top edge, which is precisely where
+        the clip happens — so unmasked it guarantees the very line it is
+        supposed to be atmosphere for. Masked, the light ramps in.
+      */
+      className={cn("seamless pointer-events-none absolute inset-0 overflow-hidden", className)}
       style={{
         background: `radial-gradient(60% 50% at ${position}, rgb(${color} / ${intensity}) 0%, rgb(${color} / ${intensity * 0.35}) 35%, transparent 70%)`,
       }}
@@ -91,7 +97,7 @@ export function Spectrum({ className }: { className?: string }) {
   return (
     <div
       aria-hidden
-      className={cn("pointer-events-none absolute inset-0", className)}
+      className={cn("seamless pointer-events-none absolute inset-0", className)}
       style={{ background: spectrumWash() }}
     />
   );
@@ -123,26 +129,20 @@ export function Atmosphere({
 }: AuroraProps & { children: React.ReactNode }) {
   return (
     /*
-      ONE GROUND FOR EVERY THEME-FOLLOWING SECTION. Atmosphere used bg-ink
-      while the standalone sections used bg-void, and in the light theme those
-      are #f5f5f5 and #ffffff — so every boundary between an Atmosphere
-      section and a plain one drew a hard horizontal line across the page.
-      That is the "cut". The variation between sections comes from the
-      Spectrum wash, which is a gradient and cannot draw an edge.
+      NO GROUND AND NO SPECTRUM OF ITS OWN, and both removals are the same
+      fix. This used to paint bg-void and stack the four spectrum sources
+      into its own box — a box with `overflow: hidden`, whose edge therefore
+      sliced the wash and drew a line at every section join. The field is now
+      one document-wide layer in PageAtmosphere, and this is transparent so
+      it shows through. What is left here is the section's own directional
+      key light, masked so it cannot reach the boundary either.
     */
-    <div className={cn("relative isolate overflow-hidden bg-void", className)}>
-      {/*
-        Spectrum first, then the directional source over it, then grain over
-        both — so the noise sits on the gradient rather than under it, which
-        is what stops a wide soft wash banding on a cheap panel.
-      */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{ background: spectrumWash() }}
-      />
+    <div className={cn("relative isolate overflow-hidden", className)}>
       <Aurora origin={origin} tone={tone} intensity={intensity} />
-      <Grain />
+      {/* No <Grain /> here. It blends `overlay`, this box is `isolate`, and
+          a section with no ground of its own gives it nothing to blend with
+          — which measured as a hard step at every boundary. PageAtmosphere
+          runs one grain layer across the whole document instead. */}
       <div className="relative z-[2]">{children}</div>
     </div>
   );

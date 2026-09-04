@@ -26,7 +26,7 @@ export function WhoWeAre() {
   return (
     <section
       id="about"
-      className="grain relative isolate overflow-hidden bg-void py-16 sm:py-20"
+      className="relative isolate overflow-hidden py-16 sm:py-20"
     >
       <Spectrum />
 

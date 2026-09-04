@@ -32,7 +32,7 @@ export function WorkLibrary() {
   return (
     <section
       id="library"
-      className="grain relative isolate overflow-hidden bg-void py-16 sm:py-20"
+      className="relative isolate overflow-hidden py-16 sm:py-20"
     >
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-4">

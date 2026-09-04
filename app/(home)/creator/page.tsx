@@ -26,7 +26,7 @@ export default function CreatorPage() {
   return (
     <SlideUp>
     <main>
-      <section className="grain relative isolate overflow-hidden bg-void pt-32 pb-32 sm:pt-40">
+      <section className="relative isolate overflow-hidden pt-32 pb-32 sm:pt-40">
         <Spotlight x={68} spread={17} tone="warm" intensity={1} reach={96} />
         <GhostType className="translate-y-2">FOR CREATORS</GhostType>
 

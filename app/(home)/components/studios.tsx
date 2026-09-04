@@ -45,30 +45,30 @@ export function Studios() {
   return (
     <section
       id="studios"
-      className="scene-dark grain relative isolate overflow-hidden bg-void py-16 sm:py-20"
+      className="scene-dark scene-open grain relative isolate overflow-hidden py-16 sm:py-20"
     >
       {/*
-        Blends into the sections above and below. This is one of only two
-        pinned-dark chapters on an otherwise light page, and without these it
-        butts straight into the neighbouring ground — the hard horizontal line
-        Genesis flagged. Both bands blend to the ACTUAL adjacent ground
-        through --surface-base, so in dark mode, where the neighbours are
-        already near-black, they fade to nothing.
+        Blends into the sections above and below, in the LIGHT theme only.
+        This is one of only two chapters that pin themselves dark, and on a
+        light page it butts straight into the neighbouring ground. The bands
+        paint --chapter-blend, which is the PAGE's ground: white on light,
+        transparent on dark, where the chapter is not an island at all and
+        anything opaque here would itself cut the page-wide field.
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-32"
+        className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-16"
         style={{
           background:
-            "linear-gradient(180deg, var(--surface-base) 0%, color-mix(in srgb, var(--surface-base) 55%, transparent) 40%, transparent 100%)",
+            "linear-gradient(180deg, var(--chapter-blend) 0%, color-mix(in srgb, var(--chapter-blend) 40%, transparent) 55%, transparent 100%)",
         }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-32"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-16"
         style={{
           background:
-            "linear-gradient(0deg, var(--surface-base) 0%, color-mix(in srgb, var(--surface-base) 55%, transparent) 40%, transparent 100%)",
+            "linear-gradient(0deg, var(--chapter-blend) 0%, color-mix(in srgb, var(--chapter-blend) 40%, transparent) 55%, transparent 100%)",
         }}
       />
 

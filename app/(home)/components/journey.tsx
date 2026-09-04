@@ -138,7 +138,7 @@ export function Journey() {
   return (
     <section
       id="journey"
-      className="grain relative isolate overflow-hidden bg-void py-16 sm:py-20"
+      className="relative isolate overflow-hidden py-16 sm:py-20"
     >
       <Spectrum />
 

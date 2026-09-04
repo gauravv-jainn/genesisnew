@@ -29,7 +29,7 @@ export function CreativeProcess() {
   return (
     <section
       id="process"
-      className="grain relative isolate overflow-hidden py-24 sm:py-32"
+      className="relative isolate overflow-hidden py-24 sm:py-32"
       style={{ backgroundColor: "#111111" }}
     >
       {/*

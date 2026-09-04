@@ -31,12 +31,18 @@ export function InfluencerMarketing() {
   return (
     <section
       id="influence"
-      className="grain relative isolate overflow-hidden bg-void py-24 sm:py-32"
+      className="relative isolate overflow-hidden py-24 sm:py-32"
     >
-      {/* Soft key light behind the headline, red spill low-left, as in the mockup. */}
+      {/*
+        Soft key light behind the headline, warm spill low-left, as in the
+        mockup — and `.seamless`, because the low-left source sits at 92% of
+        the section's height with a 44% radius, so unmasked it was still at
+        full strength when the section's own overflow cut it. That slice was
+        the hard line under this block.
+      */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
+        className="seamless pointer-events-none absolute inset-0"
         style={{
           background:
             "radial-gradient(46% 38% at 24% 16%, rgb(214 210 214 / 0.11) 0%, transparent 68%), radial-gradient(50% 44% at 8% 92%, rgb(255 212 0 / 0.16) 0%, transparent 70%), radial-gradient(60% 50% at 88% 40%, rgb(255 212 0 / 0.07) 0%, transparent 72%)",

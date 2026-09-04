@@ -71,9 +71,16 @@ export default function CreatorPage() {
           </RevealGroup>
 
           <Reveal delay={0.15} className="mt-16 flex justify-end">
+            {/*
+              This note used to repeat card 04 almost word for word — "most of
+              our creators come back for the next campaign" appeared twice,
+              two screens apart, which reads as a copy-paste slip rather than
+              emphasis. A closing note should add the thing the four cards
+              imply but none of them says.
+            */}
             <CornerNote index="2">
-              Most of our creators come back for the next campaign. That is the
-              whole model, and it only works if the first one was worth doing.
+              None of that is generosity. It is the cheapest way we know to get
+              work worth publishing.
             </CornerNote>
           </Reveal>
         </div>

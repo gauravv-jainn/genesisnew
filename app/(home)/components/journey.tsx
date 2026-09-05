@@ -53,7 +53,24 @@ export function Journey() {
   const glowRef = useRef<SVGPathElement>(null);
   const nodeRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [box, setBox] = useState({ w: 0, h: 0 });
-  /** How far the route has been drawn, 0-1. Drives the nodes too. */
+  /**
+   * How far the route has been drawn, 0-1.
+   *
+   * IT DRIVES THE LINE AND THE DOTS, AND NOTHING ELSE ANY MORE. It used to
+   * gate the text of every stop as well, and that is what Genesis was looking
+   * at: the scrub is the SECTION's travel through the viewport, so on a
+   * section five stops tall the lower three were still at opacity 0 while
+   * sitting in the middle of the screen. Two stops, then four hundred pixels
+   * of nothing with a faint dot in it. That does not read as a journey which
+   * has not started; it reads as a section that failed to render.
+   *
+   * The words now arrive on Reveal, the same component every other section on
+   * this page uses, so a stop is legible whenever it is looked at — however
+   * the reader got there, at any viewport height, and whether or not the
+   * scrub ever runs. What the scrub still owns is the route itself and the
+   * lamp at each stop, which are decoration: an undrawn line is a line that
+   * has not arrived yet, not a hole where the content should be.
+   */
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -113,10 +130,19 @@ export function Journey() {
 
     const trigger = ScrollTrigger.create({
       trigger: rail,
-      // The route starts drawing as the first stop clears the fold and
-      // finishes as the last one leaves — the section's own travel, no pin.
-      start: "top 80%",
-      end: "bottom 60%",
+      /*
+        The route starts drawing as the first stop clears the fold and is
+        finished by the time the last one is comfortably on screen — the
+        section's own travel, no pin.
+
+        `bottom 90%` rather than `bottom 60%`: the old range only completed
+        once the section's bottom edge had climbed to the middle of the
+        viewport, by which point the reader is already leaving. The line was
+        still visibly drawing under stops that had been sitting there for a
+        screen and a half.
+      */
+      start: "top 85%",
+      end: "bottom 90%",
       scrub: 0.6,
       onUpdate: (self) => paint(self.progress),
     });
@@ -219,6 +245,7 @@ export function Journey() {
               spare.
             */
             const at = (index / stops.length) * 0.95;
+            /** Lights this stop's lamp. Decoration only — see `progress`. */
             const reached = progress >= at - 0.04;
 
             return (
@@ -262,17 +289,13 @@ export function Journey() {
                 </div>
 
                 {/*
-                  The stop itself arrives with the route. Transform and opacity
-                  only — nothing here animates a layout property, so the whole
-                  scrub stays on the compositor.
+                  The stop arrives on its own sightline, not on the route's
+                  progress. Reveal is the site's standard entrance — transform
+                  and opacity only, fired once when the element is actually
+                  looked at — so this stop behaves like every other block on
+                  the page and cannot end up invisible while on screen.
                 */}
-                <div
-                  className="min-w-0 pb-8 transition-[opacity,transform] duration-700 ease-out sm:pb-9"
-                  style={{
-                    opacity: reached ? 1 : 0,
-                    transform: reached ? "none" : "translateY(14px)",
-                  }}
-                >
+                <Reveal className="min-w-0 pb-8 sm:pb-9">
                   <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                     <h3
                       className="text-h3 font-normal leading-none tracking-tight sm:text-h2"
@@ -292,7 +315,7 @@ export function Journey() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </Reveal>
               </article>
             );
           })}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
@@ -21,11 +21,18 @@ import { services, studios } from "@/lib/home-content";
  * is what this section would have been without the clips, and it would have
  * been the least convincing block on a page about making films.
  *
- * WHY POSTER-FIRST, PLAY ON HOVER. Sixteen autoplaying videos is sixteen live
- * decoders and sixteen files pulled on load. Each tile renders one <video>
- * with `preload="none"` and a poster, so the wall costs sixteen 40KB stills
- * until a pointer lands on one — then that one clip, and only that one,
- * starts fetching.
+ * THE CLIPS RUN BY THEMSELVES, and only while they are on screen. Genesis
+ * asked for the wall to be playing rather than waiting to be hovered, which
+ * is right — a reel wall whose reels are still is a contact sheet, and it
+ * asked every visitor to discover that the stills were films at all.
+ *
+ * The reason it was hover-only still stands, though: thirty-two tiles (the row
+ * is doubled for the loop) autoplaying is thirty-two live decoders and
+ * thirty-two files pulled on load. So each tile watches its own intersection
+ * and plays only while it is actually in the viewport, pausing the moment it
+ * leaves. Off-screen tiles cost their poster and nothing else, which is what
+ * `preload="none"` bought before, and the handful on screen are the only
+ * decoders alive at any time.
  *
  * THE WALL DRIFTS, IT DOES NOT SCROLL-JACK. Two rows moving in opposite
  * directions on a CSS transform animation — no JS, no scroll listener,
@@ -138,8 +145,16 @@ export function Studios() {
           <GlassButton href="/content-creation" variant="glass" size="lg" arrow>
             Explore Genesis Studios
           </GlassButton>
-          <GlassButton href="/our-work" variant="ghost" size="lg" arrow>
-            View studio work
+          {/*
+            POINTS DOWN THE PAGE, NOT OFF IT. This said "View studio work" and
+            went to /our-work — which is the third place the same catalogue was
+            being shown, and it took a reader who had just started watching the
+            reel wall away from the page entirely. The library is now the one
+            browse on the homepage and it sits below the four verticals, so
+            this scrolls to it.
+          */}
+          <GlassButton href="/#library" variant="ghost" size="lg" arrow>
+            View the whole library
           </GlassButton>
         </Reveal>
       </div>
@@ -178,13 +193,43 @@ function ReelRow({ clips }: { clips: readonly number[] }) {
 function ReelTile({ n, duplicate }: { n: number; duplicate: boolean }) {
   const ref = useRef<HTMLVideoElement>(null);
 
-  const play = () => void ref.current?.play().catch(() => {});
-  const stop = () => {
+  /*
+    Plays while on screen, pauses off it. The observer is what keeps "they
+    should all be running" from meaning "all thirty-two are decoding": the row
+    is wider than any viewport, so at most seven or eight tiles are ever
+    visible, and those are the only ones with a decoder attached.
+
+    It does not rewind on the way out, unlike the old hover handler. A clip
+    that resets every time it drifts past the edge of the screen restarts from
+    frame one on a wall that is permanently drifting, so nothing beyond the
+    first second of any clip would ever be seen.
+
+    Reduce Motion stops it: the wall's own drift is already disabled there, and
+    autoplaying video is exactly what that setting is asking not to happen.
+  */
+  useEffect(() => {
     const video = ref.current;
     if (!video) return;
-    video.pause();
-    video.currentTime = 0;
-  };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Rejects if the element is detached or the play is superseded;
+          // neither is worth surfacing.
+          void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      // A little margin so a tile is already running by the time it drifts in
+      // rather than starting in full view.
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
@@ -201,10 +246,14 @@ function ReelTile({ n, duplicate }: { n: number; duplicate: boolean }) {
         muted
         loop
         playsInline
-        // Nothing but the poster until a pointer arrives.
-        preload="none"
-        onMouseEnter={play}
-        onMouseLeave={stop}
+        /*
+          `metadata`, not `none`. The observer calls play() the moment a tile
+          nears the viewport, and with `none` the browser has not opened the
+          file yet — so the first second of every clip was a poster holding
+          still while the fetch started. It is also not `auto`: that pulls all
+          thirty-two on load, which is the thing being avoided.
+        */
+        preload="metadata"
         className="aspect-[9/13] w-full object-cover"
       />
     </div>

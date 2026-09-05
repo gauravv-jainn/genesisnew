@@ -95,8 +95,10 @@ function Tile({ item }: { item: WorkItem }) {
             src={item.art}
             alt={`${item.client} — ${item.title}`}
             fill
-            // Three columns on desktop, two on tablet, one on a phone.
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            // Follows the column count above: four on desktop, three on
+            // tablet, two on a phone. Left at 33vw these would each fetch a
+            // still half again as wide as the tile it lands in.
+            sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
             className="object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.03]"
           />
         ) : (
@@ -201,8 +203,19 @@ export function WorkGrid({
         Column flow rather than a fixed grid, so tiles of different heights
         pack without leaving a row of gaps under the short ones. `break-inside`
         is what stops a tile being sliced across a column boundary.
+
+        FOUR COLUMNS AT THE TOP END, NOT THREE. Genesis's note on the library
+        was that it is too big — and the height of a masonry grid is set by its
+        column COUNT, not by the number of tiles: at three columns a 1280px
+        page gave each tile 405px, so a 4:5 still stood 506px tall and six of
+        them ran past a screen and a half. Four columns puts a tile at 296px
+        and the same six at roughly half the height, and two on a phone rather
+        than one turns a stack you scroll through into a wall you look at. A
+        fifth column above 1280 takes a tile to 218px, which is where two rows
+        of them and the heading above finally clear a laptop screen. Nothing is
+        dropped; every tile is simply the size a thumbnail should be.
       */}
-      <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
+      <div className="columns-2 gap-3 sm:columns-3 sm:gap-4 lg:columns-4 xl:columns-5 [&>*]:mb-3 sm:[&>*]:mb-4">
         {visible.map((item) => (
           <div key={item.slug} className="break-inside-avoid">
             <Tile item={item} />

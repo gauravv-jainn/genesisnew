@@ -100,12 +100,34 @@ function installAnchorScrolling(lenis: Lenis | null): () => void {
     if (!target) return;
 
     event.preventDefault();
+    /*
+      And stop it here. next/link's own handler would otherwise still see the
+      click on its way down to the anchor; it bails on defaultPrevented, but
+      only in the same tick — anything else listening between here and the
+      element does not.
+    */
+    event.stopPropagation();
     go(target, true);
     // Keep the URL shareable without letting the browser do its own jump.
     window.history.pushState(null, "", hash);
   };
 
-  document.addEventListener("click", onClick);
+  /*
+    CAPTURE PHASE, WHICH IS THE WHOLE FIX FOR THE NAV.
+
+    This was registered on the bubble phase. React attaches its listeners to
+    the root container, not to document, so a bubbling click reaches React
+    FIRST and only afterwards reaches this handler on the way out. By then
+    next/link has already read `defaultPrevented` as false — the
+    preventDefault below had not happened yet — and pushed the route, which
+    sets its own scroll position. Lenis then eased toward the target from
+    wherever that push had landed, and the page came to rest a section past
+    the one asked for: clicking Influence on the nav put you in Studios.
+
+    Registered on capture, this runs before the click reaches React at all, so
+    next/link sees a prevented event and stands down. One scroller, one target.
+  */
+  document.addEventListener("click", onClick, true);
 
   // Arriving with a hash already in the URL — from another page, or a shared
   // link. Deferred a frame so layout has settled before measuring.
@@ -118,7 +140,7 @@ function installAnchorScrolling(lenis: Lenis | null): () => void {
   }
 
   return () => {
-    document.removeEventListener("click", onClick);
+    document.removeEventListener("click", onClick, true);
     if (raf) cancelAnimationFrame(raf);
   };
 }

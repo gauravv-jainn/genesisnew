@@ -31,7 +31,7 @@ export function InfluencerMarketing() {
   return (
     <section
       id="influence"
-      className="relative isolate overflow-hidden py-24 sm:py-32"
+      className="relative isolate overflow-hidden py-14 sm:py-16"
     >
       {/*
         Soft key light behind the headline, warm spill low-left, as in the
@@ -77,14 +77,14 @@ export function InfluencerMarketing() {
 
             {/* Eyebrow BELOW the headline, per the mockup. */}
             <Reveal delay={0.06}>
-              <p className="micro-label mt-6 flex items-center gap-3">
+              <p className="micro-label mt-5 flex items-center gap-3">
                 <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-brand" />
                 {influencer.label}
               </p>
             </Reveal>
 
             <Reveal delay={0.1}>
-              <p className="mt-6 max-w-md text-pretty text-body leading-relaxed text-ash">
+              <p className="mt-5 max-w-lg text-pretty text-body leading-relaxed text-ash">
                 {influencer.body}
               </p>
             </Reveal>
@@ -92,22 +92,22 @@ export function InfluencerMarketing() {
             {/* The database card: red-tinted glass, icon well, circular arrow. */}
             <Reveal delay={0.16}>
               <div
-                className="glass glass-lit mt-8 flex items-center gap-6 rounded-panel p-6 sm:p-8"
+                className="glass glass-lit mt-6 flex items-center gap-5 rounded-panel p-5"
                 style={{
                   background:
                     "linear-gradient(102deg, rgb(255 212 0 / 0.17) 0%, rgb(255 212 0 / 0.05) 42%, rgb(255 255 255 / 0.03) 100%)",
                 }}
               >
-                <div className="grid size-16 shrink-0 place-items-center rounded-card border border-brand/35 bg-brand/10 text-brand-ink">
-                  <Users className="size-7" aria-hidden />
+                <div className="grid size-14 shrink-0 place-items-center rounded-card border border-brand/35 bg-brand/10 text-brand-ink">
+                  <Users className="size-6" aria-hidden />
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-h2 font-medium leading-none tracking-tight text-bone">
+                  <p className="text-h3 font-medium leading-none tracking-tight text-bone">
                     {influencer.databaseStat.value}
                   </p>
-                  <p className="micro-label mt-3">{influencer.databaseStat.label}</p>
-                  <p className="mt-3 text-small leading-relaxed text-ash">
+                  <p className="micro-label mt-2">{influencer.databaseStat.label}</p>
+                  <p className="mt-2 text-small leading-relaxed text-ash">
                     {influencer.databaseStat.description}
                   </p>
                 </div>
@@ -115,7 +115,7 @@ export function InfluencerMarketing() {
                 <a
                   href="/influencer-campaigns"
                   aria-label="See influencer campaigns"
-                  className="grid size-12 shrink-0 place-items-center rounded-full border border-white/20 text-bone transition-colors hover:border-brand hover:bg-brand/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                  className="grid size-11 shrink-0 place-items-center rounded-full border border-white/20 text-bone transition-colors hover:border-brand hover:bg-brand/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 >
                   <span aria-hidden className="text-h3 leading-none">→</span>
                 </a>
@@ -128,15 +128,26 @@ export function InfluencerMarketing() {
               The mockup labels these by niche and follower count, not by
               celebrity name — the named celebrity collaborations are a
               separate list and do not ride the orbits.
+
+              CAPPED, BECAUSE IT SETS THE SECTION'S HEIGHT. The constellation
+              is `aspect-[850/620] w-full`, so in a 708px column it stood 516px
+              tall — taller than the entire left column beside it, which made
+              it, not the copy, the thing deciding how far the section ran. A
+              36rem cap puts it at 420px, under the copy's own height, so the
+              grid is now as tall as its text and the orbits stop being the
+              reason the CTA is below the fold.
             */}
-            <CreatorConstellation creators={influencer.creators.map((c) => ({ ...c }))} />
+            <CreatorConstellation
+              creators={influencer.creators.map((c) => ({ ...c }))}
+              className="lg:max-w-[36rem]"
+            />
           </Reveal>
         </div>
 
         {/* The figures bar — the CTA lives inside it, as in the mockup. */}
-        <Reveal delay={0.24} className="mt-10">
-          <div className="glass glass-lit flex flex-col gap-8 rounded-panel px-6 py-8 sm:px-8 lg:flex-row lg:items-center">
-            <div className="grid flex-1 grid-cols-2 gap-y-8 lg:grid-cols-4">
+        <Reveal delay={0.24} className="mt-8">
+          <div className="glass glass-lit flex flex-col gap-6 rounded-panel px-5 py-5 sm:px-6 lg:flex-row lg:items-center">
+            <div className="grid flex-1 grid-cols-2 gap-y-6 lg:grid-cols-4">
               {stats.map((stat, index) => {
                 const Icon = STAT_ICONS[index] ?? Globe;
                 const highlight = index === 0;
@@ -151,7 +162,7 @@ export function InfluencerMarketing() {
                   >
                     <span
                       className={cnJoin(
-                        "grid size-11 shrink-0 place-items-center rounded-card border",
+                        "grid size-10 shrink-0 place-items-center rounded-card border",
                         highlight
                           ? "border-brand/35 bg-brand/10 text-brand-ink"
                           : "border-white/12 bg-white/5 text-bone",
@@ -183,7 +194,7 @@ export function InfluencerMarketing() {
           them in the stats panel packed four numbers and two buttons into one
           row; they get their own line.
         */}
-        <Reveal delay={0.15} className="mt-6 flex flex-wrap gap-3">
+        <Reveal delay={0.15} className="mt-5 flex flex-wrap gap-3">
           <GlassButton
             href="/#contact"
             quickContact="influence:plan-a-campaign"

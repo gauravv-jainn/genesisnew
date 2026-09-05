@@ -32,7 +32,22 @@ export function AiContent() {
       tone="brand"
       origin="center"
       intensity={0.14}
-      align="center"
+      /*
+        SPLIT, NOT CENTRED, AND THAT IS THE CLARITY FIX. Centred stacked three
+        text blocks down the middle of the section — the GENESIS.AI Lab lockup,
+        a three-line paragraph under it, and then "AI Avatars & Realism" under
+        that. Two headings of similar weight, one above the other, with prose
+        wedged between them: nothing in the block said which was the subject,
+        which is what Genesis meant by the heading being unclear.
+
+        The deck's own AI Lab board has the lockup small in the top-left corner
+        and one heading in the middle of the frame. Split puts it back that
+        way: lockup left, the paragraph beside it rather than beneath, and
+        "AI Avatars & Realism" left as the only centred thing in the section
+        and unmistakably the subject of the fan below it. It takes 100px off
+        the section as a side effect.
+      */
+      align="split"
     >
       {/*
         FULL-BLEED. The fan runs edge to edge and clips at both sides, the
@@ -51,10 +66,16 @@ export function AiContent() {
           >
             {aiContent.avatarsHeading} {aiContent.avatarsAccent}
           </h3>
-          <p
-            className="ramp-text mt-4 text-lead leading-relaxed"
-            style={{ "--ramp": "var(--ramp-avatars-soft)" } as CSSProperties}
-          >
+          {/*
+            PLAIN, NOT A SECOND GRADIENT. This ran --ramp-avatars-soft, which
+            is the avatar ramp with the saturation taken out — a muted
+            lavender-to-tan that on the dark ground reads as grey, directly
+            under a heading wearing the bright version of the same gradient.
+            Two gradients stacked is where the block stopped having a
+            hierarchy. The heading keeps the colour; its subtitle is simply
+            legible.
+          */}
+          <p className="mt-4 text-lead leading-relaxed text-bone/85">
             {aiContent.avatarsBody}
           </p>
         </div>

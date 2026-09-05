@@ -8,21 +8,26 @@ import { work } from "@/lib/work";
  * How many pieces the homepage browse shows.
  *
  * The full catalogue ran to 2.76 screens here, against a brief that asks for
- * one section to a screen. Six is enough to read as "there is a lot of
- * this" while the grid still ends where the reader can see it ending; the
- * rest is one click away at /our-work, which is the page built for browsing
- * all of it.
+ * one section to a screen. The rest is one click away at /our-work, which is
+ * the page built for browsing all of it.
+ *
+ * EIGHT NOW THAT THE GRID IS FOUR COLUMNS WIDE. Six was two full rows of
+ * three; in four columns it is one row and a gap-toothed second, which reads
+ * as a grid that ran out of work rather than one that stops. Eight fills two
+ * rows exactly, and at the smaller tile size those two rows are shorter than
+ * the old two were.
  */
-const ON_HOMEPAGE = 6;
+const ON_HOMEPAGE = 8;
 
 /**
- * The full work library, on the homepage, after Studios.
+ * The full work library, on the homepage, after the four verticals.
  *
- * TWO PLACES, TWO JOBS. The rail near the top is a trailer — six pieces, one
- * horizontal move, seen before a visitor has read anything. This is the
- * browse: everything Genesis has made, filterable, straight after the
- * production section that explains how it is made. A visitor who has just
- * watched the reel wall is exactly the one who wants to see the rest.
+ * THE ONE BROWSE ON THE PAGE, after all four verticals. There used to be a
+ * poster rail above it under "Selected work" doing the same job from the same
+ * catalogue, four cards shorter — Genesis counted the work three times over
+ * and this was the third. The rail is gone; Studios keeps its own reel wall,
+ * which is that division showing its footage rather than a second catalogue,
+ * and its button scrolls down here.
  *
  * It is the same grid and the same catalogue as /our-work, so a piece cannot
  * appear in one and be missing from the other, and every tile leads to the
@@ -32,7 +37,7 @@ export function WorkLibrary() {
   return (
     <section
       id="library"
-      className="relative isolate overflow-hidden py-16 sm:py-20"
+      className="relative isolate overflow-hidden py-12 sm:py-14"
     >
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-4">
@@ -55,7 +60,7 @@ export function WorkLibrary() {
           </Reveal>
         </div>
 
-        <Reveal variant="scene" className="mt-10">
+        <Reveal variant="scene" className="mt-8">
           <WorkGrid items={work.slice(0, ON_HOMEPAGE)} />
         </Reveal>
       </div>

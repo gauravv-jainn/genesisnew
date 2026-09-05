@@ -100,14 +100,38 @@ export function WatchCluster({
 
   return (
     <div
-      className={cn(
-        "relative isolate w-full overflow-hidden",
-        // Fade the cluster out at every edge so it reads as a window onto
-        // something larger, not a box with items clipped against a hard line.
-        "[mask-image:radial-gradient(75%_75%_at_50%_50%,black_55%,transparent_100%)]",
-        className,
-      )}
-      style={{ height }}
+      className={cn("relative isolate w-full overflow-hidden", className)}
+      style={{
+        height,
+        /*
+          THE FADE HAS TO REACH ZERO AT THE EDGE, which is the whole fix.
+
+          This was one radial — 75% 75% at 50% 50%, black to 55%, transparent
+          at 100% — and a radial sized in percentages of the BOX is not sized
+          in percentages of the visible area. On the 400px logo wall its
+          vertical radius was 300px from the centre while the box edge is only
+          200px away, so the gradient was still at 74% opacity exactly where
+          overflow:hidden cut it. Measured, the wall's content ran from -30px
+          to 430px inside that 400px box: 30px of card guillotined at
+          three-quarter brightness, top and bottom. The people wall was worse,
+          69px off the bottom.
+
+          Two linear gradients intersected instead. Each runs to fully
+          transparent AT its own edge, so whatever the lattice does outside the
+          box has already faded to nothing before the clip can reach it, and
+          the middle stays at full opacity rather than being dimmed by a
+          vignette. The bands are wider vertically than horizontally because
+          that is where the honeycomb overruns.
+        */
+        maskImage:
+          "linear-gradient(90deg, transparent 0%, #000 13%, #000 87%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%)",
+        WebkitMaskImage:
+          "linear-gradient(90deg, transparent 0%, #000 13%, #000 87%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%)",
+        // Both spellings: the standard property, and the older WebKit one for
+        // Safari versions that only understand that.
+        maskComposite: "intersect",
+        WebkitMaskComposite: "source-in",
+      }}
       aria-describedby={clipId}
       onPointerMove={(event) => {
         if (prefersReducedMotion) return;

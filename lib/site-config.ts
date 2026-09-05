@@ -47,9 +47,10 @@ export const siteConfig = {
 /**
  * Primary navigation — the four verticals first, then the rest.
  *
- * NO "WORK" ITEM. The work now appears twice on the homepage — a short rail
- * near the top and the full library after Studios — so a nav entry pointing
- * at one of them is ambiguous, and the verticals are the way in.
+ * NO "WORK" ITEM. There is now exactly one browse on the homepage — the
+ * library, below the four verticals — and Studios' own reel wall points down
+ * to it. The verticals are the way in; a reader who wants the catalogue
+ * reaches it from any of them.
  *
  * FLAT, NOT A DROPDOWN. The verticals lived behind a Capabilities menu, on
  * the reasoning that nine items crowd a pill. Genesis wants them on the bar

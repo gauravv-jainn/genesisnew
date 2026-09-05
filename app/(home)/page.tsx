@@ -8,7 +8,6 @@ import { ClientLogos } from "./components/client-logos";
 import { FooterCta } from "./components/footer-cta";
 import { InfluencerMarketing } from "./components/influencer-marketing";
 import { Journey } from "./components/journey";
-import { Portfolio } from "./components/portfolio";
 import { Services } from "./components/services";
 import { Studios } from "./components/studios";
 import { WorkLibrary } from "./components/work-library";
@@ -65,23 +64,31 @@ export default function HomePage() {
       {/* 01 — the Brain. Four verticals, one system, and the way in. */}
       <Services />
 
-      {/* 02 — the work, before any more talking. */}
-      <Portfolio />
-
-      {/* 03 — proof: who Genesis has done it for. */}
+      {/* 02 — proof: who Genesis has done it for. */}
       <ClientLogos />
 
-      {/* 04-07 — the four verticals, in the brief's order. */}
+      {/* 03-06 — the four verticals, in the brief's order. */}
       <InfluencerMarketing />
       <Studios />
-      {/*
-        The full library sits here rather than beside the rail at the top: a
-        visitor who has just watched the production wall is exactly the one who
-        wants to see everything else, and the rail up top is a trailer for it.
-      */}
-      <WorkLibrary />
       <AiContent />
       <BrandingDesign />
+
+      {/*
+        07 — THE LIBRARY, and the only browse on the page. Genesis counted the
+        work three times over: a poster rail at the top under "Selected work",
+        the Studios reel wall, and this grid between Studios and AI Lab. Three
+        answers to "show me what you've made", two of them trailers for each
+        other.
+
+        Two now, with different jobs. The reel wall inside Studios is that
+        division showing its own footage, and its button sends you here rather
+        than off to another page. This is the browse: everything, filterable,
+        and placed after all four verticals so a visitor has met the whole
+        ecosystem before being handed the catalogue. The rail that used to open
+        the page is gone outright — it was the same catalogue, four cards
+        shorter.
+      */}
+      <WorkLibrary />
 
       {/*
         Positioning and history, together. The brief asks to cut explanatory

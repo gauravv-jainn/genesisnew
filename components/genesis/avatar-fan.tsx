@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
@@ -37,6 +40,22 @@ import { cn } from "@/lib/utils";
  * written down: the board keeps every card at full brightness, and the
  * outermost one is as vivid as the centre. Fading the flanks produces the
  * generic 3D-carousel look the board is not.
+ *
+ * IT DEALS ITSELF, which is what Genesis's animation shows and what this was
+ * missing: the fan simply existed, fully spread, the moment the section
+ * appeared. The hand now arrives stacked — every card at zero rotation, one
+ * on top of another, sitting a little low — and opens outward from the middle
+ * as it comes into view.
+ *
+ * THE STAGGER IS BY DISTANCE FROM THE CENTRE, not by index. Dealing left to
+ * right would put the upright card, the one the whole fan is arranged around,
+ * fourth in a queue. Ordering by distance lands the centre first and then
+ * releases each pair outward, which is how a hand of cards actually opens and
+ * what makes the middle read as the card being presented rather than as the
+ * one that happens to be in the middle.
+ *
+ * ONCE, and never again on the way back up: a fan that re-deals every time it
+ * re-enters the viewport turns a flourish into a tic.
  */
 
 /** Placeholder grounds, one per position, running the deck's spectrum warm to
@@ -87,6 +106,12 @@ export function AvatarFan({
 }) {
   // The middle card, whichever way the roster is ordered.
   const centre = (avatars.length - 1) / 2;
+  /*
+    Reduce Motion gets the finished fan, not a stack. The spread is the
+    layout, not decoration — collapsing to a pile and staying there would
+    leave six of the seven avatars hidden behind the seventh.
+  */
+  const still = useReducedMotion();
 
   return (
     /*
@@ -113,7 +138,7 @@ export function AvatarFan({
         const isCentre = distance < 0.5;
 
         return (
-          <div
+          <motion.div
             key={avatar.id}
             className="absolute inset-x-0 top-0 flex justify-center"
             style={{
@@ -121,7 +146,24 @@ export function AvatarFan({
               // from the card being presented.
               zIndex: Math.round((avatars.length - distance) * 10),
               transformOrigin: PIVOT,
-              transform: `rotate(${(offset * STEP).toFixed(2)}deg)`,
+            }}
+            /*
+              Rotation is animated rather than written into `transform`, so
+              Framer owns the property outright — a static transform here and
+              an animated one there fight over the same matrix and the fan
+              snaps.
+            */
+            initial={
+              still ? false : { rotate: 0, y: 26, opacity: 0 }
+            }
+            whileInView={{ rotate: offset * STEP, y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{
+              // Long and heavily eased-out: the cards leave the stack quickly
+              // and settle slowly, which is the weight a dealt card has.
+              duration: 0.85,
+              delay: distance * 0.085,
+              ease: [0.16, 1, 0.3, 1],
             }}
           >
             {/*
@@ -176,7 +218,7 @@ export function AvatarFan({
               </figcaption>
             </figure>
             </Link>
-          </div>
+          </motion.div>
         );
       })}
     </div>

@@ -95,6 +95,10 @@ export const services = {
   items: [
     {
       title: "Genesis.Influence",
+      /* The colour this vertical GLOWS when you point at it. One stop out of
+         its own ramp — a hover state has to be a single colour, and picking it
+         here keeps it beside the ramp it came from. */
+      glow: "#f7719e",
       /*
        * THE SHORT NAME, used where the Genesis wordmark is already in the
        * picture. The divisions board sets the four around the mark and drops
@@ -125,6 +129,10 @@ export const services = {
     },
     {
       title: "Genesis.BrandDesign",
+      /* The colour this vertical GLOWS when you point at it. One stop out of
+         its own ramp — a hover state has to be a single colour, and picking it
+         here keeps it beside the ramp it came from. */
+      glow: "#e2a6ff",
       short: "Brand & Design",
       href: "/#brand-design",
       caption: "Branding | Design | Positioning | Collaterals",
@@ -133,6 +141,10 @@ export const services = {
     },
     {
       title: "Genesis.Studios",
+      /* The colour this vertical GLOWS when you point at it. One stop out of
+         its own ramp — a hover state has to be a single colour, and picking it
+         here keeps it beside the ramp it came from. */
+      glow: "#ffab52",
       short: "Studios",
       href: "/#studios",
       caption: "Strategy, scripting & content production",
@@ -141,6 +153,10 @@ export const services = {
     },
     {
       title: "Genesis.AILab",
+      /* The colour this vertical GLOWS when you point at it. One stop out of
+         its own ramp — a hover state has to be a single colour, and picking it
+         here keeps it beside the ramp it came from. */
+      glow: "#ff8fb8",
       short: "AI Lab",
       href: "/#ai-lab",
       caption: "Avatars | Multilingual content | Games & apps",

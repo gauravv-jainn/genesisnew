@@ -36,10 +36,12 @@ import { services } from "@/lib/home-content";
  * toward the page edges. It is the only thing holding the corners to the
  * middle once the type is this large.
  *
- * NO HOVER STATE. The previous list lit each row with a fill cut at the
- * mark's own diagonal. These are not links — no division has a page yet — and
- * a hover flourish on text that cannot be clicked promises something that
- * does not happen. The device comes back when the destinations do.
+ * THE HOVER STATE IS A GLOW. It was a rule that grew out from under each
+ * name; Genesis asked for the line gone and a shadow in its place. Each
+ * vertical lights in its OWN colour rather than in the interface yellow, and
+ * because the names are gradients clipped to their glyphs it has to be a
+ * drop-shadow filter — a text-shadow paints behind transparent text and would
+ * put a coloured slab where the halo should be.
  */
 
 /**
@@ -52,19 +54,6 @@ const PLACEMENT = [
   "lg:col-start-1 lg:row-start-2 lg:items-end lg:text-right",
   "lg:col-start-3 lg:row-start-2 lg:items-start lg:text-left",
   "lg:col-start-3 lg:row-start-1 lg:items-start lg:text-left",
-];
-
-/**
- * Which edge the hover rule grows from — toward the sphere, matching the way
- * each column rags. Kept beside PLACEMENT because it is the same decision,
- * and written as whole class strings for the same reason: Tailwind reads the
- * source for literals and compiles nothing it cannot see.
- */
-const RULE_ORIGIN = [
-  "origin-left lg:origin-right",
-  "origin-left lg:origin-right",
-  "origin-left",
-  "origin-left",
 ];
 
 export function Services() {
@@ -107,7 +96,7 @@ export function Services() {
 
       <Spectrum />
 
-      <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
+      <div className="relative z-[2] mx-auto w-full max-w-7xl px-6">
         {/*
           NO HEADER AT ALL. The label, the heading and the standfirst have all
           gone at Genesis's request: the hero is the orb and the four names,
@@ -131,7 +120,17 @@ export function Services() {
           first, because on a phone a sphere behind live text is a legibility
           problem dressed as atmosphere.
         */}
-        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-12 lg:grid-cols-[1fr_minmax(0,28rem)_1fr] lg:grid-rows-2 lg:gap-x-14 lg:gap-y-12">
+        {/*
+          ONE LINE EACH, WHICH IS A MEASUREMENT NOT A PREFERENCE. At the old
+          sizes the side columns were 272px and "Brand & Design" needed 406px
+          at 56px type, so it broke over two lines; three of the four captions
+          needed just over 300px and broke too. Three changes buy the width
+          back: the container goes to max-w-7xl, the orb's own track narrows
+          between lg and xl where the squeeze is worst, and the gaps come in.
+          The side columns are 296px at lg and 360px from xl up, which is what
+          the type below is sized against.
+        */}
+        <RevealGroup className="mt-14 grid items-center gap-y-12 sm:mt-12 lg:grid-cols-[1fr_minmax(0,20rem)_1fr] lg:grid-rows-2 lg:gap-x-8 lg:gap-y-12 xl:grid-cols-[1fr_minmax(0,26rem)_1fr] xl:gap-x-12">
           <RevealItem className="order-first lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1">
             {/*
               The orb overruns its own column by 11% each side, into the grid
@@ -176,29 +175,34 @@ export function Services() {
               <Link
                 href={service.href}
                 className="group flex flex-col gap-2 rounded-sm outline-none transition-transform duration-300 ease-out focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-transparent motion-safe:hover:-translate-y-0.5"
+                style={{ "--glow": service.glow } as CSSProperties}
               >
                 <h3
-                  className="ramp-text text-balance text-h3 font-normal leading-[1.05] tracking-tight sm:text-h2 lg:text-h1"
+                  /*
+                    NOWRAP, and a size clamped to the column rather than to the
+                    type scale. text-h1 is 56px, at which "Brand & Design"
+                    measures 406px against a 296px column — so the scale was
+                    the thing forcing the break. This tops out at 48px, where
+                    it measures 348px, and scales down with the viewport
+                    between lg and xl where the column is narrowest.
+
+                    THE GLOW IS THE HOVER STATE. It used to be a rule that grew
+                    out from under the name; Genesis asked for the line gone
+                    and a shadow instead. drop-shadow rather than text-shadow
+                    because the name is a gradient clipped to the glyphs, and
+                    text-shadow paints behind transparent text — it would draw
+                    a coloured slab, not a halo. The colour is the division's
+                    own, so each vertical lights up as itself.
+                  */
+                  className="ramp-text whitespace-nowrap text-h3 font-normal leading-[1.05] tracking-tight transition-[filter] duration-300 ease-out group-hover:[filter:drop-shadow(0_0_10px_var(--glow))_drop-shadow(0_0_34px_var(--glow))] sm:text-h2 lg:text-[clamp(2rem,3.6vw,3rem)] motion-reduce:transition-none"
                   style={{ "--ramp": service.ramp } as CSSProperties}
                 >
                   {service.short}
                 </h3>
 
-                <p className="max-w-[18rem] text-small leading-relaxed text-ash transition-colors duration-300 group-hover:text-bone">
+                <p className="whitespace-nowrap text-[0.8125rem] leading-relaxed text-ash transition-colors duration-300 group-hover:text-bone xl:text-small">
                   {service.caption}
                 </p>
-
-                {/*
-                  The rule is the hover state, drawn in the division's own
-                  ramp rather than in the interface yellow — each vertical
-                  lights up as itself. It grows from whichever edge the column
-                  rags toward, so it runs into the sphere.
-                */}
-                <span
-                  aria-hidden
-                  className={`mt-1 h-px w-0 transition-[width] duration-500 ease-out group-hover:w-16 ${RULE_ORIGIN[index] ?? "origin-left"}`}
-                  style={{ backgroundImage: service.ramp }}
-                />
               </Link>
             </RevealItem>
           ))}

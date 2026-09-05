@@ -66,7 +66,7 @@ export function InfluencerMarketing() {
           />
         </Reveal>
 
-        <div className="mt-10 grid items-center gap-8 lg:grid-cols-[0.82fr_1.18fr]">
+        <div className="mt-6 grid items-center gap-8 lg:grid-cols-[0.82fr_1.18fr]">
           {/*
             min-w-0 is load-bearing. A grid item defaults to `min-width: auto`,
             which refuses to shrink below its content's longest unbreakable

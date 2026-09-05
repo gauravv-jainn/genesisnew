@@ -93,7 +93,7 @@ export function AiContent() {
         above the fan it was a claim made before anything was shown, and here
         it is the caption on seven faces the reader has just looked at.
       */}
-      <Reveal delay={0.05} className="mt-12">
+      <Reveal delay={0.05} className="mt-6">
         <p className="mx-auto max-w-2xl text-pretty text-center text-body leading-relaxed text-ash sm:text-lead">
           {aiContent.body}
         </p>

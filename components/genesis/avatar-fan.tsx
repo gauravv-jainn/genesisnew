@@ -131,7 +131,15 @@ export function AvatarFan({
     */
     <div
       className={cn(
-        "relative h-[calc(clamp(7.5rem,14vw,13rem)*2.2)] w-full",
+        /*
+          2.08, NOT 2.2. Measured with the fan actually SPREAD — the first
+          reading was taken while it was still stacked, which put the cards
+          150px higher than they really sit and would have had me cut the box
+          nearly in half. Dealt, the cards span 393px of a 444px box, so there
+          were 52px doing nothing under them. 2.08 leaves about 27, which is
+          what the shadows and the sway's ±0.9 degrees need.
+        */
+        "relative h-[calc(clamp(7.5rem,14vw,13rem)*2.08)] w-full",
         /*
           IT NEEDS 775px AND A PHONE HAS 375.
 

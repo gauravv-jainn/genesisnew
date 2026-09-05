@@ -99,11 +99,6 @@ export function Studios() {
             />
           </Reveal>
 
-          <Reveal delay={0.1} className="mt-5 max-w-2xl">
-            <p className="text-pretty text-small leading-relaxed text-ash sm:text-body">
-              {studios.body}
-            </p>
-          </Reveal>
         </div>
       </div>
 
@@ -142,7 +137,19 @@ export function Studios() {
           was the last thing standing between Studios and one screen.
         */}
 
-        <Reveal delay={0.1} className="mt-8 flex flex-wrap gap-3">
+        {/*
+          THE COPY UNDER THE WALL, above the buttons — the same order AI Lab
+          uses, and for the same reason. Over the reel it was a description of
+          footage the reader had not seen yet; under it, it is the caption on
+          footage they just watched.
+        */}
+        <Reveal delay={0.05}>
+          <p className="mx-auto max-w-2xl text-pretty text-center text-body leading-relaxed text-ash sm:text-lead">
+            {studios.body}
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.1} className="mt-8 flex flex-wrap justify-center gap-3">
           <GlassButton
             href="/#contact"
             quickContact="studios:plan-a-shoot"

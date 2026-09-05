@@ -13,6 +13,7 @@ import {
   type FormKind,
 } from "@/lib/forms";
 import { SubmissionType } from "@/lib/generated/prisma/enums";
+import { appendSubmission, isSheetsConfigured } from "@/lib/google-sheets";
 
 /**
  * Contact / waitlist submission.
@@ -94,13 +95,51 @@ export async function submitContactForm(
     };
   }
 
-  if (!isDatabaseConfigured()) {
-    // Pre-credentials: do not pretend the message was stored.
+  /*
+    EITHER SINK WILL DO. Genesis asked for the form's backend to be a Google
+    Sheet, and a sheet is where the people who act on an enquiry actually
+    work — so a submission no longer depends on the database existing. It
+    still goes to both when both are configured; what changed is that the
+    form stops refusing the visitor when only one is.
+
+    If NEITHER is configured it must still refuse, and say so honestly rather
+    than accepting a message into nothing.
+  */
+  if (!isDatabaseConfigured() && !isSheetsConfigured()) {
     return {
       status: "error",
       message:
-        "The form is not connected to a database yet. Please email hello@genesismedia.co in the meantime.",
+        "The form is not connected yet. Please email hello@genesismedia.co in the meantime.",
     };
+  }
+
+  /*
+    The sheet is written FIRST and its result kept, because it is the copy a
+    human will read. It never throws — see appendSubmission — so a Sheets
+    outage cannot cost the database write below.
+  */
+  const sheeted = await appendSubmission({
+    type: data.type,
+    name: data.name,
+    email: data.email,
+    company: data.company,
+    message: data.message,
+    source: data.source,
+  });
+
+  if (!isDatabaseConfigured()) {
+    return sheeted
+      ? {
+          status: "success",
+          message:
+            data.type === "CAREERS_WAITLIST"
+              ? "You're on the list. We'll be in touch when a matching role opens."
+              : "Thanks — we'll be in touch shortly.",
+        }
+      : {
+          status: "error",
+          message: "Something went wrong saving that. Please try again.",
+        };
   }
 
   try {
@@ -135,11 +174,18 @@ export async function submitContactForm(
           : "Thanks — we'll be in touch shortly.",
     };
   } catch {
-    // Never surface database internals to a public form.
-    return {
-      status: "error",
-      message: "Something went wrong saving that. Please try again.",
-    };
+    /*
+      The database write failed. If the sheet took it, the enquiry is not lost
+      and the visitor should not be told to send it again — telling someone to
+      retry a message that arrived is how you get two of them. Never surface
+      database internals to a public form either way.
+    */
+    return sheeted
+      ? { status: "success", message: "Thanks — we'll be in touch shortly." }
+      : {
+          status: "error",
+          message: "Something went wrong saving that. Please try again.",
+        };
   }
 }
 
@@ -227,6 +273,34 @@ export async function submitGenesisForm(
     if (value) metadata[field.name] = value;
   }
 
+  // Same two-sink rule as the contact action above.
+  if (!isDatabaseConfigured() && !isSheetsConfigured()) {
+    return {
+      status: "error",
+      message:
+        "The form is not connected yet. Please email hello@genesismedia.co in the meantime.",
+    };
+  }
+
+  const sheeted = await appendSubmission({
+    type: spec.submissionType,
+    name: data.name!,
+    email: data.email!,
+    company: data.company,
+    phone: data.phone,
+    message: data.message,
+    source: data.source,
+  });
+
+  if (!isDatabaseConfigured()) {
+    return sheeted
+      ? { status: "success", message: spec.successMessage }
+      : {
+          status: "error",
+          message: "Something went wrong saving that. Please try again.",
+        };
+  }
+
   try {
     const record = await getPrisma().contactSubmission.create({
       data: {
@@ -254,11 +328,13 @@ export async function submitGenesisForm(
 
     return { status: "success", message: spec.successMessage };
   } catch {
-    // Never surface database internals to a public form.
-    return {
-      status: "error",
-      message: "Something went wrong saving that. Please try again.",
-    };
+    // See the note in the contact action: a sheeted lead is not a lost one.
+    return sheeted
+      ? { status: "success", message: spec.successMessage }
+      : {
+          status: "error",
+          message: "Something went wrong saving that. Please try again.",
+        };
   }
 }
 

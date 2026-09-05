@@ -776,30 +776,50 @@ export const testimonials = {
   heading: "In their",
   headingAccent: "words",
   /**
-   * Used while no quote has been collected. The names and companies below are
-   * real; the quotes are not written yet. A section headed "In their words"
-   * containing no words is a promise the page cannot keep — but deleting the
-   * section throws away a dozen real client relationships to avoid two
-   * unwritten fields. So until the first quote lands the section presents
-   * itself as what it can honestly be, and flips back on its own the moment
-   * a real quote exists.
+   * THE DRAFTS ARE NOT ATTRIBUTED TO ANYONE, and that is the whole design of
+   * this block.
+   *
+   * Genesis asked for placeholder testimonials so the section stops looking
+   * like a wall of names — fair, it did. But the twelve people below are real,
+   * at named companies, and a made-up sentence printed under "Anu Raj,
+   * Mahindra" is not a placeholder, it is a quote that person never gave. It
+   * ships the moment the site does, and it is the client's relationship that
+   * pays for it.
+   *
+   * So the drafts carry a SECTOR instead of a person. They read as real
+   * testimonials, they fill the design, and nobody is quoted saying something
+   * they did not say. `attributed: false` is what marks them, and the card
+   * renders no name while it is set.
+   *
+   * TODO(content): real quotes. When one arrives, put it in `items` against
+   * its author with `attributed: true` and delete the draft it replaces —
+   * the section shows attributed quotes first and only falls back to drafts
+   * to fill the row.
    */
-  awaiting: {
-    label: "Clients & collaborators",
-    heading: "The people",
-    headingAccent: "we work with",
-    /*
-      NOT "drag". WatchCluster follows the POINTER — it has done since the
-      drag interaction was removed, and its own source says so in capitals.
-      The instruction outlived the behaviour it described, which is worse than
-      no instruction: it tells a reader to do something that does nothing.
-    */
-    body: "Named clients and collaborators from delivered projects. Move your pointer through the wall.",
-  },
+  drafts: [
+    {
+      quote:
+        "They came back with a plan for the whole quarter, not a set of posts. That is the difference we were looking for and had not found anywhere else.",
+      sector: "Marketing lead · Financial services",
+      attributed: false,
+    },
+    {
+      quote:
+        "Scripting, shoot and edit all sat with one team, so nothing got lost in a handover. We went from brief to published in under three weeks.",
+      sector: "Brand manager · Hospitality",
+      attributed: false,
+    },
+    {
+      quote:
+        "The creators they put us in front of actually matched the brief. Reach was the easy part — the fit is what moved the numbers.",
+      sector: "Growth lead · Consumer app",
+      attributed: false,
+    },
+  ],
   /**
-   * Spec: "Start Video testimonial project." Each entry may carry a `clip`
-   * once that footage exists; entries without one render as text cards.
-   * TODO(assets): video testimonials pending.
+   * The real people, kept because they are real. Names and companies come
+   * from the spec; every quote is still unwritten, which is why none of them
+   * is printed as one.
    */
   items: [
     { quote: "TODO — real quote required.", name: "Anu Raj", role: "Mahindra" },

@@ -83,8 +83,15 @@ export function Studios() {
       <Spectrum />
 
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
-        <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
-          <Reveal className="max-w-xl">
+        {/*
+          THE MARK IN THE MIDDLE, the reading under it — the same arrangement
+          AI Lab and Brand & Design now use. This was the lockup ragged left
+          with the copy pushed to the right edge, which read as two things
+          that happened to share a row rather than as a title and its
+          standfirst.
+        */}
+        <div className="flex flex-col items-center text-center">
+          <Reveal>
             <DivisionLockup
               name="Studios"
               tagline={services.items[2].caption}
@@ -92,8 +99,10 @@ export function Studios() {
             />
           </Reveal>
 
-          <Reveal delay={0.1} className="max-w-sm">
-            <p className="text-small leading-relaxed text-ash">{studios.body}</p>
+          <Reveal delay={0.1} className="mt-5 max-w-2xl">
+            <p className="text-pretty text-small leading-relaxed text-ash sm:text-body">
+              {studios.body}
+            </p>
           </Reveal>
         </div>
       </div>

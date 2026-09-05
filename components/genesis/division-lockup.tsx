@@ -25,8 +25,14 @@ import { cn } from "@/lib/utils";
  *     at most 766, so next/image has three times the pixels it needs at 1x
  *     and enough at 3x.
  *
- * The one cost that cannot be answered is that the tagline is burned into the
- * artwork and therefore cannot re-wrap. See TARGET_HEIGHT.
+ * THE ARTWORK IS THE WORDMARK ONLY. Each supplied file carries the tagline
+ * burned in under the name, and cropping to the whole thing was what made the
+ * tagline unable to re-wrap — on a 375px screen Brand & Design's sat at about
+ * 10px because a 7.36:1 picture can only scale. Genesis asked for just the
+ * name and the rest cropped out, which is also the fix: the files split
+ * cleanly into two bands of ink with a gap between them, so the crop stops at
+ * the wordmark and the tagline goes back to being text. It sets in the page's
+ * own type, at the page's own size, and wraps.
  */
 
 /**
@@ -38,10 +44,10 @@ import { cn } from "@/lib/utils";
  * as the theme changes.
  */
 const LOCKUPS: Record<string, { slug: string; width: number; height: number }> = {
-  Influence: { slug: "influence", width: 1514, height: 274 },
-  Studios: { slug: "studios", width: 1374, height: 276 },
-  "AI Lab": { slug: "ai-lab", width: 1347, height: 269 },
-  "Brand & Design": { slug: "brand-design", width: 2017, height: 274 },
+  Influence: { slug: "influence", width: 1514, height: 169 },
+  Studios: { slug: "studios", width: 1374, height: 171 },
+  "AI Lab": { slug: "ai-lab", width: 1347, height: 164 },
+  "Brand & Design": { slug: "brand-design", width: 2017, height: 192 },
 };
 
 /**
@@ -160,9 +166,12 @@ export function DivisionLockup({
         same fault the poster cards had with their baked-in captions. This is
         the copy that is read, searched and translated.
       */}
-      <span className="sr-only">
-        Genesis.{name} — {tagline}
-      </span>
+      {/*
+        The name, for anything that cannot see the picture. The tagline is NOT
+        here any more — it is real text below, so repeating it would say it
+        twice to a screen reader.
+      */}
+      <span className="sr-only">Genesis.{name}</span>
 
       {/*
         The light variant sits in the flow and sets the box; the dark one is
@@ -192,6 +201,25 @@ export function DivisionLockup({
           className={cn("absolute inset-0 h-auto w-full")}
           style={{ opacity: "var(--logo-invert, 0)" }}
         />
+      </span>
+
+      {/*
+        THE TAGLINE, AS TYPE AGAIN. It is part of the supplied artwork and was
+        being rendered as part of the picture, which is why it could not wrap.
+        Cropped out of the image and set here it takes the page's own size and
+        breaks where it needs to — and it is the same string that was already
+        in the data, so nothing about the wording changes.
+
+        `fluid` is the divisions board around the orb, where four of these sit
+        in narrow side columns; there the tagline is a size down.
+      */}
+      <span
+        className={cn(
+          "mt-2 block text-pretty leading-relaxed text-ash",
+          fluid ? "text-micro sm:text-small" : "text-small sm:text-lead",
+        )}
+      >
+        {tagline}
       </span>
     </Tag>
   );

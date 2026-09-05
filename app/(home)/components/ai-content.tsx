@@ -27,27 +27,23 @@ export function AiContent() {
         tagline: services.items[3].caption,
         ramp: services.items[3].ramp,
       }}
-      body={aiContent.body}
-      // Teal appears NOWHERE in the references (PROGRESS.md:190). This section was painting itself mint-green inside a brand brand.
+      /*
+        NO `body` HERE. The section's copy used to sit in the header beside
+        the lockup; Genesis asked for it below the avatars and above the
+        buttons, which is where it now renders — see further down. Passing it
+        here as well would print it twice.
+      */
       tone="brand"
       origin="center"
       intensity={0.14}
       /*
-        SPLIT, NOT CENTRED, AND THAT IS THE CLARITY FIX. Centred stacked three
-        text blocks down the middle of the section — the GENESIS.AI Lab lockup,
-        a three-line paragraph under it, and then "AI Avatars & Realism" under
-        that. Two headings of similar weight, one above the other, with prose
-        wedged between them: nothing in the block said which was the subject,
-        which is what Genesis meant by the heading being unclear.
-
-        The deck's own AI Lab board has the lockup small in the top-left corner
-        and one heading in the middle of the frame. Split puts it back that
-        way: lockup left, the paragraph beside it rather than beneath, and
-        "AI Avatars & Realism" left as the only centred thing in the section
-        and unmistakably the subject of the fan below it. It takes 100px off
-        the section as a side effect.
+        CENTRED, AND THIS IS THE PATTERN NOW. The lockup is the mark, alone,
+        in the middle of the section. It was `split` — lockup left, prose
+        right — which was the fix for a worse arrangement, but the mark is
+        artwork rather than a heading and artwork wants the middle of the
+        frame. The reading follows the showcase rather than crowding it.
       */
-      align="split"
+      align="center"
     >
       {/*
         FULL-BLEED. The fan runs edge to edge and clips at both sides, the
@@ -89,6 +85,18 @@ export function AiContent() {
         </div>
 
         <AvatarFan avatars={aiContent.avatars} className="mt-10 sm:mt-12" />
+      </Reveal>
+
+      {/*
+        THE SECTION'S COPY, below the roster and above the buttons, where
+        Genesis asked for it. It reads better here than it did in the header:
+        above the fan it was a claim made before anything was shown, and here
+        it is the caption on seven faces the reader has just looked at.
+      */}
+      <Reveal delay={0.05} className="mt-12">
+        <p className="mx-auto max-w-2xl text-pretty text-center text-body leading-relaxed text-ash sm:text-lead">
+          {aiContent.body}
+        </p>
       </Reveal>
 
       {/*

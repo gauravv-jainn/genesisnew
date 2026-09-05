@@ -33,7 +33,9 @@ export function BrandingDesign() {
         ramp: services.items[1].ramp,
       }}
       body={branding.body}
-      align="split"
+      // Centred, like AI Lab and Studios: the mark is artwork and sits in the
+      // middle of its section. See the note in ai-content.
+      align="center"
       tone="brand"
       origin="top-left"
       intensity={0.16}

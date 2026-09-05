@@ -50,7 +50,23 @@ export function InfluencerMarketing() {
       />
 
       <div className="relative z-[2] mx-auto w-full max-w-7xl px-6">
-        <div className="grid items-center gap-8 lg:grid-cols-[0.82fr_1.18fr]">
+        {/*
+          THE MARK ABOVE THE GRID, CENTRED — the arrangement every division
+          uses now. It used to sit in the left column, stacked over the
+          niches and the copy, which made the section's title one item in a
+          list rather than the thing the section is called. Pulling it out
+          leaves the two columns to do what they are for: the reading on one
+          side, the constellation on the other.
+        */}
+        <Reveal className="flex flex-col items-center text-center">
+          <DivisionLockup
+            name="Influence"
+            tagline={services.items[0].caption}
+            ramp={services.items[0].ramp}
+          />
+        </Reveal>
+
+        <div className="mt-10 grid items-center gap-8 lg:grid-cols-[0.82fr_1.18fr]">
           {/*
             min-w-0 is load-bearing. A grid item defaults to `min-width: auto`,
             which refuses to shrink below its content's longest unbreakable
@@ -67,14 +83,6 @@ export function InfluencerMarketing() {
               vertical, and the headline alone was most of the reason the
               section ran to 1.29 screens.
             */}
-            <Reveal>
-              <DivisionLockup
-                name="Influence"
-                tagline={services.items[0].caption}
-                ramp={services.items[0].ramp}
-              />
-            </Reveal>
-
             {/*
               THE NICHES, BELOW THE HEADLINE, per the mockup's eyebrow slot —
               but set as chips rather than as one letterspaced line.
@@ -90,7 +98,7 @@ export function InfluencerMarketing() {
               A list, semantically, because that is what it is.
             */}
             <Reveal delay={0.06}>
-              <ul className="mt-5 flex flex-wrap gap-x-2 gap-y-2">
+              <ul className="flex flex-wrap gap-x-2 gap-y-2">
                 {influencer.niches.map((niche) => (
                   <li
                     key={niche}

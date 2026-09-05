@@ -388,10 +388,10 @@ export const aiContent = {
     list them below — reel takes .mp4 paths, stills take images.
   */
   avatars: [
-    { id: "ivaanat", portrait: "/avatars/ivaanat.jpg", name: "Ivaanat", role: undefined as string | undefined,
+    { id: "ivaanat", portrait: "/avatars/ivaanat.jpg", name: "Ivaanat", role: "Fashion & Beauty" as string | undefined,
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
-    { id: "tanvi", portrait: "/avatars/tanvi.jpg", name: "Tanvi", role: undefined as string | undefined,
+    { id: "tanvi", portrait: "/avatars/tanvi.jpg", name: "Tanvi", role: "Head of Creatives" as string | undefined,
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
     { id: "jesko", portrait: "/avatars/jesko.jpg", name: "Jesko", role: "DJ | Techno artist",

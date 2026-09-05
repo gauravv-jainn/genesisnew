@@ -69,7 +69,43 @@ export function CaseStudies() {
                 "radial-gradient(closest-side, rgb(255 212 0 / 0.3) 0%, rgb(255 212 0 / 0.12) 42%, transparent 76%)",
             }}
           />
-          <PosterRail posters={posters} className="relative -mx-6 px-6" />
+          {/*
+            FULL-BLEED, WHICH IS THE ACTUAL FIX FOR THE CUT.
+
+            The rail used to end where the 72rem container ends. On a 1440
+            screen that put its right edge at 1296px with 144px of empty page
+            beyond it — so the last poster was not running off the screen, it
+            was being guillotined in the middle of the page with daylight to
+            its right. No amount of fading rescues that: a card dissolving at
+            the edge of the window reads as "there is more this way", and the
+            same card dissolving 144px short of the window reads as a
+            rendering fault, which is exactly what Genesis kept pointing at.
+
+            The rail now spans the viewport and pads itself back to the
+            container's gutter, so the first poster still lines up under the
+            heading while the last one runs off the actual edge of the screen.
+            It also means the rail is 1440 wide instead of 1152 against 1296 of
+            posters — above about 1300px nothing overflows at all any more, so
+            there is no cut to fade and useEdgeFade correctly draws none.
+            Below that it scrolls, and the fade lands on the window edge where
+            it belongs. The wrapper is clipped by Atmosphere's own
+            overflow-hidden, so 100vw cannot widen the page.
+          */}
+          <div className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden">
+            <PosterRail
+              posters={posters}
+              /*
+                The container is 72rem wide with its own 1.5rem gutter inside
+                it, so its text starts at (100vw - 72rem) / 2 + 1.5rem. The
+                padding has to be that same figure or the first poster sits a
+                gutter's width to the left of the heading it belongs under —
+                measured, 144px against the heading's 168px. Below 72rem the
+                whole expression falls under 1.5rem and the max holds the
+                phone gutter.
+              */
+              className="px-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))]"
+            />
+          </div>
         </div>
       </Reveal>
       {/*

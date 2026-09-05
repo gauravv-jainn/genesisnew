@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { GenesisForm } from "@/components/genesis/genesis-form";
+import { GlowWord } from "@/components/genesis/glow-word";
 import { Atmosphere } from "@/components/genesis/atmosphere";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
@@ -37,6 +38,13 @@ export default function CareersPage() {
       origin="top"
       intensity={0.2}
       className="relative isolate min-h-dvh overflow-hidden"
+      /*
+        The compact ground, not the page-wide one. See globals.css: the seven
+        stop 168deg ramp is written for the homepage and unrolls over many
+        screens; squeezed into this page's 1355px its warm middle stops land
+        directly behind the form, which is the mud Genesis kept pointing at.
+      */
+      style={{ background: "var(--page-ground-compact)" }}
     >
       <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-3xl flex-col items-center justify-center px-6 py-32 text-center">
         <Reveal>
@@ -52,22 +60,24 @@ export default function CareersPage() {
         </Reveal>
 
         {/*
-          THE ACCENT IS SET THE WAY EVERY OTHER HEADING ON THIS SITE IS.
+          THE CAPSULE IS BACK, and this time it survives the light theme.
 
-          It was a GlowWord — a lit word held in glass, which is a lovely thing
-          on a black page and was the last piece of the reference this page was
-          built to. On the light theme it rendered pale gold on near-white and
-          all but vanished: the glow IS the letterform there, and a glow needs
-          something dark to be a glow against.
+          I replaced GlowWord with plain serif italic because on light it
+          rendered pale cream on near-white and vanished — the glow IS the
+          letterform there, and a glow needs something dark to glow against.
+          Genesis wants the capsule, and they are right that it is the one
+          piece of character this page has.
 
-          Serif italic in --brand-ink is the site's own accent, and that token
-          already carries a dark value for light mode (#7a6000). One treatment,
-          both themes, and this heading finally matches the other twelve.
+          So GlowWord reads its colours from tokens now rather than carrying
+          light-on-dark values in its own file. On dark it is unchanged. On
+          light the word takes --brand-ink's dark gold, the halo becomes a warm
+          bloom BEHIND dark type instead of a light source, and the capsule
+          gets an edge you can see against paper.
         */}
         <Reveal delay={0.12}>
-          <p className="mt-2 font-serif text-h2 font-normal italic text-brand-ink sm:text-h1">
+          <GlowWord tone="warm" className="mt-6 text-h2 sm:text-h1 lg:text-h1">
             {careersPage.headingAccent}
-          </p>
+          </GlowWord>
         </Reveal>
 
         <Reveal delay={0.18}>

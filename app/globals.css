@@ -274,6 +274,47 @@
         #1e1526 84%,
         #120f18 100%
     );
+
+    /*
+       A SHORT PAGE'S GROUND.
+
+       --page-ground is a 168deg ramp with seven stops, written for the
+       homepage where it unrolls over many screens. On a page that is one and a
+       half screens tall — /careers is 1355px — the whole ramp is visible at
+       once, so its warm middle stops sit right behind the form and the page
+       reads as a violet top fading into mud. The gradient is not wrong; it is
+       being asked to do its job in a fifth of the distance.
+
+       This is the same idea over a short drop: fewer stops, one direction, and
+       no warm turn, so a page you can take in at a glance has a ground that
+       resolves rather than transitions.
+    */
+    --page-ground-compact: linear-gradient(
+        180deg,
+        #1c1540 0%,
+        #181231 46%,
+        #110e1e 100%
+    );
+
+    /*
+       GLOWWORD, which is a light source on dark and cannot be one on paper.
+
+       The component carried these as literals and they were built for a black
+       ground: cream type with a warm halo, in a barely-there glass capsule. On
+       the light theme that is pale cream on near-white — the glow IS the
+       letterform, so the word disappears entirely.
+
+       On light the same idea inverts: the ink goes to --brand-ink's dark gold,
+       the halo stops being light coming OFF the word and becomes a warm bloom
+       sitting behind it, and the capsule gets an edge that reads against
+       paper. Same shape, same character, legible either way.
+    */
+    --glow-ink: 255 244 220;
+    --glow-halo: 255 214 150;
+    --glow-capsule: 255 255 255 / 0.03;
+    --glow-edge: 255 255 255 / 0.15;
+    --glow-text-alpha: 0.9;
+    --glow-cast: 0.75;
     --surface-ink: #1a1a1a;
     --surface-raised: #222222;
     --surface-panel: #2b2b2b;
@@ -445,6 +486,34 @@
         #fffbf2 88%,
         #ffffff 100%
     );
+
+    /*
+       A SHORT PAGE'S GROUND.
+
+       --page-ground is a 168deg ramp with seven stops, written for the
+       homepage where it unrolls over many screens. On a page that is one and a
+       half screens tall — /careers is 1355px — the whole ramp is visible at
+       once, so its warm middle stops sit right behind the form and the page
+       reads as a violet top fading into mud. The gradient is not wrong; it is
+       being asked to do its job in a fifth of the distance.
+
+       This is the same idea over a short drop: fewer stops, one direction, and
+       no warm turn, so a page you can take in at a glance has a ground that
+       resolves rather than transitions.
+    */
+    --page-ground-compact: linear-gradient(
+        180deg,
+        #f4f0ff 0%,
+        #faf7fd 48%,
+        #f6f3ec 100%
+    );
+
+    --glow-ink: 122 96 0;
+    --glow-halo: 255 196 60;
+    --glow-capsule: 255 248 224 / 0.75;
+    --glow-edge: 122 96 0 / 0.22;
+    --glow-text-alpha: 0;
+    --glow-cast: 0.45;
     --chapter-ground: #111111;
     --chapter-blend: #ffffff;
     --surface-ink: #f5f5f5;
@@ -525,6 +594,34 @@
             #fffbf2 88%,
             #ffffff 100%
         );
+
+        /*
+           A SHORT PAGE'S GROUND.
+
+           --page-ground is a 168deg ramp with seven stops, written for the
+           homepage where it unrolls over many screens. On a page that is one and a
+           half screens tall — /careers is 1355px — the whole ramp is visible at
+           once, so its warm middle stops sit right behind the form and the page
+           reads as a violet top fading into mud. The gradient is not wrong; it is
+           being asked to do its job in a fifth of the distance.
+
+           This is the same idea over a short drop: fewer stops, one direction, and
+           no warm turn, so a page you can take in at a glance has a ground that
+           resolves rather than transitions.
+        */
+        --page-ground-compact: linear-gradient(
+            180deg,
+            #f4f0ff 0%,
+            #faf7fd 48%,
+            #f6f3ec 100%
+        );
+
+        --glow-ink: 122 96 0;
+        --glow-halo: 255 196 60;
+        --glow-capsule: 255 248 224 / 0.75;
+        --glow-edge: 122 96 0 / 0.22;
+        --glow-text-alpha: 0;
+        --glow-cast: 0.45;
         --chapter-ground: #111111;
         --chapter-blend: #ffffff;
         --surface-ink: #f5f5f5;

@@ -126,7 +126,20 @@ export function Atmosphere({
   tone,
   intensity,
   className,
-}: AuroraProps & { children: React.ReactNode }) {
+  style,
+}: AuroraProps & {
+  children: React.ReactNode;
+  /**
+   * A ground of this section's own.
+   *
+   * Normally there is none — see the note below, the field is one
+   * document-wide layer. A page whose whole height fits in a screen or two is
+   * the exception: PageAtmosphere's ramp is written to unroll over many, and
+   * compressed it resolves into its own middle. /careers passes
+   * --page-ground-compact for exactly that reason.
+   */
+  style?: React.CSSProperties;
+}) {
   return (
     /*
       NO GROUND AND NO SPECTRUM OF ITS OWN, and both removals are the same
@@ -137,7 +150,7 @@ export function Atmosphere({
       it shows through. What is left here is the section's own directional
       key light, masked so it cannot reach the boundary either.
     */
-    <div className={cn("relative isolate overflow-hidden", className)}>
+    <div className={cn("relative isolate overflow-hidden", className)} style={style}>
       <Aurora origin={origin} tone={tone} intensity={intensity} />
       {/* No <Grain /> here. It blends `overlay`, this box is `isolate`, and
           a section with no ground of its own gives it nothing to blend with

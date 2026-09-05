@@ -27,26 +27,49 @@ export function GlowWord({
 
   const { core, halo } = TONES[tone];
 
+  /*
+    THE TONE IS THE FALLBACK, THE THEME TOKENS DECIDE.
+
+    These values were literals built for a black ground, and on the light theme
+    the word vanished: pale cream on near-white, where the glow IS the
+    letterform. The tokens in globals.css flip with the theme — on light the
+    ink becomes --brand-ink's dark gold, the halo stops being light coming off
+    the word and becomes a warm bloom behind it, and the capsule gets an edge
+    that reads against paper.
+
+    Each `var()` keeps the tone value as its fallback, so a caller that renders
+    outside a themed root still gets the shape it asked for.
+  */
+  const ink = `var(--glow-ink, ${core})`;
+  const glow = `var(--glow-halo, ${halo})`;
+
   return (
     <span
       className={cn(
         "relative inline-flex items-center justify-center rounded-full px-8 py-2",
         // The capsule: barely-there glass so the word, not the frame, is lit.
-        "border border-white/15 bg-white/[0.03]",
         className,
       )}
       style={{
-        boxShadow: `0 0 60px -12px rgb(${halo} / 0.35), inset 0 0 40px -18px rgb(${core} / 0.5)`,
+        border: `1px solid rgb(var(--glow-edge, 255 255 255 / 0.15))`,
+        background: `rgb(var(--glow-capsule, 255 255 255 / 0.03))`,
+        boxShadow: `0 0 60px -12px rgb(${glow} / 0.35), inset 0 0 40px -18px rgb(${ink} / 0.5)`,
       }}
     >
       <span
         className="font-serif italic"
         style={{
-          color: `rgb(${core})`,
+          color: `rgb(${ink})`,
+          /*
+            On dark this is the word emitting light. On light --glow-text-alpha
+            is 0, which removes the halo from the TYPE — a bloom on dark ink
+            over paper reads as a printing fault — and leaves the capsule's own
+            glow to do the work.
+          */
           textShadow: [
-            `0 0 8px rgb(${core} / 0.9)`,
-            `0 0 26px rgb(${halo} / 0.65)`,
-            `0 0 62px rgb(${halo} / 0.4)`,
+            `0 0 8px rgb(${ink} / var(--glow-text-alpha, 0.9))`,
+            `0 0 26px rgb(${glow} / calc(var(--glow-text-alpha, 0.9) * 0.72))`,
+            `0 0 62px rgb(${glow} / calc(var(--glow-text-alpha, 0.9) * 0.44))`,
           ].join(","),
         }}
       >
@@ -58,7 +81,7 @@ export function GlowWord({
         aria-hidden
         className="pointer-events-none absolute -bottom-px left-1/2 h-px w-3/4 -translate-x-1/2"
         style={{
-          background: `linear-gradient(90deg, transparent, rgb(${core} / 0.75), transparent)`,
+          background: `linear-gradient(90deg, transparent, rgb(${ink} / var(--glow-cast, 0.75)), transparent)`,
         }}
       />
     </span>

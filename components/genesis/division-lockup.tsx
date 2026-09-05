@@ -51,6 +51,27 @@ const LOCKUPS: Record<string, { slug: string; width: number; height: number }> =
 };
 
 /**
+ * THE BOARD SET — the second supply, and a different mark rather than a
+ * different crop of the same one.
+ *
+ * These carry the SHORT name and no GENESIS prefix: "Influence", not
+ * "GENESIS.Influence". That is what the divisions board around the orb wants,
+ * because the wordmark is already at the sphere's core — with the full lockup
+ * in all four corners the composition said GENESIS five times.
+ *
+ * They also keep their tagline burned in, so a caller using these must NOT
+ * print the tagline again underneath. That double line is exactly what
+ * Genesis kept seeing, and here it is prevented by the component rather than
+ * by remembering.
+ */
+const BOARD: Record<string, { slug: string; width: number; height: number }> = {
+  Influence: { slug: "influence", width: 728, height: 147 },
+  Studios: { slug: "studios", width: 623, height: 148 },
+  "AI Lab": { slug: "ai-lab", width: 684, height: 145 },
+  "Brand & Design": { slug: "brand-design", width: 648, height: 148 },
+};
+
+/**
  * How tall a lockup stands at full size, in px.
  *
  * WIDTH IS WHAT IS CAPPED, NOT HEIGHT, and the difference matters on a phone.
@@ -83,6 +104,11 @@ const MAX_RATIO = Math.max(
   ...Object.values(LOCKUPS).map((l) => l.width / l.height),
 );
 
+/** The same figure for the board set, which has its own proportions. */
+const BOARD_MAX_RATIO = Math.max(
+  ...Object.values(BOARD).map((l) => l.width / l.height),
+);
+
 export function DivisionLockup({
   name,
   tagline,
@@ -90,6 +116,7 @@ export function DivisionLockup({
   as: Tag = "h2",
   height = TARGET_HEIGHT,
   fluid = false,
+  board = false,
   className,
 }: {
   /** The part after the dot — "Influence", "AI Lab". */
@@ -109,9 +136,14 @@ export function DivisionLockup({
    * lockups in one composition all stand the same height. See `sizing`.
    */
   fluid?: boolean;
+  /**
+   * Uses the short-name artwork, which carries its own tagline — so no
+   * tagline is printed beneath it. For the divisions board around the orb.
+   */
+  board?: boolean;
   className?: string;
 }) {
-  const lockup = LOCKUPS[name];
+  const lockup = board ? BOARD[name] : LOCKUPS[name];
 
   /*
     A division with no artwork falls back to the type it used to be rather
@@ -152,7 +184,7 @@ export function DivisionLockup({
     move the segment rather than overwrite the file.
   */
   const src = (variant: "light" | "dark") =>
-    `/brand/divisions/wordmark/${lockup.slug}-${variant}.png`;
+    `/brand/divisions/${board ? "board" : "wordmark"}/${lockup.slug}-${variant}.png`;
 
   /*
     FLUID MODE EXISTS SO FOUR LOCKUPS CAN SHARE A HEIGHT.
@@ -170,7 +202,9 @@ export function DivisionLockup({
     column / 7.36 tall, at every breakpoint, with nothing to keep in sync.
   */
   const sizing = fluid
-    ? { width: `${((ratio / MAX_RATIO) * 100).toFixed(3)}%` }
+    ? {
+        width: `${((ratio / (board ? BOARD_MAX_RATIO : MAX_RATIO)) * 100).toFixed(3)}%`,
+      }
     : { maxWidth: Math.round(height * ratio) };
   const maxWidth = Math.round(height * ratio);
 
@@ -187,7 +221,16 @@ export function DivisionLockup({
         here any more — it is real text below, so repeating it would say it
         twice to a screen reader.
       */}
-      <span className="sr-only">Genesis.{name}</span>
+      {/*
+        The full name for anything that cannot see the picture. The board's
+        artwork drops the GENESIS prefix for composition reasons; the
+        accessible name should not, and the tagline joins it there when the
+        picture is carrying it instead of the text below.
+      */}
+      <span className="sr-only">
+        Genesis.{name}
+        {board ? ` — ${tagline}` : ""}
+      </span>
 
       {/*
         The light variant sits in the flow and sets the box; the dark one is
@@ -220,23 +263,18 @@ export function DivisionLockup({
       </span>
 
       {/*
-        THE TAGLINE, AS TYPE AGAIN. It is part of the supplied artwork and was
-        being rendered as part of the picture, which is why it could not wrap.
-        Cropped out of the image and set here it takes the page's own size and
-        breaks where it needs to — and it is the same string that was already
-        in the data, so nothing about the wording changes.
-
-        `fluid` is the divisions board around the orb, where four of these sit
-        in narrow side columns; there the tagline is a size down.
+        THE TAGLINE, AS TYPE — but only where the picture does not already
+        carry it. The wordmark set was cropped to the name alone precisely so
+        this line could wrap; the board set keeps its tagline burned in, and
+        printing it again there is the doubled line Genesis reported. One
+        condition, decided by which artwork is in use, so it cannot be got
+        wrong at a call site.
       */}
-      <span
-        className={cn(
-          "mt-2 block text-pretty leading-relaxed text-ash",
-          fluid ? "text-micro sm:text-small" : "text-small sm:text-lead",
-        )}
-      >
-        {tagline}
-      </span>
+      {!board && (
+        <span className="mt-2 block text-pretty text-small leading-relaxed text-ash sm:text-lead">
+          {tagline}
+        </span>
+      )}
     </Tag>
   );
 }

@@ -529,26 +529,42 @@ export function NeuralOrb({ className }: { className?: string }) {
       canvas and it means a theme change is an array swap rather than a
       rebuild in the middle of a frame.
     */
-    const buildPalette = (ink: number) => {
+    /*
+      `ink` dims the whole colour; `sat` pushes each channel away from the
+      colour's own mean, which is a saturation boost that needs no HSL round
+      trip and cannot shift the hue.
+    */
+    const buildPalette = (ink: number, sat = 1) => {
       const out: HTMLCanvasElement[] = [];
+      const grade = (v: number, mean: number) =>
+        Math.max(0, Math.min(255, Math.round((mean + (v - mean) * sat) * ink)));
       for (const edge of [0.2, 0.1]) {
         for (let i = 0; i < PALETTE_STEPS; i += 1) {
           const [r, g, b] = rampColour(i / (PALETTE_STEPS - 1));
-          out.push(
-            makeSprite(
-              Math.round(r * ink),
-              Math.round(g * ink),
-              Math.round(b * ink),
-              edge,
-            ),
-          );
+          const mean = (r + g + b) / 3;
+          out.push(makeSprite(grade(r, mean), grade(g, mean), grade(b, mean), edge));
         }
       }
       return out;
     };
 
     const spritesOnDark = buildPalette(1);
-    const spritesOnLight = buildPalette(0.42);
+    /*
+      LIGHTER AND MORE SATURATED THAN THE FIRST ATTEMPT, which took the ramp
+      down to 42% and came out as a muddy grey-brown ball.
+
+      Multiply COMPOUNDS: each overlapping dot multiplies what is under it, so
+      a hundred of them converge on a colour raised to a power — which drives
+      lightness toward zero and takes the saturation with it. Starting darker
+      only makes it crash sooner, and that is what 42% did.
+
+      So the light ink starts lighter, at 66%, and the saturation is pushed to
+      1.45 to hold the hue through the compounding. The per-dot alpha comes
+      down with it, from 1.5x to 1.15x, because the sphere no longer needs
+      brute force to be visible — it needs room to accumulate without going
+      black.
+    */
+    const spritesOnLight = buildPalette(0.66, 1.45);
 
     const coreSprite = makeCore();
 
@@ -848,12 +864,15 @@ export function NeuralOrb({ className }: { className?: string }) {
           Half again on paper. Additive build-up is generous — a hundred dots
           at 0.08 still climb toward white — while multiply converges much
           more slowly, so the same figures that make a sphere on black make a
-          smudge on white. 1.5x is where the two read at the same strength.
+          smudge on white. It was 1.5x, which over-drove a palette that was
+          already too dark and compounded into mud; with the lighter, more
+          saturated light ink above, 1.15 is where the two read at the same
+          strength without the colour collapsing.
         */
         ctx.globalAlpha = Math.min(
           1,
           (0.075 + front * 0.19 + rim * rim * 0.06 + lift * 0.3) *
-            (onLight ? 1.5 : 1),
+            (onLight ? 1.15 : 1),
         );
         const size = (0.9 + front * 0.45 + lift * 0.45) * dot;
 

@@ -212,6 +212,16 @@ export function Services() {
                   ramp={service.ramp}
                   as="h3"
                   fluid
+                  /*
+                    THE BOARD SET: the short name, no GENESIS prefix, tagline
+                    inside the artwork. The wordmark is already at the orb's
+                    core, so the full lockup in all four corners made the
+                    composition say GENESIS five times — and because this
+                    artwork carries its own tagline, the component prints no
+                    second one. That double line is what Genesis kept seeing
+                    here.
+                  */
+                  board
                   className="transition-[filter] duration-300 ease-out group-hover:[filter:drop-shadow(0_0_10px_var(--glow))_drop-shadow(0_0_34px_var(--glow))] motion-reduce:transition-none"
                 />
               </Link>

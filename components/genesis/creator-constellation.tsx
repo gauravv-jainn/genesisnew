@@ -130,14 +130,25 @@ export function CreatorConstellation({
     >
       <Globe />
 
-      {/* Portrait badges ride the widest orbit, behind the cards. */}
+      {/*
+        Portrait badges ride the widest orbit, behind the cards.
+
+        THE RADIUS IS CAPPED BY ARITHMETIC, NOT BY EYE. A badge is centred on
+        `50% + radius%` and is 36px wide with a 4px platform chip hanging off
+        its corner, so it reaches `50 + radius + (22 / boxWidth)%`. At the old
+        44-to-49 that put the far edge past 100% on every width — the badge
+        Genesis kept seeing sliced at the edge of the block. The narrowest box
+        the constellation renders in is about 320px, where 22px is 6.9%, so 42
+        is the largest radius that is safe everywhere. Vertically the orbit is
+        already flattened to 0.72, which leaves the top and bottom clear.
+      */}
       {PLATFORMS.map((platform, index) => (
         <PlatformBadge
           key={index}
           platform={platform}
           angle={angle}
           offset={(360 / PLATFORMS.length) * index + 26}
-          radius={44 + seeded(index, 3) * 5}
+          radius={38 + seeded(index, 3) * 4}
           avatar={`/creators/avatars/a${index + 1}.webp`}
         />
       ))}
@@ -149,7 +160,13 @@ export function CreatorConstellation({
           angle={angle}
           // The feature card barely moves; the rest are spread evenly.
           offset={creator.feature ? 0 : (360 / orbiting.length) * index}
-          radius={creator.feature ? 7 : index % 2 === 0 ? 37 : 27}
+          /*
+            Same arithmetic as the badges. A card is 19% wide and grows to
+            1.06x at the front of its orbit, so its half-width is 10.1% and 37
+            put its edge at 97.1% — inside, but with nothing to spare once the
+            scale peaked. 35 and 25 leave a two-point margin.
+          */
+          radius={creator.feature ? 7 : index % 2 === 0 ? 35 : 25}
           avatar={`/creators/avatars/a${(index % 6) + 1}.webp`}
         />
       ))}

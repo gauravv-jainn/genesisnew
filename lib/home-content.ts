@@ -535,7 +535,25 @@ export const creativeProcess = {
 // --- Influencer marketing ---------------------------------------------------
 
 export const influencer = {
-  label: "Strategic · Targeted · Impactful",
+  /*
+   * THE NICHES, NOT THREE ADJECTIVES. This line read "Strategic · Targeted ·
+   * Impactful", which is a claim any agency could make about anything and
+   * told a reader nothing they could act on. Genesis asked for the categories
+   * here instead, and they are the better line for the same reason: a brand
+   * arriving at this section is looking for whether their category is covered,
+   * and this answers it in the eyebrow rather than making them read on.
+   *
+   * Read off `creators` below rather than typed again — the niches are already
+   * the source of truth for the constellation, and two lists of the same eight
+   * things is one list that goes stale.
+   */
+  get label() {
+    return influencer.niches.join(" · ");
+  },
+  /** The categories the database actually spans, in the constellation's order. */
+  get niches(): string[] {
+    return influencer.creators.map((creator) => creator.label);
+  },
   heading: "Influencer marketing,",
   headingAccent: "UGC & celebrity",
   body:
@@ -660,48 +678,59 @@ export const clients = {
    * is worse than a missing one. It goes in the moment someone names it.
    * TODO(content): identify file 21 of the Pallete of Brand Works.
    *
-   * `onDark` IS MEASURED, NOT EYEBALLED. Sampling the mean luminance of every
-   * non-transparent pixel in each file splits the set 22 / 8: most are dark or
-   * full-colour marks that need a light ground, but eight are white-ink
-   * versions that vanish on one. A single chip colour cannot serve both, and
-   * no CSS filter can either — inverting a white mark turns The Lalit's red
-   * square cyan and HT Brunch's peach circle blue. So each mark states which
-   * ground it needs and the wall gives it that one.
+   * `ink` IS MEASURED, AND THE CHIP IS ALWAYS PAPER. An earlier pass split
+   * the wall between white chips and dark ones so every mark had a ground
+   * that suited it — which worked, and looked like a chequerboard. Genesis
+   * was right that a wall of client logos wants one surface.
    *
-   * TODO(assets): dark-ink versions of the eight flagged below would let the
-   * wall run one uniform chip. Until then this is the only arrangement in
-   * which all twenty-nine are legible.
+   * So the ground is uniform and the seven marks that cannot live on it are
+   * named here instead. Sampling mean luminance AND saturation over every
+   * opaque pixel separates two cases the first pass had conflated:
+   *
+   *   "invert" — social-samosa (L 0.98, sat 0.00) and someplace-else
+   *     (L 0.99, sat 0.01) are monochrome white. Inverting a mark with no
+   *     colour in it produces the same mark in black and loses nothing at
+   *     all, which is why only these two get it.
+   *   "darken" — mahindra-finance, the-lalit-mumbai, ht-brunch, bumble and
+   *     lizol sit between L 0.68 and 0.85 and DO carry colour, so inverting
+   *     would turn The Lalit's red square cyan. They are dimmed instead,
+   *     which holds their hue and costs some saturation.
+   *
+   * Everything else is left exactly as supplied.
+   *
+   * TODO(assets): dark-ink versions of those seven would let every mark run
+   * untouched. Dimming a client's colour is a compromise, not a preference.
    */
   logos: [
-    { name: "Aditya Birla Capital", file: "aditya-birla-capital", onDark: false },
-    { name: "Mahindra Finance", file: "mahindra-finance", onDark: true },
-    { name: "HDFC Bank", file: "hdfc-bank", onDark: false },
-    { name: "IDBI Bank", file: "idbi-bank", onDark: false },
-    { name: "House of Hiranandani", file: "house-of-hiranandani", onDark: false },
-    { name: "The WorldGrad", file: "the-worldgrad", onDark: false },
-    { name: "The Lalit Mumbai", file: "the-lalit-mumbai", onDark: true },
-    { name: "Social Samosa", file: "social-samosa", onDark: true },
-    { name: "Four Points", file: "four-points", onDark: false },
-    { name: "Someplace Else", file: "someplace-else", onDark: true },
-    { name: "Matahaari", file: "matahaari", onDark: false },
-    { name: "Grand Hyatt", file: "grand-hyatt", onDark: false },
-    { name: "MNR", file: "mnr", onDark: false },
-    { name: "BNI", file: "bni", onDark: false },
-    { name: "Imagicaa", file: "imagicaa", onDark: false },
-    { name: "Kitty Su", file: "kitty-su", onDark: false },
-    { name: "Royal Tulip", file: "royal-tulip", onDark: false },
-    { name: "Radcliffe", file: "radcliffe", onDark: false },
-    { name: "HT Brunch", file: "ht-brunch", onDark: true },
-    { name: "Bumble", file: "bumble", onDark: true },
-    { name: "Lizol", file: "lizol", onDark: true },
-    { name: "Dove", file: "dove", onDark: false },
-    { name: "Bacardi", file: "bacardi", onDark: false },
-    { name: "Vivo", file: "vivo", onDark: false },
-    { name: "Budweiser", file: "budweiser", onDark: false },
-    { name: "LN Construction", file: "ln-construction", onDark: false },
-    { name: "Kamdhenu", file: "kamdhenu", onDark: false },
-    { name: "Aditya Birla Sun Life Insurance", file: "aditya-birla-sun-life", onDark: false },
-    { name: "TripGate", file: "tripgate", onDark: false },
+    { name: "Aditya Birla Capital", file: "aditya-birla-capital", ink: "auto" },
+    { name: "Mahindra Finance", file: "mahindra-finance", ink: "darken" },
+    { name: "HDFC Bank", file: "hdfc-bank", ink: "auto" },
+    { name: "IDBI Bank", file: "idbi-bank", ink: "auto" },
+    { name: "House of Hiranandani", file: "house-of-hiranandani", ink: "auto" },
+    { name: "The WorldGrad", file: "the-worldgrad", ink: "auto" },
+    { name: "The Lalit Mumbai", file: "the-lalit-mumbai", ink: "darken" },
+    { name: "Social Samosa", file: "social-samosa", ink: "invert" },
+    { name: "Four Points", file: "four-points", ink: "auto" },
+    { name: "Someplace Else", file: "someplace-else", ink: "invert" },
+    { name: "Matahaari", file: "matahaari", ink: "auto" },
+    { name: "Grand Hyatt", file: "grand-hyatt", ink: "auto" },
+    { name: "MNR", file: "mnr", ink: "auto" },
+    { name: "BNI", file: "bni", ink: "auto" },
+    { name: "Imagicaa", file: "imagicaa", ink: "auto" },
+    { name: "Kitty Su", file: "kitty-su", ink: "auto" },
+    { name: "Royal Tulip", file: "royal-tulip", ink: "auto" },
+    { name: "Radcliffe", file: "radcliffe", ink: "auto" },
+    { name: "HT Brunch", file: "ht-brunch", ink: "darken" },
+    { name: "Bumble", file: "bumble", ink: "darken" },
+    { name: "Lizol", file: "lizol", ink: "darken" },
+    { name: "Dove", file: "dove", ink: "auto" },
+    { name: "Bacardi", file: "bacardi", ink: "auto" },
+    { name: "Vivo", file: "vivo", ink: "auto" },
+    { name: "Budweiser", file: "budweiser", ink: "auto" },
+    { name: "LN Construction", file: "ln-construction", ink: "auto" },
+    { name: "Kamdhenu", file: "kamdhenu", ink: "auto" },
+    { name: "Aditya Birla Sun Life Insurance", file: "aditya-birla-sun-life", ink: "auto" },
+    { name: "TripGate", file: "tripgate", ink: "auto" },
   ],
 } as const;
 

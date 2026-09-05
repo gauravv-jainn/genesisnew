@@ -43,46 +43,40 @@ export function ClientLogos() {
             id: logo.file,
             content: (
               /*
-                EACH MARK GETS THE GROUND IT NEEDS. Twenty-two of the
-                twenty-nine are dark or full-colour and want paper behind
-                them; eight are white-ink versions that would disappear on
-                it. `onDark` is measured per file rather than guessed — see
-                lib/home-content — and no CSS filter can substitute for it:
-                inverting a white mark turns The Lalit's red square cyan.
+                ONE GROUND FOR THE WHOLE WALL. This used to give each mark the
+                chip its own ink wanted — white for most, dark for the light
+                ones — which was legible and looked like a chequerboard.
+                Genesis was right: a wall of client logos wants one surface.
 
-                The chip is opaque rather than glass on purpose. A client's
-                logo is their asset; it should sit on a clean ground, not be
-                tinted by whatever the page's gradient is doing behind it.
+                The seven marks that cannot live on paper are handled on the
+                MARK instead, from a measurement rather than by eye. Two are
+                monochrome white and simply invert, which for a mark with no
+                colour in it is lossless. Five carry colour and are dimmed,
+                which holds the hue — inverting those would turn The Lalit's
+                red square cyan. See lib/home-content.
+
+                The chip is opaque rather than glass on purpose: a client's
+                logo is their asset and should sit on a clean ground, not take
+                a tint from the page gradient behind it.
               */
-              <div
-                className={
-                  logo.onDark
-                    ? "relative grid size-28 place-items-center rounded-panel border border-white/12 bg-[#141418] p-3.5 sm:size-32"
-                    : "relative grid size-28 place-items-center rounded-panel border border-black/10 bg-white p-3.5 sm:size-32"
-                }
-              >
-                {/*
-                  `fill`, NOT FIXED DIMENSIONS, because the files are no longer
-                  square. Each was a 400x400 canvas of which the actual mark
-                  used between 4.8% and 13% — HDFC's was 213x36 sitting in the
-                  middle of it — so object-contain was faithfully fitting the
-                  EMPTY CANVAS to the chip and leaving the logo a few pixels
-                  tall. That is what Genesis was looking at.
-
-                  Every file is cropped to its own ink now, which means each
-                  has its own aspect and there is no one width/height pair to
-                  give. A filled box with object-contain sizes itself from the
-                  chip instead, and the mark uses all of it.
-                */}
+              <div className="relative grid size-28 place-items-center rounded-panel border border-black/10 bg-white p-3.5 sm:size-32">
                 <Image
                   src={`/clients/${logo.file}.png`}
                   alt={logo.name}
                   fill
                   // The chip is 128px at its largest; without this each of the
-                  // twenty-nine would pull a viewport-sized file for a
-                  // thumbnail.
+                  // twenty-nine would pull a viewport-sized file.
                   sizes="128px"
-                  className="object-contain"
+                  className="object-contain p-3.5"
+                  style={
+                    logo.ink === "invert"
+                      ? { filter: "invert(1)" }
+                      : logo.ink === "darken"
+                        ? // Saturation nudged back up because dimming reads as
+                          // washing out; the hue itself is untouched.
+                          { filter: "brightness(0.58) saturate(1.2)" }
+                        : undefined
+                  }
                 />
               </div>
             ),

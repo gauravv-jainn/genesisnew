@@ -75,12 +75,31 @@ export function InfluencerMarketing() {
               />
             </Reveal>
 
-            {/* Eyebrow BELOW the headline, per the mockup. */}
+            {/*
+              THE NICHES, BELOW THE HEADLINE, per the mockup's eyebrow slot —
+              but set as chips rather than as one letterspaced line.
+
+              Eight categories joined by middots run to about a hundred
+              characters, and micro-label is uppercase and tracked out, so in a
+              490px column that wrapped into three ragged lines that read as a
+              sentence someone had failed to finish. As chips they wrap into a
+              block, each one is its own object, and a brand scanning for their
+              own category finds it in one pass — which is the whole reason
+              Genesis wanted the niches here instead of three adjectives.
+
+              A list, semantically, because that is what it is.
+            */}
             <Reveal delay={0.06}>
-              <p className="micro-label mt-5 flex items-center gap-3">
-                <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-brand" />
-                {influencer.label}
-              </p>
+              <ul className="mt-5 flex flex-wrap gap-x-2 gap-y-2">
+                {influencer.niches.map((niche) => (
+                  <li
+                    key={niche}
+                    className="rounded-full border border-[var(--glass-border)] bg-[var(--hover-wash)] px-3 py-1 text-micro font-medium uppercase tracking-[0.1em] text-ash"
+                  >
+                    {niche}
+                  </li>
+                ))}
+              </ul>
             </Reveal>
 
             <Reveal delay={0.1}>

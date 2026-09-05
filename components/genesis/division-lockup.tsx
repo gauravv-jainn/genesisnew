@@ -66,11 +66,24 @@ const LOCKUPS: Record<string, { slug: string; width: number; height: number }> =
  */
 const TARGET_HEIGHT = 104;
 
+/**
+ * The widest of the four, in aspect terms — Brand & Design, at 7.36:1.
+ *
+ * It is the one that decides how tall a set of lockups can stand in a given
+ * column, because it is the one that runs out of width first. Derived rather
+ * than typed, so a fifth division cannot leave it stale.
+ */
+const MAX_RATIO = Math.max(
+  ...Object.values(LOCKUPS).map((l) => l.width / l.height),
+);
+
 export function DivisionLockup({
   name,
   tagline,
   ramp,
   as: Tag = "h2",
+  height = TARGET_HEIGHT,
+  fluid = false,
   className,
 }: {
   /** The part after the dot — "Influence", "AI Lab". */
@@ -78,7 +91,18 @@ export function DivisionLockup({
   tagline: string;
   /** Kept for the text fallback below. */
   ramp: string;
-  as?: "h1" | "h2";
+  as?: "h1" | "h2" | "h3";
+  /**
+   * Overrides how tall the lockup stands, in px. The divisions board around
+   * the orb has four of these in two narrow side columns rather than one
+   * across a section, so it asks for a smaller one.
+   */
+  height?: number;
+  /**
+   * Sizes by a share of the container instead of a pixel cap, so a set of
+   * lockups in one composition all stand the same height. See `sizing`.
+   */
+  fluid?: boolean;
   className?: string;
 }) {
   const lockup = LOCKUPS[name];
@@ -104,9 +128,29 @@ export function DivisionLockup({
     );
   }
 
-  const maxWidth = Math.round((TARGET_HEIGHT * lockup.width) / lockup.height);
+  const ratio = lockup.width / lockup.height;
   const src = (variant: "light" | "dark") =>
     `/brand/divisions/${lockup.slug}-${variant}.png`;
+
+  /*
+    FLUID MODE EXISTS SO FOUR LOCKUPS CAN SHARE A HEIGHT.
+
+    A fixed max-width gives each mark the same height only while there is room
+    for all of them; in a narrow column the widest is clamped and the set ends
+    up ragged — 53px for Brand & Design against 79 for Studios, which in a
+    composition where all four are seen at once reads as a mistake rather than
+    as four logos.
+
+    So instead of capping width in pixels, each is given a PERCENTAGE of its
+    column in proportion to how wide it is relative to the widest of the four.
+    Brand & Design takes the full column, Influence 75% of it, Studios 68% —
+    and the arithmetic falls out such that every one of them is exactly
+    column / 7.36 tall, at every breakpoint, with nothing to keep in sync.
+  */
+  const sizing = fluid
+    ? { width: `${((ratio / MAX_RATIO) * 100).toFixed(3)}%` }
+    : { maxWidth: Math.round(height * ratio) };
+  const maxWidth = Math.round(height * ratio);
 
   return (
     <Tag className={className}>
@@ -127,18 +171,14 @@ export function DivisionLockup({
         follows the theme AND follows `.scene-dark` without either of them
         having to know there is a logo in here.
       */}
-      <span
-        aria-hidden
-        className="relative block w-full"
-        style={{ maxWidth }}
-      >
+      <span aria-hidden className="relative block w-full" style={sizing}>
         <Image
           src={src("light")}
           alt=""
           width={lockup.width}
           height={lockup.height}
           priority
-          sizes={`(min-width: 640px) ${maxWidth}px, 100vw`}
+          sizes={fluid ? "(min-width: 1024px) 30vw, 90vw" : `(min-width: 640px) ${maxWidth}px, 100vw`}
           className="h-auto w-full"
           style={{ opacity: "calc(1 - var(--logo-invert, 0))" }}
         />
@@ -148,7 +188,7 @@ export function DivisionLockup({
           width={lockup.width}
           height={lockup.height}
           priority
-          sizes={`(min-width: 640px) ${maxWidth}px, 100vw`}
+          sizes={fluid ? "(min-width: 1024px) 30vw, 90vw" : `(min-width: 640px) ${maxWidth}px, 100vw`}
           className={cn("absolute inset-0 h-auto w-full")}
           style={{ opacity: "var(--logo-invert, 0)" }}
         />

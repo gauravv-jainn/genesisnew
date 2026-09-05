@@ -88,12 +88,29 @@ export function ThemeToggle({ className }: { className?: string }) {
       onClick={toggle}
       className={cn(
         "group relative inline-flex h-9 w-16 shrink-0 items-center rounded-full",
-        // Theme-aware, because this control sits ON the glass pill and the
-        // pill is near-white in the light theme: a white track with a white
-        // border measured 1.00:1 against it, so the switch had no track and
-        // no edge — just a floating knob.
-        "border border-[var(--glass-border)] bg-[var(--hover-wash)] transition-colors duration-300",
-        "hover:border-[var(--ink-faint)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+        /*
+          THE TRACK HAS TO BE A TRACK. It was --hover-wash over
+          --glass-border, and on paper that resolves to 7% black on a pill
+          that is 72% white — measured, a 1.06:1 track. The knob was solid
+          and perfectly visible, so what a light-theme visitor saw was a dark
+          dot floating in the nav with nothing around it: not a switch, and
+          not obviously anything. Genesis could not find it, which is the
+          whole report.
+
+          Own values rather than tokens here, and deliberately. Every token
+          that could carry this is tuned for a surface sitting ON the page,
+          and this one sits on the glass pill, which is already a lightened
+          plate over whatever is behind it — so the same 7% that reads as a
+          panel edge elsewhere disappears here. 14% ink with a 34% rim is the
+          faintest that still reads as a groove on both grounds — 50% on the
+          rim is what takes the control's boundary past 3:1 against the pill,
+          which is the threshold a UI component's edge is meant to clear.
+        */
+        "border transition-colors duration-300",
+        "border-[color-mix(in_srgb,var(--ink-strong)_50%,transparent)]",
+        "bg-[color-mix(in_srgb,var(--ink-strong)_14%,transparent)]",
+        "hover:border-[color-mix(in_srgb,var(--ink-strong)_72%,transparent)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
         className,
       )}
     >
@@ -101,7 +118,10 @@ export function ThemeToggle({ className }: { className?: string }) {
         aria-hidden
         className={cn(
           "absolute grid size-7 place-items-center rounded-full",
-          "bg-bone text-void shadow-raised",
+          // The knob is the page's own ink over the page's own ground, so it
+          // stays a solid, high-contrast puck in both themes rather than
+          // being white-on-white on paper.
+          "bg-[var(--ink-strong)] text-[var(--surface-base)] shadow-raised",
           "transition-transform duration-300 ease-out",
           isLight ? "translate-x-8" : "translate-x-1",
         )}

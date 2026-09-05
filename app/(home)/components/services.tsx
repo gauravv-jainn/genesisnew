@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Spectrum } from "@/components/genesis/atmosphere";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
+import { DivisionLockup } from "@/components/genesis/division-lockup";
 import { NeuralOrb } from "@/components/genesis/neural-orb";
 import { RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { services } from "@/lib/home-content";
@@ -174,35 +175,38 @@ export function Services() {
               */}
               <Link
                 href={service.href}
-                className="group flex flex-col gap-2 rounded-sm outline-none transition-transform duration-300 ease-out focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-transparent motion-safe:hover:-translate-y-0.5"
+                className="group flex w-full flex-col rounded-sm outline-none transition-transform duration-300 ease-out focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 focus-visible:ring-offset-transparent motion-safe:hover:-translate-y-0.5"
                 style={{ "--glow": service.glow } as CSSProperties}
               >
-                <h3
-                  /*
-                    NOWRAP, and a size clamped to the column rather than to the
-                    type scale. text-h1 is 56px, at which "Brand & Design"
-                    measures 406px against a 296px column — so the scale was
-                    the thing forcing the break. This tops out at 48px, where
-                    it measures 348px, and scales down with the viewport
-                    between lg and xl where the column is narrowest.
+                {/*
+                  THE FULL LOCKUP, at Genesis's instruction — artwork, not the
+                  short name set in type. This was "Influence" at 48px with
+                  its caption underneath; it is now GENESIS.Influence and its
+                  tagline as one supplied mark.
 
-                    THE GLOW IS THE HOVER STATE. It used to be a rule that grew
-                    out from under the name; Genesis asked for the line gone
-                    and a shadow instead. drop-shadow rather than text-shadow
-                    because the name is a gradient clipped to the glyphs, and
-                    text-shadow paints behind transparent text — it would draw
-                    a coloured slab, not a halo. The colour is the division's
-                    own, so each vertical lights up as itself.
-                  */
-                  className="ramp-text whitespace-nowrap text-h3 font-normal leading-[1.05] tracking-tight transition-[filter] duration-300 ease-out group-hover:[filter:drop-shadow(0_0_10px_var(--glow))_drop-shadow(0_0_34px_var(--glow))] sm:text-h2 lg:text-[clamp(2rem,3.6vw,3rem)] motion-reduce:transition-none"
-                  style={{ "--ramp": service.ramp } as CSSProperties}
-                >
-                  {service.short}
-                </h3>
+                  WHAT IT COSTS, measured, because it is the whole reason the
+                  short name was here: the board gives each division a side
+                  column, and the widest mark is 7.36:1, so the set can only
+                  stand column-width / 7.36 tall. The name inside the mark
+                  ends up around 32px where the type it replaces was 48. It
+                  is the composition that is the constraint, not the CSS —
+                  four full lockups and a sphere do not all fit across 1232px
+                  at the size four short words did.
 
-                <p className="whitespace-nowrap text-[0.8125rem] leading-relaxed text-ash transition-colors duration-300 group-hover:text-bone xl:text-small">
-                  {service.caption}
-                </p>
+                  `fluid` is what keeps the four the same height as the column
+                  changes; see the note on it in DivisionLockup. The glow moves
+                  here from the old <h3>: still a drop-shadow, because a PNG
+                  with transparency needs the halo to follow its alpha rather
+                  than its box.
+                */}
+                <DivisionLockup
+                  name={service.short}
+                  tagline={service.caption}
+                  ramp={service.ramp}
+                  as="h3"
+                  fluid
+                  className="transition-[filter] duration-300 ease-out group-hover:[filter:drop-shadow(0_0_10px_var(--glow))_drop-shadow(0_0_34px_var(--glow))] motion-reduce:transition-none"
+                />
               </Link>
             </RevealItem>
           ))}

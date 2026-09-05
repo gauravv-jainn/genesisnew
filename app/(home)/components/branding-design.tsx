@@ -55,7 +55,7 @@ export function BrandingDesign() {
             />
             <div className="relative">
               <p className="micro-label mb-6">Selected identity work</p>
-              {/* Named in the spec: Tripgate, Abhi App, Doja. */}
+              {/* Tripgate and the Activ Health App — see lib/home-content. */}
               <ul className="flex flex-col gap-4">
                 {branding.work.map((item) => (
                   <li key={item.title} className="border-b border-white/10 pb-3 last:border-0">

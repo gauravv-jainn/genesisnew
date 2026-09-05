@@ -107,6 +107,16 @@ export function InfluencerMarketing() {
                     {niche}
                   </li>
                 ))}
+                {/*
+                  The board's own "+56 More". Ten named against sixty-six
+                  covered is Genesis's figure from Genesis's artwork, and it
+                  is the whole point of listing categories at all — a brand
+                  whose own niche is not among the ten needs to be told the
+                  list is a sample, not the extent of it.
+                */}
+                <li className="rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-micro font-medium uppercase tracking-[0.1em] text-brand-ink">
+                  +{influencer.moreNiches} more
+                </li>
               </ul>
             </Reveal>
 

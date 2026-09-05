@@ -550,10 +550,37 @@ export const influencer = {
   get label() {
     return influencer.niches.join(" · ");
   },
-  /** The categories the database actually spans, in the constellation's order. */
-  get niches(): string[] {
-    return influencer.creators.map((creator) => creator.label);
-  },
+  /**
+   * THE CATEGORIES, OFF GENESIS'S OWN INFLUENCER BOARD — the one with 100K+
+   * at the centre of a ring and ten niches around it.
+   *
+   * They are NOT read off `creators` any more, and the split is deliberate.
+   * The constellation is capped at eight cards because twelve overlapping in
+   * one orbit read as a pile rather than a network — that is a composition
+   * limit, and it has no business deciding how many categories the database
+   * is described as covering. Two lists, two jobs: these say what Genesis
+   * briefs across, those are the faces that fit in an orbit.
+   *
+   * Named in the board's own order, down one side and then the other.
+   */
+  niches: [
+    "Fashion",
+    "Finance",
+    "Gaming",
+    "Tech",
+    "Parenting",
+    "Fitness",
+    "Beauty",
+    "Lifestyle",
+    "Food",
+    "Travel",
+  ] as string[],
+  /**
+   * What the board counts beyond the ten it names. Genesis's own figure from
+   * their own artwork — ten listed against sixty-six covered — so it is a
+   * claim they already make rather than one inferred here.
+   */
+  moreNiches: 56,
   heading: "Influencer marketing,",
   headingAccent: "UGC & celebrity",
   body:
@@ -638,7 +665,12 @@ export const influencer = {
 
 // --- Branding & design ------------------------------------------------------
 
-// Spec: "Tripgate Branding & Guidelines, Abhi App logo, Doja and more".
+/*
+ * The spec listed "Tripgate Branding & Guidelines, Abhi App logo, Doja and
+ * more". Genesis has since corrected it: Doja comes off the list, and the
+ * Abhi App entry is the Activ Health App — a logo redesign rather than an
+ * identity built from nothing, which is what the caption now says.
+ */
 export const branding = {
   label: "Branding & design",
   heading: "Identity that survives",
@@ -647,8 +679,7 @@ export const branding = {
     "Brand guidelines, design, motion videos and content production — built for the sixth-second crop, not just the pitch deck.",
   work: [
     { title: "Tripgate", caption: "Branding & guidelines" },
-    { title: "Abhi App", caption: "Logo & identity" },
-    { title: "Doja", caption: "Content & design" },
+    { title: "Activ Health App", caption: "Logo redesign" },
   ],
   capabilities: [
     "Brand guidelines",

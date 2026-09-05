@@ -67,7 +67,7 @@ export function Services() {
         orb a full screen to sit in rather than the 24 units of section
         padding it had when it was section two.
       */
-      className="scene-dark scene-open grain relative isolate flex min-h-dvh flex-col justify-center overflow-hidden pb-16 pt-28 sm:pb-20 sm:pt-32"
+      className="scene-open grain relative isolate flex min-h-dvh flex-col justify-center overflow-hidden pb-16 pt-28 sm:pb-20 sm:pt-32"
     >
       {/*
         Transitions into and out of the dark chapter, for the LIGHT theme

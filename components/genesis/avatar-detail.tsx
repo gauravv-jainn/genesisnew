@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { GlassButton } from "@/components/genesis/glass-button";
 import { Media } from "@/components/genesis/media";
 import { mediaUrl } from "@/lib/media-url";
 import { isPending } from "@/lib/home-content";
@@ -11,191 +10,173 @@ import { avatars, AVATAR_TINT, type Avatar } from "@/lib/avatars";
  * One AI avatar, rendered identically whether it arrived as a dialog over the
  * roster or as its own page.
  *
+ * THE PORTRAIT KEEPS ITS OWN SHAPE, which is the fix for the crop Genesis
+ * flagged. It used to be a full-width band whose height was clamped to the
+ * viewport — a 2.3:1 letterbox cut out of a 9:16 photograph. Anchoring that
+ * band to the top showed the wall above the subject's head; anchoring it to
+ * the centre showed a torso. There is no crop of a portrait into a wide strip
+ * that contains a face, so the strip is gone: the picture is a 3:4 panel in
+ * its own column and the reading sits beside it.
+ *
  * IT OMITS WHAT IS NOT WRITTEN. Bio, languages and use cases are Genesis's to
  * supply and every block disappears while its field is pending. What a
  * visitor sees today is the avatar, its name and the brand it fronts — all of
- * which are real — and the rest appears with no code change when the copy
- * lands.
+ * which are real.
+ *
+ * TODO(content): `bio` is the story Genesis asked to appear here and it is the
+ * one thing this view cannot invent. Adi and Diya front a named insurer;
+ * writing a backstory for them would be putting words in a client's mouth. The
+ * Story section below renders the moment the field is filled.
  */
 export function AvatarDetail({ avatar }: { avatar: Avatar }) {
   const index = Math.max(0, avatars.findIndex((a) => a.id === avatar.id));
   const tint = AVATAR_TINT[index % AVATAR_TINT.length];
+  const hasSamples = avatar.reel.length > 0 || avatar.stills.length > 0;
 
   return (
-    <article className="flex flex-col gap-8">
-      <figure className="relative overflow-hidden rounded-panel border border-[var(--glass-border)] bg-ink">
-        {/*
-          HEIGHT, NOT ASPECT, AND IT IS TIED TO THE VIEWPORT.
-
-          This was aspect-[3/4] rising to 16/10, which sounds modest until the
-          panel is 848px wide — at which point 16/10 is 531px of placeholder
-          gradient before the reader reaches the avatar's own name. Measured on
-          a 1440x900 laptop the page came to 1084px against a 900px viewport,
-          and the same block is what the modal has to scroll past.
-
-          An aspect ratio cannot know how tall the screen is; that is the whole
-          problem with using one for a hero. A clamp can: 14rem on the smallest
-          screen, 38% of the viewport where there is room, never past 26rem. The
-          same rule serves the page and the dialog, which is why it lives here
-          rather than in either of them.
-        */}
-        <div className="relative h-[clamp(14rem,38vh,26rem)] w-full">
-          {avatar.portrait ? (
-            <>
-              {/*
-                Framed from the TOP, not the centre. The hero is a wide short
-                band cut from a 9:16 portrait, so a centred crop takes the
-                torso and loses the face — which is the one part of an avatar
-                card that matters.
-              */}
-              <Image
-                src={avatar.portrait}
-                alt={`${avatar.name} — AI avatar`}
-                fill
-                priority
-                sizes="(min-width: 1024px) 56rem, 100vw"
-                className="object-cover object-top"
-              />
-              {/* Keeps the name legible over whatever the photograph does. */}
-              <div
-                aria-hidden
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(0deg, rgb(0 0 0 / 0.85) 0%, rgb(0 0 0 / 0.35) 42%, transparent 72%)",
-                }}
-              />
-            </>
-          ) : (
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `linear-gradient(160deg, rgb(${tint} / 0.4) 0%, rgb(14 14 18 / 0.97) 62%), radial-gradient(70% 50% at 50% 18%, rgb(255 255 255 / 0.14), transparent 72%)`,
-              }}
-            />
-          )}
-          <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-            <span className="block text-h1 font-semibold uppercase leading-none tracking-tight text-white">
-              {avatar.name}
-            </span>
-          </div>
-        </div>
+    /*
+      Two columns where there is room, stacked where there is not. The picture
+      column is capped at 20rem so a 3:4 panel is never taller than 427px —
+      which is what keeps the dialog inside a laptop screen without the height
+      of the photograph having to be clamped against the viewport.
+    */
+    <article className="grid gap-8 lg:grid-cols-[minmax(0,20rem)_1fr] lg:items-start lg:gap-10">
+      <figure className="relative aspect-[3/4] overflow-hidden rounded-panel border border-[var(--glass-border)] bg-ink">
+        {avatar.portrait ? (
+          <Image
+            src={avatar.portrait}
+            alt={`${avatar.name}, a Genesis AI avatar`}
+            fill
+            priority
+            /*
+              The column is 20rem at most and full width below lg, so this is
+              the real measurement rather than a guess at the viewport. A 3:4
+              window on a 9:16 source crops the top and bottom evenly and
+              keeps the middle, which is where these are framed.
+            */
+            sizes="(min-width: 1024px) 20rem, 100vw"
+            className="object-cover object-center"
+          />
+        ) : (
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(160deg, rgb(${tint} / 0.4) 0%, rgb(14 14 18 / 0.97) 62%), radial-gradient(70% 50% at 50% 18%, rgb(255 255 255 / 0.14), transparent 72%)`,
+            }}
+          />
+        )}
       </figure>
 
-      <header className="flex flex-col gap-3">
-        <span className="micro-label text-brand-ink">Genesis AI Labs</span>
-        <h1 className="text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1">
-          {avatar.name}
-        </h1>
-        {avatar.role && (
-          <p className="text-lead leading-relaxed text-ash">{avatar.role}</p>
+      <div className="flex min-w-0 flex-col gap-6">
+        <header className="flex flex-col gap-3">
+          <span className="micro-label text-brand-ink">Genesis AI Labs</span>
+          {/*
+            The name is set ONCE. It used to be burned across the bottom of the
+            picture as well as printed here, which is the same say-it-twice
+            fault the poster cards had with their baked-in captions.
+          */}
+          <h1 className="text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1">
+            {avatar.name}
+          </h1>
+          {avatar.role && (
+            <p className="text-lead leading-relaxed text-ash">{avatar.role}</p>
+          )}
+        </header>
+
+        {/*
+          THE STORY, which is what Genesis asked to stand where the CTA was.
+          "Build with this avatar" is gone from here at their request — it was
+          asking for the brief before the reader had been told who they were
+          looking at.
+        */}
+        {!isPending(avatar.bio) && (
+          <section className="flex flex-col gap-2 border-t border-[var(--glass-border)] pt-6">
+            <h2 className="micro-label">The story</h2>
+            <p className="text-body leading-relaxed text-ash">{avatar.bio}</p>
+          </section>
         )}
-      </header>
 
-      {!isPending(avatar.bio) && (
-        <section className="flex flex-col gap-2 border-t border-[var(--glass-border)] pt-8">
-          <h2 className="micro-label">About</h2>
-          <p className="max-w-2xl text-body leading-relaxed text-ash">
-            {avatar.bio}
-          </p>
-        </section>
-      )}
+        {avatar.languages.length > 0 && (
+          <section className="flex flex-col gap-2">
+            <h2 className="micro-label">Speaks</h2>
+            <ul className="flex flex-wrap gap-2">
+              {avatar.languages.map((language) => (
+                <li
+                  key={language}
+                  className="glass-chip rounded-full px-3 py-1.5 text-small text-bone"
+                >
+                  {language}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-      {avatar.languages.length > 0 && (
-        <section className="flex flex-col gap-2">
-          <h2 className="micro-label">Languages</h2>
-          <ul className="flex flex-wrap gap-2">
-            {avatar.languages.map((language) => (
-              <li
-                key={language}
-                className="glass-chip rounded-full px-3 py-1.5 text-small text-bone"
-              >
-                {language}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+        {avatar.useCases.length > 0 && (
+          <section className="flex flex-col gap-2">
+            <h2 className="micro-label">Used for</h2>
+            <ul className="flex flex-wrap gap-2">
+              {avatar.useCases.map((useCase) => (
+                <li
+                  key={useCase}
+                  className="glass-chip rounded-full px-3 py-1.5 text-small text-bone"
+                >
+                  {useCase}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-      {avatar.useCases.length > 0 && (
-        <section className="flex flex-col gap-2">
-          <h2 className="micro-label">Used for</h2>
-          <ul className="flex flex-wrap gap-2">
-            {avatar.useCases.map((useCase) => (
-              <li
-                key={useCase}
-                className="glass-chip rounded-full px-3 py-1.5 text-small text-bone"
-              >
-                {useCase}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+        {/*
+          WHAT THIS AVATAR HAS BEEN USED TO MAKE. Films first, then stills.
 
-      {/*
-        WHAT THIS AVATAR HAS BEEN USED TO MAKE — the samples Genesis asked the
-        window to carry. Films first, then stills, both from lib/home-content.
+          Two across from 640 rather than three: these now sit in the right
+          column of a split, not across the full panel, so a third tile would
+          put each one under 140px. `sizes` follows the same measurement.
+        */}
+        {hasSamples && (
+          <section className="flex flex-col gap-4 border-t border-[var(--glass-border)] pt-6">
+            <h2 className="micro-label">Made with {avatar.name}</h2>
 
-        RESPONSIVE BY COLUMN COUNT, not by media query on each tile: one across
-        on a phone, two from 640, three from 1024, so a sample is never smaller
-        than about 150px on the narrowest screen the modal opens on. `sizes`
-        follows the same breakpoints, which is the half that actually saves
-        bytes — without it every tile fetches a viewport-wide file.
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {avatar.reel.map((clip) => (
+                <li key={clip}>
+                  <video
+                    src={mediaUrl(clip)}
+                    muted
+                    loop
+                    playsInline
+                    controls
+                    preload="metadata"
+                    className="aspect-[9/13] w-full rounded-card border border-[var(--glass-border)] bg-ink object-cover"
+                  />
+                </li>
+              ))}
 
-        The whole block disappears while both lists are empty, which is where
-        they are today. It is the same rule the bio and the language chips
-        follow: show what is real, print nothing where nothing is written.
-      */}
-      {(avatar.reel.length > 0 || avatar.stills.length > 0) && (
-        <section className="flex flex-col gap-4 border-t border-[var(--glass-border)] pt-8">
-          <h2 className="micro-label">Made with {avatar.name}</h2>
+              {avatar.stills.map((still) => (
+                <li key={still}>
+                  <Media
+                    src={mediaUrl(still)}
+                    alt={`${avatar.name} — sample still`}
+                    aspect="portrait"
+                    sizes="(min-width: 1024px) 14rem, 40vw"
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {avatar.reel.map((clip) => (
-              <li key={clip}>
-                <video
-                  src={mediaUrl(clip)}
-                  muted
-                  loop
-                  playsInline
-                  controls
-                  preload="metadata"
-                  className="aspect-[9/13] w-full rounded-card border border-[var(--glass-border)] bg-ink object-cover"
-                />
-              </li>
-            ))}
-
-            {avatar.stills.map((still) => (
-              <li key={still} className="relative">
-                <Media
-                  src={mediaUrl(still)}
-                  alt={`${avatar.name} — sample still`}
-                  aspect="portrait"
-                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <footer className="flex flex-wrap items-center gap-3 border-t border-[var(--glass-border)] pt-8">
-        <GlassButton
-          href="/#contact"
-          quickContact={`avatar:${avatar.id}`}
-          variant="brand"
-          arrow
-        >
-          Build with this avatar
-        </GlassButton>
-        <Link
-          href="/#ai-lab"
-          className="rounded-full px-3 py-2 text-small text-ash underline-offset-4 transition-colors hover:text-bone hover:underline"
-        >
-          All avatars
-        </Link>
-      </footer>
+        <footer className="border-t border-[var(--glass-border)] pt-6">
+          <Link
+            href="/#ai-lab"
+            className="rounded-full text-small text-ash underline-offset-4 transition-colors hover:text-bone hover:underline"
+          >
+            All avatars
+          </Link>
+        </footer>
+      </div>
     </article>
   );
 }

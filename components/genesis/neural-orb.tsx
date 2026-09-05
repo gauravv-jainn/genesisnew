@@ -1021,6 +1021,36 @@ export function NeuralOrb({ className }: { className?: string }) {
       className={cn("pointer-events-none relative aspect-square w-full", className)}
     >
       {/*
+        THE ORB BRINGS ITS OWN NIGHT.
+
+        The canvas composites with `lighter` — every dot ADDS light — so on a
+        white ground each one saturates to white and the sphere disappears
+        entirely. That is why the Brain section used to pin itself dark in
+        both themes, and why the light theme looked broken: the whole first
+        screen stayed black, so switching to light appeared to do nothing.
+
+        The requirement was never the section, only the ground directly under
+        the sphere. This is that ground — a dark pool sized to the orb, fading
+        out well before the edge of the box, so on paper it reads as a lit
+        stage the sphere is standing on rather than as a section that forgot
+        to change. In the dark theme it lands on near-black and is invisible,
+        which is exactly right.
+      */}
+      <div
+        className="absolute inset-[-2%] rounded-full blur-xl"
+        style={{
+          /*
+            A long tail, not a disc. The sphere fills about 80% of this box, so
+            the pool only has to be solid across the middle half — everything
+            after that is falloff. Eight stops rather than four, because on
+            paper a four-stop fade of near-black is visibly a ring, and a blur
+            on top of them because this layer never repaints and can afford it.
+          */
+          background:
+            "radial-gradient(circle at 50% 50%, #08080c 0%, #08080c 30%, rgb(8 8 12 / 0.94) 42%, rgb(8 8 12 / 0.82) 52%, rgb(8 8 12 / 0.6) 62%, rgb(8 8 12 / 0.36) 72%, rgb(8 8 12 / 0.16) 82%, rgb(8 8 12 / 0.05) 90%, transparent 98%)",
+        }}
+      />
+      {/*
         A wide static wash under the canvas. The reactive part of the core is
         painted on the canvas, where it can pulse; this is the ambient half,
         and repainting it 60 times a second to have it not change would be

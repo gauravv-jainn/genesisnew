@@ -87,7 +87,15 @@ export function GlassButton({
   const { x, y, magneticProps } = useMagnetic(0.18);
 
   const classes = cn(
-    "relative inline-flex select-none items-center justify-center rounded-full font-medium",
+    /*
+      `whitespace-nowrap` because a pill does not wrap. "Start a Project" broke
+      across two lines in the nav the moment the bar grew to eight items: the
+      link list is `flex-1`, so it took the slack and squeezed this button
+      until its label folded inside a shape built for one line. A button's text
+      wrapping is never the right answer to a narrow container — either it fits
+      or the container gives.
+    */
+    "relative inline-flex shrink-0 select-none items-center justify-center whitespace-nowrap rounded-full font-medium",
     "transition-[background-color,border-color,box-shadow,color] duration-300",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-ink",
     "disabled:pointer-events-none disabled:opacity-50",

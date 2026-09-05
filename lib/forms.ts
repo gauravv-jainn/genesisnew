@@ -310,8 +310,15 @@ export const FORMS: Record<FormKind, FormSpec> = {
       },
       { name: "instagram", label: "Instagram link", type: "url", required: true, half: true, placeholder: "Enter Instagram link" },
       { name: "youtube", label: "YouTube link", type: "url", half: true, placeholder: "Enter YouTube link" },
-      { name: "igReelCost", label: "1 IG reel cost (₹)", half: true, placeholder: "This cost is subject to change." },
-      { name: "ytReelCost", label: "YT integrated reel cost (₹)", half: true, placeholder: "This cost is subject to change." },
+      /*
+        Labels kept short enough to hold one line in a half-width column. "YT
+        integrated reel cost (₹)" plus its "(optional)" suffix wrapped, and a
+        two-line label in a two-column grid pushes its own input 11px below the
+        one beside it — which is the ragged edge that made this form look
+        packed. The placeholder carries the caveat either way.
+      */
+      { name: "igReelCost", label: "IG reel cost (₹)", half: true, placeholder: "Per reel — subject to change." },
+      { name: "ytReelCost", label: "YT integrated (₹)", half: true, placeholder: "Per video — subject to change." },
       { name: "previousBrands", label: "Previous brands you've collaborated with", type: "textarea", max: 2000 },
       {
         name: "picture",

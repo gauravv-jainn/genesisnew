@@ -103,7 +103,13 @@ export function GenesisForm({
         </p>
       )}
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      {/*
+        gap-y-7, not gap-5. The influencer form runs to fourteen fields and two
+        checkbox groups; at 5 the rows touched and the panel read as one block
+        of controls with no grouping. The extra space is what lets a label
+        belong to the field under it rather than to the field above.
+      */}
+      <div className="grid gap-x-6 gap-y-7 sm:grid-cols-2">
         {spec.fields.map((field) => (
           <Field
             key={field.name}
@@ -171,7 +177,7 @@ function Field({
   */
   if (field.type === "checkbox-group") {
     return (
-      <fieldset className={cn("flex flex-col gap-2", isWide && "sm:col-span-2")}>
+      <fieldset className={cn("flex flex-col gap-3", isWide && "sm:col-span-2")}>
         <legend className="micro-label !text-ash">
           {field.label}
           {!field.required && (
@@ -180,7 +186,12 @@ function Field({
             </span>
           )}
         </legend>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+        {/*
+          Two columns, not three. "Access to Brand Campaigns" wrapped to two
+          lines beside one-line neighbours at three across, which staggered the
+          boxes down the column. Two gives every option one line.
+        */}
+        <div className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
           {field.options?.map((option) => (
             <label
               key={option}
@@ -222,11 +233,17 @@ function Field({
   };
 
   return (
-    <div className={cn("flex flex-col gap-1.5", isWide && "sm:col-span-2")}>
+    <div className={cn("flex flex-col gap-2", isWide && "sm:col-span-2")}>
       <label htmlFor={id} className="micro-label !text-ash">
         {field.label}
+        {/*
+          `whitespace-nowrap` so the suffix never breaks on its own. "YT
+          integrated reel cost (₹) (optional)" wrapped mid-suffix and pushed
+          its input out of line with the field beside it, which is most of why
+          the form looked ragged.
+        */}
         {!field.required && (
-          <span className="ml-1 normal-case tracking-normal text-faint">
+          <span className="ml-1 whitespace-nowrap normal-case tracking-normal text-faint">
             (optional)
           </span>
         )}

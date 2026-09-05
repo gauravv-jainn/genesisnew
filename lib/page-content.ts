@@ -50,11 +50,17 @@ export const creatorPage = {
   headingAccent: "Genesis",
   body:
     "We run campaigns for brands that pay on time and brief properly. If you make content people actually watch, we'd like you on the roster.",
+  /*
+    ONE LINE EACH. These ran to two sentences apiece, which in four cards side
+    by side is a paragraph of body copy where the eye expects a list. The
+    promise is the title; the line under it only has to make the title
+    specific.
+  */
   benefits: [
-    { title: "Real briefs", body: "Written briefs with a clear deliverable, deadline and fee — agreed before you start." },
-    { title: "Paid on schedule", body: "Payment terms are set at signing and tracked, not negotiated after delivery." },
-    { title: "Creative latitude", body: "You know your audience. We bring the brand's guardrails, not a shot list." },
-    { title: "Repeat work", body: "Most of our creators come back for the next campaign. That's the whole model." },
+    { title: "Real briefs", body: "Deliverable, deadline and fee agreed before you start." },
+    { title: "Paid on schedule", body: "Terms set at signing, not renegotiated after delivery." },
+    { title: "Creative latitude", body: "Brand guardrails, not a shot list." },
+    { title: "Repeat work", body: "Most creators come back for the next campaign." },
   ],
 } as const;
 

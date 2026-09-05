@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { GenesisForm } from "@/components/genesis/genesis-form";
 import { SlideUp } from "@/components/genesis/slide-up";
-import { PaperCard } from "@/components/genesis/paper-card";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { CornerNote, Spotlight } from "@/components/genesis/spotlight";
@@ -75,20 +74,26 @@ export default function CreatorPage() {
           <RevealGroup className="mt-16 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {creatorPage.benefits.map((benefit, index) => (
               <RevealItem key={benefit.title} className="h-full">
-                <PaperCard
-                  pinned
-                  tone="brand"
-                  rotate={index % 2 === 0 ? -1.2 : 1}
-                  className="h-full"
-                >
-                  <p className="micro-label mb-3">{`0${index + 1}`}</p>
-                  <h2 className="text-h3 font-normal tracking-tight text-bone">
+                {/*
+                  PLAIN CARDS, at Genesis's instruction. These were PaperCards:
+                  pinned, tilted and tinted, each holding two sentences. Four of
+                  them in a row was three effects and a paragraph competing for
+                  the same square — the pin drew the eye to a corner, the tilt
+                  said "loose note" while the content was a list of commitments,
+                  and the tint made the copy fight its own background.
+
+                  A title and one line, level, in the same glass surface the
+                  rest of the site uses. Nothing here needed a device.
+                */}
+                <div className="glass glass-lit flex h-full flex-col rounded-panel p-6">
+                  <p className="micro-label text-brand-ink">{`0${index + 1}`}</p>
+                  <h2 className="mt-4 text-h3 font-normal tracking-tight text-bone">
                     {benefit.title}
                   </h2>
-                  <p className="mt-3 text-small leading-relaxed text-ash">
+                  <p className="mt-2 text-small leading-relaxed text-ash">
                     {benefit.body}
                   </p>
-                </PaperCard>
+                </div>
               </RevealItem>
             ))}
           </RevealGroup>

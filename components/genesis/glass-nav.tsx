@@ -166,7 +166,12 @@ export function GlassNav() {
           ))}
         </ul>
 
-        <div className="ml-auto flex items-center gap-2">
+        {/*
+          `shrink-0`: the link list beside this is flex-1 and will happily take
+          every pixel this cluster needs. The toggle and the CTA are fixed
+          furniture — they are what the bar shrinks AROUND, not what shrinks.
+        */}
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           <ThemeToggle className="hidden xl:inline-flex" />
 
           <GlassButton

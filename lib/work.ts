@@ -272,6 +272,36 @@ const catalogue: WorkItem[] = [
     format: "Reels",
     reel: [27, 28],
   },
+  /*
+   * The second Drive folder — "Website Content Temporary", eleven property
+   * films. Ten of them are here; the eleventh is House of Hiranandani, which
+   * is 47.4MB at 47s and 1080x1920, the same file as clip 32, already in the
+   * catalogue above. Ingested as one piece rather than ten because they are
+   * one body of work, and the property names survive on the detail page
+   * through CLIP_LABELS.
+   *
+   * TODO(content): THE CLIENT IS AN INFERENCE. The folder names the properties
+   * and not who they were made for. "Genesis Estate" is Genesis's own
+   * real-estate arm — it appears in their milestones — so attributing their
+   * own property films to it invents no third party, which naming an outside
+   * client would. Correct it if these belong to a brokerage instead.
+   */
+  {
+    slug: "genesis-estate-property-films",
+    client: "Genesis Estate",
+    title: "Property Films",
+    vertical: "Studios",
+    format: "Reels",
+    reel: [33, 34, 35, 36, 37, 38, 39, 40, 41, 42],
+  },
+  {
+    slug: "ht-brunch-content",
+    client: "HT Brunch",
+    title: "Editorial Content",
+    vertical: "Studios",
+    format: "Reels",
+    reel: [26],
+  },
   {
     slug: "house-of-hiranandani-content",
     client: "House of Hiranandani",
@@ -296,6 +326,28 @@ const catalogue: WorkItem[] = [
  * unchanged, so this map is the identity and the site serves exactly what it
  * served before. See lib/media-url.ts.
  */
+/**
+ * What a numbered clip actually shows, where the file says so.
+ *
+ * The first thirty-two arrived as `1.mp4` to `32.mp4` and carry no name of
+ * their own — the client is the only thing identifying them, which is why they
+ * are absent here. The property films came out of a second Drive folder with
+ * their subject in the filename, and throwing that away to renumber them would
+ * be discarding the only description anyone has written of these ten.
+ */
+export const CLIP_LABELS: Record<number, string> = {
+  33: "Panvel Hospital Plot",
+  34: "Ghatkopar Godown",
+  35: "Chembur Commercial Office",
+  36: "Vashi Petrol Pump",
+  37: "Prajapati Ornate",
+  38: "Sea Facing Alibag",
+  39: "Alibag Plot 1",
+  40: "Chembur Plot",
+  41: "Karjat Agricultural Land",
+  42: "Sarda Village",
+};
+
 /** Where a numbered clip and its frame live. The numbering mirrors Drive. */
 export const reelClip = (n: number) => `/work/clips/${n}.mp4`;
 export const reelPoster = (n: number) => `/work/posters/${n}.jpg`;

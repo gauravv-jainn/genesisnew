@@ -4,7 +4,13 @@ import Link from "next/link";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { isPending } from "@/lib/home-content";
 import { mediaUrl } from "@/lib/media-url";
-import { hasStory, reelClip, reelPoster, type WorkItem } from "@/lib/work";
+import {
+  CLIP_LABELS,
+  hasStory,
+  reelClip,
+  reelPoster,
+  type WorkItem,
+} from "@/lib/work";
 
 /**
  * One project, rendered identically whether it arrived as a modal over the
@@ -91,7 +97,7 @@ export function WorkDetail({ item }: { item: WorkItem }) {
           </h2>
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {rest.map((n) => (
-              <li key={n}>
+              <li key={n} className="flex flex-col gap-2">
                 <video
                   src={mediaUrl(reelClip(n))}
                   poster={mediaUrl(reelPoster(n))}
@@ -102,6 +108,16 @@ export function WorkDetail({ item }: { item: WorkItem }) {
                   preload="none"
                   className="aspect-[9/16] w-full rounded-card border border-[var(--glass-border)] bg-ink object-cover"
                 />
+                {/*
+                  Only where the file told us what it is. The first thirty-two
+                  clips have no name of their own, and a caption reading
+                  "Clip 14" is worse than no caption.
+                */}
+                {CLIP_LABELS[n] && (
+                  <p className="text-micro leading-snug text-ash">
+                    {CLIP_LABELS[n]}
+                  </p>
+                )}
               </li>
             ))}
           </ul>

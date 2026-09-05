@@ -7,7 +7,6 @@ import { CaseStudies } from "./components/case-studies";
 import { ClientLogos } from "./components/client-logos";
 import { FooterCta } from "./components/footer-cta";
 import { InfluencerMarketing } from "./components/influencer-marketing";
-import { Journey } from "./components/journey";
 import { Services } from "./components/services";
 import { Studios } from "./components/studios";
 import { WorkLibrary } from "./components/work-library";
@@ -91,15 +90,13 @@ export default function HomePage() {
       <WorkLibrary />
 
       {/*
-        Positioning and history, together. The brief asks to cut explanatory
-        sections and its running order drops this one — but it is also the
-        deck's own positioning page, which was added at the client's request,
-        so rather than delete it outright it moves out of the opening and sits
-        against the journey, where "who we are" and "how we got here" read as
-        one thought. Easy to cut if the answer is still cut.
+        Positioning. This used to be half of a pair — "who we are" beside "how
+        we got here" — and the note here said the journey was easy to cut if
+        the answer was still cut. It was: Genesis removed it. What is left is
+        the deck's own positioning page, which they asked for, standing on its
+        own between the library and the case studies.
       */}
       <WhoWeAre />
-      <Journey />
 
       {/* 09-11 — the strategic case, the client's voice, then the ask. */}
       <CaseStudies />

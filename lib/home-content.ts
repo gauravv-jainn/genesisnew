@@ -267,75 +267,6 @@ export const whoWeAre = {
   ],
 } as const;
 
-// --- Journey ----------------------------------------------------------------
-
-// The spec marks this "//numbers increasing animation".
-// TODO(data): milestones and dates are placeholders — real story needed.
-export const journey = {
-  label: "Our journey",
-  heading: "How Genesis",
-  headingAccent: "got here",
-  body: "From a garage in Panvel to an AI lab in Ghatkopar, told as the route it actually was.",
-  /*
-   * REAL, AT LAST. Every figure and every milestone below comes from the
-   * company's own journey board — the map that traces Panvel to Chembur to
-   * Ghatkopar. Everything here previously read "TODO"; five invented
-   * milestone titles and three placeholder figures have been replaced with
-   * what actually happened, in the board's own words.
-   *
-   * The creator-database figure was already confirmed elsewhere in the brief
-   * and is unchanged.
-   */
-  // One source of truth — see lib/proof.ts for which of these are contested.
-  figures: [
-    proof.creatorDatabase,
-    proof.events,
-    proof.brands,
-    proof.campaigns,
-  ],
-  /*
-   * The board is a route, so each stop carries the office it was reached
-   * from. 2020 has no office of its own — it is the pivot on the road
-   * between Panvel and Chembur, and the board draws it that way.
-   */
-  milestones: [
-    {
-      period: "2016 – 2019",
-      place: "Panvel",
-      lines: ["Started up as an Events Expert in a garage"],
-    },
-    {
-      period: "2020",
-      lines: ["Pivoted to an Advertising Agency due to COVID"],
-    },
-    {
-      period: "2021",
-      place: "Chembur",
-      lines: ["Championed Influencer Marketing"],
-    },
-    {
-      period: "2022 – 24",
-      lines: [
-        "Created a Digital Wave",
-        "Launched IP GenesisDrip",
-        "Scaled Influencer Ecosystem",
-        "1,500+ Successful Events",
-        "Collaborated with 30+ Brands",
-        "Developed 50+ Campaigns",
-      ],
-    },
-    {
-      period: "2025 – 26",
-      place: "Ghatkopar",
-      lines: [
-        "Evolving with AI",
-        "Tech Automations & App Development",
-        "Genesis Estate Established",
-      ],
-    },
-  ],
-} as const;
-
 // --- AI content -------------------------------------------------------------
 
 // Spec: "AI tools, Image Generations, AI Avatars, Video Generations, AI videos
@@ -720,13 +651,14 @@ export const clients = {
   label: "Trusted by",
   heading: "Our",
   headingAccent: "clients",
-  body: "Twenty-nine brands across banking, hospitality, FMCG, media, real estate and education.",
+  body: "Thirty brands across banking, hospitality, FMCG, media, real estate and education.",
   /*
    * THE REAL LOGO FILES, at last. This was a list of NAMES rendered as text
    * wordmarks under a standing TODO ("Ask tanvi"); it is Genesis's own
    * "Pallete of Brand Works", twenty-nine marks, one per client.
    *
-   * THIRTY WERE SUPPLIED AND TWENTY-NINE ARE HERE. The missing one is set in
+   * THIRTY WERE SUPPLIED AND TWENTY-NINE ARE HERE (SiNet arrived separately
+   * and makes thirty on the wall). The missing one is set in
    * script inside a yellow ticket and cannot be read with enough confidence
    * to print a client's name on a public page — which is the SAME mark, and
    * the same reason, recorded against the old text list. A misspelled client
@@ -795,6 +727,7 @@ export const clients = {
     { name: "Kamdhenu", file: "kamdhenu", ink: "auto", ratio: 1.56 },
     { name: "Aditya Birla Sun Life Insurance", file: "aditya-birla-sun-life", ink: "auto", ratio: 2.54 },
     { name: "TripGate", file: "tripgate", ink: "auto", ratio: 3.24 },
+    { name: "SiNet", file: "sinet", ink: "auto", ratio: 1.09 },
   ],
 } as const;
 

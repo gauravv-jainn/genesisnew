@@ -5,7 +5,7 @@ import { SlideUp } from "@/components/genesis/slide-up";
 import { PaperCard } from "@/components/genesis/paper-card";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
-import { CornerNote, GhostType, Spotlight } from "@/components/genesis/spotlight";
+import { CornerNote, Spotlight } from "@/components/genesis/spotlight";
 import { creatorPage } from "@/lib/page-content";
 import { SectionShell } from "../components/section-shell";
 
@@ -27,8 +27,31 @@ export default function CreatorPage() {
     <SlideUp>
     <main>
       <section className="relative isolate overflow-hidden pt-32 pb-32 sm:pt-40">
-        <Spotlight x={68} spread={17} tone="warm" intensity={1} reach={96} />
-        <GhostType className="translate-y-2">FOR CREATORS</GhostType>
+        {/*
+          THE SPOTLIGHT STOPS ABOVE THE CARDS.
+
+          It was reach 96 at full intensity — a cone falling almost the whole
+          section, which landed on cards 03 and 04 and washed them to a pale
+          yellow their body copy could not be read against. A spotlight that
+          lights the headline is drama; one that lights the paragraphs is a
+          filter over them.
+        */}
+        <Spotlight x={68} spread={17} tone="warm" intensity={0.82} reach={58} />
+
+        {/*
+          THE GHOST WORDMARK IS GONE FROM THIS PAGE.
+
+          It was "FOR CREATORS" at up to 22rem across the whole hero. Bounding
+          it to the headline band stopped it printing through the cards, and
+          left it doing the other half of the damage — sitting directly behind
+          "Work with Genesis" at a weight close enough to compete with it. Two
+          headlines occupying one space, one of which is decoration.
+
+          The section already has scale: a spotlight, a 4rem headline and four
+          pinned cards. It did not need a fifth voice, and Genesis was right
+          that the page looked wrong with it. GhostType still earns its place
+          on sections that are mostly type and air; this one is neither.
+        */}
 
         <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
           <div className="flex flex-wrap items-start justify-between gap-8">
@@ -55,7 +78,7 @@ export default function CreatorPage() {
                 <PaperCard
                   pinned
                   tone="brand"
-                  rotate={index % 2 === 0 ? -2.6 : 2.2}
+                  rotate={index % 2 === 0 ? -1.2 : 1}
                   className="h-full"
                 >
                   <p className="micro-label mb-3">{`0${index + 1}`}</p>
@@ -89,9 +112,9 @@ export default function CreatorPage() {
       <SectionShell
         id="apply"
         label="Join the roster"
-        heading="Tell us what"
-        headingAccent="you make"
-        body="Send your handles and the kind of work you do. We'll come back if there's a fit."
+        heading="Get onboarded"
+        headingAccent="with us"
+        body="Hello influencers and creators. Tell us where you post, what you charge and what you're looking for — we brief creators for brand campaigns every week."
         tone="brand"
         origin="bottom"
         intensity={0.2}
@@ -103,7 +126,7 @@ export default function CreatorPage() {
             pitch on someone's behalf, which is a thing you must be asked for
             rather than assumed.
           */}
-          <GenesisForm kind="influencer" source="/creator" />
+          <GenesisForm kind="influencer" source="/creator" compact />
         </Reveal>
       </SectionShell>
     </main>

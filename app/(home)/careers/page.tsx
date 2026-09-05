@@ -148,7 +148,7 @@ export default function CareersPage() {
             find the discipline. The `career` spec asks for the position as a
             field, so it sorts in the sheet.
           */}
-          <GenesisForm kind="career" source="/careers" />
+          <GenesisForm kind="career" source="/careers" compact />
         </Reveal>
 
         {/* TODO(copy): confirm before launch — this is a scarcity claim. */}

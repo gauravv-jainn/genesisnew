@@ -628,7 +628,6 @@ export const branding = {
       title: "Tripgate",
       caption: "Branding & guidelines",
       palette: ["#0f5c56", "#b7e3ff", "#ffe5a9", "#f89423", "#ffffff"],
-      paletteNote: "Calm · Grounded · Explorative · Balanced",
     },
     /*
       `assets` names a folder under /public/brand. Where one exists, the

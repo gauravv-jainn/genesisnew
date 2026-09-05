@@ -64,14 +64,57 @@ function identityRoute(assets: string): { phases: string[]; final?: string } {
     a convention, it is a trap; the number is the only part that matters, so
     any leading number is a phase.
   */
-  const phases = entries
+  /*
+    A CHANGED FILE GETS A CHANGED URL, and this is the second time this project
+    has been bitten by not doing it.
+
+    While this feature was being built, `final.png` briefly held a stand-in —
+    the Tripgate wordmark — and every layer that caches by URL went on serving
+    it after the real Activ Health mark replaced it: the browser, and Next's
+    dev-server image cache, which is why Genesis saw Tripgate's logo inside
+    Activ Health's card on their own machine and not just on mine. The division
+    lockups hit exactly this earlier and were fixed by moving them to a new
+    path; that fix does not generalise, because here the FILENAMES are
+    Genesis's to choose.
+
+    So the URL carries the file's modification time. Replace an image and its
+    URL changes with it, which no cache can get wrong. Same file, same URL,
+    still cached — the point is not to defeat caching, it is to stop one URL
+    ever meaning two different pictures.
+  */
+  const stamp = (file: string) => {
+    try {
+      return `?v=${Math.round(fs.statSync(path.join(dir, file)).mtimeMs)}`;
+    } catch {
+      return "";
+    }
+  };
+
+  const numbered = entries
     .filter((f) => isImage(f) && /^(phase-)?\d+\./i.test(f))
     // Numeric, not lexical: 10 sorts after 9, not after 1.
-    .sort((a, b) => Number(a.match(/\d+/)![0]) - Number(b.match(/\d+/)![0]))
-    .map((f) => `/brand/${assets}/${f}`);
-  const finalFile = entries.find((f) => isImage(f) && /^final\./i.test(f));
+    .sort((a, b) => Number(a.match(/\d+/)![0]) - Number(b.match(/\d+/)![0]));
 
-  return { phases, final: finalFile ? `/brand/${assets}/${finalFile}` : undefined };
+  /*
+    NO `final.` FILE? THE LAST NUMBER IS THE FINAL.
+
+    The README asked for the finished mark to be called final.png, and Genesis
+    renamed it 5.png — which is the obvious thing to do once the sketches are
+    1 to 4, and it quietly turned the answer into a fifth sketch. A sequence
+    ends where it ends; the last frame of a logo's route IS what it arrived at.
+
+    An explicit final. file still wins, for the case where the finished mark
+    is not the last thing that happened.
+  */
+  const named = entries.find((f) => isImage(f) && /^final\./i.test(f));
+  const finalFile = named ?? numbered.at(-1);
+  const phases = named ? numbered : numbered.slice(0, -1);
+
+  const url = (f: string) => `/brand/${assets}/${f}${stamp(f)}`;
+  return {
+    phases: phases.map(url),
+    final: finalFile ? url(finalFile) : undefined,
+  };
 }
 
 export function BrandingDesign() {
@@ -155,11 +198,23 @@ export function BrandingDesign() {
                               key={src}
                               className="relative size-[4.5rem] shrink-0 overflow-hidden rounded-card border border-white/15 bg-white sm:size-20"
                             >
+                              {/*
+                                `unoptimized`, and it is the fix rather than a
+                                shortcut. These are 15-50KB PNGs drawn at 80px;
+                                the optimiser saves almost nothing on them and
+                                IS the layer that served a stale stand-in under
+                                a reused filename. Serving the file directly
+                                means the ?v= stamp above is the whole cache
+                                key, and it also sidesteps needing to open
+                                images.localPatterns to arbitrary query strings
+                                — which the Next docs warn lets anyone mint
+                                unlimited optimiser cache entries.
+                              */}
                               <Image
                                 src={src}
                                 alt={`${item.title} logo, sketch ${index + 1} of ${route.phases.length}`}
                                 fill
-                                sizes="80px"
+                                unoptimized
                                 className="object-contain p-2"
                               />
                             </div>
@@ -178,7 +233,7 @@ export function BrandingDesign() {
                                   src={route.final}
                                   alt={`${item.title} — the finished logo`}
                                   fill
-                                  sizes="112px"
+                                  unoptimized
                                   className="object-contain p-3"
                                 />
                               </div>
@@ -199,25 +254,47 @@ export function BrandingDesign() {
                         copy one will look, and nowhere near the eye of someone
                         who does not.
                       */}
+                      {/*
+                        THE PALETTE, WITH ITS CODES BACK UNDER IT.
+
+                        Three passes on this. Five chips with a hex caption each
+                        read as a spreadsheet; one bare band with the codes
+                        hidden on hover threw away the useful half — a hex you
+                        cannot see is a hex you cannot copy, and somebody
+                        rebuilding a deck needs to. So: one continuous band,
+                        because a locked palette is one object, with the codes
+                        set beneath each segment on the same grid. The
+                        descriptor line that ran under it is gone at Genesis's
+                        request.
+                      */}
                       {"palette" in item && item.palette.length > 0 && (
-                        <div className="mt-5">
-                          <div className="flex h-7 w-full max-w-sm overflow-hidden rounded-card border border-white/15">
+                        <div className="mt-5 w-full max-w-sm">
+                          <div className="flex h-8 overflow-hidden rounded-card border border-white/15">
                             {item.palette.map((hex) => (
                               <span
                                 key={hex}
-                                title={hex}
                                 className="h-full flex-1"
                                 style={{ backgroundColor: hex }}
                               />
                             ))}
                           </div>
-                          {"paletteNote" in item && (
-                            <p className="mt-2 text-micro text-faint">
-                              {item.paletteNote}
-                            </p>
-                          )}
+                          {/*
+                            One column per swatch, so each code sits under the
+                            colour it names rather than in a sentence beside it.
+                          */}
+                          <div className="mt-1.5 flex">
+                            {item.palette.map((hex) => (
+                              <span
+                                key={hex}
+                                className="flex-1 text-center text-[0.5625rem] uppercase tracking-wide text-faint"
+                              >
+                                {hex}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       )}
+
                     </li>
                   );
                 })}

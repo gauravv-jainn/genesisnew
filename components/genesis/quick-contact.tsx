@@ -133,7 +133,7 @@ export function QuickContact() {
           <p className="text-small leading-relaxed text-ash">{spec.blurb}</p>
         </header>
 
-        <GenesisForm kind="quick" source={source} compact />
+        <GenesisForm kind="quick" source={source} compact panel={false} />
       </div>
     </div>
   );

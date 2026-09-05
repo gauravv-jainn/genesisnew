@@ -85,17 +85,29 @@ const TIMELINES = [
   "Just exploring",
 ] as const;
 
-/** The disciplines the careers page already advertises. One list, not two. */
+/**
+ * The roles Genesis actually hires for, taken from the form they run at
+ * genesismedia.co/career.
+ *
+ * These replace a list I had built from the careers page's "disciplines we
+ * hire for" — plausible, and not the same thing. "Content production" is a
+ * department; "Influencer Marketing Intern" is a job someone applies to, and
+ * an applicant picking from the first list tells you almost nothing about
+ * which opening they meant.
+ */
 const POSITIONS = [
-  "Content production",
-  "Editing & post",
-  "Creative direction",
-  "Strategy",
-  "Influencer partnerships",
-  "Design & motion",
-  "AI content",
-  "Engineering",
-  "Something else",
+  "Influencer Marketing",
+  "Influencer Marketing Intern",
+  "Content Creator",
+  "Creative Intern",
+  "AI & Graphic Intern",
+  "Social Media Intern",
+  "Copy Writer",
+  "Content Strategist",
+  "Video Editor",
+  "Cinematographer",
+  "Digital Marketing",
+  "Other",
 ] as const;
 
 const PLATFORMS = [

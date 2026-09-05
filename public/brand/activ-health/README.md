@@ -1,20 +1,23 @@
 # Activ Health App — the logo's route
 
-Drop the artwork here and the Brand & Design section shows it. Nothing else
-to edit: `branding-design.tsx` reads this folder at build time, so the files
-ARE the deployment.
+Drop the artwork here and the Brand & Design section shows it. Nothing else to
+edit: `branding-design.tsx` reads this folder at build time, so the files ARE
+the deployment.
 
-    phase-1.png    the sketches, in the order they happened
-    phase-2.png
-    phase-3.png    …as many as there are; phase-10 sorts after phase-9
-    final.png      the mark it arrived at
+    1.png, 2.png, 3.png…     the sketches, in the order they happened
+    5.png                     the last number is treated as the finished mark
 
-`.png`, `.jpg`, `.webp` and `.svg` all work. Anything not matching
-`phase-<number>.` or `final.` is ignored, so working files can live here too.
+Name them however you like as long as they START WITH A NUMBER — `1.png` and
+`phase-1.png` both work, and 10 sorts after 9 rather than after 1.
 
-The chips render on WHITE, because the sketches are scans of paper — a glass
-ground would show through them and grey the pencil out. Roughly square art
-sits best; the mark is `object-contain`, so nothing gets cropped either way.
+The LAST number is shown larger and behind a rule, as the mark the sketches
+arrived at. If the finished logo is not the last thing that happened, call it
+`final.png` and it wins regardless of numbering.
 
-With the folder empty the section prints "Activ Health App / Logo redesign"
-and no strip, which is what it did before this existed.
+`.png`, `.jpg`, `.webp` and `.svg` all work. Anything not starting with a
+number (or called `final.`) is ignored, so working files can live here too.
+
+The chips render on WHITE, because sketches are scans of paper — a glass
+ground would show through and grey the pencil out.
+
+With the folder empty the section prints the title and caption and no strip.

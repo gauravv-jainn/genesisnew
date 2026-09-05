@@ -30,13 +30,30 @@ export function GenesisForm({
   source,
   className,
   compact = false,
+  panel = true,
 }: {
   kind: FormKind;
   /** Which page or CTA the submission came from. */
   source: string;
   className?: string;
-  /** Drops the heading and blurb — for use inside a dialog that has its own. */
+  /**
+   * Drops the form's own heading and blurb.
+   *
+   * For anywhere that already has one — a dialog, or a section whose shell
+   * carries the title. /creator and /careers both did, so each was printing
+   * two headings: the section's and the form's, saying nearly the same thing
+   * one above the other.
+   *
+   * It does NOT drop the panel — see `panel`. That was a second thing this one
+   * flag used to do, and it meant a page could not remove a duplicate title
+   * without also losing the card the fields sit in.
+   */
   compact?: boolean;
+  /**
+   * Draws the glass card around the fields. Off for the popup, which is
+   * already a panel — two nested glass surfaces read as a seam, not depth.
+   */
+  panel?: boolean;
 }) {
   const spec = FORMS[kind];
   const [state, formAction] = useActionState(submitGenesisForm, INITIAL);
@@ -57,10 +74,7 @@ export function GenesisForm({
   return (
     <form
       action={formAction}
-      className={cn(
-        !compact && "glass glass-lit rounded-panel p-6 sm:p-8",
-        className,
-      )}
+      className={cn(panel && "glass glass-lit rounded-panel p-6 sm:p-8", className)}
     >
       <input type="hidden" name="kind" value={kind} />
       <input type="hidden" name="source" value={source} />

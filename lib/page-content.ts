@@ -62,10 +62,17 @@ export const creatorPage = {
 
 export const careersPage = {
   label: "Careers",
-  heading: "Join the",
-  headingAccent: "waitlist",
+  /*
+    NOT "the waitlist" any more. That was accurate when the form took a name,
+    an email and a message; it now asks which role you are applying for and
+    for a link to your work, which is an application. Telling someone they are
+    joining a waitlist and then asking them to pick a position is two
+    different promises on one page.
+  */
+  heading: "Join our talented",
+  headingAccent: "team",
   body:
-    "We open roles in batches. Leave your details and we'll reach out when something matching your discipline opens up.",
+    "We open roles in batches. Tell us which role you're after and leave a link to your work — we reach out when something matching opens up.",
   disciplines: [
     "Content production", "Editing & post", "Creative direction",
     "Strategy", "Influencer partnerships", "Design & motion",

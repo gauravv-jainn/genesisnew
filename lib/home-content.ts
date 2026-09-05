@@ -109,7 +109,16 @@ export const services = {
       /* Where the Brain sends you. Two verticals have a page of their own;
          the other two anchor to their homepage section until they do. */
       href: "/#influence",
-      caption: "Influencer marketing | Celeb | UGC activations",
+      /*
+       * READ OFF THE 2026 LOCKUP, verbatim. Each division's artwork carries
+       * its tagline burned in under the wordmark, and this string is set
+       * beneath the same lockup rendered as live text — so where the two
+       * disagree the page is contradicting its own logo. Three of the four
+       * did: the pipes are the old separators and "UGC activations",
+       * "Positioning" and the pipe-delimited AI Lab list are not what the
+       * new artwork says.
+       */
+      caption: "Influencer Marketing, Celeb Partnerships & UGC",
       /*
        * ONE GRADIENT PER DIVISION, from the deck's "What we do" board, where
        * each name is set in its own warm-to-cool ramp rather than in the
@@ -135,7 +144,8 @@ export const services = {
       glow: "#e2a6ff",
       short: "Brand & Design",
       href: "/#brand-design",
-      caption: "Branding | Design | Positioning | Collaterals",
+      // See the note on Influence above — read off the 2026 lockup.
+      caption: "Branding Positioning, Design & Collaterals",
       ramp: "linear-gradient(100deg, #f0dcff 0%, #f5a3cd 50%, #ffbe8f 100%)",
       body: "Identity systems, brand guidelines, motion design and the rules that keep a brand recognisable everywhere it appears.",
     },
@@ -147,7 +157,8 @@ export const services = {
       glow: "#ffab52",
       short: "Studios",
       href: "/#studios",
-      caption: "Strategy, scripting & content production",
+      // The one that already agreed with its lockup, bar capitalisation.
+      caption: "Strategy, Scripting & Content Production",
       ramp: "linear-gradient(100deg, #ff9147 0%, #ffb057 58%, #ffd27a 100%)",
       body: "Creative direction, strategy, scripting, production and post — plus the product and interactive work — built to hold up on any feed.",
     },
@@ -159,7 +170,8 @@ export const services = {
       glow: "#ff8fb8",
       short: "AI Lab",
       href: "/#ai-lab",
-      caption: "Avatars | Multilingual content | Games & apps",
+      // See the note on Influence above — read off the 2026 lockup.
+      caption: "Avatars, Multilingual Content, Games & Apps",
       ramp: "linear-gradient(100deg, #ff8fb8 0%, #ffa25c 100%)",
       body: "AI avatars and influencers, image and video generation, digital fashion, and the automation that compresses a content workflow from weeks into days.",
     },

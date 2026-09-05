@@ -5,6 +5,14 @@ import { cn } from "@/lib/utils";
 /**
  * The Genesis Media wordmark, from the brand guidelines.
  *
+ * 2026 REBRAND. Both files are the new lockup, in which MEDIA is set in the
+ * identity's own warm-to-violet gradient rather than the flat white it used
+ * to be — so the mark now carries the same ramp as the division lockups and
+ * the orb, and the wordmark is no longer the one place on the page wearing
+ * none of it. Supplied on a 2160 square of which 96% was transparent padding;
+ * cropped to the ink's measured bounding box with a hair of margin, which is
+ * what makes the ratio note below true.
+ *
  * Two files, not one recoloured file: the guidelines supply a dark lockup for
  * light grounds and a white lockup for dark ones, and in both the N's wedge
  * stays brand yellow. A CSS filter could not produce that from one asset
@@ -46,8 +54,20 @@ export function GenesisMark({
   }
 
   return (
+    /*
+      THE BOX IS THE ARTWORK'S OWN RATIO, 8.8:1.
+
+      It was 10:1 (120x12), which fitted the old file's 9.83 closely enough
+      that nobody noticed. The 2026 wordmark is 1723x181 of ink on a 1760x200
+      canvas — 8.8 — and `object-contain` resolves a mismatch by shrinking to
+      fit the tighter axis, so in a 10:1 box the mark would have rendered at
+      full height with fourteen pixels of dead space to its right and looked
+      like a logo that had lost its nerve. Height follows width here rather
+      than the other way round, so the mark keeps the horizontal presence the
+      layouts were built around.
+    */
     <span
-      className={cn("relative block h-[12px] w-[7.5rem] shrink-0", className)}
+      className={cn("relative block h-[14px] w-[7.5rem] shrink-0", className)}
     >
       <Image
         src="/brand/genesis-wordmark-light.png"

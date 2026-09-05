@@ -155,7 +155,7 @@ export function Services() {
                 aria-hidden
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <GenesisMark className="h-[14px] w-[8.75rem] lg:h-[18px] lg:w-[11.25rem]" />
+                <GenesisMark className="h-[16px] w-[8.75rem] lg:h-[20px] lg:w-[11.25rem]" />
               </div>
             </div>
           </RevealItem>

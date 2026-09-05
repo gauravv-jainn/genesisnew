@@ -4,6 +4,7 @@ import Link from "next/link";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { isPending } from "@/lib/home-content";
 import { mediaUrl } from "@/lib/media-url";
+import { filmUrl } from "@/lib/films";
 import {
   CLIP_LABELS,
   hasStory,
@@ -44,22 +45,36 @@ export function WorkDetail({ item }: { item: WorkItem }) {
       {/* The piece itself, first and large. */}
       <figure className="relative overflow-hidden rounded-panel border border-[var(--glass-border)] bg-ink">
         {/*
-          Same rule as the avatar hero, and for the same reason: aspect-[16/10]
-          in an 848px panel is 531px of media before the reader reaches the
-          client's name, which put this window a screen and a quarter tall on a
-          laptop. An aspect ratio cannot know how tall the screen is; a clamp
-          can. Portrait reels are object-cover'd inside it rather than being
-          allowed to set the height themselves.
+          object-CONTAIN, and the height is still clamped.
+
+          This was object-cover in a landscape box, and every film in the
+          catalogue is 1080x1920 — so the player took a wide slice out of the
+          middle of a portrait video and threw the rest away. On House of
+          Hiranandani that meant a strip of balcony where the building was.
+          Genesis was right that the ratio was wrong; cover is for artwork you
+          are cropping deliberately, and a film is not that.
+
+          Contain letterboxes instead, which is what every video player does
+          with mixed aspect ratios and costs nothing but the black at the
+          sides. The clamp stays, because an aspect ratio cannot know how tall
+          the screen is and this window has to fit a laptop.
         */}
-        <div className="relative h-[clamp(14rem,42vh,30rem)] w-full">
+        <div className="relative h-[clamp(16rem,52vh,34rem)] w-full">
           {item.clip ? (
             <video
-              src={item.clip}
+              /*
+                THE FULL FILM WHERE THERE IS ONE. `item.clip` is the four-second
+                preview cut for hover; playing it here is why every video on the
+                site was four seconds long. filmUrl returns the master out of
+                Drive when that is switched on, and undefined when it is not —
+                in which case this is exactly what it was before.
+              */
+              src={(item.reel?.[0] && filmUrl(item.reel[0])) || item.clip}
               poster={item.poster ?? item.art}
               controls
               playsInline
               preload="metadata"
-              className="absolute inset-0 size-full object-cover"
+              className="absolute inset-0 size-full object-contain"
             />
           ) : item.art ? (
             <Image
@@ -99,7 +114,7 @@ export function WorkDetail({ item }: { item: WorkItem }) {
             {rest.map((n) => (
               <li key={n} className="flex flex-col gap-2">
                 <video
-                  src={mediaUrl(reelClip(n))}
+                  src={filmUrl(n) ?? mediaUrl(reelClip(n))}
                   poster={mediaUrl(reelPoster(n))}
                   muted
                   loop

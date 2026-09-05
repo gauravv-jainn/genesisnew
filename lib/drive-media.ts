@@ -24,6 +24,57 @@ import { getDriveClient, getRootFolderId, isDriveConfigured } from "./google-dri
  * structure a person can keep tidy without being told a scheme.
  */
 
+/**
+ * Where each numbered film actually lives in Genesis's Drive.
+ *
+ * THE FOLDERS ARE ORGANISED BY SHOOT, NOT BY THE SITE'S PATHS, and that is
+ * reasonable — they are Genesis's working folders, and asking a person to
+ * restructure their Drive to match a URL scheme is asking the wrong party to
+ * do the mapping. The site asked for `work/clips/1.mp4`, the file is `1.mp4`
+ * at the root of one folder, and nothing resolved. This table is the mapping,
+ * written down once.
+ *
+ * Two sources, because the footage arrived in two batches:
+ *   1-32   "With 2 seconds thumbnail"   — named 1.mp4 … 32.mp4
+ *   33-42  "Website Content Temporary"  — named after the property filmed
+ *
+ * Note 40: `Chembur Plot` has no file extension in Drive. It is matched by the
+ * name Drive actually holds, not the name it ought to have.
+ */
+const PROPERTY_FILMS: Record<number, string> = {
+  33: "1) Panvel Hospital Plot.mp4",
+  34: "2) Ghatkopar Godown.mp4",
+  35: "3) Chembur Commercial Office.mp4",
+  36: "4) Vashi Petrol Pump.mp4",
+  37: "5) Prajapati Ornate.mp4",
+  38: "6) Sea Facing Alibag.mp4",
+  39: "7) Alibag Plot 1.mp4",
+  40: "8) Chembur Plot",
+  41: "9) Karjat Agricultural Land.mp4",
+  42: "11) Sarda Village.mp4",
+};
+
+/** Resolves `films/<n>.mp4` to the folder and filename Drive really has. */
+function filmSource(
+  segments: string[],
+): { parentId: string; name: string } | null {
+  if (segments.length !== 2 || segments[0] !== "films") return null;
+  const n = Number(segments[1].replace(/\.mp4$/i, ""));
+  if (!Number.isInteger(n)) return null;
+
+  const property = PROPERTY_FILMS[n];
+  if (property) {
+    const folder = process.env.GOOGLE_DRIVE_PROPERTY_FOLDER_ID?.trim();
+    return folder ? { parentId: folder, name: property } : null;
+  }
+
+  if (n >= 1 && n <= 32) {
+    const root = getRootFolderId();
+    return root ? { parentId: root, name: `${n}.mp4` } : null;
+  }
+  return null;
+}
+
 export type DriveMediaFile = {
   id: string;
   name: string;
@@ -135,6 +186,14 @@ export async function resolveDriveMedia(
   if (cached) return cached;
 
   const lookup = (async () => {
+    /*
+      A film is addressed by number and lives wherever Genesis put it, so it
+      skips the folder walk entirely and asks for one named file in one known
+      folder. Everything else still mirrors /public.
+    */
+    const film = filmSource(segments);
+    if (film) return findChild(film.parentId, film.name);
+
     let parent = root;
     for (const segment of segments.slice(0, -1)) {
       const folder = await findChild(parent, segment);

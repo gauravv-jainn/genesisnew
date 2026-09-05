@@ -76,13 +76,43 @@ export async function GET(
       "Accept-Ranges": "bytes",
     });
 
-    const length = response.headers["content-length"];
-    if (typeof length === "string") headers.set("Content-Length", length);
+    /*
+      GAXIOS RETURNS A `Headers` INSTANCE, NOT A PLAIN OBJECT.
 
-    const contentRange = response.headers["content-range"];
-    if (typeof contentRange === "string") {
-      headers.set("Content-Range", contentRange);
-    }
+      This read them as `response.headers["content-length"]`, which on a
+      Headers is undefined — so the route answered 206 Partial Content with no
+      Content-Range and no Content-Length. That is a malformed partial
+      response: a browser cannot tell how big the file is or which slice it
+      just received, so seeking a video breaks and some players refuse it
+      outright. It looked fine until something actually streamed through here,
+      because a 200 with no Content-Length still plays.
+
+      Read through the accessor, and keep the bracket form as a fallback in
+      case a future version hands back an object again.
+    */
+    const header = (name: string): string | undefined => {
+      const raw = response.headers as unknown;
+      /*
+        DUCK-TYPED, NOT `instanceof Headers`. The constructor is named Headers
+        and the instanceof check still failed: gaxios builds its own undici
+        instance, so its Headers class is a different realm's from the one in
+        this module's scope. Asking whether the thing has a `get` cannot care
+        which copy of the class it came from.
+      */
+      const get = (raw as { get?: unknown }).get;
+      if (typeof get === "function") {
+        const value = (get as (n: string) => string | null).call(raw, name);
+        return value ?? undefined;
+      }
+      const value = (raw as Record<string, unknown>)[name];
+      return typeof value === "string" ? value : undefined;
+    };
+
+    const length = header("content-length");
+    if (length) headers.set("Content-Length", length);
+
+    const contentRange = header("content-range");
+    if (contentRange) headers.set("Content-Range", contentRange);
 
     const body = Readable.toWeb(
       response.data as unknown as Readable,

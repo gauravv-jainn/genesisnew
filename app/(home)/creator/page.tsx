@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 
 import { GenesisForm } from "@/components/genesis/genesis-form";
 import { SlideUp } from "@/components/genesis/slide-up";
-import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
+import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { CornerNote, Spotlight } from "@/components/genesis/spotlight";
+import { GenesisMark } from "@/components/genesis/genesis-mark";
 import { creatorPage } from "@/lib/page-content";
 import { SectionShell } from "../components/section-shell";
 
@@ -58,11 +59,32 @@ export default function CreatorPage() {
               <SectionLabel dot tone="brand">
                 {creatorPage.label}
               </SectionLabel>
-              <h1 className="mt-6 text-balance text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1 lg:text-h1">
-                {creatorPage.heading}{" "}
-                <span className="font-serif font-normal italic text-brand-ink">
-                  {creatorPage.headingAccent}
-                </span>
+              {/*
+                THE WORDMARK, NOT THE WORDS. Genesis asked for "Work with" to
+                sit against the real gradient lockup rather than a serif italic
+                imitation of it — the mark exists, and setting the brand name in
+                type beside a page that uses the artwork everywhere else was the
+                one place it was being redrawn by hand.
+
+                It stays an h1: the sr-only name inside GenesisMark is what a
+                screen reader and a crawler read, so the heading is still a
+                heading with the company's name in it.
+              */}
+              <h1 className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1">
+                <span>{creatorPage.heading}</span>
+                <span className="sr-only">Genesis Media</span>
+                {/*
+                  `aspect-[8.8/1]`, not `w-auto`. GenesisMark is a positioned
+                  box holding two `fill` images, and a fill image is absolutely
+                  positioned — it contributes no intrinsic size, so w-auto
+                  resolved to ZERO and the mark rendered 0x40. The artwork's own
+                  ratio has to be declared for the height to imply a width.
+                */}
+                <GenesisMark
+                  aria-hidden
+                  className="h-[0.72em] w-auto shrink-0 aspect-[8.8/1]"
+                  sizes="(min-width: 640px) 352px, 70vw"
+                />
               </h1>
             </Reveal>
 
@@ -71,32 +93,14 @@ export default function CreatorPage() {
             </Reveal>
           </div>
 
-          <RevealGroup className="mt-16 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {creatorPage.benefits.map((benefit, index) => (
-              <RevealItem key={benefit.title} className="h-full">
-                {/*
-                  PLAIN CARDS, at Genesis's instruction. These were PaperCards:
-                  pinned, tilted and tinted, each holding two sentences. Four of
-                  them in a row was three effects and a paragraph competing for
-                  the same square — the pin drew the eye to a corner, the tilt
-                  said "loose note" while the content was a list of commitments,
-                  and the tint made the copy fight its own background.
-
-                  A title and one line, level, in the same glass surface the
-                  rest of the site uses. Nothing here needed a device.
-                */}
-                <div className="glass glass-lit flex h-full flex-col rounded-panel p-6">
-                  <p className="micro-label text-brand-ink">{`0${index + 1}`}</p>
-                  <h2 className="mt-4 text-h3 font-normal tracking-tight text-bone">
-                    {benefit.title}
-                  </h2>
-                  <p className="mt-2 text-small leading-relaxed text-ash">
-                    {benefit.body}
-                  </p>
-                </div>
-              </RevealItem>
-            ))}
-          </RevealGroup>
+          {/*
+            THE FOUR BENEFIT CARDS ARE GONE, at Genesis's request. Simplifying
+            them was the wrong fix and they said so: a creator who reached this
+            page came to sign up, and four cards of reassurance between the
+            headline and the form is a page arguing with someone who has
+            already decided. The standfirst on the right makes the same
+            promise in three lines, once.
+          */}
 
           <Reveal delay={0.15} className="mt-16 flex justify-end">
             {/*

@@ -274,6 +274,17 @@
         #1e1526 84%,
         #120f18 100%
     );
+    /* --- THE ORB'S STAGE -------------------------------------------------
+       How strongly the dark pool under the sphere paints, 0 to 1.
+
+       The orb's canvas composites with `lighter`, so it needs a dark ground
+       or it saturates to white and disappears. In THIS theme the page is
+       already dark and the pool would only show up as a black disc sitting on
+       a violet field — so it is switched off entirely here and turned on for
+       paper. One number, because the stops in neural-orb.tsx multiply their
+       own alphas by it.
+       --------------------------------------------------------------------- */
+    --orb-stage: 0;
     --surface-ink: #1a1a1a;
     --surface-raised: #222222;
     --surface-panel: #2b2b2b;
@@ -445,6 +456,8 @@
         #fffbf2 88%,
         #ffffff 100%
     );
+    /* Paper needs the pool: see --orb-stage in the dark block. */
+    --orb-stage: 1;
     --chapter-ground: #111111;
     --chapter-blend: #ffffff;
     --surface-ink: #f5f5f5;
@@ -525,6 +538,8 @@
             #fffbf2 88%,
             #ffffff 100%
         );
+    /* Paper needs the pool: see --orb-stage in the dark block. */
+    --orb-stage: 1;
         --chapter-ground: #111111;
         --chapter-blend: #ffffff;
         --surface-ink: #f5f5f5;

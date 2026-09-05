@@ -1037,17 +1037,33 @@ export function NeuralOrb({ className }: { className?: string }) {
         which is exactly right.
       */}
       <div
-        className="absolute inset-[-2%] rounded-full blur-xl"
+        className="absolute inset-[-6%] rounded-full blur-sm"
         style={{
           /*
-            A long tail, not a disc. The sphere fills about 80% of this box, so
-            the pool only has to be solid across the middle half — everything
-            after that is falloff. Eight stops rather than four, because on
-            paper a four-stop fade of near-black is visibly a ring, and a blur
-            on top of them because this layer never repaints and can afford it.
+            SOLID UNDER THE WHOLE SPHERE, THEN A SHORT TAIL — and getting that
+            order wrong is what made the first attempt a smudge.
+
+            The arithmetic: the sphere's radius is 0.4 of the box, so it spans
+            80% of it, and this pool is inset -6% so its own radius is 56 in
+            those units against the sphere's 40. The sphere's edge therefore
+            sits at 71% of the pool's radius. The previous version went solid
+            only to 30% and spent everything after that fading, which put
+            three-quarters of the sphere on a half-transparent ground — the dots
+            composite with `lighter`, so on a pale ground they washed out, and
+            what was left read as a dark cloud rather than a stage.
+
+            Solid to 74% now, which is just past the sphere's rim, then the
+            whole falloff in the last quarter. The sphere lands on black; the
+            page gets a defined edge instead of a haze.
+
+            EVERY STOP IS MULTIPLIED BY --orb-stage, which is 1 on paper and 0
+            in the dark theme. There the page is already dark and the pool has
+            nothing to do but show up as a black disc on a violet field, so it
+            is switched off rather than tuned down — one token, defined beside
+            the rest of the theme, and the alphas below scale themselves.
           */
           background:
-            "radial-gradient(circle at 50% 50%, #08080c 0%, #08080c 30%, rgb(8 8 12 / 0.94) 42%, rgb(8 8 12 / 0.82) 52%, rgb(8 8 12 / 0.6) 62%, rgb(8 8 12 / 0.36) 72%, rgb(8 8 12 / 0.16) 82%, rgb(8 8 12 / 0.05) 90%, transparent 98%)",
+            "radial-gradient(circle at 50% 50%, rgb(8 8 12 / calc(1 * var(--orb-stage, 0))) 0%, rgb(8 8 12 / calc(1 * var(--orb-stage, 0))) 74%, rgb(8 8 12 / calc(0.72 * var(--orb-stage, 0))) 84%, rgb(8 8 12 / calc(0.32 * var(--orb-stage, 0))) 93%, transparent 100%)",
         }}
       />
       {/*

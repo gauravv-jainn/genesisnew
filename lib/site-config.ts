@@ -21,17 +21,27 @@ export const siteConfig = {
     "Genesis is a Gen Z-led full-service agency where strategy, content and technology come together to build iconic brands.",
   url: "https://genesismedia.co",
   /**
-   * WhatsApp, in international format without symbols — e.g. "919876543210".
+   * Genesis's business WhatsApp line. Written the way a person writes a phone
+   * number rather than the way wa.me wants it — the button strips everything
+   * that is not a digit before building the link, so the readable form is the
+   * one that lives here and the country code is the only part that matters.
    *
-   * DELIBERATELY EMPTY. The floating button renders only when this holds a
-   * real number, because a WhatsApp button that opens a chat with nobody is
-   * worse than no button: it is a dead end presented as the fastest way to
-   * reach Genesis. One line to fill in.
-   * TODO(content): supply the business WhatsApp number.
+   * The floating button renders only when this holds a number; setting it
+   * back to an empty string switches the button off rather than leaving it
+   * opening a chat with nobody.
    */
-  whatsapp: "",
+  whatsapp: "+91 96534 54848",
+  /**
+   * THE MESSAGE THE CHAT OPENS WITH, so the visitor never faces an empty
+   * compose box. Two jobs: read like something a person would actually send,
+   * and tell Genesis where the lead came from — a message that opens with the
+   * website saves the first reply from being "how did you find us?". It stops
+   * short of naming a division on purpose. The button floats on every page,
+   * so it cannot know which one they were reading, and a wrong guess printed
+   * in the visitor's own compose box is worse than no guess.
+   */
   whatsappMessage:
-    "Hi Genesis, I'd like to discuss a project with your team.",
+    "Hi Genesis! I found you through your website and I'd like to talk about a project.",
 } as const;
 
 /**

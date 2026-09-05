@@ -88,6 +88,43 @@ function getSheets() {
 }
 
 /**
+ * Creates the Submissions tab if the spreadsheet has not got one.
+ *
+ * A NEW SHEET COMES WITH ONE TAB CALLED "Sheet1", AND NOTHING TOLD ANYONE.
+ * Genesis shared a spreadsheet, enabled the API, and every submission would
+ * still have failed — appending to `Submissions!A:H` when no such tab exists
+ * is a 400, and because appendSubmission never throws, the failure would have
+ * been silent and the form would have blamed the database instead.
+ *
+ * Asking a person to rename a tab to an exact string is a setup step that gets
+ * missed once and then debugged for an hour. Making the tab is one API call.
+ *
+ * Failing here must not stop the append either: if the tab already exists this
+ * throws a duplicate error, which is the success case.
+ */
+async function ensureTab(spreadsheetId: string): Promise<void> {
+  try {
+    const sheets = getSheets();
+    const meta = await sheets.spreadsheets.get({
+      spreadsheetId,
+      fields: "sheets.properties.title",
+    });
+    const titles = (meta.data.sheets ?? []).map((s) => s.properties?.title);
+    if (titles.includes(TAB)) return;
+
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [{ addSheet: { properties: { title: TAB } } }],
+      },
+    });
+  } catch {
+    // Raced by another submission, or no permission to add one. The append
+    // below reports the real outcome either way.
+  }
+}
+
+/**
  * Writes the header row if — and only if — the sheet has nothing in it.
  *
  * Failing here must not stop the append: a missing header is cosmetic, a lost
@@ -125,6 +162,7 @@ export async function appendSubmission(row: SubmissionRow): Promise<boolean> {
   if (!spreadsheetId || !isSheetsConfigured()) return false;
 
   try {
+    await ensureTab(spreadsheetId);
     await ensureHeader(spreadsheetId);
 
     await getSheets().spreadsheets.values.append({

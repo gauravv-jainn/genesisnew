@@ -343,6 +343,25 @@ export const COLUMN_FIELDS = new Set(["name", "email", "company", "message"]);
  * submits for an untouched input — treating "" as a type error would fail
  * every form where someone skipped an optional line.
  */
+/**
+ * Whether a posted `kind` is one this module knows.
+ *
+ * DERIVED FROM `FORMS`, AND IT LIVES HERE FOR A REASON. This was a hand-typed
+ * list of three kinds sitting in the server action — `value === "creator" ||
+ * value === "brand" || value === "quick"` — and adding `career` and
+ * `influencer` to FORMS did not add them to it. Both new forms rendered
+ * perfectly, validated in the browser, submitted, and came back "Unknown
+ * form." from the server. They had never once worked.
+ *
+ * That is precisely the failure this file's own header warns about: a list and
+ * a second list that must agree, maintained apart. The schema is already
+ * derived from the field spec for the same reason; the guard should have been
+ * too. `in FORMS` cannot fall behind FORMS.
+ */
+export function isFormKind(value: string): value is FormKind {
+  return value in FORMS;
+}
+
 export function schemaFor(spec: FormSpec) {
   const shape: Record<string, z.ZodTypeAny> = {};
 

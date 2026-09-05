@@ -9,8 +9,8 @@ import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import {
   COLUMN_FIELDS,
   FORMS,
+  isFormKind,
   schemaFor,
-  type FormKind,
 } from "@/lib/forms";
 import { SubmissionType } from "@/lib/generated/prisma/enums";
 import { appendSubmission, isSheetsConfigured } from "@/lib/google-sheets";
@@ -264,13 +264,19 @@ export async function submitGenesisForm(
     };
   }
 
-  if (!isDatabaseConfigured()) {
-    return {
-      status: "error",
-      message:
-        "The form is not connected to a database yet. Please email hello@genesismedia.co in the meantime.",
-    };
-  }
+  /*
+    NO DATABASE-ONLY GATE HERE ANY MORE.
+
+    This action kept a `!isDatabaseConfigured()` refusal ABOVE the two-sink
+    check further down — a straggler from before Sheets was a sink at all.
+    submitContactForm was moved to the two-sink rule and this one was not, so
+    every submission through /careers and /creator was turned away with "not
+    connected to a database" while a perfectly good spreadsheet sat configured
+    and waiting, and the correct guard below could never be reached.
+
+    The rule is: refuse only when NEITHER sink exists. That check is thirty
+    lines down and it is the one that decides.
+  */
 
   /*
     Split the answers: four of them are columns, the rest ride in the JSON
@@ -360,6 +366,3 @@ export async function submitGenesisForm(
   }
 }
 
-function isFormKind(value: string): value is FormKind {
-  return value === "creator" || value === "brand" || value === "quick";
-}

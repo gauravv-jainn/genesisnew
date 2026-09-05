@@ -135,8 +135,24 @@ export function DivisionLockup({
   }
 
   const ratio = lockup.width / lockup.height;
+  /*
+    THE PATH CARRIES `wordmark`, AND THAT IS A CACHE FIX, NOT TIDINESS.
+
+    These files were re-cropped in place — same names, same paths, different
+    picture — and every layer that caches an image by URL went on serving the
+    old one: the browser, Next's optimiser, and a CDN would too. The old crop
+    had the tagline baked in and the new markup prints the tagline as text, so
+    a stale copy does not look stale, it looks like a bug — the line appears
+    twice, once burned into the picture and once underneath it. Genesis saw
+    that three times and I kept calling it a refresh problem, which it was,
+    but "tell everyone to hard-refresh" is not a fix.
+
+    A changed asset gets a changed URL. The segment says what these are — the
+    wordmark alone, no tagline — so the next person to re-crop them knows to
+    move the segment rather than overwrite the file.
+  */
   const src = (variant: "light" | "dark") =>
-    `/brand/divisions/${lockup.slug}-${variant}.png`;
+    `/brand/divisions/wordmark/${lockup.slug}-${variant}.png`;
 
   /*
     FLUID MODE EXISTS SO FOUR LOCKUPS CAN SHARE A HEIGHT.

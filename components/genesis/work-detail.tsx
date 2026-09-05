@@ -29,7 +29,15 @@ export function WorkDetail({ item }: { item: WorkItem }) {
     <article className="flex flex-col gap-8">
       {/* The piece itself, first and large. */}
       <figure className="relative overflow-hidden rounded-panel border border-[var(--glass-border)] bg-ink">
-        <div className="relative aspect-[16/10] w-full">
+        {/*
+          Same rule as the avatar hero, and for the same reason: aspect-[16/10]
+          in an 848px panel is 531px of media before the reader reaches the
+          client's name, which put this window a screen and a quarter tall on a
+          laptop. An aspect ratio cannot know how tall the screen is; a clamp
+          can. Portrait reels are object-cover'd inside it rather than being
+          allowed to set the height themselves.
+        */}
+        <div className="relative h-[clamp(14rem,42vh,30rem)] w-full">
           {item.clip ? (
             <video
               src={item.clip}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { GlassButton } from "@/components/genesis/glass-button";
@@ -39,13 +40,40 @@ export function AvatarDetail({ avatar }: { avatar: Avatar }) {
           rather than in either of them.
         */}
         <div className="relative h-[clamp(14rem,38vh,26rem)] w-full">
-          {/* TODO(assets): the real portrait replaces this ground. */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(160deg, rgb(${tint} / 0.4) 0%, rgb(14 14 18 / 0.97) 62%), radial-gradient(70% 50% at 50% 18%, rgb(255 255 255 / 0.14), transparent 72%)`,
-            }}
-          />
+          {avatar.portrait ? (
+            <>
+              {/*
+                Framed from the TOP, not the centre. The hero is a wide short
+                band cut from a 9:16 portrait, so a centred crop takes the
+                torso and loses the face — which is the one part of an avatar
+                card that matters.
+              */}
+              <Image
+                src={avatar.portrait}
+                alt={`${avatar.name} — AI avatar`}
+                fill
+                priority
+                sizes="(min-width: 1024px) 56rem, 100vw"
+                className="object-cover object-top"
+              />
+              {/* Keeps the name legible over whatever the photograph does. */}
+              <div
+                aria-hidden
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(0deg, rgb(0 0 0 / 0.85) 0%, rgb(0 0 0 / 0.35) 42%, transparent 72%)",
+                }}
+              />
+            </>
+          ) : (
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(160deg, rgb(${tint} / 0.4) 0%, rgb(14 14 18 / 0.97) 62%), radial-gradient(70% 50% at 50% 18%, rgb(255 255 255 / 0.14), transparent 72%)`,
+              }}
+            />
+          )}
           <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
             <span className="block text-h1 font-semibold uppercase leading-none tracking-tight text-white">
               {avatar.name}

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
@@ -75,6 +76,8 @@ type Avatar = {
   id: string;
   name: string;
   role?: string | undefined;
+  /** The supplied card, 1080x1920. Absent for an avatar not yet shot. */
+  portrait?: string | undefined;
 };
 
 /**
@@ -160,7 +163,21 @@ export function AvatarFan({
         return (
           <motion.div
             key={avatar.id}
-            className="absolute inset-x-0 top-0 flex justify-center"
+            /*
+              POINTER-EVENTS-NONE, WHICH IS WHY SIX OF THE SEVEN WERE DEAD.
+
+              Each card is centred inside a wrapper that spans the FULL width
+              of the fan, and the wrappers are stacked with the middle card
+              highest — so the centre card's wrapper, an invisible full-width
+              box, lay over every other card and swallowed their clicks.
+              Measured before this: one of seven reachable, and the one that
+              worked was Adi, the middle card. Nothing looked wrong, which is
+              why it took a hit-test to find.
+
+              The wrapper is a positioning device and should never have been a
+              target; the link inside it takes pointer events back.
+            */
+            className="pointer-events-none absolute inset-x-0 top-0 flex justify-center"
             style={{
               // Nearer the middle sits on top, so the fan overlaps outward
               // from the card being presented.
@@ -212,7 +229,7 @@ export function AvatarFan({
               href={`/avatars/${avatar.id}`}
               aria-label={`${avatar.name}${avatar.role ? `, ${avatar.role}` : ""}`}
               className={cn(
-                "block rounded-[1.25rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+                "pointer-events-auto block rounded-[1.25rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
               )}
             >
             <figure
@@ -224,11 +241,33 @@ export function AvatarFan({
                   ? "border-white/25 shadow-[0_24px_70px_-20px_rgb(0_0_0/0.9),0_0_44px_-12px_rgb(255_212_0/0.28)]"
                   : "border-white/10 shadow-[0_18px_50px_-24px_rgb(0_0_0/0.9)]",
               )}
-              style={{
-                /* TODO(assets): the real portrait replaces this ground. */
-                background: `linear-gradient(160deg, rgb(${PLACEHOLDER[index % PLACEHOLDER.length]} / 0.34) 0%, rgb(14 14 18 / 0.97) 58%), radial-gradient(78% 52% at 50% 16%, rgb(255 255 255 / 0.13), transparent 72%)`,
-              }}
+              style={
+                avatar.portrait
+                  ? undefined
+                  : {
+                      background: `linear-gradient(160deg, rgb(${PLACEHOLDER[index % PLACEHOLDER.length]} / 0.34) 0%, rgb(14 14 18 / 0.97) 58%), radial-gradient(78% 52% at 50% 16%, rgb(255 255 255 / 0.13), transparent 72%)`,
+                    }
+              }
             >
+              {/*
+                THE REAL PORTRAIT, and the ramp behind it stays as the fallback
+                for an avatar that has not been shot yet.
+
+                `sizes` is the card's own width, not the viewport's: these are
+                1080x1920 originals and the card tops out at 13rem, so without
+                it every one of the seven would fetch a full-width file to fill
+                208px. The card is 3:4 and the source is 9:16, so it crops —
+                object-cover, centred, which is where these are framed.
+              */}
+              {avatar.portrait && (
+                <Image
+                  src={avatar.portrait}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 13rem, (min-width: 640px) 14vw, 7.5rem"
+                  className="object-cover"
+                />
+              )}
               {/*
                 The scrim. On the board the names are burned into the lower
                 third of each photograph, and white type straight onto a

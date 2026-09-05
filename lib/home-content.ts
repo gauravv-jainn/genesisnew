@@ -367,7 +367,12 @@ export const aiContent = {
   avatarsAccent: "Realism",
   avatarsBody: "AI content that works like magic.",
   /*
-    TODO(assets): real avatar stills owed — one portrait per name, 3:4.
+    THE PORTRAITS ARE IN. Genesis supplied one card per name at 1080x1920,
+    which is why `portrait` is a real path on every entry rather than the
+    placeholder ramp the fan used to paint. They are photographs with no
+    transparency and no burned-in type, so the card keeps drawing its own
+    scrim and name over them.
+
     TODO(content): `bio`, `languages` and `useCases` are Genesis's to write.
     Each avatar has a page of its own at /avatars/<slug>; the detail view
     omits whatever is still pending rather than printing a placeholder.
@@ -383,25 +388,25 @@ export const aiContent = {
     list them below — reel takes .mp4 paths, stills take images.
   */
   avatars: [
-    { id: "ivaanat", name: "Ivaanat", role: undefined as string | undefined,
+    { id: "ivaanat", portrait: "/avatars/ivaanat.jpg", name: "Ivaanat", role: undefined as string | undefined,
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
-    { id: "tanvi", name: "Tanvi", role: undefined as string | undefined,
+    { id: "tanvi", portrait: "/avatars/tanvi.jpg", name: "Tanvi", role: undefined as string | undefined,
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
-    { id: "jesko", name: "Jesko", role: "DJ | Techno artist",
+    { id: "jesko", portrait: "/avatars/jesko.jpg", name: "Jesko", role: "DJ | Techno artist",
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
-    { id: "adi", name: "Adi", role: "Aditya Birla Health Insurance",
+    { id: "adi", portrait: "/avatars/adi.jpg", name: "Adi", role: "Aditya Birla Health Insurance",
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
-    { id: "diya", name: "Diya", role: "Aditya Birla Health Insurance",
+    { id: "diya", portrait: "/avatars/diya.jpg", name: "Diya", role: "Aditya Birla Health Insurance",
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
-    { id: "bharat", name: "Bharat", role: "Advocate",
+    { id: "bharat", portrait: "/avatars/bharat.jpg", name: "Bharat", role: "Advocate",
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
-    { id: "shivam", name: "Shivam", role: "Founder & CEO | Genesis",
+    { id: "shivam", portrait: "/avatars/shivam.jpg", name: "Shivam", role: "Founder & CEO | Genesis",
       bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
       reel: [] as string[], stills: [] as string[] },
   ],

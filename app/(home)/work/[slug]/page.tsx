@@ -53,7 +53,7 @@ export default async function WorkProjectPage({
   if (!item) notFound();
 
   return (
-    <main className="relative min-h-dvh pb-32 pt-32 sm:pt-40">
+    <main className="relative min-h-dvh pb-16 pt-24 sm:pb-20 sm:pt-28">
       <div className="mx-auto w-full max-w-4xl px-6">
         <WorkDetail item={item} />
       </div>

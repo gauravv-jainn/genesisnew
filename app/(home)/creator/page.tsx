@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 
 import { GenesisForm } from "@/components/genesis/genesis-form";
-import { SlideUp } from "@/components/genesis/slide-up";
-import { Reveal } from "@/components/genesis/reveal";
-import { SectionLabel } from "@/components/genesis/section-label";
-import { CornerNote, Spotlight } from "@/components/genesis/spotlight";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
+import { Reveal } from "@/components/genesis/reveal";
+import { SlideUp } from "@/components/genesis/slide-up";
+import { Spotlight } from "@/components/genesis/spotlight";
 import { creatorPage } from "@/lib/page-content";
-import { SectionShell } from "../components/section-shell";
 
 export const metadata: Metadata = {
   title: "For Creators",
@@ -15,130 +13,75 @@ export const metadata: Metadata = {
 };
 
 /**
- * /creator — "I'm a Creator", built to p05_0.
+ * /creator — the roster form, and nothing else.
  *
- * One hard light from upper right, the offer pinned beneath it as cards at
- * angles, oversized ghosted type behind, and editorial corner annotations.
- * The copy stays plain-spoken on purpose: creators read a hundred agency
- * pages, and what decides it is briefs, money and repeat work.
+ * WHAT THIS PAGE USED TO BE: an eyebrow, a headline, a corner note, four
+ * pinned benefit cards, a second corner note, then a section shell with its
+ * own label, its own heading, its own standfirst, and finally the form. Nine
+ * blocks of persuasion in front of one thing to fill in.
+ *
+ * Genesis cut it to the mark and the form, and they are right about who is on
+ * this page. A creator arrives here from a nav item that says "I'm a Creator"
+ * — they have already decided. Everything between that decision and the first
+ * field is the site talking to itself. The offer still exists in full inside
+ * the form's own fields, which is where someone who wants the detail will
+ * meet it.
+ *
+ * The spotlight stays: it is the page's lighting, not its copy, and without it
+ * a single column on a flat ground is a form on a page rather than a page.
  */
 export default function CreatorPage() {
   return (
     <SlideUp>
-    <main>
-      <section className="relative isolate overflow-hidden pt-32 pb-32 sm:pt-40">
-        {/*
-          THE SPOTLIGHT STOPS ABOVE THE CARDS.
-
-          It was reach 96 at full intensity — a cone falling almost the whole
-          section, which landed on cards 03 and 04 and washed them to a pale
-          yellow their body copy could not be read against. A spotlight that
-          lights the headline is drama; one that lights the paragraphs is a
-          filter over them.
-        */}
+      <main className="relative isolate min-h-dvh overflow-hidden pb-32 pt-32 sm:pt-40">
         <Spotlight x={68} spread={17} tone="warm" intensity={0.82} reach={58} />
 
         {/*
-          THE GHOST WORDMARK IS GONE FROM THIS PAGE.
-
-          It was "FOR CREATORS" at up to 22rem across the whole hero. Bounding
-          it to the headline band stopped it printing through the cards, and
-          left it doing the other half of the damage — sitting directly behind
-          "Work with Genesis" at a weight close enough to compete with it. Two
-          headlines occupying one space, one of which is decoration.
-
-          The section already has scale: a spotlight, a 4rem headline and four
-          pinned cards. It did not need a fifth voice, and Genesis was right
-          that the page looked wrong with it. GhostType still earns its place
-          on sections that are mostly type and air; this one is neither.
+          ONE COLUMN, so the headline sits on the same left edge as the first
+          field rather than floating over a form centred beneath it.
         */}
-
-        <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
-          <div className="flex flex-wrap items-start justify-between gap-8">
-            <Reveal className="max-w-xl">
-              <SectionLabel dot tone="brand">
-                {creatorPage.label}
-              </SectionLabel>
-              {/*
-                THE WORDMARK, NOT THE WORDS. Genesis asked for "Work with" to
-                sit against the real gradient lockup rather than a serif italic
-                imitation of it — the mark exists, and setting the brand name in
-                type beside a page that uses the artwork everywhere else was the
-                one place it was being redrawn by hand.
-
-                It stays an h1: the sr-only name inside GenesisMark is what a
-                screen reader and a crawler read, so the heading is still a
-                heading with the company's name in it.
-              */}
-              <h1 className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1">
-                <span>{creatorPage.heading}</span>
-                <span className="sr-only">Genesis Media</span>
-                {/*
-                  `aspect-[8.8/1]`, not `w-auto`. GenesisMark is a positioned
-                  box holding two `fill` images, and a fill image is absolutely
-                  positioned — it contributes no intrinsic size, so w-auto
-                  resolved to ZERO and the mark rendered 0x40. The artwork's own
-                  ratio has to be declared for the height to imply a width.
-                */}
-                <GenesisMark
-                  aria-hidden
-                  className="h-[0.72em] w-auto shrink-0 aspect-[8.8/1]"
-                  sizes="(min-width: 640px) 352px, 70vw"
-                />
-              </h1>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <CornerNote index="Creators">{creatorPage.body}</CornerNote>
-            </Reveal>
-          </div>
-
-          {/*
-            THE FOUR BENEFIT CARDS ARE GONE, at Genesis's request. Simplifying
-            them was the wrong fix and they said so: a creator who reached this
-            page came to sign up, and four cards of reassurance between the
-            headline and the form is a page arguing with someone who has
-            already decided. The standfirst on the right makes the same
-            promise in three lines, once.
-          */}
-
-          <Reveal delay={0.15} className="mt-16 flex justify-end">
+        <div className="relative z-[2] mx-auto w-full max-w-2xl px-6">
+          <Reveal>
             {/*
-              This note used to repeat card 04 almost word for word — "most of
-              our creators come back for the next campaign" appeared twice,
-              two screens apart, which reads as a copy-paste slip rather than
-              emphasis. A closing note should add the thing the four cards
-              imply but none of them says.
+              THE WORDMARK, NOT THE WORDS. The mark exists; setting the brand
+              name in type on a page that uses the artwork everywhere else was
+              the one place it was being redrawn by hand.
+
+              It stays an h1, and the sr-only name is what a screen reader and
+              a crawler read — so this is still a heading carrying the
+              company's name, not a picture where a heading should be.
+
+              `aspect-[8.8/1]`, not `w-auto`: GenesisMark holds two `fill`
+              images, which are absolutely positioned and contribute no
+              intrinsic size, so w-auto resolved to zero and the mark rendered
+              0x40. The artwork's ratio has to be declared for the height to
+              imply a width.
             */}
-            <CornerNote index="2">
-              None of that is generosity. It is the cheapest way we know to get
-              work worth publishing.
-            </CornerNote>
+            <h1 className="flex flex-col gap-y-3 text-h2 font-normal leading-[1.05] tracking-tight text-bone sm:text-h1">
+              <span>{creatorPage.heading}</span>
+              <span className="sr-only">Genesis Media</span>
+              <GenesisMark
+                aria-hidden
+                className="h-[0.78em] w-auto shrink-0 aspect-[8.8/1]"
+                sizes="(min-width: 640px) 384px, 80vw"
+              />
+            </h1>
+          </Reveal>
+
+          <Reveal delay={0.08} className="mt-12 sm:mt-14">
+            {/*
+              `influencer` rather than `creator`: same audience, the field set
+              Genesis actually runs — platforms, rates, and the permission to
+              pitch on someone's behalf, which is a thing you must be asked for
+              rather than assumed.
+
+              `compact` drops the form's own heading, because the h1 above is
+              the page's one title now.
+            */}
+            <GenesisForm kind="influencer" source="/creator" compact />
           </Reveal>
         </div>
-      </section>
-
-      <SectionShell
-        id="apply"
-        label="Join the roster"
-        heading="Get onboarded"
-        headingAccent="with us"
-        body="Hello influencers and creators. Tell us where you post, what you charge and what you're looking for — we brief creators for brand campaigns every week."
-        tone="brand"
-        origin="bottom"
-        intensity={0.2}
-      >
-        <Reveal className="mx-auto max-w-2xl">
-          {/*
-            `influencer` rather than `creator`: same audience, the field set
-            Genesis actually runs — platforms, rates, and the permission to
-            pitch on someone's behalf, which is a thing you must be asked for
-            rather than assumed.
-          */}
-          <GenesisForm kind="influencer" source="/creator" compact />
-        </Reveal>
-      </SectionShell>
-    </main>
+      </main>
     </SlideUp>
   );
 }

@@ -52,7 +52,7 @@ export function Studios() {
   return (
     <section
       id="studios"
-      className="scene-dark scene-open grain relative isolate overflow-hidden py-16 sm:py-20"
+      className="scene-dark scene-open grain relative isolate overflow-hidden py-12 sm:py-14 lg:py-16"
     >
       {/*
         Blends into the sections above and below, in the LIGHT theme only.

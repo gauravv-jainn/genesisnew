@@ -37,7 +37,7 @@ export function WorkLibrary() {
   return (
     <section
       id="library"
-      className="relative isolate overflow-hidden py-12 sm:py-14"
+      className="relative isolate overflow-hidden py-12 sm:py-14 lg:py-16"
     >
       <div className="relative z-[2] mx-auto w-full max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-4">

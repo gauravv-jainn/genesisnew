@@ -71,13 +71,22 @@ export function SectionShell({
       origin={origin}
       intensity={intensity}
       /*
-        ONE SECTION, ONE SCREEN. At py-24/32/40 the padding alone was 320px
-        top and bottom on a large display — nearly three quarters of a
-        900px viewport spent on air before any content. Every section on the
-        homepage was over a screen tall because of it. This is the single
-        change that fixes most of them.
+        ONE SECTION, ONE SCREEN — and ONE RHYTHM, which is the newer half of
+        this note. At py-24/32/40 the padding alone was 320px top and bottom
+        on a large display, nearly three quarters of a 900px viewport spent on
+        air before any content; py-16/20/24 fixed that.
+
+        What it did not fix was that every section had its own idea. Measured
+        across the homepage the tops ran 56, 64, 80, 96 and 128px — five
+        different values, so the space between any two blocks depended on
+        which pair they happened to be, and the client wall sat at 128/128
+        with a faded wall above it, which is the 290px hole Genesis pointed
+        at between the logos and the Influence lockup.
+
+        48/56/64 now, and every section on the page uses it, this shell's
+        four included. The gap between two blocks is the same gap everywhere.
       */
-      className={cn("py-16 sm:py-20 lg:py-24", className)}
+      className={cn("py-12 sm:py-14 lg:py-16", className)}
     >
       <section id={id} className="mx-auto w-full max-w-6xl px-6">
         {/*

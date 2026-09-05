@@ -122,11 +122,19 @@ export function WatchCluster({
           the middle stays at full opacity rather than being dimmed by a
           vignette. The bands are wider vertically than horizontally because
           that is where the honeycomb overruns.
+
+          THE VERTICAL BAND IS 14%, DOWN FROM 20. Measured, the lattice
+          overruns a 400px wall by 30px at each end — so 20% was spending 80px
+          per end to hide 30px of overflow, and the other 50px was a row of
+          logos faded away for no reason. Two of those, plus the section
+          padding either side, was most of the empty stretch Genesis saw
+          under the client wall. 14% is 56px: still comfortably more than the
+          overrun, with 48px of readable wall handed back.
         */
         maskImage:
-          "linear-gradient(90deg, transparent 0%, #000 13%, #000 87%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%)",
+          "linear-gradient(90deg, transparent 0%, #000 13%, #000 87%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
         WebkitMaskImage:
-          "linear-gradient(90deg, transparent 0%, #000 13%, #000 87%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%)",
+          "linear-gradient(90deg, transparent 0%, #000 13%, #000 87%, transparent 100%), linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%)",
         // Both spellings: the standard property, and the older WebKit one for
         // Safari versions that only understand that.
         maskComposite: "intersect",

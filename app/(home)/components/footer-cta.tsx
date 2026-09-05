@@ -21,7 +21,7 @@ export function FooterCta() {
       tone="brand"
       origin="bottom"
       intensity={0.24}
-      className="relative overflow-hidden pt-24 sm:pt-32"
+      className="relative overflow-hidden pt-12 sm:pt-14 lg:pt-16"
     >
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal>

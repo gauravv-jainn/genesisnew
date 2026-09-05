@@ -31,7 +31,7 @@ export function InfluencerMarketing() {
   return (
     <section
       id="influence"
-      className="relative isolate overflow-hidden py-14 sm:py-16"
+      className="relative isolate overflow-hidden py-12 sm:py-14 lg:py-16"
     >
       {/*
         Soft key light behind the headline, warm spill low-left, as in the

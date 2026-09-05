@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { GenesisForm } from "@/components/genesis/genesis-form";
-import { GlowWord } from "@/components/genesis/glow-word";
+import { Atmosphere } from "@/components/genesis/atmosphere";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
 import { careersPage } from "@/lib/page-content";
@@ -12,119 +12,32 @@ export const metadata: Metadata = {
 };
 
 /**
- * /careers — the waitlist, built to p05_1.
+ * /careers — the application, on the page's own ground.
  *
- * PINNED DARK. This page is a lit scene, not a surface: one word glowing in
- * darkness over a lit bank. In light mode the glow had nothing to shine
- * against — the glowing word vanished entirely and the scene became a pale
- * fog. `.scene-dark` re-declares the dark tokens for this subtree so the
- * composition holds in either theme, while the nav outside it still follows
- * the visitor's choice.
+ * WHY THE BOTANICAL SCENE IS GONE. This page painted its own world: a mint-fog
+ * bank, forty-six SVG stems silhouetted against it and twenty-six drifting
+ * motes, all held inside `scene-dark bg-void`. It was built to a reference and
+ * it was the only page on the site that did this.
  *
- * The reference is one idea: a single word lit from within, held in a glass
- * capsule, over a dark scene that glows from below. Everything else on the
- * page defers to it — one action, one line of scarcity, nothing to navigate
- * away to.
+ * Two things were wrong with it and they have the same cause. The colours
+ * belonged to no part of the identity — recolouring the fog to brand tokens
+ * helped and did not fix it, because a bespoke scene is bespoke whatever hue
+ * it is. And `scene-dark` PINS the dark tokens for the subtree, so the theme
+ * toggle did nothing here: Genesis switched to light and got a black page with
+ * a light switch on it.
+ *
+ * `Atmosphere` is what every other section on this site stands on. It follows
+ * the theme, it carries the brand wash, and it is one line. The page loses a
+ * scene it did not need and gains a light mode it should always have had.
  */
 export default function CareersPage() {
   return (
-    <main className="scene-dark relative isolate min-h-dvh overflow-hidden bg-void">
-      {/*
-        The ground the scene grows out of.
-
-        p05_1 puts a lit botanical bed across its lower half — that bed is
-        where all of its light comes from, and it is why the reference sits at
-        75.7% shadow with a mean luminance of 34.9 while this page sat at 95.4%
-        and 18.1: a page-wide 22%-alpha wash is not a light source.
-
-        The bed itself is photography and cannot be reproduced here. Its
-        STRUCTURE can: a bright bank low in the frame with growth silhouetted
-        against it, so the light has something to come from and something to
-        rake across.
-      */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            /*
-              GENESIS'S COLOURS, NOT A FOREST'S. This fog was mint and teal —
-              rgb(186 236 204) over #04120f — which belongs to no part of the
-              identity. The page read as a different site with the Genesis nav
-              bolted on.
-
-              Rebuilt from the tokens: --page-ground's violet (#191333) for the
-              depth and --brand-ink (#ffd400) for the light, at the same
-              opacities the mint version used, so the shape of the fog is
-              unchanged and only its hue moves.
-            */
-            "radial-gradient(58% 26% at 50% 72%, rgb(255 212 0 / 0.20) 0%, rgb(196 150 255 / 0.16) 34%, rgb(84 60 140 / 0.13) 58%, transparent 80%), radial-gradient(86% 40% at 50% 88%, rgb(140 108 220 / 0.22) 0%, transparent 68%), radial-gradient(56% 30% at 50% 30%, rgb(255 212 0 / 0.07) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* Growth rising into the light, silhouetted against the bank. */}
-      <svg
-        aria-hidden
-        viewBox="0 0 1200 300"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-x-0 top-[46%] h-[34%] w-full"
-      >
-        <defs>
-          <linearGradient id="careers-stem" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stopColor="#120f18" stopOpacity="0.96" />
-            <stop offset="70%" stopColor="#191333" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#1d1528" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {Array.from({ length: 46 }).map((_, i) => {
-          const seeded = (salt: number) => {
-            const v = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453;
-            return v - Math.floor(v);
-          };
-          const x = seeded(1) * 1200;
-          const h = 90 + seeded(2) * 175;
-          const lean = (seeded(3) - 0.5) * 60;
-          const w = 1.4 + seeded(4) * 2.4;
-          return (
-            <path
-              key={i}
-              d={`M ${x.toFixed(1)} 300 Q ${(x + lean * 0.4).toFixed(1)} ${(300 - h * 0.55).toFixed(1)} ${(x + lean).toFixed(1)} ${(300 - h).toFixed(1)}`}
-              stroke="url(#careers-stem)"
-              strokeWidth={w.toFixed(2)}
-              fill="none"
-              strokeLinecap="round"
-            />
-          );
-        })}
-      </svg>
-
-      {/* Motes drifting in the light. Deterministic so SSR matches. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        {Array.from({ length: 26 }).map((_, i) => {
-          const seeded = (salt: number) => {
-            const v = Math.sin((i + 1) * 12.9898 + salt * 78.233) * 43758.5453;
-            return v - Math.floor(v);
-          };
-          return (
-            <span
-              key={i}
-              className="absolute rounded-full bg-white "
-              style={
-                {
-                  left: `${(seeded(1) * 100).toFixed(2)}%`,
-                  top: `${(38 + seeded(2) * 52).toFixed(2)}%`,
-                  width: `${(1 + seeded(3) * 2).toFixed(1)}px`,
-                  height: `${(1 + seeded(3) * 2).toFixed(1)}px`,
-                  opacity: (0.12 + seeded(4) * 0.4).toFixed(2),
-                  "--float-duration": `${(7 + seeded(5) * 7).toFixed(1)}s`,
-                  animationDelay: `-${(seeded(6) * 8).toFixed(1)}s`,
-                } as React.CSSProperties
-              }
-            />
-          );
-        })}
-      </div>
-
+    <Atmosphere
+      tone="brand"
+      origin="top"
+      intensity={0.2}
+      className="relative isolate min-h-dvh overflow-hidden"
+    >
       <div className="relative z-[2] mx-auto flex min-h-dvh w-full max-w-3xl flex-col items-center justify-center px-6 py-32 text-center">
         <Reveal>
           <SectionLabel dot tone="brand" className="justify-center">
@@ -138,11 +51,23 @@ export default function CareersPage() {
           </h1>
         </Reveal>
 
-        {/* The lit word, held in glass — the whole point of the reference. */}
+        {/*
+          THE ACCENT IS SET THE WAY EVERY OTHER HEADING ON THIS SITE IS.
+
+          It was a GlowWord — a lit word held in glass, which is a lovely thing
+          on a black page and was the last piece of the reference this page was
+          built to. On the light theme it rendered pale gold on near-white and
+          all but vanished: the glow IS the letterform there, and a glow needs
+          something dark to be a glow against.
+
+          Serif italic in --brand-ink is the site's own accent, and that token
+          already carries a dark value for light mode (#7a6000). One treatment,
+          both themes, and this heading finally matches the other twelve.
+        */}
         <Reveal delay={0.12}>
-          <GlowWord tone="warm" className="mt-6 text-h2 sm:text-h1 lg:text-h1">
+          <p className="mt-2 font-serif text-h2 font-normal italic text-brand-ink sm:text-h1">
             {careersPage.headingAccent}
-          </GlowWord>
+          </p>
         </Reveal>
 
         <Reveal delay={0.18}>
@@ -184,6 +109,6 @@ export default function CareersPage() {
           </RevealGroup>
         </div>
       </div>
-    </main>
+    </Atmosphere>
   );
 }

@@ -4,7 +4,6 @@ import { GenesisForm } from "@/components/genesis/genesis-form";
 import { GenesisMark } from "@/components/genesis/genesis-mark";
 import { Reveal } from "@/components/genesis/reveal";
 import { SlideUp } from "@/components/genesis/slide-up";
-import { Spotlight } from "@/components/genesis/spotlight";
 import { creatorPage } from "@/lib/page-content";
 
 export const metadata: Metadata = {
@@ -27,15 +26,18 @@ export const metadata: Metadata = {
  * the form's own fields, which is where someone who wants the detail will
  * meet it.
  *
- * The spotlight stays: it is the page's lighting, not its copy, and without it
- * a single column on a flat ground is a form on a page rather than a page.
+ * THE SPOTLIGHT IS GONE TOO. I kept it on the argument that it was lighting
+ * rather than copy; Genesis looked at it and said no, and they are right about
+ * what it was doing. A hard cone falling from the top-right landed across the
+ * form itself — it lit the fields, tinted half of them warmer than the other
+ * half, and put a diagonal edge through a panel somebody is trying to read and
+ * type into. Drama behind a headline is one thing; drama over an input is a
+ * filter over the thing the page exists for.
  */
 export default function CreatorPage() {
   return (
     <SlideUp>
       <main className="relative isolate min-h-dvh overflow-hidden pb-32 pt-32 sm:pt-40">
-        <Spotlight x={68} spread={17} tone="warm" intensity={0.82} reach={58} />
-
         {/*
           ONE COLUMN, so the headline sits on the same left edge as the first
           field rather than floating over a form centred beneath it.

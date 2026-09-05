@@ -1,3 +1,4 @@
+import { mediaUrl } from "./media-url";
 import { isPending } from "./home-content";
 
 /**
@@ -91,7 +92,7 @@ export type WorkItem = {
  * filter row hides tags with nothing behind them rather than presenting empty
  * categories.
  */
-export const work: WorkItem[] = [
+const catalogue: WorkItem[] = [
   {
     slug: "kayali-product-reel",
     client: "Kayali",
@@ -217,6 +218,27 @@ export const work: WorkItem[] = [
     featured: true,
   },
 ];
+
+/**
+ * The catalogue with every media path resolved.
+ *
+ * ONE PLACE, AND IT IS THIS ONE. The paths in the array above are written the
+ * way a person writes them — /work/kayali.webp — and `mediaUrl` decides
+ * whether that is where the bytes are actually read from or whether they come
+ * out of Genesis's Drive instead. Doing it here rather than at each render
+ * means the twelve components that show a still, a poster or a clip never
+ * learn that there is a choice, and none of them can be the one that forgets.
+ *
+ * With Drive off — which is the default — mediaUrl returns its argument
+ * unchanged, so this map is the identity and the site serves exactly what it
+ * served before. See lib/media-url.ts.
+ */
+export const work: WorkItem[] = catalogue.map((item) => ({
+  ...item,
+  ...(item.art ? { art: mediaUrl(item.art) } : {}),
+  ...(item.clip ? { clip: mediaUrl(item.clip) } : {}),
+  ...(item.poster ? { poster: mediaUrl(item.poster) } : {}),
+}));
 
 /**
  * True while a piece is showing interim mockup artwork that already carries

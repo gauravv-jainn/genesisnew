@@ -6,6 +6,7 @@ import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransfo
 import { Play } from "lucide-react";
 import { useState } from "react";
 
+import { mediaUrl } from "@/lib/media-url";
 import { cn } from "@/lib/utils";
 
 /**
@@ -149,7 +150,7 @@ export function CreatorConstellation({
           angle={angle}
           offset={(360 / PLATFORMS.length) * index + 26}
           radius={38 + seeded(index, 3) * 4}
-          avatar={`/creators/avatars/a${index + 1}.webp`}
+          avatar={mediaUrl(`/creators/avatars/a${index + 1}.webp`)}
         />
       ))}
 
@@ -167,7 +168,7 @@ export function CreatorConstellation({
             scale peaked. 35 and 25 leave a two-point margin.
           */
           radius={creator.feature ? 7 : index % 2 === 0 ? 35 : 25}
-          avatar={`/creators/avatars/a${(index % 6) + 1}.webp`}
+          avatar={mediaUrl(`/creators/avatars/a${(index % 6) + 1}.webp`)}
         />
       ))}
     </div>

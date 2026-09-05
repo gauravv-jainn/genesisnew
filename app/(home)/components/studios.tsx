@@ -7,6 +7,7 @@ import { Reveal } from "@/components/genesis/reveal";
 import { Spectrum } from "@/components/genesis/atmosphere";
 import { DivisionLockup } from "@/components/genesis/division-lockup";
 import { services, studios } from "@/lib/home-content";
+import { mediaUrl } from "@/lib/media-url";
 
 /**
  * Genesis Studios — the production vertical.
@@ -241,8 +242,11 @@ function ReelTile({ n, duplicate }: { n: number; duplicate: boolean }) {
     >
       <video
         ref={ref}
-        src={`/work/clips/${n}.mp4`}
-        poster={`/work/posters/${n}.jpg`}
+        // Through mediaUrl like everything else, so the reel wall follows the
+        // same switch as the catalogue rather than being the one place still
+        // hardcoded to /public. See lib/media-url.ts.
+        src={mediaUrl(`/work/clips/${n}.mp4`)}
+        poster={mediaUrl(`/work/posters/${n}.jpg`)}
         muted
         loop
         playsInline

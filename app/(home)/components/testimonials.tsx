@@ -36,7 +36,13 @@ export function Testimonials() {
       label={copy.label}
       heading={copy.heading}
       headingAccent={copy.headingAccent}
-      body={hasQuotes ? "Drag to move through the wall." : testimonials.awaiting.body}
+      // "Move your pointer", not "drag" — the cluster follows the pointer and
+      // has since the drag was removed. See the note in home-content.
+      body={
+        hasQuotes
+          ? "Move your pointer through the wall."
+          : testimonials.awaiting.body
+      }
       align="split"
       tone="brand"
       origin="top"

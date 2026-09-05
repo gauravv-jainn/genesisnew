@@ -38,7 +38,7 @@ export function ClientLogos() {
           // Sized so all of them sit inside the frame at rest — the lean
           // is a flourish, not the only way to reach half the wall.
           height={400}
-          cell={132}
+          cell={150}
           items={clients.logos.map((logo) => ({
             id: logo.file,
             content: (
@@ -57,23 +57,32 @@ export function ClientLogos() {
               <div
                 className={
                   logo.onDark
-                    ? "grid size-24 place-items-center rounded-panel border border-white/12 bg-[#141418] p-4 sm:size-28"
-                    : "grid size-24 place-items-center rounded-panel border border-black/10 bg-white p-4 sm:size-28"
+                    ? "relative grid size-28 place-items-center rounded-panel border border-white/12 bg-[#141418] p-3.5 sm:size-32"
+                    : "relative grid size-28 place-items-center rounded-panel border border-black/10 bg-white p-3.5 sm:size-32"
                 }
               >
+                {/*
+                  `fill`, NOT FIXED DIMENSIONS, because the files are no longer
+                  square. Each was a 400x400 canvas of which the actual mark
+                  used between 4.8% and 13% — HDFC's was 213x36 sitting in the
+                  middle of it — so object-contain was faithfully fitting the
+                  EMPTY CANVAS to the chip and leaving the logo a few pixels
+                  tall. That is what Genesis was looking at.
+
+                  Every file is cropped to its own ink now, which means each
+                  has its own aspect and there is no one width/height pair to
+                  give. A filled box with object-contain sizes itself from the
+                  chip instead, and the mark uses all of it.
+                */}
                 <Image
                   src={`/clients/${logo.file}.png`}
                   alt={logo.name}
-                  width={400}
-                  height={400}
-                  /*
-                    The chip is 112px at its largest, so without `sizes` every
-                    one of the twenty-nine would pull a viewport-sized file to
-                    fill it. object-contain because a logo must never be
-                    cropped; w-auto so a wide mark keeps its proportions.
-                  */
-                  sizes="112px"
-                  className="max-h-full w-auto max-w-full object-contain"
+                  fill
+                  // The chip is 128px at its largest; without this each of the
+                  // twenty-nine would pull a viewport-sized file for a
+                  // thumbnail.
+                  sizes="128px"
+                  className="object-contain"
                 />
               </div>
             ),

@@ -728,7 +728,13 @@ export const testimonials = {
     label: "Clients & collaborators",
     heading: "The people",
     headingAccent: "we work with",
-    body: "Named clients and collaborators from delivered projects. Drag to move through the wall.",
+    /*
+      NOT "drag". WatchCluster follows the POINTER — it has done since the
+      drag interaction was removed, and its own source says so in capitals.
+      The instruction outlived the behaviour it described, which is worse than
+      no instruction: it tells a reader to do something that does nothing.
+    */
+    body: "Named clients and collaborators from delivered projects. Move your pointer through the wall.",
   },
   /**
    * Spec: "Start Video testimonial project." Each entry may carry a `clip`

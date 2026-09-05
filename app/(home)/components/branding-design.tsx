@@ -32,7 +32,13 @@ export function BrandingDesign() {
         tagline: services.items[1].caption,
         ramp: services.items[1].ramp,
       }}
-      body={branding.body}
+      /*
+        NO `body` HERE — it is set below the tiles instead, at Genesis's
+        request. Between the lockup and the work it was a third line of
+        introduction before anything had been shown; underneath, it reads as
+        the caption to what you have just looked at, which is the job that
+        sentence is actually doing.
+      */
       // Centred, like AI Lab and Studios: the mark is artwork and sits in the
       // middle of its section. See the note in ai-content.
       align="center"
@@ -101,10 +107,21 @@ export function BrandingDesign() {
         </Reveal>
 
         {/*
+          The standfirst, moved down out of the header. lg:col-span-2 so it
+          runs the full width under both tiles rather than being trapped in
+          the left column, and centred to match the header above it.
+        */}
+        <Reveal delay={0.12} className="lg:col-span-2">
+          <p className="mx-auto max-w-2xl text-pretty text-center text-body text-ash sm:text-lead">
+            {branding.body}
+          </p>
+        </Reveal>
+
+        {/*
           This division had no call to action at all — a reader could finish
           the section that describes identity work with nowhere to go.
         */}
-        <Reveal delay={0.15} className="mt-12 flex flex-wrap gap-3">
+        <Reveal delay={0.15} className="mt-2 flex flex-wrap justify-center gap-3 lg:col-span-2">
           <GlassButton
             href="/#contact"
             quickContact="brand-design:build-a-brand"

@@ -304,3 +304,103 @@ export function hasStory(item: WorkItem): boolean {
       (item.results && item.results.length > 0),
   );
 }
+
+/**
+ * THE BROWSE ROWS — the Portfolio's shelves.
+ *
+ * WHY ROWS AND NOT A WALL. /our-work was a masonry dump of everything behind
+ * one filter bar: fourteen tiles of five different shapes in five columns,
+ * with no order and nothing to tell you what you were looking at. Genesis
+ * asked for it to work like Netflix, and the thing that actually makes that
+ * layout work is not the horizontal scroll — it is that every row is a
+ * SENTENCE about the work in it. A piece can sit in three rows, which is a
+ * feature: it is how a catalogue this size fills a page without repeating
+ * itself visually.
+ *
+ * TODO(content): THESE SHOULD BE THE DRIVE FOLDERS. Genesis's instruction is
+ * that the filters come from the folders in the shared Drive, and that link
+ * has not been shared yet — asked for three times now. So the rows are built
+ * from the taxonomy the project already has: `featured`, then the CATEGORIES
+ * Genesis fixed, then the four verticals. Swapping them is an edit to THIS
+ * ARRAY and nothing else, because the page reads its shelves from here rather
+ * than deciding them itself. Adding a row is one entry; renaming one is one
+ * string.
+ */
+export type WorkRow = {
+  id: string;
+  title: string;
+  blurb?: string;
+  test: (item: WorkItem) => boolean;
+};
+
+export const WORK_ROWS: WorkRow[] = [
+  {
+    id: "featured",
+    title: "Featured work",
+    blurb: "The pieces we lead with.",
+    test: (i) => Boolean(i.featured),
+  },
+  {
+    id: "reels",
+    title: "Reels & short form",
+    blurb: "Shot vertical, cut for the feed.",
+    test: (i) => i.format === "Reels" || i.format === "UGC",
+  },
+  {
+    id: "shoots",
+    title: "Shoots & films",
+    blurb: "Full productions, on location and in studio.",
+    test: (i) => i.format === "Shoots",
+  },
+  {
+    id: "campaigns",
+    title: "Campaigns",
+    blurb: "Multi-format work built around one idea.",
+    test: (i) => i.format === "Campaigns",
+  },
+  {
+    id: "influence",
+    title: "Genesis.Influence",
+    blurb: "Creator-led work.",
+    test: (i) => i.vertical === "Influence",
+  },
+  {
+    id: "studios",
+    title: "Genesis.Studios",
+    blurb: "Production, end to end.",
+    test: (i) => i.vertical === "Studios",
+  },
+];
+
+/**
+ * The rows that actually have work behind them.
+ *
+ * A shelf with one thing on it is not a shelf — it reads as a mistake, and
+ * horizontally scrolling a single tile is worse than not offering the row. So
+ * a row needs `min` pieces to appear, and the ones that do not clear it come
+ * back on their own as the catalogue fills, with no code change.
+ */
+export function workRows(
+  items: WorkItem[],
+  min = 2,
+): { row: WorkRow; items: WorkItem[] }[] {
+  return WORK_ROWS.map((row) => ({ row, items: items.filter(row.test) })).filter(
+    (shelf) => shelf.items.length >= min,
+  );
+}
+
+/**
+ * The piece the Portfolio leads with.
+ *
+ * It must have ARTWORK — a billboard is a picture with words on it, and the
+ * four finance pieces have no still yet, so leading with one would put a
+ * typographic placeholder at the top of the page as the first thing anyone
+ * sees. Featured first, then anything with art, then nothing at all, which
+ * the page handles by simply not drawing a billboard.
+ */
+export function billboardItem(items: WorkItem[]): WorkItem | undefined {
+  return (
+    items.find((i) => i.featured && (i.art || i.clip)) ??
+    items.find((i) => i.art || i.clip)
+  );
+}

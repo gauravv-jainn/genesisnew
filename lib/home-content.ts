@@ -675,8 +675,15 @@ export const branding = {
   label: "Branding & design",
   heading: "Identity that survives",
   headingAccent: "contact with the feed",
+  /*
+   * "Content production" came off the capabilities list at Genesis's
+   * instruction and was still sitting in this line, one paragraph above the
+   * list it had been removed from — so the section contradicted itself in
+   * view. Collaterals takes its place here too, which is what the division's
+   * own tagline says it does.
+   */
   body:
-    "Brand guidelines, design, motion videos and content production — built for the sixth-second crop, not just the pitch deck.",
+    "Brand guidelines, design, motion videos and brand collaterals — built for the sixth-second crop, not just the pitch deck.",
   work: [
     { title: "Tripgate", caption: "Branding & guidelines" },
     { title: "Activ Health App", caption: "Logo redesign" },
@@ -755,39 +762,67 @@ export const clients = {
    * kept pointing at, and it was never a padding value — it was the geometry.
    * See client-logos.tsx for what the number is used for.
    *
+   * `hue` IS THE MARK'S OWN BRAND HUE, in degrees, and it is what turns a
+   * grid into a palette. Twenty-nine logos carry twenty-nine unrelated colour
+   * schemes, and set on twenty-nine identical white cards the result reads as
+   * a directory — which is what Genesis rejected. Tinting each chip with the
+   * hue of the mark standing on it gives the wall a colour rhythm that comes
+   * from the clients themselves rather than from a designer's swatch.
+   *
+   * MEASURED, NOT PICKED. Each file is drawn to a canvas and every opaque
+   * pixel converted to HSL; anything under 20% saturation or outside 7-93%
+   * lightness is dropped as ink, paper or shadow rather than brand colour,
+   * and the rest are binned into 24 hue buckets and averaged CIRCULARLY — a
+   * plain mean would put a red at 355 deg and a red at 5 deg somewhere near
+   * cyan.
+   *
+   * `null` MEANS THE MARK HAS NO COLOUR. Matahaari, Social Samosa and
+   * Someplace Else are pure black or white artwork, with a chromatic pixel
+   * share of exactly 0. They take a neutral chip, because inventing a hue for
+   * a monochrome logo is inventing part of a client's identity.
+   *
+   * `pale` IS THE ONE MARK THE TINT COSTS TOO MUCH. Contrast was measured for
+   * all twenty-nine — the 10th percentile of each mark's rendered ink, AFTER
+   * the `ink` filter above, against its own chip. Median 5.62:1, and only
+   * Royal Tulip falls under the 3:1 a graphical object wants: 3.09 on white,
+   * 2.61 on its tint. Its chip keeps the hue in the border and the label and
+   * gives up the ground, so the mark reads and the chip still belongs to the
+   * wall. Nothing else needs it, and a second one should only be added off a
+   * measurement, not off a hunch.
+   *
    * TODO(assets): dark-ink versions of those seven would let every mark run
    * untouched. Dimming a client's colour is a compromise, not a preference.
    */
   logos: [
-    { name: "Aditya Birla Capital", file: "aditya-birla-capital", ink: "auto", ratio: 2.55 },
-    { name: "Mahindra Finance", file: "mahindra-finance", ink: "darken", ratio: 12.63 },
-    { name: "HDFC Bank", file: "hdfc-bank", ink: "auto", ratio: 5.93 },
-    { name: "IDBI Bank", file: "idbi-bank", ink: "auto", ratio: 5.93 },
-    { name: "House of Hiranandani", file: "house-of-hiranandani", ink: "auto", ratio: 2.02 },
-    { name: "The WorldGrad", file: "the-worldgrad", ink: "auto", ratio: 3.24 },
-    { name: "The Lalit Mumbai", file: "the-lalit-mumbai", ink: "darken", ratio: 1.22 },
-    { name: "Social Samosa", file: "social-samosa", ink: "invert", ratio: 1.97 },
-    { name: "Four Points", file: "four-points", ink: "auto", ratio: 1.0 },
-    { name: "Someplace Else", file: "someplace-else", ink: "invert", ratio: 6.32 },
-    { name: "Matahaari", file: "matahaari", ink: "auto", ratio: 1.76 },
-    { name: "Grand Hyatt", file: "grand-hyatt", ink: "auto", ratio: 4.14 },
-    { name: "MNR", file: "mnr", ink: "auto", ratio: 1.4 },
-    { name: "BNI", file: "bni", ink: "auto", ratio: 2.55 },
-    { name: "Imagicaa", file: "imagicaa", ink: "auto", ratio: 2.39 },
-    { name: "Kitty Su", file: "kitty-su", ink: "auto", ratio: 1.29 },
-    { name: "Royal Tulip", file: "royal-tulip", ink: "auto", ratio: 2.21 },
-    { name: "Radcliffe", file: "radcliffe", ink: "auto", ratio: 3.53 },
-    { name: "HT Brunch", file: "ht-brunch", ink: "darken", ratio: 4.21 },
-    { name: "Bumble", file: "bumble", ink: "darken", ratio: 5.85 },
-    { name: "Lizol", file: "lizol", ink: "darken", ratio: 0.98 },
-    { name: "Dove", file: "dove", ink: "auto", ratio: 1.42 },
-    { name: "Bacardi", file: "bacardi", ink: "auto", ratio: 1.36 },
-    { name: "Vivo", file: "vivo", ink: "auto", ratio: 3.78 },
-    { name: "Budweiser", file: "budweiser", ink: "auto", ratio: 2.94 },
-    { name: "LN Construction", file: "ln-construction", ink: "auto", ratio: 0.89 },
-    { name: "Kamdhenu", file: "kamdhenu", ink: "auto", ratio: 1.56 },
-    { name: "Aditya Birla Sun Life Insurance", file: "aditya-birla-sun-life", ink: "auto", ratio: 2.54 },
-    { name: "TripGate", file: "tripgate", ink: "auto", ratio: 3.24 },
+    { name: "Aditya Birla Capital", file: "aditya-birla-capital", ink: "auto", ratio: 2.55, hue: 353 },
+    { name: "Mahindra Finance", file: "mahindra-finance", ink: "darken", ratio: 12.63, hue: 355 },
+    { name: "HDFC Bank", file: "hdfc-bank", ink: "auto", ratio: 5.93, hue: 209 },
+    { name: "IDBI Bank", file: "idbi-bank", ink: "auto", ratio: 5.93, hue: 161 },
+    { name: "House of Hiranandani", file: "house-of-hiranandani", ink: "auto", ratio: 2.02, hue: 340 },
+    { name: "The WorldGrad", file: "the-worldgrad", ink: "auto", ratio: 3.24, hue: 206 },
+    { name: "The Lalit Mumbai", file: "the-lalit-mumbai", ink: "darken", ratio: 1.22, hue: 352 },
+    { name: "Social Samosa", file: "social-samosa", ink: "invert", ratio: 1.97, hue: null },
+    { name: "Four Points", file: "four-points", ink: "auto", ratio: 1.0, hue: 205 },
+    { name: "Someplace Else", file: "someplace-else", ink: "invert", ratio: 6.32, hue: null },
+    { name: "Matahaari", file: "matahaari", ink: "auto", ratio: 1.76, hue: null },
+    { name: "Grand Hyatt", file: "grand-hyatt", ink: "auto", ratio: 4.14, hue: 3 },
+    { name: "MNR", file: "mnr", ink: "auto", ratio: 1.4, hue: 237 },
+    { name: "BNI", file: "bni", ink: "auto", ratio: 2.55, hue: 353 },
+    { name: "Imagicaa", file: "imagicaa", ink: "auto", ratio: 2.39, hue: 213 },
+    { name: "Kitty Su", file: "kitty-su", ink: "auto", ratio: 1.29, hue: 359 },
+    { name: "Royal Tulip", file: "royal-tulip", ink: "auto", ratio: 2.21, hue: 36, pale: true },
+    { name: "Radcliffe", file: "radcliffe", ink: "auto", ratio: 3.53, hue: 356 },
+    { name: "HT Brunch", file: "ht-brunch", ink: "darken", ratio: 4.21, hue: 24 },
+    { name: "Bumble", file: "bumble", ink: "darken", ratio: 5.85, hue: 47 },
+    { name: "Lizol", file: "lizol", ink: "darken", ratio: 0.98, hue: 215 },
+    { name: "Dove", file: "dove", ink: "auto", ratio: 1.42, hue: 213 },
+    { name: "Bacardi", file: "bacardi", ink: "auto", ratio: 1.36, hue: 351 },
+    { name: "Vivo", file: "vivo", ink: "auto", ratio: 3.78, hue: 230 },
+    { name: "Budweiser", file: "budweiser", ink: "auto", ratio: 2.94, hue: 359 },
+    { name: "LN Construction", file: "ln-construction", ink: "auto", ratio: 0.89, hue: 358 },
+    { name: "Kamdhenu", file: "kamdhenu", ink: "auto", ratio: 1.56, hue: 353 },
+    { name: "Aditya Birla Sun Life Insurance", file: "aditya-birla-sun-life", ink: "auto", ratio: 2.54, hue: 358 },
+    { name: "TripGate", file: "tripgate", ink: "auto", ratio: 3.24, hue: 176 },
   ],
 } as const;
 

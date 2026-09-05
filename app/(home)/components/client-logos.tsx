@@ -41,6 +41,26 @@ import { SectionShell } from "./section-shell";
  * IT IS A SWATCH BOARD, SO EVERY CHIP IS LABELLED. A palette chip carries its
  * name; it is also the only thing that tells a visitor who a mark belongs to
  * when they do not happen to know a client's logo by sight.
+ *
+ * AND IT IS COLOURED, WHICH IS THE SECOND PASS. Sizing the marks correctly
+ * fixed legibility and left the wall reading as a directory — twenty-nine
+ * identical white cards in a table. Genesis rejected it, and the diagnosis is
+ * that twenty-nine logos carry twenty-nine unrelated colour schemes, so on one
+ * flat ground the only thing the eye gets is the grid.
+ *
+ * So every chip is tinted with the brand hue of the mark standing on it,
+ * measured off the artwork itself (see lib/home-content). The tint is set at a
+ * fixed saturation and lightness so only the HUE varies across the wall: it
+ * stays a palette rather than becoming twenty-nine differently-loud boxes, and
+ * the colour rhythm comes from the client list instead of from a swatch
+ * someone chose.
+ *
+ * THE TINT IS PALE ON PURPOSE, AND IN BOTH THEMES. These files were drawn for
+ * white paper, and a mark on a strong ground either clashes or has to be
+ * knocked out, which is editing a client's logo. 96% lightness is enough to
+ * read as colour next to its neighbours and light enough that every mark sits
+ * on it untouched — including in dark mode, where the wall becomes pale
+ * swatches on a dark table rather than dark chips that no logo survives.
  */
 
 /**
@@ -79,6 +99,41 @@ function inkHeight(ratio: number): string {
   return "34%";
 }
 
+/**
+ * The four colours a chip is built from, given its mark's brand hue.
+ *
+ * ONE SATURATION AND ONE LIGHTNESS FOR EVERY CHIP. Using each brand's actual
+ * colour at its actual strength would put Budweiser's full red beside Royal
+ * Tulip's soft gold and read as twenty-nine accidents; holding S and L still
+ * and moving only H is what makes a set of colours a palette.
+ *
+ * A `null` hue is a mark with no colour in it at all, and it gets a neutral
+ * chip — the same construction at zero saturation, so it sits in the wall
+ * rather than looking like a chip that failed to load.
+ */
+function swatch(hue: number | null, pale = false) {
+  const h = hue ?? 0;
+  const s = hue === null ? 0 : 1;
+  return {
+    /*
+      The chip's ground: colour you notice beside its neighbours, not on it.
+      66/90.5 was arrived at by looking — 96.5% was measurably a tint and
+      visibly nothing, 88% started eating the palest marks.
+
+      `pale` gives the ground up entirely for a mark that cannot afford it.
+      See the note in lib/home-content: exactly one qualifies, on a
+      measurement, and it keeps the hue everywhere else on the chip so it is
+      still part of the wall.
+    */
+    "--chip": pale ? `hsl(${h} ${30 * s}% 98.5%)` : `hsl(${h} ${66 * s}% 90.5%)`,
+    /* Where it goes on hover — the same hue, one step in. */
+    "--chip-hover": pale ? `hsl(${h} ${40 * s}% 96%)` : `hsl(${h} ${70 * s}% 86.5%)`,
+    /* Border and label, dark enough to read against the ground they sit on. */
+    "--chip-edge": `hsl(${h} ${42 * s}% 77%)`,
+    "--chip-ink": `hsl(${h} ${26 * s}% 42%)`,
+  } as React.CSSProperties;
+}
+
 export function ClientLogos() {
   return (
     <SectionShell
@@ -103,15 +158,32 @@ export function ClientLogos() {
           return (
             <li
               key={logo.file}
+              /*
+                `in` rather than `logo.pale`: the catalogue is `as const`, so
+                only the one entry that needs the flag carries it and the
+                union has no such property on the other twenty-eight. Adding
+                `pale: false` to all of them to satisfy the type would be
+                twenty-eight lines of noise to say nothing.
+              */
+              style={swatch(logo.hue, "pale" in logo && logo.pale === true)}
               className={cn(
                 /*
-                  Opaque paper, not glass. A client's logo is their asset and
-                  belongs on a clean ground rather than taking a tint from the
-                  page gradient behind it — which is also what makes the `ink`
-                  corrections below predictable, since they were measured
-                  against white.
+                  The chip is its client's colour, not the page's. It is
+                  opaque rather than glass on purpose — a logo is the client's
+                  asset and belongs on a ground you control, not one that
+                  picks up whatever gradient is behind it, and the ink
+                  corrections below were measured against a near-white chip.
                 */
-                "flex flex-col overflow-hidden rounded-card border border-black/10 bg-white",
+                "group/chip flex flex-col overflow-hidden rounded-card border",
+                "border-[var(--chip-edge)] bg-[var(--chip)]",
+                /*
+                  Colour and lift on hover, and NOTHING that moves the mark
+                  itself. Scaling a client's logo on hover is the sort of
+                  flourish that makes a wall of them feel like a toy.
+                */
+                "transition-[background-color,border-color,transform,box-shadow] duration-300 ease-out",
+                "hover:-translate-y-0.5 hover:bg-[var(--chip-hover)] hover:shadow-[0_10px_24px_-12px_rgb(0_0_0/0.35)]",
+                "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
                 wide && "col-span-2",
               )}
             >
@@ -156,12 +228,15 @@ export function ClientLogos() {
               </div>
 
               {/*
-                The swatch label. Set in the chip's own dark ink rather than a
-                page token, because the chip is white in BOTH themes — a
-                --faint that follows the theme would go pale-on-white the
-                moment the page turns dark.
+                The swatch label, set in the chip's own hue rather than a page
+                token. Grey uppercase captions under twenty-nine white boxes
+                are most of what made this read as a table; a name in its
+                brand's colour is part of the swatch. It is also fixed ink
+                because the chip is pale in BOTH themes — a --faint that
+                followed the theme would go pale-on-pale the moment the page
+                turned dark.
               */}
-              <p className="border-t border-black/[0.07] px-3 py-2 text-center text-[0.625rem] font-medium uppercase leading-tight tracking-[0.08em] text-black/45">
+              <p className="border-t border-[var(--chip-edge)] px-3 py-2 text-center text-[0.625rem] font-medium uppercase leading-tight tracking-[0.08em] text-[var(--chip-ink)]">
                 {logo.name}
               </p>
             </li>

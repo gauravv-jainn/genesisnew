@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { Reveal } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
-import { WorkGrid } from "@/components/genesis/work-grid";
+import { WorkBrowse } from "@/components/genesis/work-browse";
 import { ourWork } from "@/lib/page-content";
 import { work } from "@/lib/work";
 
@@ -29,6 +29,14 @@ export const metadata: Metadata = {
  * Search went with it. It filtered fourteen items behind a text box; the
  * filter row does that job at this size. It earns its place back when the
  * catalogue is long enough that scanning it is work.
+ *
+ * IT IS BROWSED NOW, NOT DUMPED. This was one masonry wall of everything,
+ * five columns wide, under a row of chips — fourteen tiles in five shapes
+ * with no order and nothing telling you what any of it was. Genesis asked for
+ * it to work like Netflix, so it does: a billboard, then titled shelves you
+ * push sideways, and the shelves collapse to a single grid the moment a
+ * filter is picked. What the shelves ARE lives in lib/work.ts, because
+ * Genesis's instruction is that they become the folders in the shared Drive.
  */
 export default function OurWorkPage() {
   return (
@@ -49,10 +57,18 @@ export default function OurWorkPage() {
           </p>
         </Reveal>
 
-        <Reveal variant="scene" className="mt-14 sm:mt-16">
-          <WorkGrid items={work} />
-        </Reveal>
       </div>
+
+      {/*
+        Outside the container on purpose. The shelves are full-bleed — a rail
+        that stops at the 72rem edge leaves 144px of empty page beyond its
+        fade on a large display, which is the cut Genesis has found on every
+        rail on this site — so WorkBrowse manages its own width and re-applies
+        the container to the parts that need it.
+      */}
+      <Reveal variant="scene" className="mt-14 sm:mt-16">
+        <WorkBrowse items={work} />
+      </Reveal>
     </main>
   );
 }

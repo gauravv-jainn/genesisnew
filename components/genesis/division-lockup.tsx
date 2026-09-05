@@ -127,6 +127,7 @@ export function DivisionLockup({
   height = TARGET_HEIGHT,
   fluid = false,
   board = false,
+  priority = false,
   className,
 }: {
   /** The part after the dot — "Influence", "AI Lab". */
@@ -151,6 +152,22 @@ export function DivisionLockup({
    * tagline is printed beneath it. For the divisions board around the orb.
    */
   board?: boolean;
+  /**
+   * Preloads both variants at high priority. OFF by default, and that is a
+   * fix rather than a preference.
+   *
+   * Every lockup renders TWO images — the pair is cross-faded so the mark
+   * follows the theme — and this was unconditionally `priority`. The homepage
+   * carries eight lockups, so it was emitting SIXTEEN high-priority preloads,
+   * fifteen of them for marks thousands of pixels below the fold, all
+   * competing with the hero and with each other on first paint. Measured in
+   * the network log: the w=750 candidates for two of them were fetched and
+   * aborted before the right size was even chosen.
+   *
+   * Only a lockup actually above the fold should ask for this. Everything
+   * else lazy-loads, which is what next/image does correctly when left alone.
+   */
+  priority?: boolean;
   className?: string;
 }) {
   const lockup = board ? BOARD[name] : LOCKUPS[name];
@@ -255,7 +272,7 @@ export function DivisionLockup({
           alt=""
           width={lockup.width}
           height={lockup.height}
-          priority
+          priority={priority}
           sizes={fluid ? "(min-width: 1024px) 30vw, 90vw" : `(min-width: 640px) ${maxWidth}px, 100vw`}
           className="h-auto w-full"
           style={{ opacity: "calc(1 - var(--logo-invert, 0))" }}
@@ -265,7 +282,7 @@ export function DivisionLockup({
           alt=""
           width={lockup.width}
           height={lockup.height}
-          priority
+          priority={priority}
           sizes={fluid ? "(min-width: 1024px) 30vw, 90vw" : `(min-width: 640px) ${maxWidth}px, 100vw`}
           className={cn("absolute inset-0 h-auto w-full")}
           style={{ opacity: "var(--logo-invert, 0)" }}

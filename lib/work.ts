@@ -1,5 +1,5 @@
 import { mediaUrl } from "./media-url";
-import { isPending } from "./home-content";
+import { isPending, services } from "./home-content";
 
 /**
  * THE WORK CATALOGUE — one list, read by everything.
@@ -330,8 +330,34 @@ export type WorkRow = {
   id: string;
   title: string;
   blurb?: string;
+  /**
+   * Renders the division's own lockup in place of the row's title.
+   *
+   * A shelf named after a division should be announced the way the division
+   * is announced everywhere else on the site — its supplied artwork, with the
+   * gradient — not set in the same weight as "Shoots & films". Genesis asked
+   * for the images here specifically.
+   *
+   * The lockup brings its OWN tagline as text, so a row that has one must not
+   * also carry a `blurb`; that is the doubled line that has been reported
+   * three times on this site, and here it is prevented by there being nothing
+   * to double.
+   */
+  division?: { name: string; tagline: string; ramp: string };
   test: (item: WorkItem) => boolean;
 };
+
+/** A division's tagline and ramp, looked up by the name on its service card. */
+function divisionOf(title: string): WorkRow["division"] {
+  const service = services.items.find((item) => item.title === title);
+  if (!service) return undefined;
+  return {
+    // "Genesis.Influence" -> "Influence", which is what DivisionLockup keys on.
+    name: title.replace(/^Genesis\./, ""),
+    tagline: service.caption,
+    ramp: service.ramp,
+  };
+}
 
 export const WORK_ROWS: WorkRow[] = [
   {
@@ -361,13 +387,19 @@ export const WORK_ROWS: WorkRow[] = [
   {
     id: "influence",
     title: "Genesis.Influence",
-    blurb: "Creator-led work.",
+    /*
+      The tagline and ramp come from `services` rather than being retyped, so
+      a division cannot say one thing on its own section and another on its
+      shelf. Indexed by title so re-ordering that list cannot silently swap
+      Studios' gradient onto Influence.
+    */
+    division: divisionOf("Genesis.Influence"),
     test: (i) => i.vertical === "Influence",
   },
   {
     id: "studios",
     title: "Genesis.Studios",
-    blurb: "Production, end to end.",
+    division: divisionOf("Genesis.Studios"),
     test: (i) => i.vertical === "Studios",
   },
 ];

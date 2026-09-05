@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { DivisionLockup } from "@/components/genesis/division-lockup";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
 import { useEdgeFade } from "@/components/genesis/use-edge-fade";
@@ -15,6 +16,7 @@ import {
   workFilters,
   workRows,
   type WorkItem,
+  type WorkRow,
 } from "@/lib/work";
 import { cn } from "@/lib/utils";
 
@@ -54,10 +56,12 @@ import { cn } from "@/lib/utils";
 function Shelf({
   title,
   blurb,
+  division,
   items,
 }: {
   title: string;
   blurb?: string;
+  division?: WorkRow["division"];
   items: WorkItem[];
 }) {
   /*
@@ -108,8 +112,33 @@ function Shelf({
     <section className="group/shelf relative">
       <header className="mb-4 flex items-end justify-between gap-4 px-6">
         <div className="min-w-0">
-          <h2 className="text-h3 font-medium tracking-tight text-bone">{title}</h2>
-          {blurb && <p className="mt-1 text-small text-ash">{blurb}</p>}
+          {/*
+            A division shelf is announced by its own lockup, at Genesis's
+            instruction — the supplied artwork with the gradient, the same
+            mark the division carries everywhere else on the site. It brings
+            its tagline with it as text, so the row's blurb is not printed as
+            well; see the note on WorkRow.division.
+
+            38px rather than the lockup's own 58. This is a shelf heading
+            sitting next to a 20px blurb on the rows either side of it, and at
+            full size GENESIS.Brand & Design would run 280px wide in a row
+            header and read as a section title rather than a shelf.
+          */}
+          {division ? (
+            <DivisionLockup
+              name={division.name}
+              tagline={division.tagline}
+              ramp={division.ramp}
+              height={38}
+            />
+          ) : (
+            <>
+              <h2 className="text-h3 font-medium tracking-tight text-bone">
+                {title}
+              </h2>
+              {blurb && <p className="mt-1 text-small text-ash">{blurb}</p>}
+            </>
+          )}
         </div>
 
         {/*
@@ -293,7 +322,12 @@ export function WorkBrowse({ items }: { items: WorkItem[] }) {
         <div className="relative left-1/2 mt-10 w-screen -translate-x-1/2 space-y-12 sm:space-y-14">
           {shelves.map(({ row, items: shelfItems }) => (
             <div key={row.id} className="mx-auto w-full max-w-6xl">
-              <Shelf title={row.title} blurb={row.blurb} items={shelfItems} />
+              <Shelf
+              title={row.title}
+              blurb={row.blurb}
+              division={row.division}
+              items={shelfItems}
+            />
             </div>
           ))}
         </div>

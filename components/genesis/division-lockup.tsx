@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
@@ -10,10 +10,62 @@ import { cn } from "@/lib/utils";
  * shell first; the moment a second section needed it, three copies were one
  * refactor away from disagreeing about the dot.
  *
- * Live text in the division's ramp rather than the supplied PNG. A heading
- * that is an image cannot be selected, searched, translated or read aloud,
- * and goes soft on a retina display.
+ * THE SUPPLIED ARTWORK, at Genesis's instruction. This was live text in the
+ * division's ramp, and the reason was written down: a heading that is an
+ * image cannot be selected, searched, translated or read aloud, and goes soft
+ * on a retina display. Genesis has asked for the logos to be used wherever
+ * the name appears, which is their call to make — so the reasoning is
+ * answered rather than ignored:
+ *
+ *   - SELECTED, SEARCHED, READ ALOUD. Every lockup carries an sr-only heading
+ *     with the full name and tagline. It is in the DOM, in the accessibility
+ *     tree, and in the page source for a crawler; what it is not is visible,
+ *     because the picture above it says the same thing.
+ *   - SOFT ON RETINA. The sources are 1347-2017px wide for marks that render
+ *     at most 766, so next/image has three times the pixels it needs at 1x
+ *     and enough at 3x.
+ *
+ * The one cost that cannot be answered is that the tagline is burned into the
+ * artwork and therefore cannot re-wrap. See TARGET_HEIGHT.
  */
+
+/**
+ * The four lockups, with the intrinsic size of the cropped artwork.
+ *
+ * Both variants of a division share one canvas — the crop was taken from the
+ * union of the two bounding boxes precisely so they would — which is what
+ * lets the pair be cross-faded in place without the mark shifting by a pixel
+ * as the theme changes.
+ */
+const LOCKUPS: Record<string, { slug: string; width: number; height: number }> = {
+  Influence: { slug: "influence", width: 1514, height: 274 },
+  Studios: { slug: "studios", width: 1374, height: 276 },
+  "AI Lab": { slug: "ai-lab", width: 1347, height: 269 },
+  "Brand & Design": { slug: "brand-design", width: 2017, height: 274 },
+};
+
+/**
+ * How tall a lockup stands at full size, in px.
+ *
+ * WIDTH IS WHAT IS CAPPED, NOT HEIGHT, and the difference matters on a phone.
+ * The four marks are not the same shape — Brand & Design is 7.36:1 against AI
+ * Lab's 5.01 — so pinning them all to one height would make Brand & Design
+ * 766px wide and burst a 375px screen. Capping the WIDTH at this height's
+ * worth instead means each lockup stands at the same height wherever there is
+ * room for it, and shrinks to fit where there is not.
+ *
+ * 104px is what the live text it replaces measured: 56px of heading, 12px of
+ * gap, 29px of tagline.
+ *
+ * THE TAGLINE CANNOT RE-WRAP, which is the real cost of using artwork here
+ * and is worth knowing rather than discovering. As live text the tagline
+ * wrapped to two lines on a phone; burned into the mark it can only scale, so
+ * on a 375px screen Brand & Design's sits at around 10px. Every other
+ * division clears 13. If that reads too small on a real phone, the fix is a
+ * stacked mobile crop from Genesis, not a CSS change here.
+ */
+const TARGET_HEIGHT = 104;
+
 export function DivisionLockup({
   name,
   tagline,
@@ -24,25 +76,83 @@ export function DivisionLockup({
   /** The part after the dot — "Influence", "AI Lab". */
   name: string;
   tagline: string;
+  /** Kept for the text fallback below. */
   ramp: string;
   as?: "h1" | "h2";
   className?: string;
 }) {
+  const lockup = LOCKUPS[name];
+
+  /*
+    A division with no artwork falls back to the type it used to be rather
+    than to a broken image. Nothing hits this today; a fifth division would,
+    and it should look deliberate on the day it does rather than on the day
+    someone remembers to draw it.
+  */
+  if (!lockup) {
+    return (
+      <div className={className}>
+        <Tag className="flex flex-wrap items-baseline gap-x-1 text-h2 font-normal leading-[1.05] tracking-tight sm:text-h1">
+          <span className="text-bone">GENESIS</span>
+          <span className="text-brand-ink">.</span>
+          <span className="ramp-text" style={{ "--ramp": ramp } as React.CSSProperties}>
+            {name}
+          </span>
+        </Tag>
+        <p className="mt-3 text-lead leading-relaxed text-ash">{tagline}</p>
+      </div>
+    );
+  }
+
+  const maxWidth = Math.round((TARGET_HEIGHT * lockup.width) / lockup.height);
+  const src = (variant: "light" | "dark") =>
+    `/brand/divisions/${lockup.slug}-${variant}.png`;
+
   return (
-    <div className={className}>
-      <Tag
-        className={cn(
-          "flex flex-wrap items-baseline gap-x-1 font-normal leading-[1.05] tracking-tight",
-          "text-h2 sm:text-h1",
-        )}
+    <Tag className={className}>
+      {/*
+        The heading's actual text. Both halves of it are burned into the
+        picture below, so printing them again would say everything twice — the
+        same fault the poster cards had with their baked-in captions. This is
+        the copy that is read, searched and translated.
+      */}
+      <span className="sr-only">
+        Genesis.{name} — {tagline}
+      </span>
+
+      {/*
+        The light variant sits in the flow and sets the box; the dark one is
+        laid over it. Both are always rendered and cross-faded by
+        --logo-invert, exactly as the master wordmark is, so the lockup
+        follows the theme AND follows `.scene-dark` without either of them
+        having to know there is a logo in here.
+      */}
+      <span
+        aria-hidden
+        className="relative block w-full"
+        style={{ maxWidth }}
       >
-        <span className="text-bone">GENESIS</span>
-        <span className="text-brand-ink">.</span>
-        <span className="ramp-text" style={{ "--ramp": ramp } as CSSProperties}>
-          {name}
-        </span>
-      </Tag>
-      <p className="mt-3 text-lead leading-relaxed text-ash">{tagline}</p>
-    </div>
+        <Image
+          src={src("light")}
+          alt=""
+          width={lockup.width}
+          height={lockup.height}
+          priority
+          sizes={`(min-width: 640px) ${maxWidth}px, 100vw`}
+          className="h-auto w-full"
+          style={{ opacity: "calc(1 - var(--logo-invert, 0))" }}
+        />
+        <Image
+          src={src("dark")}
+          alt=""
+          width={lockup.width}
+          height={lockup.height}
+          priority
+          sizes={`(min-width: 640px) ${maxWidth}px, 100vw`}
+          className={cn("absolute inset-0 h-auto w-full")}
+          style={{ opacity: "var(--logo-invert, 0)" }}
+        />
+      </span>
+    </Tag>
   );
 }

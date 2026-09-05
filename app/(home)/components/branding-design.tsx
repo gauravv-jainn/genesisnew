@@ -1,3 +1,8 @@
+import fs from "node:fs";
+import path from "node:path";
+
+import Image from "next/image";
+
 import { GlassButton } from "@/components/genesis/glass-button";
 import { Reveal } from "@/components/genesis/reveal";
 import { branding, services } from "@/lib/home-content";
@@ -23,6 +28,42 @@ import { SectionShell } from "./section-shell";
  * separated column with the count carried in the eyebrow, which is what the
  * editorial references do with a list.
  */
+/**
+ * The sketch phases and finished mark for one identity, if they are on disk.
+ *
+ * READ FROM THE FILESYSTEM RATHER THAN LISTED IN DATA, and that is the point.
+ * A hard-coded list of five paths is a list that can be wrong in two
+ * directions: name a file that is not there and the section renders broken
+ * images at a client; add a sixth sketch and nothing shows it until someone
+ * remembers to edit an array. Reading the folder means dropping files in IS
+ * the deployment.
+ *
+ * This is a server component, so the walk happens once at build and never in a
+ * browser.
+ *
+ * CONVENTION: /public/brand/<assets>/phase-1.png … phase-N.png for the route,
+ * final.png for the mark it arrived at. Any image extension works.
+ */
+function identityRoute(assets: string): { phases: string[]; final?: string } {
+  const dir = path.join(process.cwd(), "public", "brand", assets);
+  let entries: string[];
+  try {
+    entries = fs.readdirSync(dir);
+  } catch {
+    return { phases: [] };
+  }
+
+  const isImage = (f: string) => /\.(png|jpe?g|webp|svg)$/i.test(f);
+  const phases = entries
+    .filter((f) => isImage(f) && /^phase-\d+\./i.test(f))
+    // Numeric, not lexical: phase-10 sorts after phase-9, not after phase-1.
+    .sort((a, b) => Number(a.match(/\d+/)![0]) - Number(b.match(/\d+/)![0]))
+    .map((f) => `/brand/${assets}/${f}`);
+  const finalFile = entries.find((f) => isImage(f) && /^final\./i.test(f));
+
+  return { phases, final: finalFile ? `/brand/${assets}/${finalFile}` : undefined };
+}
+
 export function BrandingDesign() {
   return (
     <SectionShell
@@ -63,14 +104,71 @@ export function BrandingDesign() {
               <p className="micro-label mb-6">Selected identity work</p>
               {/* Tripgate and the Activ Health App — see lib/home-content. */}
               <ul className="flex flex-col gap-4">
-                {branding.work.map((item) => (
-                  <li key={item.title} className="border-b border-white/10 pb-3 last:border-0">
-                    <p className="text-h3 font-semibold tracking-tight text-bone">
-                      {item.title}
-                    </p>
-                    <p className="mt-0.5 text-small text-ash">{item.caption}</p>
-                  </li>
-                ))}
+                {branding.work.map((item) => {
+                  const route =
+                    "assets" in item
+                      ? identityRoute(item.assets)
+                      : { phases: [], final: undefined };
+                  const hasRoute = route.phases.length > 0 || route.final;
+
+                  return (
+                    <li key={item.title} className="border-b border-white/10 pb-3 last:border-0">
+                      <p className="text-h3 font-semibold tracking-tight text-bone">
+                        {item.title}
+                      </p>
+                      <p className="mt-0.5 text-small text-ash">{item.caption}</p>
+
+                      {/*
+                        THE ROUTE TO THE MARK. Sketches on paper chips, then the
+                        finished logo — the sketches are scans of white paper,
+                        so they get a white ground rather than the panel's glass,
+                        which would show through the paper and grey them out.
+
+                        The final mark is separated by a rule and set larger: it
+                        is the answer, not a fifth attempt, and a row of five
+                        equal squares would read as five options.
+                      */}
+                      {hasRoute && (
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                          {route.phases.map((src, index) => (
+                            <div
+                              key={src}
+                              className="relative size-14 shrink-0 overflow-hidden rounded-card border border-white/15 bg-white sm:size-16"
+                            >
+                              <Image
+                                src={src}
+                                alt={`${item.title} logo, sketch ${index + 1} of ${route.phases.length}`}
+                                fill
+                                sizes="64px"
+                                className="object-contain p-1.5"
+                              />
+                            </div>
+                          ))}
+
+                          {route.final && (
+                            <>
+                              {route.phases.length > 0 && (
+                                <span
+                                  aria-hidden
+                                  className="mx-1 h-8 w-px shrink-0 bg-white/15"
+                                />
+                              )}
+                              <div className="relative size-16 shrink-0 overflow-hidden rounded-card border border-brand-ink/40 bg-white sm:size-20">
+                                <Image
+                                  src={route.final}
+                                  alt={`${item.title} — the finished logo`}
+                                  fill
+                                  sizes="80px"
+                                  className="object-contain p-2"
+                                />
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>

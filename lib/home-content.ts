@@ -617,7 +617,15 @@ export const branding = {
     "Brand guidelines, design, motion videos and brand collaterals — built for the sixth-second crop, not just the pitch deck.",
   work: [
     { title: "Tripgate", caption: "Branding & guidelines" },
-    { title: "Activ Health App", caption: "Logo redesign" },
+    /*
+      `assets` names a folder under /public/brand. Where one exists, the
+      section shows that mark's ROUTE — the sketch phases in order, then the
+      finished logo — because "Logo redesign" as a caption is a claim and the
+      sketches are the evidence. See branding-design.tsx: the strip appears on
+      its own when the files are there and the caption stands alone when they
+      are not, so this needs no second flag to keep in sync.
+    */
+    { title: "Activ Health App", caption: "Logo redesign", assets: "activ-health" },
   ],
   /*
     "Content production" comes off at Genesis's instruction and "Brand

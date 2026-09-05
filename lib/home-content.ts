@@ -681,13 +681,20 @@ export const branding = {
     { title: "Tripgate", caption: "Branding & guidelines" },
     { title: "Activ Health App", caption: "Logo redesign" },
   ],
+  /*
+    "Content production" comes off at Genesis's instruction and "Brand
+    collaterals" goes on — which also settles a contradiction: collaterals are
+    named in this division's own tagline ("Branding Positioning, Design &
+    Collaterals") and were missing from the list under it, while content
+    production is Studios' whole job and was being claimed here as well.
+  */
   capabilities: [
     "Brand guidelines",
     "Visual identity",
     "Motion design",
-    "Content production",
     "Campaign toolkits",
     "Curated content",
+    "Brand collaterals",
   ],
 } as const;
 

@@ -254,7 +254,14 @@ function ReelTile({ n, duplicate }: { n: number; duplicate: boolean }) {
       // The second copy exists only to make the loop seamless; announcing
       // every clip twice is noise.
       aria-hidden={duplicate || undefined}
-      className="relative w-[clamp(8rem,13vw,11rem)] shrink-0 overflow-hidden rounded-card border border-[var(--glass-border)] bg-ink"
+      /*
+        BIGGER, at Genesis's request. 13vw put a tile at 187px on a 1440
+        screen, which is smaller than the work grid's thumbnails on the same
+        page — a wall whose whole job is showing footage should not have the
+        smallest media on the page. 17vw is 245px, and the clamp's floor rises
+        with it so a phone gets a usable tile rather than a stamp.
+      */
+      className="relative w-[clamp(10.5rem,17vw,15rem)] shrink-0 overflow-hidden rounded-card border border-[var(--glass-border)] bg-ink"
     >
       <video
         ref={ref}

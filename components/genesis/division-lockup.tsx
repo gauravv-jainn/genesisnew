@@ -81,8 +81,18 @@ const BOARD: Record<string, { slug: string; width: number; height: number }> = {
  * worth instead means each lockup stands at the same height wherever there is
  * room for it, and shrinks to fit where there is not.
  *
- * 104px is what the live text it replaces measured: 56px of heading, 12px of
- * gap, 29px of tagline.
+ * 58px, AND THE NUMBER HAD TO COME DOWN WHEN THE ARTWORK CHANGED. It was 104
+ * — measured against the live text it replaced, which was 56px of heading,
+ * 12px of gap and 29px of tagline stacked. But that figure described the
+ * WHOLE block, and the artwork then carried the whole block too. Cropping the
+ * tagline out of the picture left 104 applying to the wordmark alone, so
+ * every division lockup silently grew by the height of a tagline and a gap —
+ * Influence went from 575px wide to 932. Nothing in the code changed; the
+ * meaning of the number did.
+ *
+ * 58 is the wordmark's own share of that original 104 (its ink was 148 of the
+ * 252 in the full lockup), which puts the mark back at the size the page was
+ * built around.
  *
  * THE TAGLINE CANNOT RE-WRAP, which is the real cost of using artwork here
  * and is worth knowing rather than discovering. As live text the tagline
@@ -91,7 +101,7 @@ const BOARD: Record<string, { slug: string; width: number; height: number }> = {
  * division clears 13. If that reads too small on a real phone, the fix is a
  * stacked mobile crop from Genesis, not a CSS change here.
  */
-const TARGET_HEIGHT = 104;
+const TARGET_HEIGHT = 58;
 
 /**
  * The widest of the four, in aspect terms — Brand & Design, at 7.36:1.

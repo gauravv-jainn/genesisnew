@@ -703,7 +703,17 @@ export const branding = {
 // Spec: "Same as the existing website ++ @ Ask tanvi" — so this list is the
 // confirmed subset. TODO(assets): full logo dump still owed by Tanvi.
 export const clients = {
-  label: "Clients we've worked with",
+  /*
+   * The eyebrow used to be "Clients we've worked with" and the section had NO
+   * heading at all — just a label, a line of instruction and the wall. Genesis
+   * asked for a heading you can actually see, so the eyebrow gives up saying
+   * what the heading now says and carries the sectors instead, which is the
+   * one thing twenty-nine marks cannot tell you on their own.
+   */
+  label: "Trusted by",
+  heading: "Our",
+  headingAccent: "clients",
+  body: "Twenty-nine brands across banking, hospitality, FMCG, media, real estate and education.",
   /*
    * THE REAL LOGO FILES, at last. This was a list of NAMES rendered as text
    * wordmarks under a standing TODO ("Ask tanvi"); it is Genesis's own
@@ -736,39 +746,48 @@ export const clients = {
    *
    * Everything else is left exactly as supplied.
    *
+   * `ratio` IS THE FILE'S OWN WIDTH/HEIGHT, and it is here because it is what
+   * decides how big each mark is allowed to be. These range from 0.89 (LN
+   * Construction, near square) to 12.63 (Mahindra Finance, a long strip), and
+   * a set of marks that different by fourteen times CANNOT share one box: in
+   * the square chip this replaced, object-contain left Mahindra Finance 5.7px
+   * tall while a square mark stood at 72. That is the size problem Genesis
+   * kept pointing at, and it was never a padding value — it was the geometry.
+   * See client-logos.tsx for what the number is used for.
+   *
    * TODO(assets): dark-ink versions of those seven would let every mark run
    * untouched. Dimming a client's colour is a compromise, not a preference.
    */
   logos: [
-    { name: "Aditya Birla Capital", file: "aditya-birla-capital", ink: "auto" },
-    { name: "Mahindra Finance", file: "mahindra-finance", ink: "darken" },
-    { name: "HDFC Bank", file: "hdfc-bank", ink: "auto" },
-    { name: "IDBI Bank", file: "idbi-bank", ink: "auto" },
-    { name: "House of Hiranandani", file: "house-of-hiranandani", ink: "auto" },
-    { name: "The WorldGrad", file: "the-worldgrad", ink: "auto" },
-    { name: "The Lalit Mumbai", file: "the-lalit-mumbai", ink: "darken" },
-    { name: "Social Samosa", file: "social-samosa", ink: "invert" },
-    { name: "Four Points", file: "four-points", ink: "auto" },
-    { name: "Someplace Else", file: "someplace-else", ink: "invert" },
-    { name: "Matahaari", file: "matahaari", ink: "auto" },
-    { name: "Grand Hyatt", file: "grand-hyatt", ink: "auto" },
-    { name: "MNR", file: "mnr", ink: "auto" },
-    { name: "BNI", file: "bni", ink: "auto" },
-    { name: "Imagicaa", file: "imagicaa", ink: "auto" },
-    { name: "Kitty Su", file: "kitty-su", ink: "auto" },
-    { name: "Royal Tulip", file: "royal-tulip", ink: "auto" },
-    { name: "Radcliffe", file: "radcliffe", ink: "auto" },
-    { name: "HT Brunch", file: "ht-brunch", ink: "darken" },
-    { name: "Bumble", file: "bumble", ink: "darken" },
-    { name: "Lizol", file: "lizol", ink: "darken" },
-    { name: "Dove", file: "dove", ink: "auto" },
-    { name: "Bacardi", file: "bacardi", ink: "auto" },
-    { name: "Vivo", file: "vivo", ink: "auto" },
-    { name: "Budweiser", file: "budweiser", ink: "auto" },
-    { name: "LN Construction", file: "ln-construction", ink: "auto" },
-    { name: "Kamdhenu", file: "kamdhenu", ink: "auto" },
-    { name: "Aditya Birla Sun Life Insurance", file: "aditya-birla-sun-life", ink: "auto" },
-    { name: "TripGate", file: "tripgate", ink: "auto" },
+    { name: "Aditya Birla Capital", file: "aditya-birla-capital", ink: "auto", ratio: 2.55 },
+    { name: "Mahindra Finance", file: "mahindra-finance", ink: "darken", ratio: 12.63 },
+    { name: "HDFC Bank", file: "hdfc-bank", ink: "auto", ratio: 5.93 },
+    { name: "IDBI Bank", file: "idbi-bank", ink: "auto", ratio: 5.93 },
+    { name: "House of Hiranandani", file: "house-of-hiranandani", ink: "auto", ratio: 2.02 },
+    { name: "The WorldGrad", file: "the-worldgrad", ink: "auto", ratio: 3.24 },
+    { name: "The Lalit Mumbai", file: "the-lalit-mumbai", ink: "darken", ratio: 1.22 },
+    { name: "Social Samosa", file: "social-samosa", ink: "invert", ratio: 1.97 },
+    { name: "Four Points", file: "four-points", ink: "auto", ratio: 1.0 },
+    { name: "Someplace Else", file: "someplace-else", ink: "invert", ratio: 6.32 },
+    { name: "Matahaari", file: "matahaari", ink: "auto", ratio: 1.76 },
+    { name: "Grand Hyatt", file: "grand-hyatt", ink: "auto", ratio: 4.14 },
+    { name: "MNR", file: "mnr", ink: "auto", ratio: 1.4 },
+    { name: "BNI", file: "bni", ink: "auto", ratio: 2.55 },
+    { name: "Imagicaa", file: "imagicaa", ink: "auto", ratio: 2.39 },
+    { name: "Kitty Su", file: "kitty-su", ink: "auto", ratio: 1.29 },
+    { name: "Royal Tulip", file: "royal-tulip", ink: "auto", ratio: 2.21 },
+    { name: "Radcliffe", file: "radcliffe", ink: "auto", ratio: 3.53 },
+    { name: "HT Brunch", file: "ht-brunch", ink: "darken", ratio: 4.21 },
+    { name: "Bumble", file: "bumble", ink: "darken", ratio: 5.85 },
+    { name: "Lizol", file: "lizol", ink: "darken", ratio: 0.98 },
+    { name: "Dove", file: "dove", ink: "auto", ratio: 1.42 },
+    { name: "Bacardi", file: "bacardi", ink: "auto", ratio: 1.36 },
+    { name: "Vivo", file: "vivo", ink: "auto", ratio: 3.78 },
+    { name: "Budweiser", file: "budweiser", ink: "auto", ratio: 2.94 },
+    { name: "LN Construction", file: "ln-construction", ink: "auto", ratio: 0.89 },
+    { name: "Kamdhenu", file: "kamdhenu", ink: "auto", ratio: 1.56 },
+    { name: "Aditya Birla Sun Life Insurance", file: "aditya-birla-sun-life", ink: "auto", ratio: 2.54 },
+    { name: "TripGate", file: "tripgate", ink: "auto", ratio: 3.24 },
   ],
 } as const;
 
@@ -783,64 +802,67 @@ export const testimonials = {
   heading: "In their",
   headingAccent: "words",
   /**
-   * THE DRAFTS ARE NOT ATTRIBUTED TO ANYONE, and that is the whole design of
-   * this block.
+   * THESE QUOTES ARE WRITTEN, NOT COLLECTED, AND THE NAMES ARE REAL.
    *
-   * Genesis asked for placeholder testimonials so the section stops looking
-   * like a wall of names — fair, it did. But the twelve people below are real,
-   * at named companies, and a made-up sentence printed under "Anu Raj,
-   * Mahindra" is not a placeholder, it is a quote that person never gave. It
-   * ships the moment the site does, and it is the client's relationship that
-   * pays for it.
+   * I flagged that once: a sentence I wrote, printed under a real person at a
+   * named company, is a quote they never gave, and it ships when the site
+   * does. Genesis has asked twice for the names to be on them, which is their
+   * call — it is their client list and their relationship, and they have said
+   * these get replaced with the real thing.
    *
-   * So the drafts carry a SECTOR instead of a person. They read as real
-   * testimonials, they fill the design, and nobody is quoted saying something
-   * they did not say. `attributed: false` is what marks them, and the card
-   * renders no name while it is set.
+   * So the risk is written down here instead of argued about. Every one of
+   * these is `approved: false`. Nothing renders that flag today, but it means
+   * a person or a script can find every unapproved quote on the site in one
+   * grep, and the day a real one arrives you swap the text and set the flag
+   * rather than trying to remember which of the six were ours.
    *
-   * TODO(content): real quotes. When one arrives, put it in `items` against
-   * its author with `attributed: true` and delete the draft it replaces —
-   * the section shows attributed quotes first and only falls back to drafts
-   * to fill the row.
+   * TODO(content): replace each quote with the client's own words and set
+   * `approved: true`. Until then, do not put these in a deck, an ad, or
+   * anywhere they cannot be taken back down.
    */
-  drafts: [
+  items: [
     {
       quote:
         "They came back with a plan for the whole quarter, not a set of posts. That is the difference we were looking for and had not found anywhere else.",
-      sector: "Marketing lead · Financial services",
-      attributed: false,
+      name: "Anu Raj",
+      role: "Mahindra",
+      approved: false,
     },
     {
       quote:
         "Scripting, shoot and edit all sat with one team, so nothing got lost in a handover. We went from brief to published in under three weeks.",
-      sector: "Brand manager · Hospitality",
-      attributed: false,
+      name: "Shreya",
+      role: "Mahindra Finance",
+      approved: false,
     },
     {
       quote:
         "The creators they put us in front of actually matched the brief. Reach was the easy part — the fit is what moved the numbers.",
-      sector: "Growth lead · Consumer app",
-      attributed: false,
+      name: "Amey Khopte",
+      role: "Aditya Birla Sun Life Insurance",
+      approved: false,
     },
-  ],
-  /**
-   * The real people, kept because they are real. Names and companies come
-   * from the spec; every quote is still unwritten, which is why none of them
-   * is printed as one.
-   */
-  items: [
-    { quote: "TODO — real quote required.", name: "Anu Raj", role: "Mahindra" },
-    { quote: "TODO — real quote required.", name: "Shreya", role: "Mahindra Finance" },
-    { quote: "TODO — real quote required.", name: "Amey Khopte", role: "Aditya Birla Sun Life Insurance" },
-    { quote: "TODO — real quote required.", name: "Aditya Rane", role: "IndusInd Nippon Life Insurance" },
-    { quote: "TODO — real quote required.", name: "Anandkumar", role: "QuiteBox" },
-    { quote: "TODO — real quote required.", name: "Rishabh Wala", role: "Cinematographer" },
-    { quote: "TODO — real quote required.", name: "Harsh Jain", role: "TODO — company" },
-    { quote: "TODO — real quote required.", name: "Siddhi Sharma", role: "TODO — company" },
-    { quote: "TODO — real quote required.", name: "Rashmi Rai", role: "TODO — company" },
-    { quote: "TODO — real quote required.", name: "Mayank Batwal", role: "TODO — company" },
-    { quote: "TODO — real quote required.", name: "Pooja", role: "TODO — company" },
-    { quote: "TODO — real quote required.", name: "Nancy", role: "TODO — company" },
+    {
+      quote:
+        "We came in with a rough idea and left with a campaign. They pushed back where it mattered and were right to.",
+      name: "Aditya Rane",
+      role: "IndusInd Nippon Life Insurance",
+      approved: false,
+    },
+    {
+      quote:
+        "Turnaround was the thing. Two weeks of footage cut, approved and live while we were still writing the next brief.",
+      name: "Anandkumar",
+      role: "QuiteBox",
+      approved: false,
+    },
+    {
+      quote:
+        "A set that runs on time and a team that knows what it wants on the day. That is rarer than it should be.",
+      name: "Rishabh Wala",
+      role: "Cinematographer",
+      approved: false,
+    },
   ],
 } as const;
 

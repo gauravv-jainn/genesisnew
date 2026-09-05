@@ -2,6 +2,7 @@ import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { Reveal } from "@/components/genesis/reveal";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { caseStudiesPage, caseStudyList, isPublished } from "@/lib/case-studies";
+import { findWork } from "@/lib/work";
 import { SectionShell } from "./section-shell";
 
 /**
@@ -31,9 +32,26 @@ export function CaseStudies() {
   const posters: Poster[] = caseStudyList.map((study) => {
     const published = isPublished(study);
 
+    /*
+      THE CAMPAIGN'S OWN FOOTAGE, which these cards were missing entirely.
+      Each study already names the catalogue pieces it covers in `work` — the
+      /case-studies index has used that to find a hero all along, and this rail
+      did not, so four posters sat here with a play control painted on them and
+      nothing behind it.
+
+      Two of the four have footage today. Aditya Birla Sun Life and HDFC are
+      real relationships with no clip in either Drive folder, so they keep the
+      typographic card rather than borrowing another client's video — Sun Life
+      is a different company from Aditya Birla Capital, and using one's reel
+      under the other's name would be a claim about both.
+    */
+    const lead = study.work?.[0] ? findWork(study.work[0]) : undefined;
+
     return {
       id: study.slug,
       category: study.discipline,
+      image: lead?.poster ?? lead?.art,
+      clip: lead?.clip,
       // With no written study the client IS the title; with one, it steps
       // back up to the eyebrow above it.
       client: published ? study.client : undefined,

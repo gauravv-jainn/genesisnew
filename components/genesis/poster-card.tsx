@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRef } from "react";
 import { Play } from "lucide-react";
 import { useEdgeFade } from "./use-edge-fade";
 
@@ -25,14 +26,17 @@ export type Poster = {
   meta?: string[];
   /** Optional real artwork. Falls back to a generated gradient. */
   image?: string;
+  /**
+   * A muted loop played on hover, with `image` as its still.
+   *
+   * These cards had a play control painted on them and nothing behind it —
+   * four posters inviting a click that started nothing. Where the campaign has
+   * footage in the catalogue, the control now means what it says.
+   */
+  clip?: string;
   /** Where the poster leads. A poster that opens nothing is a picture of
    *  work rather than a way into it. */
   href?: string;
-  /**
-   * The artwork already carries its own caption, pill and play control.
-   * Set for the interim mockup stills — see hasBakedChrome in lib/work.
-   */
-  hasOwnChrome?: boolean;
 };
 
 /**
@@ -84,9 +88,24 @@ export function PosterCard({
   /** Renders larger, as the focused card in a rail. */
   priority?: boolean;
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const play = () => {
+    const video = videoRef.current;
+    if (video) void video.play().catch(() => {});
+  };
+  const stop = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
+  };
+
   const card = (
     <motion.article
       whileHover={{ y: -10 }}
+      onHoverStart={play}
+      onHoverEnd={stop}
       transition={{ type: "spring", stiffness: 300, damping: 24 }}
       className={cn(
         "group relative shrink-0 overflow-hidden rounded-panel border border-white/10",
@@ -104,24 +123,42 @@ export function PosterCard({
     >
       <div
         /*
-          The mockup stills are 173x200 with their caption printed along the
-          bottom edge, so forcing them into 2:3 and cropping to cover sliced
-          that caption in half — which is the hard horizontal edge Genesis
-          flagged on these cards. Artwork with baked chrome keeps its own
-          shape; everything else takes the poster ratio.
+          One ratio for every poster now. The exception here was for ten
+          173x200 mockup stills with their caption printed along the bottom
+          edge, which lost half that caption when cropped to 2:3 — those files
+          and the rule that protected them are both gone.
 
           Arbitrary-value syntax: Tailwind v4 has no bare-fraction aspect-2/3.
         */
-        className={cn(
-          "relative w-full",
-          poster.hasOwnChrome ? "aspect-[173/200]" : "aspect-[2/3]",
-        )}
+        className="relative w-full aspect-[2/3]"
         style={
           poster.image
             ? { backgroundImage: `url(${poster.image})`, backgroundSize: "cover" }
             : { backgroundImage: placeholderArt(poster.id) }
         }
       >
+        {/*
+          The footage, behind every scrim and control the card draws.
+
+          Hover-played rather than autoplaying: a rail of four posters that all
+          start on load is four decoders and four files pulled for a section a
+          visitor may scroll straight past. play() rejects if the pointer
+          leaves before the promise settles, which is ordinary.
+        */}
+        {poster.clip && (
+          <video
+            ref={videoRef}
+            src={poster.clip}
+            poster={poster.image}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden
+            className="absolute inset-0 size-full object-cover"
+          />
+        )}
+
         {/*
           With no artwork the client is the subject rather than a caption at
           the foot of an empty rectangle. Set large and centred, so the card
@@ -138,10 +175,8 @@ export function PosterCard({
           </div>
         )}
 
-        {/* Everything below is the card's OWN chrome, and it is skipped
-            entirely when the artwork already carries a pill, a play control
-            and a caption — otherwise every one of them appears twice. */}
-        {!poster.hasOwnChrome && (
+        {/* The card's own chrome — pill, play control, caption. */}
+        {(
           <>
         {/*
           Legibility scrims, and they RUN THE WHOLE CARD now.

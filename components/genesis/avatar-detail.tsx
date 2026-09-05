@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 import { GlassButton } from "@/components/genesis/glass-button";
+import { Media } from "@/components/genesis/media";
+import { mediaUrl } from "@/lib/media-url";
 import { isPending } from "@/lib/home-content";
 import { avatars, AVATAR_TINT, type Avatar } from "@/lib/avatars";
 
@@ -21,7 +23,22 @@ export function AvatarDetail({ avatar }: { avatar: Avatar }) {
   return (
     <article className="flex flex-col gap-8">
       <figure className="relative overflow-hidden rounded-panel border border-[var(--glass-border)] bg-ink">
-        <div className="relative aspect-[3/4] w-full sm:aspect-[16/10]">
+        {/*
+          HEIGHT, NOT ASPECT, AND IT IS TIED TO THE VIEWPORT.
+
+          This was aspect-[3/4] rising to 16/10, which sounds modest until the
+          panel is 848px wide — at which point 16/10 is 531px of placeholder
+          gradient before the reader reaches the avatar's own name. Measured on
+          a 1440x900 laptop the page came to 1084px against a 900px viewport,
+          and the same block is what the modal has to scroll past.
+
+          An aspect ratio cannot know how tall the screen is; that is the whole
+          problem with using one for a hero. A clamp can: 14rem on the smallest
+          screen, 38% of the viewport where there is room, never past 26rem. The
+          same rule serves the page and the dialog, which is why it lives here
+          rather than in either of them.
+        */}
+        <div className="relative h-[clamp(14rem,38vh,26rem)] w-full">
           {/* TODO(assets): the real portrait replaces this ground. */}
           <div
             className="absolute inset-0"
@@ -82,6 +99,53 @@ export function AvatarDetail({ avatar }: { avatar: Avatar }) {
                 className="glass-chip rounded-full px-3 py-1.5 text-small text-bone"
               >
                 {useCase}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/*
+        WHAT THIS AVATAR HAS BEEN USED TO MAKE — the samples Genesis asked the
+        window to carry. Films first, then stills, both from lib/home-content.
+
+        RESPONSIVE BY COLUMN COUNT, not by media query on each tile: one across
+        on a phone, two from 640, three from 1024, so a sample is never smaller
+        than about 150px on the narrowest screen the modal opens on. `sizes`
+        follows the same breakpoints, which is the half that actually saves
+        bytes — without it every tile fetches a viewport-wide file.
+
+        The whole block disappears while both lists are empty, which is where
+        they are today. It is the same rule the bio and the language chips
+        follow: show what is real, print nothing where nothing is written.
+      */}
+      {(avatar.reel.length > 0 || avatar.stills.length > 0) && (
+        <section className="flex flex-col gap-4 border-t border-[var(--glass-border)] pt-8">
+          <h2 className="micro-label">Made with {avatar.name}</h2>
+
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {avatar.reel.map((clip) => (
+              <li key={clip}>
+                <video
+                  src={mediaUrl(clip)}
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  preload="metadata"
+                  className="aspect-[9/13] w-full rounded-card border border-[var(--glass-border)] bg-ink object-cover"
+                />
+              </li>
+            ))}
+
+            {avatar.stills.map((still) => (
+              <li key={still} className="relative">
+                <Media
+                  src={mediaUrl(still)}
+                  alt={`${avatar.name} — sample still`}
+                  aspect="portrait"
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                />
               </li>
             ))}
           </ul>

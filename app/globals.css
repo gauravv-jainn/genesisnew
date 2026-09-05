@@ -1062,6 +1062,34 @@ body:has(main.scene-dark) header {
 /* The Studios reel wall. Transform only, so it composites without touching
    layout; the row is doubled in the markup so -50% lands the second copy
    exactly where the first began. */
+/*
+   THE AVATAR FAN BREATHES.
+
+   Genesis asked for continuous motion on the roster. It is a rotation and
+   nothing else, about the same pivot the fan itself is built on — four card
+   heights BELOW the hand — so nine tenths of a degree at the pivot is around
+   thirteen pixels of arc at the card. Small number, visible travel, and the
+   cards stay locked to the same fan they were dealt into rather than drifting
+   out of formation.
+
+   Each card is delayed by a NEGATIVE multiple of its index, which starts every
+   one of them mid-cycle instead of waiting its turn — so the wave is already
+   running the moment the section appears, and reads as a hand being riffled
+   rather than seven things bobbing in unison.
+
+   It rides on top of the deal-in, not instead of it: the entrance owns the
+   outer element's transform and this owns an inner one, because two animations
+   on one matrix fight and the fan snaps.
+*/
+@keyframes avatar-sway {
+    from {
+        transform: rotate(-0.9deg);
+    }
+    to {
+        transform: rotate(0.9deg);
+    }
+}
+
 @keyframes reel-drift {
     from { transform: translate3d(0, 0, 0); }
     to { transform: translate3d(-50%, 0, 0); }

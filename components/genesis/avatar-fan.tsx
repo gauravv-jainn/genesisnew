@@ -129,6 +129,26 @@ export function AvatarFan({
     <div
       className={cn(
         "relative h-[calc(clamp(7.5rem,14vw,13rem)*2.2)] w-full",
+        /*
+          IT NEEDS 775px AND A PHONE HAS 375.
+
+          The geometry is not negotiable: seven cards 121px wide, pivoted four
+          card-heights down and stepped 6.6 degrees apart, put the outer pair
+          327px either side of centre — 775px of fan. Under the bleed
+          wrapper's overflow-hidden that meant Ivaanat and Shivam were simply
+          cut off the sides of every phone.
+
+          Three ways out and two are worse. Narrowing the step to fit packs
+          seven cards into 375px at 66% overlap and buries the names.
+          Shrinking the cards to fit takes them to 56px, at which the names do
+          not fit on the card at all. So the fan keeps its real size and the
+          viewport scrolls across it — the whole roster is reachable, at the
+          size it was drawn, by the gesture a phone already uses for a row of
+          cards.
+
+          Above 640px there is room for all of it and the min-width goes away.
+        */
+        "min-w-[48rem] sm:min-w-0",
         className,
       )}
     >
@@ -171,6 +191,23 @@ export function AvatarFan({
               page of its own, so a brand can be sent one directly; browsing
               the fan opens it as a dialog over the roster instead.
             */}
+            {/*
+              THE CONTINUOUS SWAY LIVES ON ITS OWN ELEMENT, inside the one
+              Framer is animating. Both rotate about the same pivot, so the
+              card stays in its place in the fan and simply breathes there —
+              but they cannot share a transform, because two animations
+              writing one matrix fight and the deal-in snaps. See
+              `avatar-sway` in globals.css.
+            */}
+            <div
+              className="motion-safe:animate-[avatar-sway_7s_ease-in-out_infinite_alternate]"
+              style={{
+                transformOrigin: PIVOT,
+                // Negative, so every card starts mid-cycle and the wave is
+                // already travelling rather than beginning on a queue.
+                animationDelay: `${(-0.55 * index).toFixed(2)}s`,
+              }}
+            >
             <Link
               href={`/avatars/${avatar.id}`}
               aria-label={`${avatar.name}${avatar.role ? `, ${avatar.role}` : ""}`}
@@ -218,6 +255,7 @@ export function AvatarFan({
               </figcaption>
             </figure>
             </Link>
+            </div>
           </motion.div>
         );
       })}

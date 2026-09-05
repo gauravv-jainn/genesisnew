@@ -55,9 +55,17 @@ export function AiContent() {
         it reads as a widget dropped into the section instead of a roster
         being dealt to you.
       */}
+      {/*
+        Full-bleed, and a SCROLLER below 640 rather than a clip. The fan is
+        775px wide by construction (see AvatarFan) so on a phone this wrapper
+        was amputating the outer avatar on each side; `overflow-x-auto` turns
+        that same overflow into something a thumb can reach. `no-scrollbar`
+        because the fan's own edges already say there is more of it, and a
+        scrollbar under a hand of cards reads as a widget.
+      */}
       <Reveal
         variant="scene"
-        className="relative left-1/2 mt-12 w-screen -translate-x-1/2 overflow-hidden"
+        className="no-scrollbar relative left-1/2 mt-12 w-screen -translate-x-1/2 overflow-x-auto overflow-y-hidden sm:overflow-hidden"
       >
         <div className="mx-auto max-w-3xl px-6 text-center">
           <h3

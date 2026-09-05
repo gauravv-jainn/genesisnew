@@ -371,22 +371,39 @@ export const aiContent = {
     TODO(content): `bio`, `languages` and `useCases` are Genesis's to write.
     Each avatar has a page of its own at /avatars/<slug>; the detail view
     omits whatever is still pending rather than printing a placeholder.
+
+    `reel` AND `stills` ARE THE SAMPLES THE DETAIL WINDOW SHOWS — what this
+    avatar has actually been used to make. Both are empty, and they are empty
+    rather than filled with something plausible on purpose: the work clips in
+    /public/work are Genesis's production reel, not any avatar's output, and
+    captioning one of them "Adi" would be inventing a credit. The section
+    renders nothing at all until a file is listed here.
+
+    TODO(assets): per avatar, drop the files under public/avatars/<id>/ and
+    list them below — reel takes .mp4 paths, stills take images.
   */
   avatars: [
     { id: "ivaanat", name: "Ivaanat", role: undefined as string | undefined,
-      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
+      reel: [] as string[], stills: [] as string[] },
     { id: "tanvi", name: "Tanvi", role: undefined as string | undefined,
-      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
+      reel: [] as string[], stills: [] as string[] },
     { id: "jesko", name: "Jesko", role: "DJ | Techno artist",
-      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
+      reel: [] as string[], stills: [] as string[] },
     { id: "adi", name: "Adi", role: "Aditya Birla Health Insurance",
-      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
+      reel: [] as string[], stills: [] as string[] },
     { id: "diya", name: "Diya", role: "Aditya Birla Health Insurance",
-      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
+      reel: [] as string[], stills: [] as string[] },
     { id: "bharat", name: "Bharat", role: "Advocate",
-      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
+      reel: [] as string[], stills: [] as string[] },
     { id: "shivam", name: "Shivam", role: "Founder & CEO | Genesis",
-      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[] },
+      bio: undefined as string | undefined, languages: [] as string[], useCases: [] as string[],
+      reel: [] as string[], stills: [] as string[] },
   ],
   // The deck's own subtitle for the division, verbatim, in place of four
   // categories written before the guidelines existed.

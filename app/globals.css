@@ -243,6 +243,37 @@
        Deep Space Gray #2B2B2B, which the deck names as the master logo's
        own colour. */
     --surface-base: #111111;
+
+    /* --- THE PAGE'S OWN GROUND ------------------------------------------
+       Genesis asked for the background to BE a gradient rather than a flat
+       ground with light thrown at it. It was #111111 everywhere, with the
+       eighteen radial sources in page-atmosphere.tsx floated over the top at
+       ten to twenty percent alpha — which is a lot of careful colour sitting
+       on a black wall, and at that alpha the wall is what you see.
+
+       This is the wall itself, and it runs the length of the document: the
+       violet the Brain sits in, cooling through the work, warming through
+       Studios, back to plum for the case studies and out. The radial field
+       keeps doing what it does on top; it now has something to tint rather
+       than something to fight.
+
+       EVERY STOP IS STILL NEARLY BLACK, and deliberately. Measured against
+       white body copy, the worst of the seven is #1e1526 at 17.64:1, where
+       the flat #111111 it replaces is 18.88:1 — a tenth of a stop of headroom
+       given up out of eighteen. The page gains a gradient and no text on it
+       loses a usable amount of contrast. A background is allowed to have a
+       colour; it is not allowed to have an opinion about legibility.
+       --------------------------------------------------------------------- */
+    --page-ground: linear-gradient(
+        168deg,
+        #191333 0%,
+        #141126 16%,
+        #17131f 32%,
+        #1d1518 50%,
+        #1a1320 68%,
+        #1e1526 84%,
+        #120f18 100%
+    );
     --surface-ink: #1a1a1a;
     --surface-raised: #222222;
     --surface-panel: #2b2b2b;
@@ -400,6 +431,20 @@
    -------------------------------------------------------------------------- */
 :root[data-theme="light"] {
     --surface-base: #ffffff;
+
+    /* The light theme's own ground. Same drift, same order, at paper values —
+       see --page-ground in the dark block. Worst stop here is #f6f3ff at
+       17.25:1 against #111111 body copy, against flat white's 18.88. */
+    --page-ground: linear-gradient(
+        168deg,
+        #f6f3ff 0%,
+        #fdfaff 18%,
+        #fffdf9 36%,
+        #fff8f2 54%,
+        #fdf7ff 72%,
+        #fffbf2 88%,
+        #ffffff 100%
+    );
     --chapter-ground: #111111;
     --chapter-blend: #ffffff;
     --surface-ink: #f5f5f5;
@@ -465,6 +510,21 @@
 @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]):not([data-theme="light"]) {
         --surface-base: #ffffff;
+
+        /* The light theme's own ground. Same drift, same order, at paper
+           values — see --page-ground in the dark block. Worst stop here is
+           #f6f3ff at 17.25:1 against #111111 body copy, against flat
+           white's 18.88. */
+        --page-ground: linear-gradient(
+            168deg,
+            #f6f3ff 0%,
+            #fdfaff 18%,
+            #fffdf9 36%,
+            #fff8f2 54%,
+            #fdf7ff 72%,
+            #fffbf2 88%,
+            #ffffff 100%
+        );
         --chapter-ground: #111111;
         --chapter-blend: #ffffff;
         --surface-ink: #f5f5f5;

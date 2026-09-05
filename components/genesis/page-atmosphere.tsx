@@ -96,7 +96,24 @@ export function PageAtmosphere({ children }: { children: React.ReactNode }) {
       clipping the page wrapper would break every `position: sticky` inside
       it — the work rail and the journey both use one.
     */
-    <div className="relative isolate min-h-dvh bg-void">
+    <div
+      className="relative isolate min-h-dvh"
+      /*
+        THE GROUND IS A GRADIENT, not a flat fill with light thrown at it.
+        This was `bg-void` — #111111 — with the eighteen sources below floated
+        over it, and at ten to twenty percent alpha eighteen soft blobs on a
+        black wall still read as a black wall. --page-ground is that wall
+        redrawn as the drift itself; see globals.css, where both themes'
+        versions live and where the contrast figures are recorded.
+
+        Painted on this element rather than on <body> so it spans the whole
+        document — the wrapper is min-h-dvh but grows to the page's real
+        height, so the gradient's stops stretch across every section rather
+        than repeating per screen. body keeps the flat token underneath it,
+        which is what shows through on overscroll and is correct there.
+      */
+      style={{ background: "var(--page-ground)" }}
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10"

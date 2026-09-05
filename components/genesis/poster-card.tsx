@@ -143,10 +143,27 @@ export function PosterCard({
             and a caption — otherwise every one of them appears twice. */}
         {!poster.hasOwnChrome && (
           <>
-        {/* Legibility scrim for the title block. */}
-        {/* Same diagonal as the library tiles — see the note there. */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45)_0%,transparent_28%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(var(--n-angle),rgb(0_0_0/0.9)_0%,rgb(0_0_0/0.7)_32%,transparent_62%)]" />
+        {/*
+          Legibility scrims, and they RUN THE WHOLE CARD now.
+
+          THIS WAS THE CUT ACROSS THE LOWER HALF. The diagonal scrim was
+          `rgb(0 0 0/0.9) 0%, rgb(0 0 0/0.7) 32%, transparent 62%` — nearly
+          flat black for its first third, then the entire remaining alpha
+          dumped over the next thirty percent and finished by 62%. Two things
+          go wrong with that. It reaches zero well before the top of the card,
+          so the scrim has an END inside the artwork, and a gradient that
+          stops mid-surface draws an edge exactly like a clip does. And the
+          fall from 0.7 to 0 in thirty percent is steep enough to band, so
+          that edge is not even soft. Four posters in a rail, four diagonal
+          seams across their lower halves.
+
+          The stops below are an eased falloff over the FULL height — closely
+          spaced where the alpha is changing fastest, arriving at zero at
+          100% rather than 62%. There is no point on the card where the scrim
+          ends, so there is no line. The top scrim gets the same treatment.
+        */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45)_0%,rgb(0_0_0/0.26)_12%,rgb(0_0_0/0.12)_24%,rgb(0_0_0/0.04)_36%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(var(--n-angle),rgb(0_0_0/0.92)_0%,rgb(0_0_0/0.86)_12%,rgb(0_0_0/0.74)_24%,rgb(0_0_0/0.58)_38%,rgb(0_0_0/0.4)_52%,rgb(0_0_0/0.24)_66%,rgb(0_0_0/0.12)_78%,rgb(0_0_0/0.04)_90%,transparent_100%)]" />
 
         <span className="glass absolute left-3 top-3 rounded-full px-3 py-1 text-micro font-medium tracking-wide text-bone">
           {poster.category}

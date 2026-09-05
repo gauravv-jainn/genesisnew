@@ -118,6 +118,80 @@ function Field({
   const errorId = `${id}-error`;
   const isWide = !field.half;
 
+  /*
+    A CONSENT BOX IS NOT A LABELLED FIELD. Every other row here is a label
+    above a control; a terms checkbox is a control beside a sentence, and
+    rendering it through the shared path would print the whole sentence in
+    10px uppercase micro-label caps as if it were a field name. It also owns
+    no "(optional)" suffix — the point of it is that it is required.
+  */
+  if (field.type === "consent") {
+    return (
+      <div className={cn("flex flex-col gap-1.5", isWide && "sm:col-span-2")}>
+        <label htmlFor={id} className="flex items-start gap-3 text-small text-ash">
+          <input
+            id={id}
+            name={field.name}
+            type="checkbox"
+            required={field.required}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? errorId : undefined}
+            className="mt-0.5 size-4 shrink-0 accent-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+          />
+          <span className="leading-relaxed">{field.label}</span>
+        </label>
+        {error && (
+          <p id={errorId} className="text-micro text-[rgb(255_150_150)]">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  /*
+    A GROUP OF BOXES SHARING ONE NAME, which is what makes the action's
+    getAll work. It is a fieldset rather than a div with a label: a label
+    can only point at ONE control, so a screen reader on a plain div would
+    announce six unlabelled checkboxes with no idea what the question was.
+  */
+  if (field.type === "checkbox-group") {
+    return (
+      <fieldset className={cn("flex flex-col gap-2", isWide && "sm:col-span-2")}>
+        <legend className="micro-label !text-ash">
+          {field.label}
+          {!field.required && (
+            <span className="ml-1 normal-case tracking-normal text-faint">
+              (optional)
+            </span>
+          )}
+        </legend>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+          {field.options?.map((option) => (
+            <label
+              key={option}
+              className="flex items-center gap-2.5 text-small text-bone"
+            >
+              <input
+                type="checkbox"
+                name={field.name}
+                value={option}
+                aria-describedby={error ? errorId : undefined}
+                className="size-4 shrink-0 accent-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              />
+              <span>{option}</span>
+            </label>
+          ))}
+        </div>
+        {error && (
+          <p id={errorId} className="text-micro text-[rgb(255_150_150)]">
+            {error}
+          </p>
+        )}
+      </fieldset>
+    );
+  }
+
   const shared = {
     id,
     name: field.name,

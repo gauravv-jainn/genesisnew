@@ -97,7 +97,13 @@ export default function CreatorPage() {
         intensity={0.2}
       >
         <Reveal className="mx-auto max-w-2xl">
-          <GenesisForm kind="creator" source="/creator" />
+          {/*
+            `influencer` rather than `creator`: same audience, the field set
+            Genesis actually runs — platforms, rates, and the permission to
+            pitch on someone's behalf, which is a thing you must be asked for
+            rather than assumed.
+          */}
+          <GenesisForm kind="influencer" source="/creator" />
         </Reveal>
       </SectionShell>
     </main>

@@ -24,7 +24,15 @@ import { z } from "zod";
 export type FieldSpec = {
   name: string;
   label: string;
-  type?: "text" | "email" | "tel" | "url" | "textarea" | "select";
+  type?:
+    | "text"
+    | "email"
+    | "tel"
+    | "url"
+    | "textarea"
+    | "select"
+    | "checkbox-group"
+    | "consent";
   required?: boolean;
   options?: readonly string[];
   placeholder?: string;
@@ -45,7 +53,12 @@ export type FormSpec = {
   fields: readonly FieldSpec[];
 };
 
-export type FormKind = "creator" | "brand" | "quick";
+export type FormKind =
+  | "creator"
+  | "brand"
+  | "quick"
+  | "career"
+  | "influencer";
 
 /** The four verticals plus the two honest answers a prospect might give. */
 const NEEDS = [
@@ -71,6 +84,30 @@ const TIMELINES = [
   "1–3 months",
   "Just exploring",
 ] as const;
+
+/** The disciplines the careers page already advertises. One list, not two. */
+const POSITIONS = [
+  "Content production",
+  "Editing & post",
+  "Creative direction",
+  "Strategy",
+  "Influencer partnerships",
+  "Design & motion",
+  "AI content",
+  "Engineering",
+  "Something else",
+] as const;
+
+const PLATFORMS = [
+  "Instagram",
+  "YouTube",
+  "Twitter",
+  "Snapchat",
+  "LinkedIn",
+  "Twitch",
+] as const;
+
+const CREATOR_GOALS = ["Access to Brand Campaigns", "Guidance for growth"] as const;
 
 export const FORMS: Record<FormKind, FormSpec> = {
   /** A — creators applying to the Genesis network. */
@@ -181,6 +218,107 @@ export const FORMS: Record<FormKind, FormSpec> = {
       },
     ],
   },
+  /*
+   * D — careers. Mirrors the form running at genesismedia.co/career, which is
+   * the field set Genesis asked for.
+   *
+   * THE CV IS A LINK, NOT AN UPLOAD, and that is a platform limit rather than
+   * a choice. A service account has no Drive storage quota of its own — it can
+   * read a shared folder but cannot own a file it creates in one — so an
+   * upload button wired to the "Website Forms" folder would fail on every
+   * submission. See the note in google-sheets.ts. A Shared Drive or a blob
+   * store makes a real uploader a contained change; shipping a button that
+   * drops the file would not have been.
+   */
+  career: {
+    kind: "career",
+    submissionType: "CAREERS_WAITLIST",
+    title: "Join our talented team",
+    blurb:
+      "We open roles in batches. Tell us what you do and leave a link to your work — we reach out when something matching opens up.",
+    submitLabel: "Submit application",
+    successMessage:
+      "Thanks — your application is in. We'll be in touch when a matching role opens.",
+    fields: [
+      { name: "name", label: "First name", required: true, half: true, autoComplete: "given-name" },
+      { name: "lastName", label: "Last name", half: true, autoComplete: "family-name" },
+      { name: "email", label: "Email", type: "email", required: true, half: true, autoComplete: "email" },
+      { name: "phone", label: "Contact number", type: "tel", required: true, half: true, autoComplete: "tel" },
+      { name: "position", label: "Position", type: "select", options: POSITIONS, required: true, half: true },
+      {
+        name: "portfolio",
+        label: "Portfolio or CV link",
+        type: "url",
+        required: true,
+        half: true,
+        placeholder: "Drive, Behance, Notion, LinkedIn…",
+      },
+      {
+        name: "message",
+        label: "About yourself",
+        type: "textarea",
+        required: true,
+        max: 4000,
+      },
+    ],
+  },
+
+  /*
+   * E — creators and influencers onboarding. Mirrors
+   * genesismedia.co/influencer-registration-form.
+   *
+   * The picture is a link for the same reason the CV is.
+   */
+  influencer: {
+    kind: "influencer",
+    submissionType: "CREATOR",
+    title: "Get onboarded with us",
+    blurb:
+      "Hello influencers and creators. Tell us where you post, what you charge and what you are looking for — we brief creators for brand campaigns every week.",
+    submitLabel: "Submit",
+    successMessage:
+      "Thanks — you're on the roster. We'll be in touch when a brief fits.",
+    fields: [
+      { name: "name", label: "Name", required: true, autoComplete: "name", placeholder: "Your name" },
+      {
+        name: "platforms",
+        label: "Influencer marketing platforms",
+        type: "checkbox-group",
+        options: PLATFORMS,
+        required: true,
+      },
+      { name: "email", label: "Email", type: "email", required: true, half: true, autoComplete: "email" },
+      { name: "phone", label: "Phone", type: "tel", required: true, half: true, autoComplete: "tel" },
+      {
+        name: "goals",
+        label: "What brings you to us?",
+        type: "checkbox-group",
+        options: CREATOR_GOALS,
+        required: true,
+      },
+      { name: "instagram", label: "Instagram link", type: "url", required: true, half: true, placeholder: "Enter Instagram link" },
+      { name: "youtube", label: "YouTube link", type: "url", half: true, placeholder: "Enter YouTube link" },
+      { name: "igReelCost", label: "1 IG reel cost (₹)", half: true, placeholder: "This cost is subject to change." },
+      { name: "ytReelCost", label: "YT integrated reel cost (₹)", half: true, placeholder: "This cost is subject to change." },
+      { name: "previousBrands", label: "Previous brands you've collaborated with", type: "textarea", max: 2000 },
+      {
+        name: "picture",
+        label: "Link to a picture of yourself",
+        type: "url",
+        required: true,
+        placeholder: "Drive, Instagram post, portfolio…",
+      },
+      { name: "message", label: "Any comments?", type: "textarea", max: 4000 },
+      {
+        name: "consent",
+        label:
+          "I agree to the terms and conditions, and permit Genesis to use my social media profiles to pitch brands on my behalf.",
+        type: "consent",
+        required: true,
+      },
+    ],
+  },
+
 };
 
 /** Columns on contact_submissions; everything else is metadata. */
@@ -199,6 +337,33 @@ export function schemaFor(spec: FormSpec) {
   for (const field of spec.fields) {
     const max = field.max ?? (field.type === "textarea" ? 4000 : 200);
     let rule: z.ZodTypeAny;
+
+    if (field.type === "checkbox-group") {
+      /*
+        Several boxes under one name, so the value arrives as an ARRAY and the
+        action reads it with getAll rather than get. A required group means at
+        least one ticked; an optional one may be empty.
+      */
+      const set = z.array(z.enum([...(field.options ?? [])] as [string, ...string[]]));
+      shape[field.name] = field.required
+        ? set.min(1, `Choose at least one ${field.label.toLowerCase()}`)
+        : set;
+      continue;
+    }
+
+    if (field.type === "consent") {
+      /*
+        A required consent box is the one field where "unchecked" must fail
+        rather than fall through as an empty string — an unticked terms box
+        that submits anyway is a form that collected an agreement nobody gave.
+        A browser sends nothing at all for an unchecked box, hence literal("")
+        being the failing case rather than the passing one.
+      */
+      shape[field.name] = field.required
+        ? z.literal("on", { message: `${field.label} must be accepted` })
+        : z.string().max(10).optional().or(z.literal(""));
+      continue;
+    }
 
     if (field.type === "email") {
       rule = z.email("Please enter a valid email address").max(max);

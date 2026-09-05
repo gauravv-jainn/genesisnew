@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ContactForm } from "@/components/genesis/contact-form";
+import { GenesisForm } from "@/components/genesis/genesis-form";
 import { GlowWord } from "@/components/genesis/glow-word";
 import { Reveal, RevealGroup, RevealItem } from "@/components/genesis/reveal";
 import { SectionLabel } from "@/components/genesis/section-label";
@@ -141,13 +141,14 @@ export default function CareersPage() {
         </Reveal>
 
         <Reveal delay={0.24} className="mt-12 w-full max-w-xl">
-          <ContactForm
-            type="CAREERS_WAITLIST"
-            source="/careers"
-            submitLabel="Join the waitlist"
-            showCompany={false}
-            messageLabel="Discipline, experience and a link to your work"
-          />
+          {/*
+            The full application, not the four-field waitlist this was.
+            Name/email/message could not tell you what someone applied FOR —
+            every application arrived as prose that a human had to read to
+            find the discipline. The `career` spec asks for the position as a
+            field, so it sorts in the sheet.
+          */}
+          <GenesisForm kind="career" source="/careers" />
         </Reveal>
 
         {/* TODO(copy): confirm before launch — this is a scarcity claim. */}

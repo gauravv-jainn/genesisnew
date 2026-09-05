@@ -212,7 +212,19 @@ export async function submitGenesisForm(
 
   const spec = FORMS[kind];
   const raw: Record<string, unknown> = {};
-  for (const field of spec.fields) raw[field.name] = formData.get(field.name) ?? "";
+  for (const field of spec.fields) {
+    /*
+      getAll for a checkbox group, get for everything else. A group posts one
+      entry PER TICKED BOX under the same name, so `get` would silently keep
+      the first and drop the rest — a creator who ticked Instagram, YouTube
+      and LinkedIn would be recorded as Instagram only, and nothing would
+      report an error.
+    */
+    raw[field.name] =
+      field.type === "checkbox-group"
+        ? formData.getAll(field.name).map(String)
+        : (formData.get(field.name) ?? "");
+  }
   raw.hp = formData.get("hp") ?? "";
   raw.source = formData.get("source") ?? "";
 
@@ -270,7 +282,17 @@ export async function submitGenesisForm(
   for (const field of spec.fields) {
     if (COLUMN_FIELDS.has(field.name)) continue;
     const value = data[field.name];
-    if (value) metadata[field.name] = value;
+    /*
+      A checkbox group is an array by the time it clears the schema. It is
+      flattened to a comma-joined string here because both sinks want a scalar
+      — a spreadsheet cell and a metadata value someone reads by eye — and an
+      empty selection is dropped along with the empty strings.
+    */
+    if (Array.isArray(value)) {
+      if (value.length) metadata[field.name] = value.join(", ");
+    } else if (value) {
+      metadata[field.name] = String(value);
+    }
   }
 
   // Same two-sink rule as the contact action above.

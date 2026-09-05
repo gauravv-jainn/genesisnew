@@ -153,18 +153,15 @@ export function Services() {
                 accessibility tree is noise, and this one is a picture.
               */}
               {/*
-                `.on-dark` PINS THE WHITE WORDMARK, and it has to be said here
-                explicitly now. This mark sits on the orb's own black stage,
-                which is dark in BOTH themes — but the section is no longer
-                `scene-dark`, and that class was what used to hold
-                --logo-invert at 0 for everything inside it. Without it the
-                mark started following the page instead of its own backdrop,
-                so in the light theme it swapped to the dark-ink lockup and
-                vanished into the sphere.
+                FOLLOWS THE THEME AGAIN. This was pinned `.on-dark` while the
+                orb sat on a black stage in both themes. The stage is gone and
+                the sphere now renders dark-on-paper in the light theme, so the
+                mark wants the dark lockup there and the white one on black —
+                which is exactly what --logo-invert already does unaided.
               */}
               <div
                 aria-hidden
-                className="on-dark absolute inset-0 flex items-center justify-center"
+                className="absolute inset-0 flex items-center justify-center"
               >
                 <GenesisMark className="h-[16px] w-[8.75rem] lg:h-[20px] lg:w-[11.25rem]" />
               </div>

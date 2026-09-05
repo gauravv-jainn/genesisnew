@@ -473,20 +473,82 @@ export function NeuralOrb({ className }: { className?: string }) {
     if (!ctx) return;
 
     /*
+      WHICH WAY THE LIGHT GOES, and it is the whole reason this thing can live
+      on a light page at all.
+
+      The field is built by ACCUMULATION: thirteen thousand soft dots piled up
+      under `lighter`, each adding a little light. That only means anything on
+      a dark ground — on paper every dot adds toward white and the sphere
+      erases itself, which is why the section used to pin itself dark and then,
+      briefly, why it sat on a black disc Genesis did not want.
+
+      `multiply` is the same idea run the other way. Each dot now SUBTRACTS
+      light instead of adding it, so the same sprites, the same ramp and the
+      same per-dot alphas build a sphere that darkens into paper exactly as it
+      brightens into black. Nothing else about the render changes — not the
+      geometry, not the wave, not the palette.
+
+      Read once and on change rather than per frame: getComputedStyle in a rAF
+      loop forces a style resolution sixty times a second to answer a question
+      whose answer changes when someone clicks a switch. The toggle already
+      announces itself on `genesis-theme-change`; the media query covers a
+      visitor who has never touched it.
+    */
+    let onLight = false;
+    const readTheme = () => {
+      const stamped = document.documentElement.getAttribute("data-theme");
+      onLight =
+        stamped === "light" ||
+        (stamped !== "dark" &&
+          window.matchMedia("(prefers-color-scheme: light)").matches);
+    };
+    readTheme();
+
+    const lightQuery = window.matchMedia("(prefers-color-scheme: light)");
+    lightQuery.addEventListener("change", readTheme);
+    document.addEventListener("genesis-theme-change", readTheme);
+
+    /*
       One sprite per palette step, crisp for the near face and soft for the
       far one. Sixteen steps rather than a fillStyle per point: setting a
       colour two thousand times a frame is two thousand state changes, while
       stamping a pre-rendered sprite is a blit.
     */
-    const sprites: HTMLCanvasElement[] = [];
-    for (let i = 0; i < PALETTE_STEPS; i += 1) {
-      const [r, g, b] = rampColour(i / (PALETTE_STEPS - 1));
-      sprites.push(makeSprite(r, g, b, 0.2));
-    }
-    for (let i = 0; i < PALETTE_STEPS; i += 1) {
-      const [r, g, b] = rampColour(i / (PALETTE_STEPS - 1));
-      sprites.push(makeSprite(r, g, b, 0.1));
-    }
+    /*
+      TWO PALETTES, BECAUSE MULTIPLY AND LIGHTER WANT OPPOSITE INK.
+
+      On black the ramp is used as drawn: each dot ADDS its own colour, so the
+      bright end of the ramp is what makes the sphere glow. On paper the dots
+      SUBTRACT, and there the bright end is the problem — multiplying #ffdb8c
+      into white removes almost nothing, so the warm half of the sphere
+      disappeared while the violet half showed. The whole ramp is taken down
+      to 42% for the light palette, which keeps every hue exactly where it was
+      and gives all of them something to subtract.
+
+      Both are built once. Eighty 24px sprites is a few hundred kilobytes of
+      canvas and it means a theme change is an array swap rather than a
+      rebuild in the middle of a frame.
+    */
+    const buildPalette = (ink: number) => {
+      const out: HTMLCanvasElement[] = [];
+      for (const edge of [0.2, 0.1]) {
+        for (let i = 0; i < PALETTE_STEPS; i += 1) {
+          const [r, g, b] = rampColour(i / (PALETTE_STEPS - 1));
+          out.push(
+            makeSprite(
+              Math.round(r * ink),
+              Math.round(g * ink),
+              Math.round(b * ink),
+              edge,
+            ),
+          );
+        }
+      }
+      return out;
+    };
+
+    const spritesOnDark = buildPalette(1);
+    const spritesOnLight = buildPalette(0.42);
 
     const coreSprite = makeCore();
 
@@ -671,7 +733,7 @@ export function NeuralOrb({ className }: { className?: string }) {
       const reach = radius * REACH;
 
       ctx.clearRect(0, 0, width, height);
-      ctx.globalCompositeOperation = "lighter";
+      ctx.globalCompositeOperation = onLight ? "multiply" : "lighter";
 
       const { pos, count } = sphere;
 
@@ -782,8 +844,17 @@ export function NeuralOrb({ className }: { className?: string }) {
           it. The halo now carries the emission and the core carries the
           texture.
         */
-        ctx.globalAlpha =
-          Math.min(1, 0.075 + front * 0.19 + rim * rim * 0.06 + lift * 0.3);
+        /*
+          Half again on paper. Additive build-up is generous — a hundred dots
+          at 0.08 still climb toward white — while multiply converges much
+          more slowly, so the same figures that make a sphere on black make a
+          smudge on white. 1.5x is where the two read at the same strength.
+        */
+        ctx.globalAlpha = Math.min(
+          1,
+          (0.075 + front * 0.19 + rim * rim * 0.06 + lift * 0.3) *
+            (onLight ? 1.5 : 1),
+        );
         const size = (0.9 + front * 0.45 + lift * 0.45) * dot;
 
         /*
@@ -814,7 +885,9 @@ export function NeuralOrb({ className }: { className?: string }) {
         );
         // Out of focus round the back, in focus on the near face.
         ctx.drawImage(
-          sprites[front < 0.32 ? step + PALETTE_STEPS : step],
+          (onLight ? spritesOnLight : spritesOnDark)[
+            front < 0.32 ? step + PALETTE_STEPS : step
+          ],
           px - size,
           py - size,
           size * 2,
@@ -837,8 +910,18 @@ export function NeuralOrb({ className }: { className?: string }) {
       flare *= 0.94;
       const corePulse = frozen ? 0.5 : 0.5 + 0.5 * Math.sin(now * 0.00042);
       const coreSize = radius * (0.6 + corePulse * 0.06 + flare * 0.22);
-      ctx.globalAlpha = Math.min(0.7, (0.15 + corePulse * 0.05 + flare * 0.42) * settle);
-      ctx.drawImage(coreSprite, cx - coreSize, cy - coreSize, coreSize * 2, coreSize * 2);
+      /*
+        The nucleus is a WHITE blob, and white is the identity value for
+        multiply — on paper it would paint precisely nothing while still
+        costing a full-radius blit every frame. So it is skipped there. The
+        sphere reads without it: on a light ground the dots darken toward the
+        middle by themselves, which is the same cue the core exists to give on
+        black.
+      */
+      if (!onLight) {
+        ctx.globalAlpha = Math.min(0.7, (0.15 + corePulse * 0.05 + flare * 0.42) * settle);
+        ctx.drawImage(coreSprite, cx - coreSize, cy - coreSize, coreSize * 2, coreSize * 2);
+      }
 
       for (let r = ripples.length - 1; r >= 0; r -= 1) {
         if (((now - ripples[r].born) / 1000) * RIPPLE_SPEED > 2.4) {
@@ -1011,6 +1094,8 @@ export function NeuralOrb({ className }: { className?: string }) {
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", onVisibility);
       still.removeEventListener("change", onPreference);
+      lightQuery.removeEventListener("change", readTheme);
+      document.removeEventListener("genesis-theme-change", readTheme);
     };
   }, []);
 
@@ -1020,52 +1105,6 @@ export function NeuralOrb({ className }: { className?: string }) {
       aria-hidden
       className={cn("pointer-events-none relative aspect-square w-full", className)}
     >
-      {/*
-        THE ORB BRINGS ITS OWN NIGHT.
-
-        The canvas composites with `lighter` — every dot ADDS light — so on a
-        white ground each one saturates to white and the sphere disappears
-        entirely. That is why the Brain section used to pin itself dark in
-        both themes, and why the light theme looked broken: the whole first
-        screen stayed black, so switching to light appeared to do nothing.
-
-        The requirement was never the section, only the ground directly under
-        the sphere. This is that ground — a dark pool sized to the orb, fading
-        out well before the edge of the box, so on paper it reads as a lit
-        stage the sphere is standing on rather than as a section that forgot
-        to change. In the dark theme it lands on near-black and is invisible,
-        which is exactly right.
-      */}
-      <div
-        className="absolute inset-[-6%] rounded-full blur-sm"
-        style={{
-          /*
-            SOLID UNDER THE WHOLE SPHERE, THEN A SHORT TAIL — and getting that
-            order wrong is what made the first attempt a smudge.
-
-            The arithmetic: the sphere's radius is 0.4 of the box, so it spans
-            80% of it, and this pool is inset -6% so its own radius is 56 in
-            those units against the sphere's 40. The sphere's edge therefore
-            sits at 71% of the pool's radius. The previous version went solid
-            only to 30% and spent everything after that fading, which put
-            three-quarters of the sphere on a half-transparent ground — the dots
-            composite with `lighter`, so on a pale ground they washed out, and
-            what was left read as a dark cloud rather than a stage.
-
-            Solid to 74% now, which is just past the sphere's rim, then the
-            whole falloff in the last quarter. The sphere lands on black; the
-            page gets a defined edge instead of a haze.
-
-            EVERY STOP IS MULTIPLIED BY --orb-stage, which is 1 on paper and 0
-            in the dark theme. There the page is already dark and the pool has
-            nothing to do but show up as a black disc on a violet field, so it
-            is switched off rather than tuned down — one token, defined beside
-            the rest of the theme, and the alphas below scale themselves.
-          */
-          background:
-            "radial-gradient(circle at 50% 50%, rgb(8 8 12 / calc(1 * var(--orb-stage, 0))) 0%, rgb(8 8 12 / calc(1 * var(--orb-stage, 0))) 74%, rgb(8 8 12 / calc(0.72 * var(--orb-stage, 0))) 84%, rgb(8 8 12 / calc(0.32 * var(--orb-stage, 0))) 93%, transparent 100%)",
-        }}
-      />
       {/*
         A wide static wash under the canvas. The reactive part of the core is
         painted on the canvas, where it can pulse; this is the ambient half,

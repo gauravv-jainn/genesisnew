@@ -64,9 +64,24 @@ export type WorkItem = {
   format: Category;
   /** Still. Every piece has one; the clip is the upgrade. */
   art?: string;
-  /** Muted loop played on hover. TODO(assets): the real reels. */
+  /** Muted loop played on hover. Derived from `reel` when that is set. */
   clip?: string;
   poster?: string;
+  /**
+   * The clips in Genesis's Drive folder that belong to this piece, by number.
+   *
+   * ONE NUMBER ADDRESSES THREE FILES, because the numbering is identical in
+   * all three places: `/work/clips/<n>.mp4` is the 4-second preview,
+   * `/work/posters/<n>.jpg` is its frame, and `<n>.mp4` in the Drive folder is
+   * the master. Storing paths instead would be three strings per clip that can
+   * disagree with each other, and there are thirty-two of them.
+   *
+   * THE FIRST ONE IS THE TILE. `clip`, `poster` and `art` are all derived from
+   * `reel[0]` below unless a piece sets them itself, which is what turns the
+   * artwork-less placeholder tiles into real footage without touching a
+   * component.
+   */
+  reel?: number[];
   /** Shown in the homepage Work section. */
   featured?: boolean;
 
@@ -193,14 +208,16 @@ const catalogue: WorkItem[] = [
     vertical: "Influence",
     format: "Campaigns",
     featured: true,
+    reel: [16, 17, 18, 19, 20],
   },
   {
     slug: "aditya-birla-capital-campaign",
-    client: "Aditya Birla Capital",
+    client: "Aditya Birla Capital Health Insurance",
     title: "Content & Campaign Work",
     vertical: "Influence",
     format: "Campaigns",
     featured: true,
+    reel: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 29, 30, 31],
   },
   {
     slug: "absli-brand-performance",
@@ -216,6 +233,52 @@ const catalogue: WorkItem[] = [
     vertical: "Studios",
     format: "UGC",
     featured: true,
+  },
+
+  /*
+   * The four clients that were only ever footage — in the Drive folder and on
+   * the Studios reel wall, but with no entry here, so nothing in the portfolio
+   * knew they existed.
+   *
+   * TODO(content): THE VERTICAL AND FORMAT ARE MY GUESS, not Genesis's. The
+   * mapping I was given is client names against clip numbers and nothing else,
+   * and all thirty-two are 1080x1920 social cuts, so "Reels" is the honest
+   * read of the FILE. Which division ran each account is not something the
+   * footage can tell me — Studios is the safer default because it claims
+   * production rather than a creator partnership I cannot verify. Correct any
+   * of these and the shelves re-sort themselves.
+   */
+  {
+    slug: "the-worldgrad-study-abroad",
+    client: "The WorldGrad",
+    title: "Study Abroad Content",
+    vertical: "Studios",
+    format: "Reels",
+    reel: [21, 24],
+  },
+  {
+    slug: "foy-social-content",
+    client: "FOY",
+    title: "Social Content",
+    vertical: "Studios",
+    format: "Reels",
+    reel: [22, 23, 25],
+  },
+  {
+    slug: "loreal-hair-care",
+    client: "L'Oreal",
+    title: "Hair Care Content",
+    vertical: "Studios",
+    format: "Reels",
+    reel: [27, 28],
+  },
+  {
+    slug: "house-of-hiranandani-content",
+    client: "House of Hiranandani",
+    title: "Brand Content",
+    vertical: "Studios",
+    format: "Reels",
+    reel: [32],
   },
 ];
 
@@ -233,12 +296,30 @@ const catalogue: WorkItem[] = [
  * unchanged, so this map is the identity and the site serves exactly what it
  * served before. See lib/media-url.ts.
  */
-export const work: WorkItem[] = catalogue.map((item) => ({
-  ...item,
-  ...(item.art ? { art: mediaUrl(item.art) } : {}),
-  ...(item.clip ? { clip: mediaUrl(item.clip) } : {}),
-  ...(item.poster ? { poster: mediaUrl(item.poster) } : {}),
-}));
+/** Where a numbered clip and its frame live. The numbering mirrors Drive. */
+export const reelClip = (n: number) => `/work/clips/${n}.mp4`;
+export const reelPoster = (n: number) => `/work/posters/${n}.jpg`;
+
+export const work: WorkItem[] = catalogue.map((item) => {
+  /*
+    The lead clip fills in whatever the piece did not state. A piece with a
+    reel and no artwork was rendering a typographic placeholder while its own
+    footage sat in /public under a number nobody had connected to it; this is
+    the connection, and it is one line rather than a field on every entry.
+  */
+  const lead = item.reel?.[0];
+  const clip = item.clip ?? (lead === undefined ? undefined : reelClip(lead));
+  const poster =
+    item.poster ?? (lead === undefined ? undefined : reelPoster(lead));
+  const art = item.art ?? poster;
+
+  return {
+    ...item,
+    ...(art ? { art: mediaUrl(art) } : {}),
+    ...(clip ? { clip: mediaUrl(clip) } : {}),
+    ...(poster ? { poster: mediaUrl(poster) } : {}),
+  };
+});
 
 /**
  * True while a piece is showing interim mockup artwork that already carries

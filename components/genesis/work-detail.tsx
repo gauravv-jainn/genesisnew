@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { GlassButton } from "@/components/genesis/glass-button";
 import { isPending } from "@/lib/home-content";
-import { hasStory, type WorkItem } from "@/lib/work";
+import { mediaUrl } from "@/lib/media-url";
+import { hasStory, reelClip, reelPoster, type WorkItem } from "@/lib/work";
 
 /**
  * One project, rendered identically whether it arrived as a modal over the
@@ -24,6 +25,13 @@ import { hasStory, type WorkItem } from "@/lib/work";
  */
 export function WorkDetail({ item }: { item: WorkItem }) {
   const story = hasStory(item);
+  /*
+    The rest of the reel — everything after the one already playing above.
+    Aditya Birla Capital is eighteen clips and Mahindra Finance five; showing
+    the lead and silently dropping the other seventeen was the state of this
+    page the moment the footage was connected.
+  */
+  const rest = (item.reel ?? []).slice(1);
 
   return (
     <article className="flex flex-col gap-8">
@@ -66,6 +74,39 @@ export function WorkDetail({ item }: { item: WorkItem }) {
           )}
         </div>
       </figure>
+
+      {/*
+        WHY THESE ARE `preload="none"` AND NOT AUTOPLAYING. Eighteen tiles is
+        eighteen files and eighteen decoders if they all start on load, on a
+        page the visitor opened to read a case study. Each one shows its
+        poster, costs nothing until it is clicked, and carries its own
+        controls — which is also what makes them reachable by keyboard,
+        unlike the hover playback on the grid.
+      */}
+      {rest.length > 0 && (
+        <section className="flex flex-col gap-4">
+          <h2 className="micro-label">
+            More from this {rest.length + 1 > 6 ? "campaign" : "set"} ·{" "}
+            {String(rest.length + 1).padStart(2, "0")}
+          </h2>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {rest.map((n) => (
+              <li key={n}>
+                <video
+                  src={mediaUrl(reelClip(n))}
+                  poster={mediaUrl(reelPoster(n))}
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  preload="none"
+                  className="aspect-[9/16] w-full rounded-card border border-[var(--glass-border)] bg-ink object-cover"
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <header className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">

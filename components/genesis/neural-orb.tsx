@@ -77,8 +77,8 @@ const PERIOD = 52_000;
  * overshoot by a few percent and settle — the sphere carries a little of its
  * own weight, and that is the difference between "it moved" and "it turned".
  */
-const LEAN_YAW = 0.3;
-const LEAN_PITCH = 0.2;
+const LEAN_YAW = 0.2;
+const LEAN_PITCH = 0.13;
 const LEAN_STIFFNESS = 0.012;
 const LEAN_DAMPING = 0.86;
 
@@ -127,8 +127,17 @@ const SETTLE_RAMP = 2600;
  * of 0.13 on top of that brings the total to 1.28x, which is what the radius
  * below is sized against. Push the amplitude up without shrinking the radius
  * and the crests are simply cut off by the edge of the canvas.
+ *
+ * DOWN FROM 0.17 AT GENESIS'S REQUEST — "reduce the wobble of the brain". At
+ * that amplitude the swells were deep enough to be read as the outline
+ * moving rather than as light crossing a surface. The pointer lean came down
+ * with it, from 0.3/0.2 to 0.2/0.13, because a sphere that leans a third of a
+ * radian at the cursor is the other half of what "wobble" describes; and the
+ * noise term, which is the one that bends the silhouette, went 0.1 to 0.06.
+ * The wave is still there. It is weather on the surface now, not motion of
+ * the whole body.
  */
-const CREST = 0.17;
+const CREST = 0.095;
 
 /**
  * THE SURFACE IS SOUND, not noise.
@@ -171,7 +180,7 @@ const WAVES = [
  * small deliberately: this is the term that bends the outline, and it is the
  * reason the first version lost its shape.
  */
-const NOISE_WEIGHT = 0.1;
+const NOISE_WEIGHT = 0.06;
 const FIELD_SCALE = 0.95;
 const FIELD_SPEED = 0.1;
 
@@ -260,21 +269,39 @@ function noise3(x: number, y: number, z: number): number {
  * and a scattering of violet — which could not respond to a wave because
  * they were decided when the sphere was built.
  *
- * Stops run the reference's own range: a deep indigo in the troughs,
- * through violet and magenta, into red, orange and a warm highlight on the
- * crests. It is a single continuous ramp rather than a set of accents, which
- * is what lets the surface read as one gradient rather than as coloured dots.
+ * THE STOPS ARE GENESIS'S OWN GRADIENT, MEASURED OFF THE LOCKUPS. Not picked
+ * to look like them — sampled. Decoding brand/1.png and the .Influence
+ * lockup and taking the mean colour of every ink column across the gradient
+ * word gives the same ramp from both files to within a couple of levels:
+ *
+ *   #feb117 -> #fe951a -> #fe681d -> #eb6352 -> #d66d89 -> #cb73a8 -> #b97cda -> #ac84fe
+ *
+ * amber, orange, vermilion, coral, rose, orchid, violet. Those eight are
+ * reproduced here exactly. The two stops below them are NOT in the wordmark
+ * and are the one liberty taken: a sphere needs somewhere to fall away to or
+ * it reads as a flat disc, so the ramp continues past the brand violet along
+ * the same hue and darkens. Only as far as #462e84, though — the first pass
+ * ran it down to a near-black indigo, and at these alphas that end of the
+ * sphere simply stopped being there. Nothing above the wordmark's amber is
+ * invented either — the last stop is that amber lifted toward white for the
+ * crests, which is what the highlight on a lit surface is.
+ *
+ * This replaces a ramp built from the reference FILM, which ran through a
+ * magenta the identity does not contain and made the orb the one thing on
+ * the page not wearing the brand.
  */
 const RAMP: [number, number, number][] = [
-  [26, 18, 46],
-  [58, 28, 92],
-  [104, 38, 128],
-  [158, 44, 122],
-  [206, 56, 96],
-  [236, 84, 68],
-  [250, 132, 60],
-  [255, 186, 84],
-  [255, 226, 158],
+  [70, 46, 132],
+  [118, 84, 200],
+  [172, 132, 254],
+  [185, 124, 218],
+  [203, 115, 168],
+  [214, 109, 137],
+  [235, 99, 82],
+  [254, 104, 29],
+  [254, 149, 26],
+  [254, 177, 23],
+  [255, 219, 140],
 ];
 
 /** Twenty-eight steps: enough that the ramp reads as a continuous gradient
@@ -282,6 +309,30 @@ const RAMP: [number, number, number][] = [
  *  overlap and a step that was invisible on a sparse field shows up as a
  *  contour once neighbours are blending into each other. */
 const PALETTE_STEPS = 40;
+
+/**
+ * HOW MUCH OF THE COLOUR IS THE BRAND GRADIENT, AND WHICH WAY IT RUNS.
+ *
+ * The ramp used to be indexed by displacement alone. That is right for a
+ * reference film of a churning surface and wrong for a brand mark: it meant
+ * whichever colours the wave happened to be making at that instant, so the
+ * orb wore a different part of the identity every second and never once
+ * showed the gradient the way the wordmark does.
+ *
+ * So most of the index is now POSITIONAL — where the point lands on screen,
+ * projected onto the same axis the lockups use. CSS writes those as
+ * `linear-gradient(100deg, ...)`: ten degrees off straight across, running
+ * left to right. The unit vector below is that angle in canvas coordinates,
+ * where y counts downward.
+ *
+ * The remainder is still the displacement, and that is the part that keeps it
+ * alive: crests ride a little further up the ramp and troughs fall back down
+ * it, so the wave reads as light travelling across a fixed gradient rather
+ * than as the gradient itself sloshing about.
+ */
+const GRAD_MIX = 0.74;
+const GRAD_X = 0.985;
+const GRAD_Y = 0.174;
 
 function rampColour(t: number): [number, number, number] {
   const x = Math.max(0, Math.min(1, t)) * (RAMP.length - 1);
@@ -345,7 +396,12 @@ function buildSphere(count: number): Sphere {
  * failure worth risking to save three characters.
  */
 function makeSprite(r: number, g: number, b: number, edge: number): HTMLCanvasElement {
-  const size = 16;
+  /*
+    24 rather than 16. The sprite is now mostly halo, so it needs the pixels
+    to resolve a smooth falloff; at 16 the outer ramp was six pixels wide and
+    stepped visibly once the dots were drawn large.
+  */
+  const size = 24;
   const sprite = document.createElement("canvas");
   sprite.width = size;
   sprite.height = size;
@@ -354,9 +410,23 @@ function makeSprite(r: number, g: number, b: number, edge: number): HTMLCanvasEl
   if (ctx) {
     const half = size / 2;
     const gradient = ctx.createRadialGradient(half, half, 0, half, half, half);
+    /*
+      A SMALL HARD DOT INSIDE A WIDE SOFT HALO — the two things Genesis asked
+      for at once. "dots ko chota karo" and "everything is in a gradient" pull
+      opposite ways if the dot IS the sprite: shrink it and the field breaks
+      into particles with gaps between them; grow it and there are no dots to
+      speak of. Splitting the sprite settles it. The core carries `edge` of
+      the radius and is what the eye reads as the dot; the halo runs all the
+      way out and is what closes the gaps into a continuous surface. Drawing
+      is unchanged and costs the same, because it was always one blit.
+
+      `edge` is therefore now a fraction of a much wider stamp: 0.2 of a
+      6.3px halo is a 2.5px dot, against 3.5px before.
+    */
     gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 1)`);
-    gradient.addColorStop(edge, `rgba(${r}, ${g}, ${b}, 0.92)`);
-    gradient.addColorStop(Math.min(0.97, edge + 0.25), `rgba(${r}, ${g}, ${b}, 0.28)`);
+    gradient.addColorStop(edge, `rgba(${r}, ${g}, ${b}, 0.62)`);
+    gradient.addColorStop(Math.min(0.985, edge + 0.16), `rgba(${r}, ${g}, ${b}, 0.2)`);
+    gradient.addColorStop(0.72, `rgba(${r}, ${g}, ${b}, 0.055)`);
     gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, size, size);
@@ -411,11 +481,11 @@ export function NeuralOrb({ className }: { className?: string }) {
     const sprites: HTMLCanvasElement[] = [];
     for (let i = 0; i < PALETTE_STEPS; i += 1) {
       const [r, g, b] = rampColour(i / (PALETTE_STEPS - 1));
-      sprites.push(makeSprite(r, g, b, 0.55));
+      sprites.push(makeSprite(r, g, b, 0.2));
     }
     for (let i = 0; i < PALETTE_STEPS; i += 1) {
       const [r, g, b] = rampColour(i / (PALETTE_STEPS - 1));
-      sprites.push(makeSprite(r, g, b, 0.18));
+      sprites.push(makeSprite(r, g, b, 0.1));
     }
 
     const coreSprite = makeCore();
@@ -491,13 +561,14 @@ export function NeuralOrb({ className }: { className?: string }) {
         against its own bounds, the outermost ring was shaved on every side,
         and moving the cursor to an edge pushed dots off it entirely.
 
-        0.375 rather than 0.42 because the surface now displaces: a crest
-        rides CREST (0.13) above the radius, so the worst case is
-        1.13 x 1.053 x 1.075, and a sphere sized for a smooth surface would
-        have its peaks clipped off exactly when the wave is most visible. The
-        section gives the width back by widening the column.
+        0.4 is what the crest ceiling allows. A crest rides CREST above the
+        radius and the pointer lift adds 7.5%, so the worst case is
+        1.095 x 1.053 x 1.075 = 1.24 — and 0.4 x 1.24 = 0.496 of the span,
+        which is the whole box and not a pixel more. It was 0.375 when CREST
+        was 0.17; reducing the wobble bought that back and the sphere takes
+        it, because the reference sphere fills its frame.
       */
-      radius = span * 0.375;
+      radius = span * 0.4;
       /*
         BIG ENOUGH TO OVERLAP. At this density the points sit about 5px apart
         on screen, so a dot drawn smaller than that leaves gaps and the eye
@@ -507,7 +578,7 @@ export function NeuralOrb({ className }: { className?: string }) {
         softer and the per-dot alpha came down at the same time: overlapping
         hard dots at high alpha would blow out to white instead of blending.
       */
-      dot = Math.max(1.8, span / 145);
+      dot = Math.max(2, span / 132);
 
       /*
         Density follows area, so a small orb is not a solid white ball and a
@@ -527,7 +598,7 @@ export function NeuralOrb({ className }: { className?: string }) {
         25.3, against a 16.7ms budget. 11,000 is where the field stops
         reading as particles with the frame still less than half spent.
       */
-      const wanted = span < 300 ? 4200 : span < 460 ? 7000 : 11000;
+      const wanted = span < 300 ? 5200 : span < 460 ? 8600 : 13000;
       if (Math.abs(wanted - sphere.count) > 120) {
         sphere = buildSphere(wanted);
         screen = new Float32Array(sphere.count * 2);
@@ -700,36 +771,45 @@ export function NeuralOrb({ className }: { className?: string }) {
         // dot spreads the same energy over more pixels, so past about half a
         // dot's width it dims the very thing it is meant to be lighting.
         /*
-          LOW PER DOT. The field is built by ACCUMULATION now — eleven
-          thousand soft, overlapping dots under `lighter` compositing. At the
-          old alpha the overlaps saturated to white and the gradient
-          disappeared; at this alpha each dot contributes a little and the
-          density does the rest.
+          LOW PER DOT. The field is built by ACCUMULATION — thirteen thousand
+          soft, overlapping dots under `lighter` compositing. Push it and the
+          overlaps saturate to white and the gradient disappears; each dot
+          contributes a little and the density does the rest.
+
+          UP A THIRD when the sprite split into a small core and a wide halo:
+          most of a dot's light used to come from its solid middle, and
+          shrinking that middle to a fifth of the stamp took the sphere with
+          it. The halo now carries the emission and the core carries the
+          texture.
         */
         ctx.globalAlpha =
-          Math.min(1, 0.055 + front * 0.13 + rim * rim * 0.05 + lift * 0.3);
+          Math.min(1, 0.075 + front * 0.19 + rim * rim * 0.06 + lift * 0.3);
         const size = (0.9 + front * 0.45 + lift * 0.45) * dot;
 
         /*
-          Colour follows the displacement, not the point. A crest runs gold, a
-          trough falls to violet, and a surface at rest is bone — which is why
-          the palette is indexed by `crest` rather than by anything decided
-          when the sphere was built.
-        */
-        /*
-          Normalised against the FIELD, not against the peak amplitude.
-          Dividing by CREST meant that whenever the wave was calm — which is
-          most of the cycle — the index only ever reached the middle third of
-          the ramp, so the sphere sat in bone and the gold and violet the
-          reference is built on never appeared. The colour now spans the ramp
-          at any amplitude, and the amplitude only widens it further.
+          Colour is the BRAND GRADIENT across the frame, with the wave moving
+          points along it. See GRAD_MIX. The displacement term is normalised
+          against the field rather than against the peak amplitude: dividing
+          by CREST meant that whenever the wave was calm — most of the cycle —
+          the index only ever reached the middle of the ramp.
         */
         const tint = field * (0.55 + 0.45 * ampFactor) + lift * 0.8;
+        /*
+          Where this point sits along the brand gradient's axis, in units of
+          the sphere's radius, then folded to 0..1. Taken from the SCREEN
+          position, not the model's, so the ramp is pinned to the frame the
+          way it is pinned to the wordmark — the sphere turns inside a fixed
+          gradient instead of carrying one around with it.
+        */
+        const along =
+          (((px - cx) * GRAD_X + (py - cy) * GRAD_Y) / radius) * 0.5 + 0.5;
+        const t =
+          along * GRAD_MIX + (tint * 0.5 + 0.5) * (1 - GRAD_MIX);
         const step = Math.max(
           0,
           Math.min(
             PALETTE_STEPS - 1,
-            Math.round((tint * 0.5 + 0.5) * (PALETTE_STEPS - 1)),
+            Math.round(t * (PALETTE_STEPS - 1)),
           ),
         );
         // Out of focus round the back, in focus on the near face.

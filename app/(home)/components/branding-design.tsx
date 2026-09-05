@@ -54,9 +54,19 @@ function identityRoute(assets: string): { phases: string[]; final?: string } {
   }
 
   const isImage = (f: string) => /\.(png|jpe?g|webp|svg)$/i.test(f);
+
+  /*
+    `1.png` COUNTS AS MUCH AS `phase-1.png`.
+
+    The README asked for phase-1, phase-2… and Genesis dropped in 1, 2, 3, 4 —
+    which is what anyone would do, and the strip stayed empty because a regex
+    said no. A convention that only works when someone reads the README is not
+    a convention, it is a trap; the number is the only part that matters, so
+    any leading number is a phase.
+  */
   const phases = entries
-    .filter((f) => isImage(f) && /^phase-\d+\./i.test(f))
-    // Numeric, not lexical: phase-10 sorts after phase-9, not after phase-1.
+    .filter((f) => isImage(f) && /^(phase-)?\d+\./i.test(f))
+    // Numeric, not lexical: 10 sorts after 9, not after 1.
     .sort((a, b) => Number(a.match(/\d+/)![0]) - Number(b.match(/\d+/)![0]))
     .map((f) => `/brand/${assets}/${f}`);
   const finalFile = entries.find((f) => isImage(f) && /^final\./i.test(f));
@@ -87,7 +97,13 @@ export function BrandingDesign() {
       origin="top-left"
       intensity={0.16}
     >
-      <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+      {/*
+        THE IDENTITY COLUMN IS THE WIDER ONE NOW. It was the narrower half of
+        a 1 : 1.1 split while it held two lines of text; it holds the actual
+        marks today, and a logo squeezed under a capability list is the section
+        showing everything except the work.
+      */}
+      <div className="grid gap-6 lg:grid-cols-[1.35fr_0.9fr]">
         <Reveal>
           <div className="glass glass-lit relative flex h-full min-h-64 flex-col justify-end overflow-hidden rounded-panel p-8">
             {/* Hairline grid, the editorial device from img-058. */}
@@ -112,69 +128,39 @@ export function BrandingDesign() {
                   const hasRoute = route.phases.length > 0 || route.final;
 
                   return (
-                    <li key={item.title} className="border-b border-white/10 pb-3 last:border-0">
+                    <li
+                      key={item.title}
+                      className="border-b border-white/10 pb-6 last:border-0 last:pb-0"
+                    >
                       <p className="text-h3 font-semibold tracking-tight text-bone">
                         {item.title}
                       </p>
                       <p className="mt-0.5 text-small text-ash">{item.caption}</p>
 
                       {/*
-                        THE ROUTE TO THE MARK. Sketches on paper chips, then the
-                        finished logo — the sketches are scans of white paper,
-                        so they get a white ground rather than the panel's glass,
-                        which would show through the paper and grey them out.
+                        THE MARKS, AND THEY ARE THE POINT OF THIS TILE. Sketches
+                        first, then what they arrived at — set large enough to
+                        actually read, on white, because these are scans of
+                        paper and the panel's glass would show through and grey
+                        the pencil out.
 
-                        The final mark is separated by a rule and set larger: it
-                        is the answer, not a fifth attempt, and a row of five
-                        equal squares would read as five options.
+                        The final mark is half again the size of a sketch and
+                        sits behind a rule: it is the answer, not a fifth
+                        attempt, and five equal squares read as five options.
                       */}
-                      {/*
-                        A LOCKED PALETTE, where the identity has one. Swatch,
-                        then its hex under it — the code is the useful half:
-                        somebody rebuilding a deck needs to copy it, and a
-                        picture of a colour cannot be copied.
-
-                        The chip carries a hairline border rather than sitting
-                        flush, because the last swatch in this set is #ffffff
-                        and white on a light theme with no edge is not a
-                        swatch, it is a gap.
-                      */}
-                      {"palette" in item && item.palette.length > 0 && (
-                        <div className="mt-4">
-                          <ul className="flex flex-wrap gap-2">
-                            {item.palette.map((hex) => (
-                              <li key={hex} className="flex flex-col gap-1">
-                                <span
-                                  className="block size-10 rounded-card border border-white/25 sm:size-11"
-                                  style={{ backgroundColor: hex }}
-                                />
-                                <span className="text-[0.5625rem] uppercase tracking-wide text-faint">
-                                  {hex}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                          {"paletteNote" in item && (
-                            <p className="mt-2 text-micro text-ash">
-                              {item.paletteNote}
-                            </p>
-                          )}
-                        </div>
-                      )}
-
                       {hasRoute && (
-                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                        <div className="mt-5 flex flex-wrap items-end gap-2.5">
                           {route.phases.map((src, index) => (
                             <div
                               key={src}
-                              className="relative size-14 shrink-0 overflow-hidden rounded-card border border-white/15 bg-white sm:size-16"
+                              className="relative size-[4.5rem] shrink-0 overflow-hidden rounded-card border border-white/15 bg-white sm:size-20"
                             >
                               <Image
                                 src={src}
                                 alt={`${item.title} logo, sketch ${index + 1} of ${route.phases.length}`}
                                 fill
-                                sizes="64px"
-                                className="object-contain p-1.5"
+                                sizes="80px"
+                                className="object-contain p-2"
                               />
                             </div>
                           ))}
@@ -184,19 +170,51 @@ export function BrandingDesign() {
                               {route.phases.length > 0 && (
                                 <span
                                   aria-hidden
-                                  className="mx-1 h-8 w-px shrink-0 bg-white/15"
+                                  className="mx-0.5 h-16 w-px shrink-0 self-center bg-white/15"
                                 />
                               )}
-                              <div className="relative size-16 shrink-0 overflow-hidden rounded-card border border-brand-ink/40 bg-white sm:size-20">
+                              <div className="relative size-24 shrink-0 overflow-hidden rounded-card border border-brand-ink/40 bg-white shadow-[0_10px_30px_-12px_rgb(0_0_0/0.6)] sm:size-28">
                                 <Image
                                   src={route.final}
                                   alt={`${item.title} — the finished logo`}
                                   fill
-                                  sizes="80px"
-                                  className="object-contain p-2"
+                                  sizes="112px"
+                                  className="object-contain p-3"
                                 />
                               </div>
                             </>
+                          )}
+                        </div>
+                      )}
+
+                      {/*
+                        THE PALETTE AS ONE STRIP, not five labelled chips.
+
+                        It was a row of swatches with the hex printed under each
+                        in 9px, which read as a spreadsheet of colours and was
+                        the loudest thing in the tile — louder than the work.
+                        A locked palette is one object, so it is drawn as one:
+                        a continuous band, no captions. The codes are still
+                        there on hover, where somebody who actually needs to
+                        copy one will look, and nowhere near the eye of someone
+                        who does not.
+                      */}
+                      {"palette" in item && item.palette.length > 0 && (
+                        <div className="mt-5">
+                          <div className="flex h-7 w-full max-w-sm overflow-hidden rounded-card border border-white/15">
+                            {item.palette.map((hex) => (
+                              <span
+                                key={hex}
+                                title={hex}
+                                className="h-full flex-1"
+                                style={{ backgroundColor: hex }}
+                              />
+                            ))}
+                          </div>
+                          {"paletteNote" in item && (
+                            <p className="mt-2 text-micro text-faint">
+                              {item.paletteNote}
+                            </p>
                           )}
                         </div>
                       )}

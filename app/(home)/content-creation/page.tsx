@@ -31,13 +31,21 @@ export default function ContentCreationPage() {
 
   return (
     <main>
-            <DivisionIntro
+      {/* The division's own lockup, so the page announces which one it is. */}
+      <DivisionIntro
         division="Studios"
         tagline={services.items[2].caption}
         ramp={services.items[2].ramp}
       />
 
-<section className="relative isolate overflow-hidden pt-32 pb-24 sm:pt-40">
+      {/*
+        Opens at the section rhythm, not at a page-top rhythm. This block used
+        to be the first thing on the page and carried pt-32 sm:pt-40 to clear
+        the nav; the lockup above it does that now, and leaving both stacked a
+        128px gap between a heading and the section it introduces. py-16
+        sm:py-20 lg:py-24 is what SectionShell uses everywhere else.
+      */}
+      <section className="relative isolate overflow-hidden py-16 sm:py-20 lg:py-24">
         <Spotlight x={44} spread={17} tone="warm" intensity={0.95} reach={96} />
         <GhostType>CONTENT</GhostType>
 

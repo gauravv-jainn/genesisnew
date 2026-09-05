@@ -30,15 +30,15 @@ export const metadata: Metadata = {
  */
 export default function InfluencerCampaignsPage() {
   return (
-    <main className="pt-24">
-            {/* The division's own lockup, so the page announces which one it is. */}
+    <main>
+      {/* The division's own lockup, so the page announces which one it is. */}
       <DivisionIntro
         division="Influence"
         tagline={services.items[0].caption}
         ramp={services.items[0].ramp}
       />
 
-<SectionShell
+      <SectionShell
         label={influencerPage.label}
         heading={influencerPage.heading}
         headingAccent={influencerPage.headingAccent}

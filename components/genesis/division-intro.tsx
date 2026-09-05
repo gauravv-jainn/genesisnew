@@ -14,6 +14,16 @@ import { Reveal } from "@/components/genesis/reveal";
  * searched, translated, or read by a screen reader, and goes soft on a
  * retina display. The name is live text in the division's own ramp, which is
  * the same gradient the lockup uses.
+ *
+ * IT CARRIES ITS OWN CLEARANCE UNDER THE NAV. This is by definition the first
+ * thing on a division page, and the nav is fixed — measured, its pill ends at
+ * 86px on desktop and 78px on a phone, and a lockup with no top padding
+ * renders entirely inside that. Leaving the clearance to the page meant each
+ * one rediscovered the number: /influencer-campaigns put pt-24 on <main>,
+ * which cleared it by ten pixels, and /content-creation set nothing at all
+ * and printed its h1 under the pill. pt-32 sm:pt-40 is what every other page
+ * on the site opens with, so a division page now opens at the same height as
+ * its neighbours and the next one cannot get it wrong.
  */
 export function DivisionIntro({
   division,
@@ -29,7 +39,7 @@ export function DivisionIntro({
   children?: React.ReactNode;
 }) {
   return (
-    <header className="mx-auto w-full max-w-6xl px-6">
+    <header className="mx-auto w-full max-w-6xl px-6 pt-32 sm:pt-40">
       <Reveal>
         <DivisionLockup name={division} tagline={tagline} ramp={ramp} as="h1" />
       </Reveal>

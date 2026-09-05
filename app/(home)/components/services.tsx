@@ -163,7 +163,33 @@ export function Services() {
                 aria-hidden
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <GenesisMark className="h-[16px] w-[8.75rem] lg:h-[20px] lg:w-[11.25rem]" />
+                {/*
+                  SIZED AGAINST THE SPHERE, AS A SHARE OF IT.
+
+                  It was h-20/w-180px — fixed pixels that had no relationship
+                  to the orb they sit inside, so the mark stayed one size while
+                  the sphere grew from 390px at lg to 507 at xl and shrank to
+                  the viewport below it. Measured: the sphere's visible extent
+                  is 0.858 of its box (the glow reaches past the geometric
+                  radius, which is 0.375), so at lg the mark was 180px inside a
+                  335px sphere — 54% of it, a small lockup floating in a large
+                  circle, which is what Genesis was looking at.
+
+                  64% of the box is 75% of the sphere: a chord across the
+                  middle leaving an eighth of the diameter clear at each end,
+                  about 42px at lg. Wide enough to read as the sphere's core
+                  rather than a label on it, short of the rim by enough that it
+                  is obviously deliberate. As a percentage it now tracks the
+                  orb at every breakpoint instead of being re-guessed at each.
+
+                  `sizes` is passed because the default 120px is a nav-bar
+                  figure — at 250-325px here it would pick the 256 candidate
+                  and render 1x on a retina screen.
+                */}
+                <GenesisMark
+                  className="h-auto w-[64%] aspect-[8.8/1]"
+                  sizes="(min-width: 1280px) 330px, (min-width: 1024px) 255px, 60vw"
+                />
               </div>
             </div>
           </RevealItem>

@@ -1,12 +1,20 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Social links as stars — the spec's "Social Media Icons (like stars)".
+ * Social links.
  *
- * The Genesis lockup carries a four-point star, so the social row repeats it:
- * each link is that star shape rather than a circle, with the platform mark
- * held inside. The star is a clip-path on the tile, so the glow and the hover
- * state take its silhouette instead of sitting in a square behind it.
+ * NO STARS ANY MORE, at Genesis's instruction, and the reason they were here
+ * is gone too. The spec asked for "Social Media Icons (like stars)" and the
+ * row drew a four-point star behind each mark because the old hand-drawn
+ * lockup carried one — but that star was a placeholder invention that appears
+ * nowhere in the 2026 identity, and it was removed from the wordmark itself
+ * when the real artwork arrived. Three of them sitting under the footer were
+ * the last place it survived: a shape from a logo the site no longer uses,
+ * large enough to read as the content rather than as the frame around it.
+ *
+ * So the icons are the icons. The target stays generous — the star was doing
+ * that job as well as decorating — and the hover moves the mark's own colour
+ * rather than lighting a silhouette behind it.
  *
  * The marks are drawn inline. lucide-react removed its brand icons in v1, and
  * pulling in a whole icon package for three glyphs is not a trade worth
@@ -14,9 +22,6 @@ import { cn } from "@/lib/utils";
  *
  * TODO(links): handles are placeholders until the real accounts are confirmed.
  */
-
-const STAR =
-  "polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%)";
 
 function InstagramMark() {
   return (
@@ -58,31 +63,34 @@ export function SocialStars({ className }: { className?: string }) {
   return (
     <ul className={cn("flex items-center gap-2", className)}>
       {SOCIALS.map(({ label, href, Mark }) => (
-        <li key={label}>
+        <li key={label} className="relative">
           <a
             href={href}
             target="_blank"
             rel="noreferrer noopener"
             aria-label={label}
-            className="group relative grid size-14 place-items-center"
+            className={cn(
+              "group grid size-11 place-items-center rounded-full",
+              "text-ash transition-colors duration-300 hover:text-bone",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+            )}
           >
-            {/* The star itself. */}
+            {/*
+              A wash on approach rather than a lit shape. It is round because
+              nothing here is a star now, and it is barely there because the
+              mark going from ash to bone is the actual signal.
+            */}
             <span
               aria-hidden
-              className="absolute inset-0 bg-white/[0.07] transition-colors duration-300 group-hover:bg-brand/70"
-              style={{ clipPath: STAR }}
+              className="absolute inset-0 rounded-full bg-white/0 transition-colors duration-300 group-hover:bg-white/[0.06]"
             />
-            {/* Bloom on approach, taking the star's silhouette. */}
-            <span
-              aria-hidden
-              className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              style={{
-                clipPath: STAR,
-                background:
-                  "radial-gradient(60% 60% at 50% 50%, rgb(255 120 130 / 0.5), transparent 70%)",
-              }}
-            />
-            <span className="relative size-4 text-ash transition-colors duration-300 group-hover:text-white">
+            {/*
+              `relative`, not a z-index. The wash is absolutely positioned and
+              would otherwise paint over the mark it is meant to sit behind;
+              a negative z-index would fix that by sending it behind the
+              footer's own ground as well, where it cannot be seen at all.
+            */}
+            <span className="relative size-5">
               <Mark />
             </span>
           </a>

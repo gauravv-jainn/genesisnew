@@ -35,10 +35,20 @@ import { cn } from "@/lib/utils";
 export function GenesisMark({
   className,
   compact = false,
+  sizes = "120px",
 }: {
   className?: string;
   /** The N symbol alone — for tight spaces such as the mobile bar. */
   compact?: boolean;
+  /**
+   * What width the mark actually renders at, for next/image's srcset.
+   *
+   * 120px is right for the nav and the footer and wrong everywhere the mark
+   * is large — at the orb's core it renders around 250px, and a hard-coded
+   * 120 there picks the 256px candidate, which is 1x on a retina display and
+   * looks it. A caller that sets an unusual width should say so here too.
+   */
+  sizes?: string;
 }) {
   if (compact) {
     return (
@@ -73,7 +83,7 @@ export function GenesisMark({
         src="/brand/genesis-wordmark-light.png"
         alt="Genesis Media"
         fill
-        sizes="120px"
+        sizes={sizes}
         priority
         className="object-contain object-left"
         style={{ opacity: "calc(1 - var(--logo-invert, 0))" }}
@@ -83,7 +93,7 @@ export function GenesisMark({
         alt=""
         aria-hidden
         fill
-        sizes="120px"
+        sizes={sizes}
         priority
         className="object-contain object-left"
         style={{ opacity: "var(--logo-invert, 0)" }}

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 
-import { BAKED_ASPECT, hasBakedChrome, type WorkItem } from "@/lib/work";
+import { type WorkItem } from "@/lib/work";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,12 +23,22 @@ import { cn } from "@/lib/utils";
  * here: a reel is shot portrait and a film is not, so the grid is uneven
  * because the work is, rather than because a masonry algorithm decided so.
  *
- * Artwork that carries its own chrome keeps its own shape — the interim
- * stills are 173x200 cards with the client name printed along the bottom, so
- * cropping them to a format aspect slices the first letter off every one.
+ * The exception that used to live here is gone with the artwork that needed
+ * it: ten 173x200 mockup cards with their own play button and caption painted
+ * in, which had to keep their own shape or lose a letter off every client
+ * name. They are removed, so every tile now takes the shape of its format.
  */
 export function aspectFor(item: WorkItem): string {
-  if (hasBakedChrome(item)) return BAKED_ASPECT;
+  /*
+    THE FOOTAGE WINS OVER THE LABEL. Every clip in Genesis's two Drive folders
+    is 1080x1920 — forty-one of the forty-two, with only clip 31 landscape and
+    it is not a lead — so a reel-backed piece is vertical whatever its format
+    says. Mahindra Finance and Aditya Birla are tagged "Campaigns", which sent
+    them to a 4:3 box, and object-cover then took a landscape slice out of the
+    middle of a portrait video: heads cropped, captions gone. The format is a
+    filing category, not a description of the frame.
+  */
+  if (item.reel?.length) return "aspect-[9/13]";
   if (item.format === "Reels" || item.format === "UGC") return "aspect-[9/13]";
   if (item.format === "Shoots" || item.format === "Campaigns") return "aspect-[4/3]";
   return "aspect-[4/5]";
@@ -51,7 +61,6 @@ export function WorkTile({
   className?: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const baked = hasBakedChrome(item);
   const hasArt = Boolean(item.clip || item.art);
   const rail = variant === "rail";
 
@@ -174,11 +183,11 @@ export function WorkTile({
         )}
 
         {/*
-          Scrim and caption, unless the artwork already carries its own — or
-          unless there IS no artwork, in which case the block above is the
-          caption and drawing a second one over it is the bug described there.
+          Scrim and caption, unless there IS no artwork — in which case the
+          block above is already the caption, and drawing a second one over it
+          is the bug described there.
         */}
-        {hasArt && !baked && (
+        {hasArt && (
           <>
             <div
               aria-hidden

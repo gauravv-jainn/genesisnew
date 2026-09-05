@@ -108,92 +108,6 @@ export type WorkItem = {
  * categories.
  */
 const catalogue: WorkItem[] = [
-  {
-    slug: "kayali-product-reel",
-    client: "Kayali",
-    title: "Product Reel",
-    vertical: "Studios",
-    format: "Reels",
-    art: "/work/kayali.webp",
-    featured: true,
-  },
-  {
-    slug: "tata-motors-brand-film",
-    client: "Tata Motors",
-    title: "Brand Film",
-    vertical: "Studios",
-    format: "Shoots",
-    art: "/work/tata-motors.webp",
-    featured: true,
-  },
-  {
-    slug: "icici-bank-brand-story",
-    client: "ICICI Bank",
-    title: "Brand Story",
-    vertical: "Studios",
-    format: "Shoots",
-    art: "/work/icici-bank.webp",
-    featured: true,
-  },
-  {
-    slug: "miraggio-lifestyle-reel",
-    client: "Miraggio",
-    title: "Lifestyle Reel",
-    vertical: "Studios",
-    format: "Reels",
-    art: "/work/miraggio.webp",
-    featured: true,
-  },
-  {
-    slug: "yonex-ad-film",
-    client: "Yonex",
-    title: "Ad Film",
-    vertical: "Studios",
-    format: "Campaigns",
-    art: "/work/yonex.webp",
-    featured: true,
-  },
-  {
-    slug: "third-wave-coffee-product-reel",
-    client: "Third Wave Coffee",
-    title: "Product Reel",
-    vertical: "Studios",
-    format: "Reels",
-    art: "/work/third-wave-coffee.webp",
-    featured: true,
-  },
-  {
-    slug: "mauritius-tourism-travel-film",
-    client: "Mauritius Tourism",
-    title: "Travel Film",
-    vertical: "Studios",
-    format: "Shoots",
-    art: "/work/mauritius-tourism.webp",
-  },
-  {
-    slug: "kreo-tech-product-film",
-    client: "Kreo Tech",
-    title: "Product Film",
-    vertical: "Studios",
-    format: "Shoots",
-    art: "/work/kreo-tech.webp",
-  },
-  {
-    slug: "dot-and-key-skincare-reel",
-    client: "Dot & Key",
-    title: "Skincare Reel",
-    vertical: "Studios",
-    format: "Reels",
-    art: "/work/dot-and-key.webp",
-  },
-  {
-    slug: "genesis-drip-event-coverage",
-    client: "Genesis Drip",
-    title: "Event Coverage",
-    vertical: "Studios",
-    format: "Shoots",
-    art: "/work/genesis-drip.webp",
-  },
 
   /*
    * The finance work. Real relationships, named in the brief, with no artwork
@@ -232,7 +146,6 @@ const catalogue: WorkItem[] = [
     title: "Content Production",
     vertical: "Studios",
     format: "UGC",
-    featured: true,
   },
 
   /*
@@ -255,6 +168,7 @@ const catalogue: WorkItem[] = [
     vertical: "Studios",
     format: "Reels",
     reel: [21, 24],
+    featured: true,
   },
   {
     slug: "foy-social-content",
@@ -263,6 +177,7 @@ const catalogue: WorkItem[] = [
     vertical: "Studios",
     format: "Reels",
     reel: [22, 23, 25],
+    featured: true,
   },
   {
     slug: "loreal-hair-care",
@@ -271,6 +186,7 @@ const catalogue: WorkItem[] = [
     vertical: "Studios",
     format: "Reels",
     reel: [27, 28],
+    featured: true,
   },
   /*
    * The second Drive folder — "Website Content Temporary", eleven property
@@ -293,6 +209,7 @@ const catalogue: WorkItem[] = [
     vertical: "Studios",
     format: "Reels",
     reel: [33, 34, 35, 36, 37, 38, 39, 40, 41, 42],
+    featured: true,
   },
   {
     slug: "ht-brunch-content",
@@ -301,6 +218,7 @@ const catalogue: WorkItem[] = [
     vertical: "Studios",
     format: "Reels",
     reel: [26],
+    featured: true,
   },
   {
     slug: "house-of-hiranandani-content",
@@ -309,6 +227,7 @@ const catalogue: WorkItem[] = [
     vertical: "Studios",
     format: "Reels",
     reel: [32],
+    featured: true,
   },
 ];
 
@@ -316,7 +235,7 @@ const catalogue: WorkItem[] = [
  * The catalogue with every media path resolved.
  *
  * ONE PLACE, AND IT IS THIS ONE. The paths in the array above are written the
- * way a person writes them — /work/kayali.webp — and `mediaUrl` decides
+ * way a person writes them — /work/clips/16.mp4 — and `mediaUrl` decides
  * whether that is where the bytes are actually read from or whether they come
  * out of Genesis's Drive instead. Doing it here rather than at each render
  * means the twelve components that show a still, a poster or a clip never
@@ -373,30 +292,6 @@ export const work: WorkItem[] = catalogue.map((item) => {
   };
 });
 
-/**
- * True while a piece is showing interim mockup artwork that already carries
- * its own chrome.
- *
- * The ten client stills are cards lifted from Genesis's own content-library
- * mockup, with the category pill, play control and client name PAINTED INTO
- * the image. Any component that draws its own caption over them prints
- * everything twice — the grid learned this once and the poster rail had to
- * learn it separately, which is why the rule lives here now rather than in
- * either of them.
- *
- * Inferred rather than flagged per item, so it stops applying by itself the
- * moment real footage lands.
- */
-export function hasBakedChrome(item: {
-  art?: string;
-  clip?: string;
-  poster?: string;
-}): boolean {
-  return Boolean(item.art) && !item.clip && !item.poster;
-}
-
-/** The aspect those mockup cards were exported at. */
-export const BAKED_ASPECT = "aspect-[173/200]";
 
 /** Fast lookup for the project route. */
 export function findWork(slug: string): WorkItem | undefined {

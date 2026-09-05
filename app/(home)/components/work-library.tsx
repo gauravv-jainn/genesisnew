@@ -20,6 +20,24 @@ import { work } from "@/lib/work";
 const ON_HOMEPAGE = 8;
 
 /**
+ * What the homepage shows, and in what order.
+ *
+ * IT WAS `work.slice(0, 8)` — the first eight entries in the array, which is
+ * an ordering nobody chose. It happened to be the ten mockup cards first, so
+ * the homepage library was eight placeholder stills and none of the real
+ * footage, and adding a client at the wrong line of the catalogue would have
+ * silently changed what the homepage led with.
+ *
+ * Featured first now, and `featured` means the piece has work you can watch.
+ * The rest follow in catalogue order to fill the row out.
+ */
+function forHomepage() {
+  const featured = work.filter((item) => item.featured);
+  const rest = work.filter((item) => !item.featured);
+  return [...featured, ...rest].slice(0, ON_HOMEPAGE);
+}
+
+/**
  * The full work library, on the homepage, after the four verticals.
  *
  * THE ONE BROWSE ON THE PAGE, after all four verticals. There used to be a
@@ -61,7 +79,7 @@ export function WorkLibrary() {
         </div>
 
         <Reveal variant="scene" className="mt-8">
-          <WorkGrid items={work.slice(0, ON_HOMEPAGE)} />
+          <WorkGrid items={forHomepage()} />
         </Reveal>
       </div>
     </section>

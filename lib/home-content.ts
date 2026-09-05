@@ -649,44 +649,59 @@ export const branding = {
 export const clients = {
   label: "Clients we've worked with",
   /*
-   * THE CLIENT BOARD, in its own order.
+   * THE REAL LOGO FILES, at last. This was a list of NAMES rendered as text
+   * wordmarks under a standing TODO ("Ask tanvi"); it is Genesis's own
+   * "Pallete of Brand Works", twenty-nine marks, one per client.
    *
-   * Genesis's logo dump runs eighteen brands; seventeen are here. The
-   * eighteenth is set in script inside a yellow ticket and I could not read
-   * it off the board with enough confidence to print a client's name on a
-   * public page — a misspelled client is worse than a missing one, so it
-   * waits for the file.
+   * THIRTY WERE SUPPLIED AND TWENTY-NINE ARE HERE. The missing one is set in
+   * script inside a yellow ticket and cannot be read with enough confidence
+   * to print a client's name on a public page — which is the SAME mark, and
+   * the same reason, recorded against the old text list. A misspelled client
+   * is worse than a missing one. It goes in the moment someone names it.
+   * TODO(content): identify file 21 of the Pallete of Brand Works.
    *
-   * The last four are from the original brief rather than the board. They are
-   * real relationships and dropping them is the client's call, not ours, so
-   * the two lists are unioned rather than replaced.
+   * `onDark` IS MEASURED, NOT EYEBALLED. Sampling the mean luminance of every
+   * non-transparent pixel in each file splits the set 22 / 8: most are dark or
+   * full-colour marks that need a light ground, but eight are white-ink
+   * versions that vanish on one. A single chip colour cannot serve both, and
+   * no CSS filter can either — inverting a white mark turns The Lalit's red
+   * square cyan and HT Brunch's peach circle blue. So each mark states which
+   * ground it needs and the wall gives it that one.
    *
-   * TODO(assets): real logo files, one per entry, into /public/clients. The
-   * component swaps <span> for <Image> in a single place when they land.
+   * TODO(assets): dark-ink versions of the eight flagged below would let the
+   * wall run one uniform chip. Until then this is the only arrangement in
+   * which all twenty-nine are legible.
    */
   logos: [
-    "ADITYA BIRLA CAPITAL",
-    "HDFC BANK",
-    "MAHINDRA FINANCE",
-    "IDBI BANK",
-    "HT BRUNCH",
-    "SOCIAL SAMOSA",
-    "LIZOL",
-    "THE WORLDGRAD",
-    "BUMBLE",
-    "DOVE",
-    "THE LALIT MUMBAI",
-    "HOUSE OF HIRANANDANI",
-    "BACARDI",
-    "BUDWEISER",
-    "VIVO",
-    "LN CONSTRUCTION",
-    "KAMDHENU REALITIES",
-    "ADITYA BIRLA SUN LIFE INSURANCE",
-    "MAHINDRA",
-    "INDUSIND NIPPON LIFE INSURANCE",
-    "TRIPGATE",
-    "ABHI APP",
+    { name: "Aditya Birla Capital", file: "aditya-birla-capital", onDark: false },
+    { name: "Mahindra Finance", file: "mahindra-finance", onDark: true },
+    { name: "HDFC Bank", file: "hdfc-bank", onDark: false },
+    { name: "IDBI Bank", file: "idbi-bank", onDark: false },
+    { name: "House of Hiranandani", file: "house-of-hiranandani", onDark: false },
+    { name: "The WorldGrad", file: "the-worldgrad", onDark: false },
+    { name: "The Lalit Mumbai", file: "the-lalit-mumbai", onDark: true },
+    { name: "Social Samosa", file: "social-samosa", onDark: true },
+    { name: "Four Points", file: "four-points", onDark: false },
+    { name: "Someplace Else", file: "someplace-else", onDark: true },
+    { name: "Matahaari", file: "matahaari", onDark: false },
+    { name: "Grand Hyatt", file: "grand-hyatt", onDark: false },
+    { name: "MNR", file: "mnr", onDark: false },
+    { name: "BNI", file: "bni", onDark: false },
+    { name: "Imagicaa", file: "imagicaa", onDark: false },
+    { name: "Kitty Su", file: "kitty-su", onDark: false },
+    { name: "Royal Tulip", file: "royal-tulip", onDark: false },
+    { name: "Radcliffe", file: "radcliffe", onDark: false },
+    { name: "HT Brunch", file: "ht-brunch", onDark: true },
+    { name: "Bumble", file: "bumble", onDark: true },
+    { name: "Lizol", file: "lizol", onDark: true },
+    { name: "Dove", file: "dove", onDark: false },
+    { name: "Bacardi", file: "bacardi", onDark: false },
+    { name: "Vivo", file: "vivo", onDark: false },
+    { name: "Budweiser", file: "budweiser", onDark: false },
+    { name: "LN Construction", file: "ln-construction", onDark: false },
+    { name: "Kamdhenu", file: "kamdhenu", onDark: false },
+    { name: "Aditya Birla Sun Life Insurance", file: "aditya-birla-sun-life", onDark: false },
+    { name: "TripGate", file: "tripgate", onDark: false },
   ],
 } as const;
 

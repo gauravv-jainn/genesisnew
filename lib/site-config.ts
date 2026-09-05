@@ -55,8 +55,9 @@ export const siteConfig = {
  * FLAT, NOT A DROPDOWN. The verticals lived behind a Capabilities menu, on
  * the reasoning that nine items crowd a pill. Genesis wants them on the bar
  * itself, and they are right that a division a visitor came for should not be
- * one hover away from being found. Seven items fit because the names are
- * short.
+ * one hover away from being found. Eight fit because the names are short —
+ * two of them are the forms, which Genesis asked to be reachable without
+ * scrolling into a section first.
  *
  * THE PREFIX IS DROPPED. "Genesis Influence" four times in a row, under a
  * Genesis wordmark, is the same word five times across one bar. The prefix
@@ -68,6 +69,15 @@ export const navItems: NavItem[] = [
   { label: "AI Labs", href: "/#ai-lab" },
   { label: "Brand & Design", href: "/#brand-design" },
   { label: "Case Studies", href: "/case-studies" },
+  /*
+    THE TWO FORMS, ON THE BAR. Both pages existed and neither was reachable
+    from the nav — the only routes to them were a button inside a section you
+    had to scroll to first, which for a creator or an applicant who arrived
+    looking for exactly this is not a route at all. Genesis asked for them up
+    here by name.
+  */
+  { label: "I'm a Creator", href: "/creator" },
+  { label: "Career", href: "/careers" },
   { label: "Contact", href: "/#contact" },
 ];
 

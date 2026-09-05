@@ -35,6 +35,16 @@ export type CaseStudy = {
   /** Pulled from the work catalogue where a piece of this campaign exists. */
   hero?: string;
   heroPoster?: string;
+  /**
+   * Which numbered clip this study leads with.
+   *
+   * Without it a study's poster is `work[0]`'s lead clip, so two studies of
+   * the SAME client show the same video — Aditya Birla Capital has eighteen
+   * films and both of their studies would have opened on the first one. The
+   * number addresses /work/clips/<n>.mp4 and its poster, the same convention
+   * the catalogue uses.
+   */
+  heroClip?: number;
 
   /** The one figure a card leads with. */
   headline?: string;
@@ -61,19 +71,40 @@ export const caseStudyList: CaseStudy[] = [
     discipline: "Content & campaign",
     work: ["aditya-birla-capital-campaign"],
   },
+  /*
+   * THESE TWO CHANGED CLIENT, at Genesis's instruction, and the slugs changed
+   * with them. They were Aditya Birla Sun Life Insurance and HDFC — real
+   * relationships with no footage in either Drive folder, so both cards sat
+   * blank under a play control that started nothing.
+   *
+   * Genesis asked for a second Aditya Birla Capital film and a second Mahindra
+   * Finance one in their place, and for the names to change to match. That
+   * last part is what makes it sound: the earlier version of this idea would
+   * have run Capital's reel under Sun Life's name, which is a different
+   * company and a false claim about both. Renaming the card removes the claim.
+   *
+   * The slug moves too. A URL reading /case-studies/absli-brand-performance
+   * showing Aditya Birla Capital is the same untruth one level down, and
+   * nothing links to these yet.
+   *
+   * `heroClip` gives each its own film — without it both Capital studies would
+   * open on clip 1.
+   */
   {
-    slug: "absli-brand-performance",
-    client: "Aditya Birla Sun Life Insurance",
+    slug: "aditya-birla-capital-brand-performance",
+    client: "Aditya Birla Capital",
     vertical: "Influence",
     discipline: "Brand & performance content",
-    work: ["absli-brand-performance"],
+    work: ["aditya-birla-capital-campaign"],
+    heroClip: 29,
   },
   {
-    slug: "hdfc-content-production",
-    client: "HDFC",
+    slug: "mahindra-finance-content-production",
+    client: "Mahindra Finance",
     vertical: "Studios",
     discipline: "Content production",
-    work: ["hdfc-content-production"],
+    work: ["mahindra-finance-influencer-campaign"],
+    heroClip: 18,
   },
 ];
 

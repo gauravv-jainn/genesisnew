@@ -147,7 +147,16 @@ export function GlassNav() {
           not be one hover away from being found, and the names are short
           enough that seven fit the pill.
         */}
-        <ul className="ml-2 hidden flex-1 items-center gap-0.5 lg:flex">
+        {/*
+          xl, NOT lg. Genesis added "I'm a Creator" and "Career" to the bar,
+          taking it from six items to eight, and at 1024 the row measured
+          1077px inside 990 — it overflowed and pushed "Start a Project" off
+          the right edge. Measured, not guessed. Eight items need about 1150px
+          alongside the wordmark, the theme toggle and the CTA, so the full bar
+          waits for xl and everything below it gets the menu, which already
+          lists all eight.
+        */}
+        <ul className="ml-2 hidden flex-1 items-center gap-0.5 xl:flex">
           {navItems.map((item) => (
             <li key={item.label}>
               <Link href={item.href} className={NAV_LINK}>
@@ -158,7 +167,7 @@ export function GlassNav() {
         </ul>
 
         <div className="ml-auto flex items-center gap-2">
-          <ThemeToggle className="hidden lg:inline-flex" />
+          <ThemeToggle className="hidden xl:inline-flex" />
 
           <GlassButton
             href={primaryCta.href}
@@ -175,7 +184,7 @@ export function GlassNav() {
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="grid size-9 place-items-center rounded-full border border-[var(--glass-border)] text-bone transition-colors hover:bg-[var(--hover-wash)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand lg:hidden"
+            className="grid size-9 place-items-center rounded-full border border-[var(--glass-border)] text-bone transition-colors hover:bg-[var(--hover-wash)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand xl:hidden"
           >
             {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
@@ -190,7 +199,7 @@ export function GlassNav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="glass glass-strong pointer-events-auto absolute inset-x-4 top-20 rounded-panel p-4 lg:hidden"
+            className="glass glass-strong pointer-events-auto absolute inset-x-4 top-20 rounded-panel p-4 xl:hidden"
           >
             <div className="mb-3 flex items-center justify-between">
               <span className="micro-label">Menu</span>

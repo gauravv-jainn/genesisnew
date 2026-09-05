@@ -2,7 +2,8 @@ import { PosterRail, type Poster } from "@/components/genesis/poster-card";
 import { Reveal } from "@/components/genesis/reveal";
 import { GlassButton } from "@/components/genesis/glass-button";
 import { caseStudiesPage, caseStudyList, isPublished } from "@/lib/case-studies";
-import { findWork } from "@/lib/work";
+import { findWork, reelClip, reelPoster } from "@/lib/work";
+import { mediaUrl } from "@/lib/media-url";
 import { SectionShell } from "./section-shell";
 
 /**
@@ -47,11 +48,25 @@ export function CaseStudies() {
     */
     const lead = study.work?.[0] ? findWork(study.work[0]) : undefined;
 
+    /*
+      `heroClip` wins over the catalogue piece's own lead. Two studies can
+      cover one client — Aditya Birla Capital has eighteen films behind two of
+      these cards — and without it both would open on the same video.
+    */
+    const clip =
+      study.heroClip === undefined
+        ? lead?.clip
+        : mediaUrl(reelClip(study.heroClip));
+    const image =
+      study.heroClip === undefined
+        ? (lead?.poster ?? lead?.art)
+        : mediaUrl(reelPoster(study.heroClip));
+
     return {
       id: study.slug,
       category: study.discipline,
-      image: lead?.poster ?? lead?.art,
-      clip: lead?.clip,
+      image,
+      clip,
       // With no written study the client IS the title; with one, it steps
       // back up to the eyebrow above it.
       client: published ? study.client : undefined,

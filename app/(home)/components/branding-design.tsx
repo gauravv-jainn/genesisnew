@@ -128,6 +128,40 @@ export function BrandingDesign() {
                         is the answer, not a fifth attempt, and a row of five
                         equal squares would read as five options.
                       */}
+                      {/*
+                        A LOCKED PALETTE, where the identity has one. Swatch,
+                        then its hex under it — the code is the useful half:
+                        somebody rebuilding a deck needs to copy it, and a
+                        picture of a colour cannot be copied.
+
+                        The chip carries a hairline border rather than sitting
+                        flush, because the last swatch in this set is #ffffff
+                        and white on a light theme with no edge is not a
+                        swatch, it is a gap.
+                      */}
+                      {"palette" in item && item.palette.length > 0 && (
+                        <div className="mt-4">
+                          <ul className="flex flex-wrap gap-2">
+                            {item.palette.map((hex) => (
+                              <li key={hex} className="flex flex-col gap-1">
+                                <span
+                                  className="block size-10 rounded-card border border-white/25 sm:size-11"
+                                  style={{ backgroundColor: hex }}
+                                />
+                                <span className="text-[0.5625rem] uppercase tracking-wide text-faint">
+                                  {hex}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                          {"paletteNote" in item && (
+                            <p className="mt-2 text-micro text-ash">
+                              {item.paletteNote}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
                       {hasRoute && (
                         <div className="mt-4 flex flex-wrap items-center gap-2">
                           {route.phases.map((src, index) => (

@@ -616,7 +616,20 @@ export const branding = {
   body:
     "Brand guidelines, design, motion videos and brand collaterals — built for the sixth-second crop, not just the pitch deck.",
   work: [
-    { title: "Tripgate", caption: "Branding & guidelines" },
+    /*
+      TRIPGATE'S LOCKED PALETTE, read off Genesis's own guidelines slide —
+      "OPTION 3 is Locked", with the hex codes printed under each swatch. It
+      is here as VALUES rather than as a picture of the slide on purpose: five
+      hex codes render sharp at any size and in any theme, where a screenshot
+      of a colour board is a JPEG of colours that cannot be copied, sampled or
+      read by anything.
+    */
+    {
+      title: "Tripgate",
+      caption: "Branding & guidelines",
+      palette: ["#0f5c56", "#b7e3ff", "#ffe5a9", "#f89423", "#ffffff"],
+      paletteNote: "Calm · Grounded · Explorative · Balanced",
+    },
     /*
       `assets` names a folder under /public/brand. Where one exists, the
       section shows that mark's ROUTE — the sketch phases in order, then the

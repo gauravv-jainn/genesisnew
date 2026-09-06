@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { useMagnetic } from "@/lib/use-magnetic";
@@ -70,6 +71,14 @@ const VARIANTS = {
   ],
 } as const;
 
+/**
+ * next/link with framer-motion's props bolted on. Created ONCE at module
+ * scope: motion.create() returns a new component type on every call, and a new
+ * type inside render unmounts and remounts the subtree on each pass — which
+ * for a link means losing focus and restarting the hover spring mid-gesture.
+ */
+const MOTION_LINK = motion.create(Link);
+
 export function GlassButton({
   children,
   variant = "glass",
@@ -121,15 +130,34 @@ export function GlassButton({
   };
 
   if (href) {
+    /*
+      ROUTED, NOT RELOADED — and this was breaking the work dialog.
+
+      This branch rendered a bare <a>, so every CTA in the site that carries an
+      href was a full document navigation: the client router never saw the
+      click, and a route that only exists as an interception never had a
+      chance to intercept. The Portfolio billboard's "View project" is the case
+      Genesis reported — the tiles beside it opened the piece in a dialog
+      because they use next/link, while the button under the same headline
+      tore the page down and rebuilt it as a standalone page.
+
+      Internal paths go through next/link. Everything else — external origins,
+      mailto:, tel:, and a bare "#hash", which SmoothScroll handles on capture
+      before React ever sees it — stays a plain anchor, because handing those
+      to the router either fails or costs a needless prefetch.
+    */
+    const routed = href.startsWith("/");
+    const MotionLink = routed ? MOTION_LINK : motion.a;
+
     return (
-      <motion.a
+      <MotionLink
         href={href}
         data-quick-contact={quickContact}
         className={classes}
         {...motionProps}
       >
         {content}
-      </motion.a>
+      </MotionLink>
     );
   }
 

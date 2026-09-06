@@ -1,4 +1,5 @@
 import { BarChart3, Globe, Sparkles, Target, Users } from "lucide-react";
+import Link from "next/link";
 
 import { CreatorConstellation } from "@/components/genesis/creator-constellation";
 import { DivisionLockup } from "@/components/genesis/division-lockup";
@@ -149,13 +150,13 @@ export function InfluencerMarketing() {
                   </p>
                 </div>
 
-                <a
+                <Link
                   href="/influencer-campaigns"
                   aria-label="See influencer campaigns"
                   className="grid size-11 shrink-0 place-items-center rounded-full border border-white/20 text-bone transition-colors hover:border-brand hover:bg-brand/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                 >
                   <span aria-hidden className="text-h3 leading-none">→</span>
-                </a>
+                </Link>
               </div>
             </Reveal>
           </div>

@@ -85,11 +85,22 @@ export function ClientLogos() {
         one thing, which is what SectionShell's own reveals already do for the
         header above it.
 
-        Seven columns at the top end, three on a phone. Three was too tight
-        while every chip carried a name — several ran to five lines at 104px
-        wide — and is right now that none of them do.
+        Seven columns at the top end, TWO on a phone — it was three, and
+        Genesis's report was that the wall did not read at all there.
+
+        Measured: three columns on a 375px viewport gives a 104px chip, and at
+        34% ink height a long wordmark stood 22px tall inside it. "GRAND
+        HYATT" is set in ~7px letters at that size and House of Hiranandani's
+        strapline in under 4. The marks were on the page and none of them were
+        legible, which for a wall whose entire content is other people's
+        names is the same as not being there.
+
+        Two columns takes the chip to 160px and the ink with it — half again
+        as tall — and the chips grow to h-20 to keep the same proportion. It
+        costs eight rows of scroll on a phone; the alternative was thirty
+        logos nobody could name.
       */}
-      <ul className="grid grid-flow-row-dense grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7">
+      <ul className="grid grid-flow-row-dense grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7">
         {clients.logos.map((logo) => (
           <li
             key={logo.file}
@@ -104,7 +115,7 @@ export function ClientLogos() {
               */
               "relative flex items-center justify-center overflow-hidden rounded-card",
               "border border-black/10 bg-white px-3",
-              "h-16 sm:h-[4.5rem] lg:h-20",
+              "h-20 sm:h-[4.5rem] lg:h-20",
               // Lift only. Scaling a client's logo on hover is the sort of
               // flourish that makes a wall of them feel like a toy.
               "transition-[transform,box-shadow] duration-300 ease-out",
@@ -131,7 +142,7 @@ export function ClientLogos() {
                   310px across a 1104px container. Without this every one of
                   the twenty-nine would pull a viewport-sized file.
                 */
-                sizes="(min-width: 1024px) 310px, (min-width: 640px) 33vw, 45vw"
+                sizes="(min-width: 1024px) 310px, (min-width: 640px) 33vw, 92vw"
                 className="object-contain"
                 style={
                   /*

@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useSyncExternalStore } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -100,6 +101,55 @@ type Avatar = {
 const STEP = 6.6;
 const PIVOT = "50% 650%";
 
+/**
+ * Is there room to fan?
+ *
+ * THE FAN IS 775px WIDE AND A PHONE IS 375, and the answer used to be a
+ * horizontal scroller — the hand at full size with the viewport panning
+ * across it. It reads as broken rather than as scrollable: what you see on
+ * load is two cards cut in half at both edges, with nothing saying the rest
+ * is a thumb away. Genesis's word for it was "fucked up", and they are right.
+ *
+ * So below 880px the fan is not a fan. Same seven cards, same links, laid out
+ * as two centred rows — four and three — with no rotation, no pivot and no
+ * sway. Everyone is on screen at their real size and the page does not move
+ * sideways.
+ *
+ * Measured rather than assumed, because the geometry is real and a Tailwind
+ * `sm:` on the transform would not have been enough: the rotation is written
+ * by Framer as an inline style, and an inline transform beats any class.
+ * matchMedia is the only place both the layout and the animation can agree.
+ *
+ * 880, NOT 640, AND IT IS NOT A TAILWIND BREAKPOINT. The fan's width is the
+ * card's width times the geometry, and the card is
+ * `clamp(7.5rem, 14vw, 13rem)` — so below 857px viewport the clamp floor
+ * pins the card at 120px and the hand stops shrinking with the page. It stays
+ * 832px wide however narrow the phone gets, which is why at 673px the outer
+ * two cards hung 79px off each edge of a container that clips, and why at 840
+ * they still overran it by 4. 880 is the first width where the hand fits with
+ * a margin either side.
+ *
+ * Every size decision below hangs off `fan` for the same reason: a `sm:` on
+ * the caption would have re-opened the gap between 640 and 880.
+ *
+ * Server-rendered as the fan — the desktop case, and the one where a wrong
+ * first paint is cheapest: a phone corrects on hydration, in the same frame
+ * the deal-in animation would have started anyway.
+ */
+const FAN_QUERY = "(min-width: 880px)";
+
+function useFanRoom(): boolean {
+  return useSyncExternalStore(
+    (notify) => {
+      const mql = window.matchMedia(FAN_QUERY);
+      mql.addEventListener("change", notify);
+      return () => mql.removeEventListener("change", notify);
+    },
+    () => window.matchMedia(FAN_QUERY).matches,
+    () => true,
+  );
+}
+
 export function AvatarFan({
   avatars,
   className,
@@ -115,6 +165,7 @@ export function AvatarFan({
     leave six of the seven avatars hidden behind the seventh.
   */
   const still = useReducedMotion();
+  const fan = useFanRoom();
 
   return (
     /*
@@ -139,27 +190,10 @@ export function AvatarFan({
           were 52px doing nothing under them. 2.08 leaves about 27, which is
           what the shadows and the sway's ±0.9 degrees need.
         */
-        "relative h-[calc(clamp(7.5rem,14vw,13rem)*2.08)] w-full",
-        /*
-          IT NEEDS 775px AND A PHONE HAS 375.
-
-          The geometry is not negotiable: seven cards 121px wide, pivoted four
-          card-heights down and stepped 6.6 degrees apart, put the outer pair
-          327px either side of centre — 775px of fan. Under the bleed
-          wrapper's overflow-hidden that meant Ivaanat and Shivam were simply
-          cut off the sides of every phone.
-
-          Three ways out and two are worse. Narrowing the step to fit packs
-          seven cards into 375px at 66% overlap and buries the names.
-          Shrinking the cards to fit takes them to 56px, at which the names do
-          not fit on the card at all. So the fan keeps its real size and the
-          viewport scrolls across it — the whole roster is reachable, at the
-          size it was drawn, by the gesture a phone already uses for a row of
-          cards.
-
-          Above 640px there is room for all of it and the min-width goes away.
-        */
-        "min-w-[48rem] sm:min-w-0",
+        fan
+          ? "relative h-[calc(clamp(7.5rem,14vw,13rem)*2.08)] w-full"
+          : // Two centred rows, four then three. See useFanRoom.
+            "flex flex-wrap justify-center gap-x-2 gap-y-3 px-4",
         className,
       )}
     >
@@ -185,13 +219,29 @@ export function AvatarFan({
               The wrapper is a positioning device and should never have been a
               target; the link inside it takes pointer events back.
             */
-            className="pointer-events-none absolute inset-x-0 top-0 flex justify-center"
-            style={{
-              // Nearer the middle sits on top, so the fan overlaps outward
-              // from the card being presented.
-              zIndex: Math.round((avatars.length - distance) * 10),
-              transformOrigin: PIVOT,
-            }}
+            /*
+              THE WIDTH BELONGS ON THE FLEX ITEM. This was `display:contents`,
+              which handed flex sizing to the sway wrapper inside it while the
+              card's `w-[…%]` still resolved against that wrapper — a width
+              defined as a fraction of a box whose own width came from its
+              content. Five cards landed in the first row instead of four, at
+              whatever size the loop settled on.
+            */
+            className={
+              fan
+                ? "pointer-events-none absolute inset-x-0 top-0 flex justify-center"
+                : "w-[calc((100%-1.5rem)/4)] max-w-[7rem]"
+            }
+            style={
+              fan
+                ? {
+                    // Nearer the middle sits on top, so the fan overlaps
+                    // outward from the card being presented.
+                    zIndex: Math.round((avatars.length - distance) * 10),
+                    transformOrigin: PIVOT,
+                  }
+                : undefined
+            }
             /*
               Rotation is animated rather than written into `transform`, so
               Framer owns the property outright — a static transform here and
@@ -199,9 +249,20 @@ export function AvatarFan({
               snaps.
             */
             initial={
-              still ? false : { rotate: 0, y: 26, opacity: 0 }
+              still || !fan ? false : { rotate: 0, y: 26, opacity: 0 }
             }
-            whileInView={{ rotate: offset * STEP, y: 0, opacity: 1 }}
+            /*
+              The rows still have to be TOLD to be visible. An empty target
+              here left the phone showing seven boxes at opacity 0 — the
+              server renders the fan, so the stacked `initial` had already
+              been written into the DOM, and switching to rows on hydration
+              gave Framer nothing to animate back from.
+            */
+            whileInView={
+              fan
+                ? { rotate: offset * STEP, y: 0, opacity: 1 }
+                : { rotate: 0, y: 0, opacity: 1 }
+            }
             viewport={{ once: true, amount: 0.25 }}
             transition={{
               // Long and heavily eased-out: the cards leave the stack quickly
@@ -225,13 +286,22 @@ export function AvatarFan({
               `avatar-sway` in globals.css.
             */}
             <div
-              className="motion-safe:animate-[avatar-sway_7s_ease-in-out_infinite_alternate]"
-              style={{
-                transformOrigin: PIVOT,
-                // Negative, so every card starts mid-cycle and the wave is
-                // already travelling rather than beginning on a queue.
-                animationDelay: `${(-0.55 * index).toFixed(2)}s`,
-              }}
+              className={
+                fan
+                  ? "motion-safe:animate-[avatar-sway_7s_ease-in-out_infinite_alternate]"
+                  : undefined
+              }
+              style={
+                fan
+                  ? {
+                      transformOrigin: PIVOT,
+                      // Negative, so every card starts mid-cycle and the wave
+                      // is already travelling rather than beginning on a
+                      // queue.
+                      animationDelay: `${(-0.55 * index).toFixed(2)}s`,
+                    }
+                  : undefined
+              }
             >
             <Link
               href={`/avatars/${avatar.id}`}
@@ -242,7 +312,12 @@ export function AvatarFan({
             >
             <figure
               className={cn(
-                "relative aspect-[3/4] w-[clamp(7.5rem,14vw,13rem)] overflow-hidden rounded-[1.25rem] border",
+                "relative aspect-[3/4] overflow-hidden rounded-[1.25rem] border",
+                /*
+                  Off the fan's own unit above 640, and off the row below it,
+                  where the wrapper carries the width — see the note on it.
+                */
+                fan ? "w-[clamp(7.5rem,14vw,13rem)]" : "w-full",
                 // The upright card is the only one carrying a lift, so the
                 // eye is told where to start.
                 isCentre
@@ -290,12 +365,29 @@ export function AvatarFan({
                 }}
               />
 
-              <figcaption className="absolute inset-x-0 bottom-0 p-3 text-center sm:p-4">
-                <span className="block text-[clamp(0.95rem,1.9vw,1.6rem)] font-semibold uppercase leading-none tracking-tight text-white">
+              <figcaption
+                className={cn(
+                  "absolute inset-x-0 bottom-0 text-center",
+                  fan ? "p-3 sm:p-4" : "p-1.5",
+                )}
+              >
+                <span
+                  className={cn(
+                    "block font-semibold uppercase leading-none tracking-tight text-white",
+                    fan ? "text-[clamp(0.95rem,1.9vw,1.6rem)]" : "text-[0.6rem]",
+                  )}
+                >
                   {avatar.name}
                 </span>
                 {avatar.role && (
-                  <span className="mt-1.5 block text-[clamp(0.4rem,0.72vw,0.6rem)] font-medium uppercase leading-tight tracking-[0.14em] text-white/70">
+                  <span
+                    className={cn(
+                      "block font-medium uppercase leading-tight text-white/70",
+                      fan
+                        ? "mt-1.5 text-[clamp(0.4rem,0.72vw,0.6rem)] tracking-[0.14em]"
+                        : "mt-1 text-[0.4rem] tracking-[0.1em]",
+                    )}
+                  >
                     {avatar.role}
                   </span>
                 )}

@@ -52,16 +52,16 @@ export function AiContent() {
         being dealt to you.
       */}
       {/*
-        Full-bleed, and a SCROLLER below 640 rather than a clip. The fan is
-        775px wide by construction (see AvatarFan) so on a phone this wrapper
-        was amputating the outer avatar on each side; `overflow-x-auto` turns
-        that same overflow into something a thumb can reach. `no-scrollbar`
-        because the fan's own edges already say there is more of it, and a
-        scrollbar under a hand of cards reads as a widget.
+        Full-bleed, and a plain clip again. This was a horizontal scroller
+        below 640, because the fan is 775px wide by construction and a phone
+        would otherwise amputate the outer avatar on each side. AvatarFan no
+        longer fans at that width — it lays the same seven cards out as two
+        centred rows — so there is nothing left to scroll and a scroller with
+        no overflow only invites a sideways drag that goes nowhere.
       */}
       <Reveal
         variant="scene"
-        className="no-scrollbar relative left-1/2 mt-12 w-screen -translate-x-1/2 overflow-x-auto overflow-y-hidden sm:overflow-hidden"
+        className="relative left-1/2 mt-12 w-screen -translate-x-1/2 overflow-hidden"
       >
         <div className="mx-auto max-w-3xl px-6 text-center">
           <h3

@@ -192,11 +192,27 @@ export function BrandingDesign() {
                         attempt, and five equal squares read as five options.
                       */}
                       {hasRoute && (
-                        <div className="mt-5 flex flex-wrap items-end gap-2.5">
+                        /*
+                          ONE LINE, ALWAYS. This was `flex-wrap` with fixed
+                          72-80px squares, which on a phone broke Activ
+                          Health's five marks into three and two — a route
+                          from sketch to finished logo reads as a sequence,
+                          and a sequence that wraps stops being one.
+
+                          So the boxes are FRACTIONS OF THE ROW rather than
+                          pixel sizes: each sketch takes an equal share, the
+                          final mark takes 1.4 shares because it is the
+                          answer, and `min-w-0` lets them all shrink below
+                          their content on a narrow tile instead of forcing an
+                          overflow. The max-widths keep them from ballooning
+                          on a wide one, where four sketches would otherwise
+                          stretch to 150px each.
+                        */
+                        <div className="mt-5 flex items-end gap-1.5 sm:gap-2.5">
                           {route.phases.map((src, index) => (
                             <div
                               key={src}
-                              className="relative size-[4.5rem] shrink-0 overflow-hidden rounded-card border border-white/15 bg-white sm:size-20"
+                              className="relative aspect-square min-w-0 flex-1 basis-0 overflow-hidden rounded-card border border-white/15 bg-white sm:max-w-20"
                             >
                               {/*
                                 `unoptimized`, and it is the fix rather than a
@@ -215,7 +231,7 @@ export function BrandingDesign() {
                                 alt={`${item.title} logo, sketch ${index + 1} of ${route.phases.length}`}
                                 fill
                                 unoptimized
-                                className="object-contain p-2"
+                                className="object-contain p-1.5 sm:p-2"
                               />
                             </div>
                           ))}
@@ -225,16 +241,16 @@ export function BrandingDesign() {
                               {route.phases.length > 0 && (
                                 <span
                                   aria-hidden
-                                  className="mx-0.5 h-16 w-px shrink-0 self-center bg-white/15"
+                                  className="h-10 w-px shrink-0 self-center bg-white/15 sm:h-16"
                                 />
                               )}
-                              <div className="relative size-24 shrink-0 overflow-hidden rounded-card border border-brand-ink/40 bg-white shadow-[0_10px_30px_-12px_rgb(0_0_0/0.6)] sm:size-28">
+                              <div className="relative aspect-square min-w-0 flex-[1.4] basis-0 overflow-hidden rounded-card border border-brand-ink/40 bg-white shadow-[0_10px_30px_-12px_rgb(0_0_0/0.6)] sm:max-w-28">
                                 <Image
                                   src={route.final}
                                   alt={`${item.title} — the finished logo`}
                                   fill
                                   unoptimized
-                                  className="object-contain p-3"
+                                  className="object-contain p-2 sm:p-3"
                                 />
                               </div>
                             </>

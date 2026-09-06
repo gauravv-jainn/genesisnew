@@ -19,8 +19,6 @@ import { cn } from "@/lib/utils";
  * The marks are drawn inline. lucide-react removed its brand icons in v1, and
  * pulling in a whole icon package for three glyphs is not a trade worth
  * making.
- *
- * TODO(links): handles are placeholders until the real accounts are confirmed.
  */
 
 function InstagramMark() {
@@ -33,6 +31,8 @@ function InstagramMark() {
   );
 }
 
+/** Unused until Genesis has a channel. See the note on SOCIALS. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function YouTubeMark() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
@@ -53,10 +53,24 @@ function LinkedInMark() {
   );
 }
 
+/*
+  THE REAL ACCOUNTS, supplied by Genesis. YouTube is gone with the
+  placeholders: the row pointed at youtube.com's front page, which is not a
+  link to Genesis, and a third icon is not worth inventing a destination for.
+  It comes back the day there is a channel to point it at — the mark below is
+  kept for exactly that.
+*/
 const SOCIALS = [
-  { label: "Instagram", href: "https://instagram.com", Mark: InstagramMark },
-  { label: "YouTube", href: "https://youtube.com", Mark: YouTubeMark },
-  { label: "LinkedIn", href: "https://linkedin.com", Mark: LinkedInMark },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/genesismedia.co/",
+    Mark: InstagramMark,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/genesismediaa/",
+    Mark: LinkedInMark,
+  },
 ];
 
 export function SocialStars({ className }: { className?: string }) {

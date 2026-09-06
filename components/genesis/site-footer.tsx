@@ -82,8 +82,26 @@ export function SiteFooter() {
           <p>
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
-          {/* TODO(legal): real policy pages required before launch. */}
-          <p>Privacy · Terms</p>
+          {/*
+            LINKS NOW, NOT PRINTED WORDS. This read "Privacy · Terms" as plain
+            text with nothing behind it, which is the one thing a footer must
+            not do — a visitor looking for a policy found the word and no page.
+            Both routes exist and are interim; see lib/legal.ts.
+
+            TODO(legal): counsel-reviewed copy required before launch.
+          */}
+          <p className="flex items-center gap-2">
+            <Link
+              href="/privacy"
+              className="transition-colors hover:text-bone"
+            >
+              Privacy
+            </Link>
+            <span aria-hidden>·</span>
+            <Link href="/terms" className="transition-colors hover:text-bone">
+              Terms
+            </Link>
+          </p>
         </div>
       </div>
 

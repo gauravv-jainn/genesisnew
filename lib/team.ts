@@ -1,15 +1,23 @@
 /**
  * The team.
  *
- * PLACEHOLDER BY AGREEMENT. Genesis is supplying names, roles and headshots;
- * until then this carries the shape of the section and nothing that pretends
- * to be a person. Every member below is marked `pending`, and the page draws
- * a monogram tile rather than a grey avatar box — a broken-looking image is
- * read as a bug, a monogram is read as a portrait that has not arrived.
+ * TWO PEOPLE, WHICH IS THE INSTRUCTION AND NOT AN OMISSION. This carried
+ * eight placeholder members — job titles standing in for names, each drawn as
+ * a monogram — while Genesis decided who goes on the page. They have: the
+ * founder and the head of creatives, and nobody else for now.
  *
- * TODO(content): real names, roles and headshots. Replace `pending` members
- * outright rather than editing them — the placeholders are not a starting
- * draft of anybody.
+ * THE PORTRAITS ARE THE AI AVATARS, also at Genesis's instruction. Shivam and
+ * Tanvi are both on the AI Lab roster and the roster's own frames are the
+ * pictures we have of them. The team tiles do not point at those 1080x1920
+ * files directly: a 9:16 full-length shot dropped into a 4:5 box crops to
+ * whatever object-cover decides, which put the two of them at visibly
+ * different distances. public/team/ holds a hand-cut 4:5 crop of each,
+ * framed so the eyes sit at 30% of the height and the head fills about a
+ * third of the frame in both. That is what "consistent" means here, and it
+ * cannot be done with a CSS keyword.
+ *
+ * The `pending` flag and the monogram tile stay for the next person added
+ * before their photograph arrives.
  */
 
 export type TeamMember = {
@@ -41,15 +49,21 @@ export const team = {
   heading: "The people",
   headingAccent: "behind it",
   body:
-    "Genesis is built in-house — strategy, creative, production and technology under one roof. These are the people who do it.",
+    "Genesis is built in-house — strategy, creative, production and technology under one roof. It is led by the two people below.",
   members: [
-    { slug: "founder", name: "Founder & CEO", role: "Founder & CEO", division: "Leadership", pending: true },
-    { slug: "creative-director", name: "Creative Director", role: "Creative Director", division: "Genesis Studios", pending: true },
-    { slug: "head-of-influence", name: "Head of Influence", role: "Head of Influence", division: "Genesis Influence", pending: true },
-    { slug: "head-of-ai", name: "Head of AI Lab", role: "Head of AI Lab", division: "Genesis AI Labs", pending: true },
-    { slug: "design-lead", name: "Design Lead", role: "Design Lead", division: "Genesis Brand & Design", pending: true },
-    { slug: "production-head", name: "Production Head", role: "Production Head", division: "Genesis Studios", pending: true },
-    { slug: "strategy-lead", name: "Strategy Lead", role: "Strategy Lead", division: "Genesis Influence", pending: true },
-    { slug: "account-director", name: "Account Director", role: "Account Director", division: "Leadership", pending: true },
+    {
+      slug: "shivam-mestry",
+      name: "Shivam Mestry",
+      role: "Founder & CEO",
+      division: "Leadership",
+      photo: "/team/shivam.jpg",
+    },
+    {
+      slug: "tanvi-panchal",
+      name: "Tanvi Panchal",
+      role: "Head of Creatives",
+      division: "Genesis Studios",
+      photo: "/team/tanvi.jpg",
+    },
   ] as TeamMember[],
 } as const;

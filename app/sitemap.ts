@@ -27,6 +27,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/case-studies`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/team`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    // Low priority, but listed: a policy a crawler cannot find is one a
+    // visitor cannot find either.
+    { url: `${base}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${base}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
   ];
 
   /*

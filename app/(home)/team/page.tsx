@@ -15,13 +15,12 @@ export const metadata: Metadata = {
  * /team — meet the people.
  *
  * ONE TILE SHAPE FOR EVERYONE, whether a headshot exists or not, so the grid
- * does not reflow when the photographs land. Until then each member gets a
- * monogram on their division's ground rather than a grey avatar box: a broken
- * image reads as a bug, a monogram reads as a portrait that has not arrived.
+ * does not reflow when a photograph lands. A member without one gets a
+ * monogram on a dark ground rather than a grey avatar box: a broken image
+ * reads as a bug, a monogram reads as a portrait that has not arrived.
  *
- * The roles are real; the names are the roles until Genesis supplies them,
- * and every member is flagged `pending` in the data so they are easy to find
- * and replace wholesale rather than edited in place.
+ * Both current members have theirs — hand-cut to a matching frame, see
+ * lib/team.ts — so the monogram branch is only waiting for the next hire.
  */
 export default function TeamPage() {
   return (
@@ -42,7 +41,14 @@ export default function TeamPage() {
           </p>
         </Reveal>
 
-        <RevealGroup className="mt-14 grid grid-cols-2 gap-x-5 gap-y-10 sm:mt-16 lg:grid-cols-4">
+        {/*
+          TWO COLUMNS, CAPPED. It was four across at lg, sized for the eight
+          placeholders that used to be here. Two members in a four-column grid
+          are two tiles huddled in the left quarter of a 1152px row with half
+          the page empty beside them; the same two at a 2xl measure read as a
+          leadership pair, which is what they are.
+        */}
+        <RevealGroup className="mt-14 grid max-w-2xl grid-cols-2 gap-x-5 gap-y-10 sm:mt-16 sm:gap-x-8">
           {team.members.map((member) => (
             <RevealItem key={member.slug}>
               <figure className="flex flex-col gap-4">
@@ -52,8 +58,8 @@ export default function TeamPage() {
                       src={member.photo}
                       alt={`${member.name}, ${member.role}`}
                       fill
-                      // Four across on desktop, two on a phone.
-                      sizes="(min-width: 1024px) 25vw, 50vw"
+                      // Two across at every width, inside a 42rem measure.
+                      sizes="(min-width: 768px) 20rem, 45vw"
                       className="object-cover"
                     />
                   ) : (
